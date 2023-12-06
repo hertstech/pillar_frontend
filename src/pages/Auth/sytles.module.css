@@ -1,0 +1,32 @@
+.wrap {
+  display: flex;
+  flex-direction: row;
+}
+
+.wrapper {
+  margin: auto;
+  display: grid;
+  place-items: "center";
+  min-height: 100vh;
+  padding: 100px 0px;
+  width: 50%;
+}
+
+.Logo {
+  height: auto;
+  margin-bottom: 30px;
+}
+
+.form {
+  width: 495px;
+  margin-top: 20px;
+}
+
+.images {
+  background-image: url("/assets/Frame 625882.svg");
+  background-repeat: no-repeat;
+  background-size: contain;
+  height: 100vh;
+  width: 60%;
+  background-position: center;
+}

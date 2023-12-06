@@ -1,0 +1,28 @@
+.wrapper {
+  margin: 8px 0 0;
+  width: 100%;
+}
+
+.label {
+  display: block;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.input {
+  display: block;
+  outline: none;
+  border: 1px solid #d0d5dd;
+  padding: 16px;
+  height: 56px;
+  width: 100%;
+  border-radius: 6px;
+  margin-top: 5px;
+}
+
+.input::placeholder {
+  color: #98a2b3;
+  font-size: 14px;
+  font-weight: normal;
+}
