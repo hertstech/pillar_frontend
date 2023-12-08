@@ -1,0 +1,21 @@
+.header {
+  padding: 10px 20px;
+  overflow: hidden;
+  height: 80px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  background: white;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.button {
+  border: none;
+  border-radius: 100%;
+  padding: 10px;
+}

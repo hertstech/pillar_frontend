@@ -24,8 +24,8 @@ export default function LoginPage() {
   };
 
   return (
-    <div className={Styles.wrap}>
-      <Container component="main" maxWidth="md">
+    <div className={Styles.container}>
+      <Container component="main">
         <div className={Styles.wrapper}>
           <Stack alignItems="center">
             <Stack alignItems="center">
@@ -82,7 +82,9 @@ export default function LoginPage() {
           </Stack>
         </div>
       </Container>
-      <div className={Styles.images}></div>
+      <div style={{ width: "100%" }}>
+        <img className={Styles.images} src="/assets/Frame 625882.svg" alt="" />
+      </div>
     </div>
   );
 }
