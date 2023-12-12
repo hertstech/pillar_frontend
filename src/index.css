@@ -18,3 +18,7 @@ label {
   border: 0px solid #d0d5dd;
   outline: none;
 }
+
+.css-12wnr2w-MuiButtonBase-root-MuiCheckbox-root {
+  padding: 6px;
+}

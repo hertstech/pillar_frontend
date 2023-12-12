@@ -1,4 +1,4 @@
-import { Box, Card, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 

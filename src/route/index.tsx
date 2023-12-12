@@ -1,30 +1,40 @@
-import { createBrowserRouter } from "react-router-dom";
+import { Navigate, createBrowserRouter } from "react-router-dom";
 import LoginPage from "../pages/Auth/LoginForm";
-import Dashboard from "../Layouts/Dashboard";
-import Example from "../pages/CreateUser";
+import DashboardLayout from "../Layouts/Dashboard";
+import Dashboard from "../pages/CreateUser";
 import Settings from "../pages/Settings";
 import RegisterPage from "../pages/Auth/RegisterForm";
+import Page404 from "../pages/Page404";
+import ResultPage from "../pages/ResultPage";
 
 export const router = createBrowserRouter([
+  // AUTH
   {
-    path: "/",
-    element: <Dashboard />,
+    path: "auth",
+    children: [
+      { path: "login", element: <LoginPage /> },
+      { path: "register", element: <RegisterPage /> },
+    ],
+  },
+
+  // DASHBOARD
+  {
+    path: "/dashboard",
+    element: <DashboardLayout />,
     children: [
       {
-        path: "/dashboard",
-        element: <Example />,
+        path: "new",
+        element: <Dashboard />,
+        // index: true,
       },
       {
-        path: "/settings",
+        path: "setting",
         element: <Settings />,
       },
+      { path: "search-result", element: <ResultPage /> },
     ],
   },
-  {
-    path: "/auth",
-    children: [
-      { path: "/auth/login", element: <LoginPage /> },
-      { path: "/auth/register", element: <RegisterPage /> },
-    ],
-  },
+
+  { path: "/", element: <Navigate to="/auth/login" replace /> },
+  { path: "*", element: <Page404 /> },
 ]);

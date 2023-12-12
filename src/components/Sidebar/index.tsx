@@ -6,7 +6,7 @@ const navLinks = [
   {
     id: 0,
     name: "EHR Dashboard",
-    to: "/dashboard",
+    to: "/dashboard/new",
     icon: (
       <svg
         width="20"
@@ -49,7 +49,7 @@ const navLinks = [
   {
     id: 1,
     name: "Settings",
-    to: "/settings",
+    to: "/dashboard/setting",
     icon: (
       <svg
         width="20"
@@ -99,7 +99,13 @@ export default function Sidebar() {
                 isActive ? `${Styles.activeLink}` : `${Styles.notActiveLink}`
               }
             >
-              <span style={{ display: "flex", alignItems: "center" }}>
+              <span
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  color: "inherit",
+                }}
+              >
                 {item.icon}
               </span>
               <span>{item.name}</span>

@@ -3,11 +3,12 @@ import { Box, Container, Stack, Typography } from "@mui/material";
 import Styles from "../sytles.module.css";
 import InputField from "../../../components/InputField";
 import Button from "../../../components/Button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function RegisterPage() {
   const [isLoadingButton, setIsLoadingButton] = useState(false);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -30,9 +31,15 @@ export default function RegisterPage() {
     return passwordRegex.test(password);
   };
 
+  //   const arePasswordsEqual = new RegExp(`^${formData.password}$`).test(
+  //     formData.confirmPassword
+  //   );
+
   const handleChange = async (e: any) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
+    setError("");
+    setIsLoadingButton(false);
   };
 
   const handleSubmit = (e: any) => {
@@ -53,6 +60,20 @@ export default function RegisterPage() {
         "Password must contain 8 characters, one uppercase letter, one lowercase letter, one number and one special character"
       );
       return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      setError("Please ensure password correlates!");
+      return;
+    }
+
+    console.log(formData);
+
+    try {
+      navigate("/auth/login", { replace: true });
+    } catch (error) {
+      console.error(error, "error");
+      setIsLoadingButton(false);
     }
   };
   return (
@@ -122,7 +143,11 @@ export default function RegisterPage() {
                   placeholder="Confirm password"
                 />
                 <div style={{ marginTop: 20 }}>
-                  <Button onClick={handleSubmit} title="Register" />
+                  <Button
+                    onClick={handleSubmit}
+                    loading={isLoadingButton}
+                    title="Register"
+                  />
                 </div>
 
                 <p className={Styles.errorText}>{error && error}</p>

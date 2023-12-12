@@ -22,22 +22,15 @@ export default function StepTwo({
   handleChange: superHandleChange,
 }: any) {
   const [selectedValue, setSelectedValue] = useState("NIN");
-  const [years, setYears] = useState(new Date().getFullYear());
-  const [day, setDay] = useState(1);
+  const [years] = useState(new Date().getFullYear());
+  // const [day] = useState(1);
 
-  const yearList = [];
-  const yearEnd = 1959;
+  const yearList = Array.from(
+    { length: years - 1959 + 1 },
+    (_, index) => years - index
+  );
+  const dayList = Array.from({ length: 31 }, (_, index) => index + 1);
 
-  const dayList = [];
-  const dayEnd = 31;
-
-  for (let i = day; i <= dayEnd; i += 1) {
-    dayList.push(i);
-  }
-
-  for (let i = years; i >= yearEnd; i -= 4) {
-    yearList.push(i);
-  }
   const handleSelectChange = (event: any) => {
     setSelectedValue(event.target.value);
   };

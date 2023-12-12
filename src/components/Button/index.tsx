@@ -1,15 +1,22 @@
 interface ButtonProps {
   title: string;
-  onClick: any;
+  onClick?: any;
+  loading?: boolean;
+  disabled?: boolean;
 }
 
-export default function Button({ title, onClick }: ButtonProps) {
+export default function Button({
+  title,
+  onClick,
+  loading,
+  disabled,
+}: ButtonProps) {
   return (
     <button
       onClick={onClick}
       style={{
-        background: "#099250",
-        color: "#F6FEF9",
+        background: loading ? "#D3D3D3" : "#099250",
+        color: loading ? "#000" : "#F6FEF9",
         width: "100%",
         height: 24,
         padding: "24px 16px",
@@ -21,9 +28,10 @@ export default function Button({ title, onClick }: ButtonProps) {
         outline: "none",
         borderRadius: 6,
         lineHeight: 24,
-        cursor: "pointer",
+        fontSize:16,
+        cursor: loading ? "not-allowed" : "pointer",
       }}
-      // type="submit"
+      disabled={loading || disabled}
     >
       {title}
     </button>

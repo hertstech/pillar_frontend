@@ -1,6 +1,6 @@
 import { Typography, Container, Box, Stack } from "@mui/material";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Styles from "../sytles.module.css";
 import InputField from "../../../components/InputField";
 import Button from "../../../components/Button";
@@ -8,6 +8,7 @@ import Button from "../../../components/Button";
 export default function LoginPage() {
   const [isLoadingButton, setIsLoadingButton] = useState(false);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -29,9 +30,11 @@ export default function LoginPage() {
   const handleChange = (e: any) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
+    setError("");
+    setIsLoadingButton(false);
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     setIsLoadingButton(true);
 
@@ -45,6 +48,13 @@ export default function LoginPage() {
         "Password must contain 8 characters, one uppercase letter, one lowercase letter, one number and one special character"
       );
       return;
+    }
+
+    try {
+      navigate("/dashboard", { replace: true });
+    } catch (error) {
+      console.error(error, "error");
+      setIsLoadingButton(false);
     }
   };
 
@@ -89,7 +99,11 @@ export default function LoginPage() {
                   placeholder="Create password"
                 />
                 <div style={{ marginTop: 20 }}>
-                  <Button onClick={handleSubmit} title="Sign In" />
+                  <Button
+                    loading={isLoadingButton}
+                    onClick={handleSubmit}
+                    title="Sign In"
+                  />
                 </div>
                 <p className={Styles.errorText}>{error && error}</p>
               </form>

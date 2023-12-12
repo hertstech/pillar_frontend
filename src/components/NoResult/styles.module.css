@@ -1,0 +1,9 @@
+.background {
+  background-image: url("/assets/Empty State.png");
+  background-position: center;
+  height: 70vh;
+  /* height: calc(100vh - 130px); */
+  background-repeat: no-repeat;
+  background-color: white;
+  padding: 20px;
+}

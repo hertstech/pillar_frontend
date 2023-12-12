@@ -88,16 +88,16 @@ export default function CreateUser() {
     2: ["NIN", "driversLicense", "passportNumber", "day", "month", "year"],
   };
 
-  // const checkValues = (step) => {
-  //   const errors: string[] = [];
-  //   const keys = data[step.toString()];
-  //   keys.forEach((value: string | number) => {
-  //     if (formData[value] === "" || formData[value].length === 0) {
-  //       errors.push(`${value} is required`);
-  //     }
-  //   });
-  //   return errors.length ? { valid: false, errors } : { valid: true };
-  // };
+  const checkValues = (step) => {
+    const errors: string[] = [];
+    const keys = data[step.toString()];
+    keys.forEach((value: string | number) => {
+      if (formData[value] === "" || formData[value].length === 0) {
+        errors.push(`${value} is required`);
+      }
+    });
+    return errors.length ? { valid: false, errors } : { valid: true };
+  };
 
   const steps = [
     {
@@ -118,14 +118,14 @@ export default function CreateUser() {
   ];
   const handleNext = () => {
     console.log(formData);
-    // setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
     if (activeStep < steps.length - 1) {
-      // const result = checkValues(activeStep + 1);
-      // if (result.valid) {
-      setActiveStep(activeStep + 1);
-      // } else {
-      //   alert(result.errors[0]);
-      // }
+      const result = checkValues(activeStep + 1);
+      if (result.valid) {
+        setActiveStep(activeStep + 1);
+      } else {
+        alert(result?.errors[0]);
+      }
     }
   };
 
@@ -137,11 +137,11 @@ export default function CreateUser() {
     }
   };
   return (
-    <Box>
+    <Box sx={{ pt: 3 }}>
       <HeaderBreadCrumb
         heading="Add New Record"
         links={[
-          { label: "Dashboard", href: "", icon: Grids },
+          { label: "Dashboard", href: "/dashboard", icon: Grids },
           { label: "Clients", href: "", icon: Users },
           { label: "New Client", href: "" },
         ]}

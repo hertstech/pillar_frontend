@@ -13,7 +13,7 @@ interface Props {
 
 export default function HeaderBreadCrumb({ heading, links }: Props) {
   return (
-    <Box sx={{ mb: 5 }}>
+    <Box sx={{ mb: 3 }}>
       <Box sx={{ display: "flex", alignItems: "center" }}>
         <Box sx={{ flexGrow: 1 }}>
           <Typography
