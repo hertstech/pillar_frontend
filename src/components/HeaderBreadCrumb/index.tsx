@@ -1,0 +1,68 @@
+import { Box, Breadcrumbs, Typography, Link } from "@mui/material";
+
+interface LinkItem {
+  label: string;
+  href: string;
+  icon?: string;
+}
+
+interface Props {
+  heading: string;
+  links: LinkItem[];
+}
+
+export default function HeaderBreadCrumb({ heading, links }: Props) {
+  return (
+    <Box sx={{ mb: 5 }}>
+      <Box sx={{ display: "flex", alignItems: "center" }}>
+        <Box sx={{ flexGrow: 1 }}>
+          <Typography
+            variant="h4"
+            gutterBottom
+            fontWeight={600}
+            fontSize={28}
+            sx={{ color: "#000" }}
+          >
+            {heading}
+          </Typography>
+
+          <Breadcrumbs aria-label="breadcrumb">
+            {links.map((link, index) => (
+              <div key={index}>
+                {index === links.length - 1 ? (
+                  <Typography
+                    variant="body2"
+                    fontWeight={500}
+                    color="textPrimary"
+                  >
+                    {link.icon} {link.label}
+                  </Typography>
+                ) : (
+                  <Link
+                    fontWeight={500}
+                    href={link.href}
+                    color="#099250"
+                    underline="none"
+                    variant="body2"
+                    sx={{ display: "flex" }}
+                  >
+                    <img
+                      src={link.icon}
+                      style={{
+                        fontSize: "inherit",
+                        marginRight: "4px",
+                        color: "#099250",
+                      }}
+                      alt=""
+                    />
+                    {link.label}
+                  </Link>
+                )}
+              </div>
+            ))}
+          </Breadcrumbs>
+        </Box>
+      </Box>
+    </Box>
+  );
+}

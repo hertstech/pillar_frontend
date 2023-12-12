@@ -5,7 +5,7 @@ interface TextProps {
   name: string;
   value: string;
   type: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: any;
   placeholder: string;
 }
 
@@ -19,7 +19,7 @@ export default function InputField({
 }: TextProps) {
   return (
     <div className={Styles.wrapper}>
-      <label htmlFor={name} className={Styles.label}>
+      <label htmlFor={name}>
         {label}
         <input
           type={type}

@@ -8,18 +8,16 @@ export default function Dashboard() {
   return (
     <Container
       sx={{
-        display: "flex",
         height: "100vh",
         flex: 1,
         p: 0,
-        flexDirection: "column",
         position: "fixed",
         left: 0,
         right: 0,
         width: "100%",
       }}
       component="main"
-      maxWidth="xl"
+      maxWidth={false}
       disableGutters
     >
       <Sidebar />

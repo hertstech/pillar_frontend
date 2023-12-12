@@ -1,14 +1,16 @@
-import { Typography, Container, Box, Stack } from "@mui/material";
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import Styles from "./sytles.module.css";
-import InputField from "../../components/InputField";
-import Button from "../../components/Button";
+import { Box, Container, Stack, Typography } from "@mui/material";
+import Styles from "../sytles.module.css";
+import InputField from "../../../components/InputField";
+import Button from "../../../components/Button";
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
 
   const handleChange = (
@@ -22,7 +24,6 @@ export default function LoginPage() {
     e.preventDefault();
     console.log(formData);
   };
-
   return (
     <div className={Styles.container}>
       <Container component="main">
@@ -46,7 +47,25 @@ export default function LoginPage() {
                 </Typography>
               </Box>
 
-              <form onSubmit={handleSubmit} className={Styles.form}>
+              <form className={Styles.form}>
+                <div className={Styles.name}>
+                  <InputField
+                    type="text"
+                    label="First Name"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    placeholder="First Name"
+                  />
+                  <InputField
+                    type="text"
+                    label="Last Name"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    placeholder="Last Name"
+                  />
+                </div>
                 <InputField
                   type="text"
                   label="Email"
@@ -63,28 +82,22 @@ export default function LoginPage() {
                   onChange={handleChange}
                   placeholder="Create password"
                 />
+                <InputField
+                  type="password"
+                  label="Confirm Password"
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  placeholder="Confirm password"
+                />
                 <div style={{ marginTop: 40 }}>
-                  <Button title="SIgn In" />
+                  <Button onClick={handleSubmit} title="Register" />
                 </div>
               </form>
-
-              <Typography sx={{ mt: 2, fontSize: 14 }}>
-                I don’t have an account with HERTs,{" "}
-                <Link
-                  style={{ color: "#099250", textDecoration: "underline" }}
-                  to={"/"}
-                >
-                  {" "}
-                  Sign Up
-                </Link>
-              </Typography>
             </Stack>
           </Stack>
         </div>
       </Container>
-      <div style={{ width: "100%" }}>
-        <img className={Styles.images} src="/assets/Frame 625882.svg" alt="" />
-      </div>
     </div>
   );
 }
