@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { useState } from "react";
 import {
   Box,
@@ -21,6 +23,37 @@ import Buttons from "../../components/Button";
 
 export default function CreateUser() {
   const [activeStep, setActiveStep] = useState(0);
+
+  // Define the type for the formData object
+  type FormData = {
+    firstName: string;
+    lastName: string;
+    gender: string;
+    dateOfBirth: string;
+    religion: string;
+    PhoneNumber: string;
+    height: string;
+    weight: string;
+    address: string;
+    state: string;
+    lga: string;
+    parentOne: string;
+    parentOneNumber: string;
+    parentOneNHRID: string;
+    parentTwo: string;
+    parentTwoNumber: string;
+    parentTwoNHRID: string;
+    nominatedPharmacy: string;
+    registeredDoctor: string;
+    registeredHospital: string;
+    HMOPlan: string;
+    NIN: string;
+    driversLicense: string;
+    passportNumber: string;
+    day: string;
+    month: string;
+    year: string;
+  };
 
   const [formData, setFormData] = useState({
     // STEP ONE
@@ -88,17 +121,6 @@ export default function CreateUser() {
     2: ["NIN", "driversLicense", "passportNumber", "day", "month", "year"],
   };
 
-  const checkValues = (step) => {
-    const errors: string[] = [];
-    const keys = data[step.toString()];
-    keys.forEach((value: string | number) => {
-      if (formData[value] === "" || formData[value].length === 0) {
-        errors.push(`${value} is required`);
-      }
-    });
-    return errors.length ? { valid: false, errors } : { valid: true };
-  };
-
   const steps = [
     {
       label: "Demographics",
@@ -117,21 +139,22 @@ export default function CreateUser() {
     },
   ];
   const handleNext = () => {
-    console.log(formData);
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    if (activeStep < steps.length - 1) {
-      const result = checkValues(activeStep + 1);
-      if (result.valid) {
-        setActiveStep(activeStep + 1);
-      } else {
-        alert(result?.errors[0]);
+    if (activeStep === 0) {
+      const missingFields = data[1].filter((field) => !formData[field]);
+
+      if (missingFields.length > 0) {
+        // Alert indicating the required fields to be filled
+        alert(
+          `Please fill in the following fields: ${missingFields.join(", ")}`
+        );
+        return;
       }
     }
+    console.log(formData);
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
   const handleBack = () => {
-    // setActiveStep((prevActiveStep) => prevActiveStep - 1);
-
     if (activeStep > 0) {
       setActiveStep(activeStep - 1);
     }
