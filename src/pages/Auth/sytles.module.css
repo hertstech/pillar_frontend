@@ -28,5 +28,12 @@
 
 .name {
   display: flex;
-  flex-direction: row;gap: 15px;
+  flex-direction: row;
+  gap: 15px;
+}
+
+.errorText {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
 }

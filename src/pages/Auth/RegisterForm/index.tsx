@@ -3,8 +3,12 @@ import { Box, Container, Stack, Typography } from "@mui/material";
 import Styles from "../sytles.module.css";
 import InputField from "../../../components/InputField";
 import Button from "../../../components/Button";
+import { Link } from "react-router-dom";
 
 export default function RegisterPage() {
+  const [isLoadingButton, setIsLoadingButton] = useState(false);
+  const [error, setError] = useState("");
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -13,16 +17,43 @@ export default function RegisterPage() {
     confirmPassword: "",
   });
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const isValidEmail = (email: string) => {
+    const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/i;
+
+    return emailRegex.test(email);
+  };
+
+  const isStrongPassword = (password: string) => {
+    const passwordRegex =
+      /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+
+    return passwordRegex.test(password);
+  };
+
+  const handleChange = async (e: any) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    console.log(formData);
+    setIsLoadingButton(true);
+    if (formData.firstName === "" || formData.lastName === "") {
+      setError("Please enter your name!");
+      return;
+    }
+
+    if (!isValidEmail(formData.email)) {
+      setError("Email is Invalid");
+      return;
+    }
+
+    if (!isStrongPassword(formData.password) || formData.password.length < 8) {
+      setError(
+        "Password must contain 8 characters, one uppercase letter, one lowercase letter, one number and one special character"
+      );
+      return;
+    }
   };
   return (
     <div className={Styles.container}>
@@ -31,7 +62,7 @@ export default function RegisterPage() {
           <Stack alignItems="center">
             <Stack alignItems="center">
               <img src="/assets/logo.svg" className={Styles.Logo} alt="" />
-              <Box>
+              <Box sx={{ textAlign: "center" }}>
                 <Typography
                   variant="h1"
                   sx={{
@@ -90,11 +121,23 @@ export default function RegisterPage() {
                   onChange={handleChange}
                   placeholder="Confirm password"
                 />
-                <div style={{ marginTop: 40 }}>
+                <div style={{ marginTop: 20 }}>
                   <Button onClick={handleSubmit} title="Register" />
                 </div>
+
+                <p className={Styles.errorText}>{error && error}</p>
               </form>
             </Stack>
+
+            <Typography sx={{ mt: 2, fontSize: 14 }}>
+              Already have an account with HERTs?{" "}
+              <Link
+                style={{ color: "#099250", textDecoration: "underline" }}
+                to={"/auth/login"}
+              >
+                Login
+              </Link>
+            </Typography>
           </Stack>
         </div>
       </Container>

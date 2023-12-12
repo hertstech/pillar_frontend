@@ -6,21 +6,46 @@ import InputField from "../../../components/InputField";
 import Button from "../../../components/Button";
 
 export default function LoginPage() {
+  const [isLoadingButton, setIsLoadingButton] = useState(false);
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const isValidEmail = (email: string) => {
+    const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/i;
+
+    return emailRegex.test(email);
+  };
+
+  const isStrongPassword = (password: string) => {
+    const passwordRegex =
+      /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+
+    return passwordRegex.test(password);
+  };
+
+  const handleChange = (e: any) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    console.log(formData);
+    setIsLoadingButton(true);
+
+    if (!isValidEmail(formData.email)) {
+      setError("Email is Invalid");
+      return;
+    }
+
+    if (!isStrongPassword(formData.password) || formData.password.length < 8) {
+      setError(
+        "Password must contain 8 characters, one uppercase letter, one lowercase letter, one number and one special character"
+      );
+      return;
+    }
   };
 
   return (
@@ -30,7 +55,7 @@ export default function LoginPage() {
           <Stack alignItems="center">
             <Stack alignItems="center">
               <img src="/assets/logo.svg" className={Styles.Logo} alt="" />
-              <Box>
+              <Box sx={{ textAlign: "center" }}>
                 <Typography
                   variant="h1"
                   sx={{
@@ -63,18 +88,18 @@ export default function LoginPage() {
                   onChange={handleChange}
                   placeholder="Create password"
                 />
-                <div style={{ marginTop: 40 }}>
+                <div style={{ marginTop: 20 }}>
                   <Button onClick={handleSubmit} title="Sign In" />
                 </div>
+                <p className={Styles.errorText}>{error && error}</p>
               </form>
 
               <Typography sx={{ mt: 2, fontSize: 14 }}>
                 I don’t have an account with HERTs,{" "}
                 <Link
                   style={{ color: "#099250", textDecoration: "underline" }}
-                  to={"/"}
+                  to={"/auth/register"}
                 >
-                  {" "}
                   Sign Up
                 </Link>
               </Typography>
