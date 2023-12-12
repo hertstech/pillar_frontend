@@ -92,7 +92,7 @@ export default function RegisterPage() {
                     fontWeight: "bold",
                   }}
                 >
-                  Sign in to Pillar
+                  Sign up to Pillar
                 </Typography>
                 <Typography>
                   Your gateway to effortless healthcare management! 🏥

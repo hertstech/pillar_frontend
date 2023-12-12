@@ -1,12 +1,5 @@
 import { useState } from "react";
-import {
-  Alert,
-  Box,
-  IconButton,
-  MenuItem,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, MenuItem, TextField, Typography } from "@mui/material";
 import InputField from "../../components/InputField";
 
 let months = [
@@ -31,7 +24,6 @@ export default function StepTwo({
 }: any) {
   const [selectedValue, setSelectedValue] = useState("NIN");
   const [years] = useState(new Date().getFullYear());
-  const [open, setOpen] = useState(true);
 
   const yearList = Array.from(
     { length: years - 1959 + 1 },
