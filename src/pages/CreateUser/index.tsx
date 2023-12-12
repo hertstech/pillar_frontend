@@ -175,7 +175,7 @@ export default function CreateUser() {
 
         setTimeout(() => {
           handleNext(); // Call handleNext after 20 seconds
-        }, 20000);
+        }, 10000);
       } else {
         // NIN is not found in the JSON data
         setResult("Verification Failed!");
@@ -292,7 +292,7 @@ export default function CreateUser() {
             {steps[activeStep].content}
 
             <Stack direction="row" gap={3} alignItems="center" sx={{ mt: 2 }}>
-              {activeStep >= 0 && activeStep > 2 && (
+              {activeStep >= 0 && activeStep <= 1 && (
                 <Button
                   fullWidth
                   size="large"
