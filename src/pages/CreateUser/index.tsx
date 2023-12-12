@@ -140,7 +140,7 @@ export default function CreateUser() {
   ];
   const handleNext = () => {
     if (activeStep === 0) {
-      const missingFields = data[1].filter((field) => !formData[field]);
+      const missingFields = data[1].filter((field) => !formData[field as keyof FormData]);
 
       if (missingFields.length > 0) {
         // Alert indicating the required fields to be filled
