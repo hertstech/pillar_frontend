@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { Box, MenuItem, TextField } from "@mui/material";
+import {
+  Alert,
+  Box,
+  IconButton,
+  MenuItem,
+  TextField,
+  Typography,
+} from "@mui/material";
 import InputField from "../../components/InputField";
 
 let months = [
@@ -20,10 +27,11 @@ let months = [
 export default function StepTwo({
   formData,
   handleChange: superHandleChange,
+  result,
 }: any) {
   const [selectedValue, setSelectedValue] = useState("NIN");
   const [years] = useState(new Date().getFullYear());
-  // const [day] = useState(1);
+  const [open, setOpen] = useState(true);
 
   const yearList = Array.from(
     { length: years - 1959 + 1 },
@@ -78,9 +86,16 @@ export default function StepTwo({
               name="NIN"
               value={formData.NIN}
               onChange={handleChange}
-              placeholder=""
+              placeholder="1234-567-8901 enter NIN without the dash"
             />
           )}
+
+          <Typography
+            color={result === "Verification Successful" ? "green" : "red"}
+            sx={{ my: 2 }}
+          >
+            {result}
+          </Typography>
 
           {selectedValue === "Drivers Licence" && (
             <>

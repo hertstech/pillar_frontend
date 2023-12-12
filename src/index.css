@@ -22,3 +22,9 @@ label {
 .css-12wnr2w-MuiButtonBase-root-MuiCheckbox-root {
   padding: 6px;
 }
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

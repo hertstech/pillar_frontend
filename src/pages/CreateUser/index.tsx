@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { useState } from "react";
 import {
   Box,
@@ -20,40 +18,42 @@ import StepOne from "./StepOne";
 import StepTwo from "./StepTwo";
 import StepThree from "./StepThree";
 import Buttons from "../../components/Button";
+// import data from "../../../nationalIdentificationNumber.json";
 
 export default function CreateUser() {
   const [activeStep, setActiveStep] = useState(0);
+  const [result, setResult] = useState("");
 
   // Define the type for the formData object
-  type FormData = {
-    firstName: string;
-    lastName: string;
-    gender: string;
-    dateOfBirth: string;
-    religion: string;
-    PhoneNumber: string;
-    height: string;
-    weight: string;
-    address: string;
-    state: string;
-    lga: string;
-    parentOne: string;
-    parentOneNumber: string;
-    parentOneNHRID: string;
-    parentTwo: string;
-    parentTwoNumber: string;
-    parentTwoNHRID: string;
-    nominatedPharmacy: string;
-    registeredDoctor: string;
-    registeredHospital: string;
-    HMOPlan: string;
-    NIN: string;
-    driversLicense: string;
-    passportNumber: string;
-    day: string;
-    month: string;
-    year: string;
-  };
+  // type FormData = {
+  //   firstName: string;
+  //   lastName: string;
+  //   gender: string;
+  //   dateOfBirth: string;
+  //   religion: string;
+  //   PhoneNumber: string;
+  //   height: string;
+  //   weight: string;
+  //   address: string;
+  //   state: string;
+  //   lga: string;
+  //   parentOne: string;
+  //   parentOneNumber: string;
+  //   parentOneNHRID: string;
+  //   parentTwo: string;
+  //   parentTwoNumber: string;
+  //   parentTwoNHRID: string;
+  //   nominatedPharmacy: string;
+  //   registeredDoctor: string;
+  //   registeredHospital: string;
+  //   HMOPlan: string;
+  //   NIN: string;
+  //   driversLicense: string;
+  //   passportNumber: string;
+  //   day: string;
+  //   month: string;
+  //   year: string;
+  // };
 
   const [formData, setFormData] = useState({
     // STEP ONE
@@ -92,34 +92,36 @@ export default function CreateUser() {
 
   const handleChange = (data: any) => {
     setFormData({ ...formData, ...data });
+
+    setResult(formData.NIN);
   };
 
-  const data = {
-    1: [
-      "firstName",
-      "lastName",
-      "gender",
-      "dateOfBirth",
-      "religion",
-      // "PhoneNumber",
-      "height",
-      "weight",
-      "address",
-      "state",
-      "lga",
-      "parentOne",
-      "parentOneNumber",
-      "parentOneNHRID",
-      "parentTwo",
-      "parentTwoNumber",
-      "parentTwoNHRID",
-      "nominatedPharmacy",
-      "registeredDoctor",
-      "registeredHospital",
-      "HMOPlan",
-    ],
-    2: ["NIN", "driversLicense", "passportNumber", "day", "month", "year"],
-  };
+  // const data = {
+  //   1: [
+  //     "firstName",
+  //     "lastName",
+  //     "gender",
+  //     "dateOfBirth",
+  //     "religion",
+  //     // "PhoneNumber",
+  //     "height",
+  //     "weight",
+  //     "address",
+  //     "state",
+  //     "lga",
+  //     "parentOne",
+  //     "parentOneNumber",
+  //     "parentOneNHRID",
+  //     "parentTwo",
+  //     "parentTwoNumber",
+  //     "parentTwoNHRID",
+  //     "nominatedPharmacy",
+  //     "registeredDoctor",
+  //     "registeredHospital",
+  //     "HMOPlan",
+  //   ],
+  //   2: ["NIN", "driversLicense", "passportNumber", "day", "month", "year"],
+  // };
 
   const steps = [
     {
@@ -130,7 +132,13 @@ export default function CreateUser() {
     {
       label: "Verify Identity",
       description: "Client’s identity information",
-      content: <StepTwo formData={formData} handleChange={handleChange} />,
+      content: (
+        <StepTwo
+          formData={formData}
+          result={result}
+          handleChange={handleChange}
+        />
+      ),
     },
     {
       label: "Generate NHR ID",
@@ -139,19 +147,10 @@ export default function CreateUser() {
     },
   ];
   const handleNext = () => {
-    if (activeStep === 0) {
-      const missingFields = data[1].filter((field) => !formData[field as keyof FormData]);
-
-      if (missingFields.length > 0) {
-        // Alert indicating the required fields to be filled
-        alert(
-          `Please fill in the following fields: ${missingFields.join(", ")}`
-        );
-        return;
-      }
+    if (activeStep < steps.length - 1) {
+      console.log(formData);
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
     }
-    console.log(formData);
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
   const handleBack = () => {
@@ -159,6 +158,33 @@ export default function CreateUser() {
       setActiveStep(activeStep - 1);
     }
   };
+
+  // useEffect(() => {
+  const fethcData = async () => {
+    try {
+      const res = await fetch("../../../nationalIdentificationNumber.json");
+      const data = await res.json();
+
+      const matchingRecord = data.find(
+        (record: any) => record.nationalNumber === formData.NIN
+      );
+
+      if (matchingRecord) {
+        // NIN is found in the JSON data
+        setResult("Verification Successful");
+
+        setTimeout(() => {
+          handleNext(); // Call handleNext after 20 seconds
+        }, 20000);
+      } else {
+        // NIN is not found in the JSON data
+        setResult("Verification Failed!");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <Box sx={{ pt: 3 }}>
       <HeaderBreadCrumb
@@ -266,25 +292,37 @@ export default function CreateUser() {
             {steps[activeStep].content}
 
             <Stack direction="row" gap={3} alignItems="center" sx={{ mt: 2 }}>
-              <Button
-                fullWidth
-                size="large"
-                sx={{
-                  color: "#099250",
-                  border: "1px solid #099250",
-                  outline: "none",
-                  textTransform: "capitalize",
-                  fontWeight: 600,
-                }}
-                variant="outlined"
-                onClick={handleBack}
-              >
-                {activeStep > 0 ? "back" : "save"}
-              </Button>
-              <Buttons
-                onClick={handleNext}
-                title={activeStep < 1 ? "Continue" : "Verify"}
-              />
+              {activeStep >= 0 && activeStep > 2 && (
+                <Button
+                  fullWidth
+                  size="large"
+                  sx={{
+                    color: "#099250",
+                    border: "1px solid #099250",
+                    outline: "none",
+                    textTransform: "capitalize",
+                    fontWeight: 600,
+                    height: 48,
+                  }}
+                  disabled={activeStep <= 0}
+                  variant="outlined"
+                  onClick={handleBack}
+                >
+                  {"Previous"}
+                </Button>
+              )}
+
+              {activeStep <= 0 && (
+                <Buttons onClick={handleNext} title={"Next"} />
+              )}
+
+              {activeStep > 0 && activeStep <= 1 && (
+                <Buttons onClick={fethcData} title={"Verify"} />
+              )}
+
+              {activeStep === steps.length - 1 && activeStep > 2 && (
+                <Buttons onClick={handleNext} title={"Continue"} />
+              )}
             </Stack>
           </Card>
         </Grid>

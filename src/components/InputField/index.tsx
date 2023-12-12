@@ -7,6 +7,7 @@ interface TextProps {
   type: string;
   onChange: any;
   placeholder: string;
+  required?: boolean;
 }
 
 export default function InputField({
@@ -16,6 +17,7 @@ export default function InputField({
   label,
   placeholder,
   type,
+  required,
 }: TextProps) {
   return (
     <div className={Styles.wrapper}>
@@ -28,6 +30,7 @@ export default function InputField({
           value={value}
           onChange={onChange}
           placeholder={placeholder}
+          required={required}
         />
       </label>
     </div>

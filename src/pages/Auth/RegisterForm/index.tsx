@@ -92,7 +92,7 @@ export default function RegisterPage() {
                     fontWeight: "bold",
                   }}
                 >
-                  Sign in to HERTs
+                  Sign in to Pillar
                 </Typography>
                 <Typography>
                   Your gateway to effortless healthcare management! 🏥
@@ -155,7 +155,7 @@ export default function RegisterPage() {
             </Stack>
 
             <Typography sx={{ mt: 2, fontSize: 14 }}>
-              Already have an account with HERTs?{" "}
+              Already have an account with Pillar?{" "}
               <Link
                 style={{ color: "#099250", textDecoration: "underline" }}
                 to={"/auth/login"}
