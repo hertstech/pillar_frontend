@@ -13,10 +13,22 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import PhoneInput from "react-phone-input-2";
-import "react-phone-input-2/lib/style.css";
 import InputField from "../../components/InputField";
 import StatesData from "../../../states.json";
+import PhoneField from "../../components/PhoneInput";
+
+const relations = [
+  { value: "father", label: "Father" },
+  { value: "mother", label: "Mother" },
+  { value: "grand mother", label: "Grand Mother" },
+  { value: "grand father", label: "Grand Father" },
+  { value: "brother", label: "Brother" },
+  { value: "sister", label: "Sister" },
+  { value: "aunty", label: "Aunty" },
+  { value: "uncle", label: "Uncle" },
+  { value: "guardian", label: "Guardian" },
+  { value: "other", label: "Other" },
+];
 
 export default function StepOne({
   formData,
@@ -67,27 +79,18 @@ export default function StepOne({
       case "phoneNumber":
         superHandleChange({ ...formData, phoneNumber: value });
         break;
-      case "parentOneNumber":
-        // setParentTwoPhone(value);
-        superHandleChange({ ...formData, parentOneNumber: value });
+      case "legalGuardianOneNumber":
+        // setlegalGuardianTwoPhone(value);
+        superHandleChange({ ...formData, legalGuardianOneNumber: value });
         break;
-      case "parentTwoNumber":
+      case "legalGuardianTwoNumber":
         // setEmergencyContactPhone(value);
-        superHandleChange({ ...formData, parentTwoNumber: value });
+        superHandleChange({ ...formData, legalGuardianTwoNumber: value });
         break;
       default:
         break;
     }
   };
-
-  // useEffect(() => {
-  //   const timeoutId = setTimeout(() => {
-  //     // Perform verification after the delay
-  //     verify();
-  //   }, 10000); // 10 seconds delay
-
-  //   return () => clearTimeout(timeoutId);
-  // }, [formData.NIN]);
 
   return (
     <>
@@ -143,10 +146,10 @@ export default function StepOne({
             <DemoContainer components={["DatePicker"]}>
               <DatePicker
                 orientation="portrait"
+                views={["year", "month", "day"]}
                 format="DD/MM/YYYY"
                 sx={{ marginTop: "5px", width: "100%" }}
                 disableFuture={true}
-                // maxDate={dayjs(maxDate)}
                 value={dayjs(formData.dateOfBirth)}
                 onChange={(newValue) =>
                   handleDateChange(newValue, "dateOfBirth")
@@ -173,40 +176,11 @@ export default function StepOne({
           </TextField>
         </label>
 
-        <label htmlFor="phoneNumber">
-          Phone Number
-          <PhoneInput
-            inputProps={{
-              name: "phoneNumber",
-              required: true,
-              autoFocus: true,
-              maxLength: 15,
-            }}
-            country={"ng"}
-            containerStyle={{
-              border: "1px solid #d0d5dd",
-              padding: "16px auto",
-              width: "100%",
-              height: "56px",
-              borderRadius: 6,
-              marginTop: 5,
-            }}
-            inputStyle={{
-              border: "none",
-              width: "100%",
-              height: "100%",
-            }}
-            dropdownStyle={{
-              padding: "12px 12px",
-            }}
-            buttonStyle={{
-              backgroundColor: "none",
-            }}
-            enableLongNumbers={13}
-            value={formData.phoneNumber}
-            onChange={(value) => handlePhoneChange(value, "phoneNumber")}
-          />
-        </label>
+        <PhoneField
+          name="PhoneNumber"
+          value={formData.phoneNumber}
+          onChange={(value: any) => handlePhoneChange(value, "phoneNumber")}
+        />
 
         <label htmlFor="height">
           Height
@@ -214,14 +188,13 @@ export default function StepOne({
             sx={{ marginTop: "5px" }}
             fullWidth
             name="height"
-            endAdornment={<InputAdornment position="end">meters</InputAdornment>}
-            aria-describedby="outlined-height-helper-text"
+            endAdornment={
+              <InputAdornment position="end">meters</InputAdornment>
+            }
             inputProps={{
-              "aria-label": "height",
-              maxLength: 3,
-              step: 0.1,
+              maxLength: 4,
               type: "number",
-              minLength: 1,
+              min: 0,
             }}
             onChange={handleChange}
           />
@@ -234,11 +207,10 @@ export default function StepOne({
             fullWidth
             name="weight"
             endAdornment={<InputAdornment position="end">kg</InputAdornment>}
-            aria-describedby="outlined-weight-helper-text"
             inputProps={{
-              "aria-label": "weight",
-              maxLength: 3,
+              maxLength: 4,
               type: "number",
+              min: 0,
             }}
             onChange={handleChange}
           />
@@ -310,169 +282,159 @@ export default function StepOne({
         </Box>
       </Box>
 
-      {/* PARENT INFORMATION */}
-      <Box sx={{ marginBottom: 2 }}>
-        <Stack direction="row" justifyContent="space-between">
-          <Typography variant="h6">Legal Guardian</Typography>{" "}
-          <button
-            title="Add new parent"
-            style={{
-              border: "none",
-              outline: "none",
-              background: "transparent",
-              cursor: "pointer",
-            }}
-            onClick={() => setShow(true)}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              x="0px"
-              y="0px"
-              width="30"
-              height="30"
-              viewBox="0 0 32 32"
+      {ageValue ? (
+        // {/* PARENT INFORMATION */}
+        <Box sx={{ marginBottom: 2 }}>
+          <Stack direction="row" justifyContent="space-between">
+            <Typography variant="h6">Legal Guardian</Typography>
+            <button
+              title="Add new parent"
+              style={{
+                border: "none",
+                outline: "none",
+                background: "transparent",
+                cursor: "pointer",
+              }}
+              onClick={() => setShow(true)}
             >
-              <path d="M 16 3 C 8.832031 3 3 8.832031 3 16 C 3 23.167969 8.832031 29 16 29 C 23.167969 29 29 23.167969 29 16 C 29 8.832031 23.167969 3 16 3 Z M 16 5 C 22.085938 5 27 9.914063 27 16 C 27 22.085938 22.085938 27 16 27 C 9.914063 27 5 22.085938 5 16 C 5 9.914063 9.914063 5 16 5 Z M 15 10 L 15 15 L 10 15 L 10 17 L 15 17 L 15 22 L 17 22 L 17 17 L 22 17 L 22 15 L 17 15 L 17 10 Z"></path>
-            </svg>
-          </button>
-        </Stack>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                x="0px"
+                y="0px"
+                width="30"
+                height="30"
+                viewBox="0 0 32 32"
+              >
+                <path d="M 16 3 C 8.832031 3 3 8.832031 3 16 C 3 23.167969 8.832031 29 16 29 C 23.167969 29 29 23.167969 29 16 C 29 8.832031 23.167969 3 16 3 Z M 16 5 C 22.085938 5 27 9.914063 27 16 C 27 22.085938 22.085938 27 16 27 C 9.914063 27 5 22.085938 5 16 C 5 9.914063 9.914063 5 16 5 Z M 15 10 L 15 15 L 10 15 L 10 17 L 15 17 L 15 22 L 17 22 L 17 17 L 22 17 L 22 15 L 17 15 L 17 10 Z"></path>
+              </svg>
+            </button>
+          </Stack>
 
-        {ageValue && (
-          <p style={{ color: "red", fontSize: 12, marginTop: 5 }}>
-            This User is below 18 kindly enter a Legal guardian details
-          </p>
-        )}
+          <Box
+            sx={{
+              display: "grid",
+              columnGap: 2,
+              rowGap: 2,
+              gridTemplateColumns: {
+                xs: "repeat(1, 1fr)",
+                lg: "repeat(3, 1fr)",
+              },
+              marginBottom: 2,
+            }}
+          >
+            <InputField
+              type="text"
+              label="Legal Guardian 1"
+              name="LegalGuardianOne"
+              value={formData.parentOne}
+              onChange={handleChange}
+              placeholder="Please enter full name"
+            />
 
-        <Box
-          sx={{
-            display: "grid",
-            columnGap: 2,
-            rowGap: 2,
-            gridTemplateColumns: {
-              xs: "repeat(1, 1fr)",
-              lg: "repeat(3, 1fr)",
-            },
-            marginBottom: 2,
-            // border: ageValue ? "2px solid red" : "",
-          }}
-        >
+            <PhoneField
+              name="legalGuardianOneNumber"
+              value={formData.legalGuardianOneNumber}
+              onChange={(value: any) =>
+                handlePhoneChange(value, "legalGuardianOneNumber")
+              }
+            />
+
+            <InputField
+              type="number"
+              required={ageValue}
+              label="NHR ID"
+              name="legalGuardianOneNHR_ID"
+              value={formData.legalGuardianOneNHR_ID}
+              onChange={handleChange}
+              placeholder="Enter NHR ID number"
+            />
+            {show && (
+              <>
+                <InputField
+                  type="text"
+                  label="Legal Guardian 2"
+                  name="legalGuardianTwo"
+                  value={formData.legalGuardianTwo}
+                  onChange={handleChange}
+                  placeholder=""
+                />
+
+                <PhoneField
+                  name="legalGuardianTwoNumber"
+                  value={formData.legalGuardianTwoNumber}
+                  onChange={(value: any) =>
+                    handlePhoneChange(value, "legalGuardianTwoNumber")
+                  }
+                />
+
+                <InputField
+                  type="text"
+                  label="NHR ID"
+                  name="legalGuardianTwoNHR_ID"
+                  value={formData.legalGuardianTwoNHR_ID}
+                  onChange={handleChange}
+                  placeholder=""
+                />
+              </>
+            )}
+          </Box>
+        </Box>
+      ) : (
+        //  {/* FAMILY/RELATIVE INFORMATION */}
+        <Box sx={{ marginBottom: 2 }}>
+          <Typography variant="h6">Next of Kin</Typography>
           <InputField
-            // required={ageValue !== null ? ageValue : undefined}
             type="text"
-            label="Parent (Father)"
-            name="parentOne"
+            label="Full Name"
+            name="nextOfKin"
             value={formData.parentOne}
             onChange={handleChange}
-            placeholder=""
+            placeholder="Please enter full name"
           />
-          <div style={{ marginTop: 8 }}>
-            <label htmlFor="parentOneNumber">
-              Phone Number
-              <PhoneInput
-                inputProps={{
-                  name: "parentOneNumber",
-                  required: ageValue,
-                  maxLength: 15,
-                  autoFocus: true,
-                }}
-                country={"ng"}
-                containerStyle={{
-                  border: "1px solid #d0d5dd",
-                  padding: "16px auto",
-                  width: "100%",
-                  height: "56px",
-                  borderRadius: 6,
-                  marginTop: 5,
-                }}
-                inputStyle={{
-                  border: "none",
-                  width: "100%",
-                  height: "100%",
-                }}
-                dropdownStyle={{
-                  padding: "12px 12px",
-                }}
-                buttonStyle={{
-                  backgroundColor: "none",
-                }}
-                value={formData.parentOneNumber}
-                onChange={(value) =>
-                  handlePhoneChange(value, "parentOneNumber")
-                }
-              />
+          <Box
+            sx={{
+              display: "grid",
+              columnGap: 2,
+              rowGap: 2,
+              gridTemplateColumns: {
+                xs: "repeat(1, 1fr)",
+                lg: "repeat(3, 1fr)",
+              },
+              marginBottom: 2,
+            }}
+          >
+            <InputField
+              type="number"
+              required={ageValue}
+              label="NHR ID"
+              name="legalGuardianOneNHR_ID"
+              value={formData.legalGuardianOneNHR_ID}
+              onChange={handleChange}
+              placeholder="Enter NHR ID number"
+            />
+
+            <PhoneField name="" value="" onChange={""} />
+
+            <label htmlFor="relationship">
+              Relationship
+              <TextField
+                select
+                sx={{ marginTop: "5px" }}
+                fullWidth
+                name="relationship"
+                value={formData.state}
+                onChange={handleChange}
+              >
+                {relations.map((item, index) => (
+                  <MenuItem key={index} value={item.value}>
+                    {item.label}
+                  </MenuItem>
+                ))}
+              </TextField>
             </label>
-          </div>
-
-          <InputField
-            type="text"
-            required={ageValue}
-            label="NHRID"
-            name="parentOneNHRID"
-            value={formData.parentOneNHRID}
-            onChange={handleChange}
-            placeholder=""
-          />
-          {show && (
-            <>
-              <InputField
-                type="text"
-                label="Parent (Mother)"
-                name="parentTwo"
-                value={formData.parentTwo}
-                onChange={handleChange}
-                placeholder=""
-              />
-
-              <div style={{ marginTop: 8 }}>
-                <label htmlFor="parentTwoNumber">
-                  Phone Number
-                  <PhoneInput
-                    inputProps={{
-                      name: "parentTwoNumber",
-                      required: true,
-                      maxLength: 15,
-                      autoFocus: true,
-                    }}
-                    country={"ng"}
-                    containerStyle={{
-                      border: "1px solid #d0d5dd",
-                      padding: "16px auto",
-                      width: "100%",
-                      height: "56px",
-                      borderRadius: 6,
-                      marginTop: 5,
-                    }}
-                    inputStyle={{
-                      border: "none",
-                      width: "100%",
-                      height: "100%",
-                    }}
-                    dropdownStyle={{
-                      padding: "12px 12px",
-                    }}
-                    buttonStyle={{
-                      backgroundColor: "none",
-                    }}
-                    value={formData.parentTwoNumber}
-                    onChange={(value) =>
-                      handlePhoneChange(value, "parentTwoNumber")
-                    }
-                  />
-                </label>
-              </div>
-
-              <InputField
-                type="text"
-                label="NHRID"
-                name="parentTwoNHRID"
-                value={formData.parentTwoNHRID}
-                onChange={handleChange}
-                placeholder=""
-              />
-            </>
-          )}
+          </Box>
         </Box>
-      </Box>
+      )}
 
       {/* MEDICAL INFORMATION */}
       <Box>

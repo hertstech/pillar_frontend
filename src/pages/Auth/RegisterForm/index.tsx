@@ -19,7 +19,7 @@ export default function RegisterPage() {
   });
 
   const isValidEmail = (email: string) => {
-    const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/i;
+    const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.(com)$/i;
 
     return emailRegex.test(email);
   };
@@ -30,10 +30,6 @@ export default function RegisterPage() {
 
     return passwordRegex.test(password);
   };
-
-  //   const arePasswordsEqual = new RegExp(`^${formData.password}$`).test(
-  //     formData.confirmPassword
-  //   );
 
   const handleChange = async (e: any) => {
     const { name, value } = e.target;

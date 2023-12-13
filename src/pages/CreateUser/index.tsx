@@ -24,37 +24,6 @@ export default function CreateUser() {
   const [activeStep, setActiveStep] = useState(0);
   const [result, setResult] = useState("");
 
-  // Define the type for the formData object
-  // type FormData = {
-  //   firstName: string;
-  //   lastName: string;
-  //   gender: string;
-  //   dateOfBirth: string;
-  //   religion: string;
-  //   PhoneNumber: string;
-  //   height: string;
-  //   weight: string;
-  //   address: string;
-  //   state: string;
-  //   lga: string;
-  //   parentOne: string;
-  //   parentOneNumber: string;
-  //   parentOneNHRID: string;
-  //   parentTwo: string;
-  //   parentTwoNumber: string;
-  //   parentTwoNHRID: string;
-  //   nominatedPharmacy: string;
-  //   registeredDoctor: string;
-  //   registeredHospital: string;
-  //   HMOPlan: string;
-  //   NIN: string;
-  //   driversLicense: string;
-  //   passportNumber: string;
-  //   day: string;
-  //   month: string;
-  //   year: string;
-  // };
-
   const [formData, setFormData] = useState({
     // STEP ONE
     firstName: "",
@@ -69,11 +38,11 @@ export default function CreateUser() {
     state: "",
     lga: "",
     parentOne: "",
-    parentOneNumber: "",
-    parentOneNHRID: "",
-    parentTwo: "",
-    parentTwoNumber: "",
-    parentTwoNHRID: "",
+    legalGuardianOneNumber: "",
+    legalGuardianOneNHR_ID: "",
+    legalGuardianTwo: "",
+    legalGuardianTwoNumber: "",
+    legalGuardianTwoNHR_ID: "",
     nominatedPharmacy: "",
     registeredDoctor: "",
     registeredHospital: "",
@@ -95,33 +64,6 @@ export default function CreateUser() {
 
     setResult(formData.NIN);
   };
-
-  // const data = {
-  //   1: [
-  //     "firstName",
-  //     "lastName",
-  //     "gender",
-  //     "dateOfBirth",
-  //     "religion",
-  //     // "PhoneNumber",
-  //     "height",
-  //     "weight",
-  //     "address",
-  //     "state",
-  //     "lga",
-  //     "parentOne",
-  //     "parentOneNumber",
-  //     "parentOneNHRID",
-  //     "parentTwo",
-  //     "parentTwoNumber",
-  //     "parentTwoNHRID",
-  //     "nominatedPharmacy",
-  //     "registeredDoctor",
-  //     "registeredHospital",
-  //     "HMOPlan",
-  //   ],
-  //   2: ["NIN", "driversLicense", "passportNumber", "day", "month", "year"],
-  // };
 
   const steps = [
     {
