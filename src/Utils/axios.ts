@@ -114,7 +114,7 @@ import { dispatchSetAccessToken } from "../redux/userSlice";
 
 // export default PillarApi;
 
-const apiBaseUrl = "http://138.68.162.159:8000/";
+const apiBaseUrl = "https://138.68.162.159:8000/";
 
 export const axiosInstance = axios.create({
   baseURL: apiBaseUrl,
@@ -149,7 +149,7 @@ axiosInstance.interceptors.response.use(
     ) {
       try {
         const response = await axiosInstance.post(
-          "http://138.68.162.159:8000/auth/refresh",
+          "https://138.68.162.159:8000/auth/refresh",
 
           { withCredentials: true }
         );
