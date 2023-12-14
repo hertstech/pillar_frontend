@@ -215,7 +215,7 @@ export default function ProfileHome() {
             <InputField
               type="number"
               label="NHR ID"
-              name="legalGuardianOneNHR_ID"
+              name="parentOneNHR_ID"
               value={""}
               onChange={() => {}}
               placeholder="Enter NHR ID number"

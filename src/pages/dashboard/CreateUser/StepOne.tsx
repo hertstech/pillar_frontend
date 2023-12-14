@@ -78,14 +78,14 @@ export default function StepOne({
       case "phoneNumber":
         superHandleChange({ ...formData, phoneNumber: value });
         break;
-      case "legalGuardianOneNumber":
-        superHandleChange({ ...formData, legalGuardianOneNumber: value });
+      case "parentOneNumber":
+        superHandleChange({ ...formData, parentOneNumber: value });
         break;
-      case "legalGuardianTwoNumber":
-        superHandleChange({ ...formData, legalGuardianTwoNumber: value });
+      case "parentTwoNumber":
+        superHandleChange({ ...formData, parentTwoNumber: value });
         break;
-      case "nextOfKinNumber":
-        superHandleChange({ ...formData, nextOfKinNumber: value });
+      case "nokPhoneNumber":
+        superHandleChange({ ...formData, nokPhoneNumber: value });
         break;
       default:
         break;
@@ -311,8 +311,8 @@ export default function StepOne({
           <InputField
             type="text"
             label="Legal Guardian 1"
-            name="LegalGuardianOne"
-            value={formData.legalGuardianOne}
+            name="parentOne"
+            value={formData.parentOne}
             onChange={handleChange}
             placeholder="Please enter full name"
           />
@@ -332,29 +332,29 @@ export default function StepOne({
               type="number"
               required={ageValue}
               label="NHR ID"
-              name="legalGuardianOneNHR_ID"
-              value={formData.legalGuardianOneNHR_ID}
+              name="parentOneNHR_ID"
+              value={formData.parentOneNHR_ID}
               onChange={handleChange}
               placeholder="Enter NHR ID number"
             />
 
             <PhoneField
-              name="legalGuardianOneNumber"
-              value={formData.legalGuardianOneNumber}
+              name="parentOneNumber"
+              value={formData.parentOneNumber}
               onChange={(value: any) =>
-                handlePhoneChange(value, "legalGuardianOneNumber")
+                handlePhoneChange(value, "parentOneNumber")
               }
             />
 
             <div style={{ marginTop: 8 }}>
-              <label htmlFor="legalGuardianOneRelationship">
+              <label htmlFor="parentOneRelationship">
                 Relationship
                 <TextField
                   select
                   sx={{ marginTop: "5px" }}
                   fullWidth
-                  name="legalGuardianOneRelationship"
-                  value={formData.legalGuardianOneRelationship}
+                  name="parentOneRelationship"
+                  value={formData.parentOneRelationship}
                   onChange={handleChange}
                 >
                   {relations.map((item, index) => (
@@ -373,8 +373,8 @@ export default function StepOne({
                 <InputField
                   type="text"
                   label="Legal Guardian 2"
-                  name="legalGuardianTwo"
-                  value={formData.legalGuardianTwo}
+                  name="parentTwo"
+                  value={formData.parentTwo}
                   onChange={handleChange}
                   placeholder="Please enter full name"
                 />
@@ -393,27 +393,27 @@ export default function StepOne({
                   <InputField
                     type="text"
                     label="NHR ID"
-                    name="legalGuardianTwoNHR_ID"
-                    value={formData.legalGuardianTwoNHR_ID}
+                    name="parentTwoNHR_ID"
+                    value={formData.parentTwoNHR_ID}
                     onChange={handleChange}
                     placeholder=""
                   />
                   <PhoneField
-                    name="legalGuardianTwoNumber"
-                    value={formData.legalGuardianTwoNumber}
+                    name="parentTwoNumber"
+                    value={formData.parentTwoNumber}
                     onChange={(value: any) =>
-                      handlePhoneChange(value, "legalGuardianTwoNumber")
+                      handlePhoneChange(value, "parentTwoNumber")
                     }
                   />
                   <div style={{ marginTop: 8 }}>
-                    <label htmlFor="legalGuardianTwoRelationship">
+                    <label htmlFor="parentTwoRelationship">
                       Relationship
                       <TextField
                         select
                         sx={{ marginTop: "5px" }}
                         fullWidth
-                        name="legalGuardianTwoRelationship"
-                        value={formData.legalGuardianTwoRelationship}
+                        name="parentTwoRelationship"
+                        value={formData.parentTwoRelationship}
                         onChange={handleChange}
                       >
                         {relations.map((item, index) => (
@@ -437,7 +437,7 @@ export default function StepOne({
             type="text"
             label="Full Name"
             name="nextOfKin"
-            value={formData.nextOfKinName}
+            value={formData.nokFullName}
             onChange={handleChange}
             placeholder="Please enter full name"
           />
@@ -458,29 +458,29 @@ export default function StepOne({
               type="number"
               required={ageValue}
               label="NHR ID"
-              name="legalGuardianOneNHR_ID"
-              value={formData.nextOfKinNameNHR_ID}
+              name="parentOneNHR_ID"
+              value={formData.nokFullNameNHR_ID}
               onChange={handleChange}
               placeholder="Enter NHR ID number"
             />
 
             <PhoneField
-              name="nextOfKinNumber"
-              value={formData.nextOfKinNumber}
+              name="nokPhoneNumber"
+              value={formData.nokPhoneNumber}
               onChange={(value: any) =>
-                handlePhoneChange(value, "nextOfKinNumber")
+                handlePhoneChange(value, "nokPhoneNumber")
               }
             />
 
             <div style={{ marginTop: 8 }}>
-              <label htmlFor="nextOfKinRelationship">
+              <label htmlFor="nokRelationship">
                 Relationship
                 <TextField
                   select
                   sx={{ marginTop: "5px" }}
                   fullWidth
-                  name="nextOfKinRelationship"
-                  value={formData.nextOfKinRelationship}
+                  name="nokRelationship"
+                  value={formData.nokRelationship}
                   onChange={handleChange}
                 >
                   {relations.map((item, index) => (

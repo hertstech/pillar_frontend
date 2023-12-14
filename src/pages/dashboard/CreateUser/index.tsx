@@ -37,18 +37,18 @@ export default function CreateUser() {
     state: "",
     lga: "",
     tribalMark: "",
-    legalGuardianOne: "",
-    legalGuardianOneNumber: "",
-    legalGuardianOneNHR_ID: "",
-    legalGuardianOneRelationship: "",
-    legalGuardianTwo: "",
-    legalGuardianTwoNumber: "",
-    legalGuardianTwoNHR_ID: "",
-    legalGuardianTwoRelationship: "",
-    nextOfKinName: "",
-    nextOfKinNameNHR_ID: "",
-    nextOfKinNumber: "",
-    nextOfKinRelationship: "",
+    parentOne: "",
+    parentOneNumber: "",
+    parentOneNHR_ID: "",
+    parentOneRelationship: "",
+    parentTwo: "",
+    parentTwoNumber: "",
+    parentTwoNHR_ID: "",
+    parentTwoRelationship: "",
+    nokFullName: "",
+    nokFullNameNHR_ID: "",
+    nokPhoneNumber: "",
+    nokRelationship: "",
     nominatedPharmacy: "",
     registeredDoctor: "",
     registeredHospital: "",
@@ -94,12 +94,6 @@ export default function CreateUser() {
       content: <StepThree />,
     },
   ];
-  const handleNext = () => {
-    if (activeStep < steps.length - 1) {
-      console.log(formData);
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    }
-  };
 
   const handleBack = () => {
     if (activeStep > 0) {
@@ -107,8 +101,22 @@ export default function CreateUser() {
     }
   };
 
-  // useEffect(() => {
-  const fethcData = async () => {
+  const handleClick = async () => {
+    try {
+      await verify();
+      // setResult(result);
+
+      if (result === "Verification Successful") {
+        handleNext();
+      }
+    } catch (error) {
+      console.error(error);
+
+      setResult("Verification failed");
+    }
+  };
+
+  const verify = async () => {
     try {
       const res = await fetch("../../../nationalIdentificationNumber.json");
       const data = await res.json();
@@ -123,7 +131,7 @@ export default function CreateUser() {
 
         setTimeout(() => {
           handleNext(); // Call handleNext after 20 seconds
-        }, 10000);
+        }, 5000);
       } else {
         // NIN is not found in the JSON data
         setResult("Verification Failed!");
@@ -133,6 +141,19 @@ export default function CreateUser() {
     }
   };
 
+  const handleNext = () => {
+    if (activeStep < steps.length - 1) {
+      console.log(formData);
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    }
+  };
+
+  // const createUser = async () => {
+  //   try {
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
   return (
     <Box sx={{ pt: 3 }}>
       <HeaderBreadCrumb
@@ -265,11 +286,11 @@ export default function CreateUser() {
               )}
 
               {activeStep > 0 && activeStep <= 1 && (
-                <Buttons onClick={fethcData} title={"Verify"} />
-              )}
+                //   <Buttons onClick={fethcData} title={"Verify"} />
+                // )}
 
-              {activeStep === steps.length - 1 && activeStep > 2 && (
-                <Buttons onClick={handleNext} title={"Continue"} />
+                // {activeStep === steps.length - 1 && activeStep > 2 && (
+                <Buttons onClick={handleClick} title={"Continue"} />
               )}
             </Stack>
           </Card>
