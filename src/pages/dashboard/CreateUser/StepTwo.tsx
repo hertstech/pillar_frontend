@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Box, MenuItem, TextField, Typography } from "@mui/material";
-import InputField from "../../components/InputField";
+import InputField from "../../../components/InputField";
 
 let months = [
   "January",

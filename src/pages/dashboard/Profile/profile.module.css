@@ -1,0 +1,22 @@
+.boxWrapper {
+  margin: 60px auto;
+  border-radius: 12px;
+  max-width: 638px;
+  display: grid;
+  background-color: white;
+}
+
+.bttnWrapper {
+  display: flex;
+  gap: 20px;
+}
+
+.content {
+  width: 400px;
+  margin: 50px auto;
+  padding: 10px 10px 0;
+}
+
+.bttn {
+  margin-top: 25px;
+}

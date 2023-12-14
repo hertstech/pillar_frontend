@@ -28,3 +28,9 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
+.css-anai2d-MuiInputBase-root-MuiOutlinedInput-root.Mui-error
+  .MuiOutlinedInput-notchedOutline {
+  /* outline: none; */
+  border-color: #d0d5dd !important;
+}

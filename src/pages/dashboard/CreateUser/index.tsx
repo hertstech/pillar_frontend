@@ -11,14 +11,13 @@ import {
   Button,
   Stack,
 } from "@mui/material";
-import HeaderBreadCrumb from "../../components/HeaderBreadCrumb";
-import Users from "../../assets/users.svg";
-import Grids from "../../assets/grid.svg";
+import HeaderBreadCrumb from "../../../components/HeaderBreadCrumb";
+import Users from "/assets/users.svg";
+import Grids from "/assets/grid.svg";
 import StepOne from "./StepOne";
 import StepTwo from "./StepTwo";
 import StepThree from "./StepThree";
-import Buttons from "../../components/Button";
-// import data from "../../../nationalIdentificationNumber.json";
+import Buttons from "../../../components/Button";
 
 export default function CreateUser() {
   const [activeStep, setActiveStep] = useState(0);
@@ -37,12 +36,19 @@ export default function CreateUser() {
     address: "",
     state: "",
     lga: "",
-    parentOne: "",
+    tribalMark: "",
+    legalGuardianOne: "",
     legalGuardianOneNumber: "",
     legalGuardianOneNHR_ID: "",
+    legalGuardianOneRelationship: "",
     legalGuardianTwo: "",
     legalGuardianTwoNumber: "",
     legalGuardianTwoNHR_ID: "",
+    legalGuardianTwoRelationship: "",
+    nextOfKinName: "",
+    nextOfKinNameNHR_ID: "",
+    nextOfKinNumber: "",
+    nextOfKinRelationship: "",
     nominatedPharmacy: "",
     registeredDoctor: "",
     registeredHospital: "",

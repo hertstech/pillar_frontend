@@ -4,6 +4,7 @@ import Styles from "../sytles.module.css";
 import InputField from "../../../components/InputField";
 import Button from "../../../components/Button";
 import { Link, useNavigate } from "react-router-dom";
+import { axiosInstance } from "../../../Utils/axios";
 
 export default function RegisterPage() {
   const [isLoadingButton, setIsLoadingButton] = useState(false);
@@ -15,11 +16,11 @@ export default function RegisterPage() {
     lastName: "",
     email: "",
     password: "",
-    confirmPassword: "",
+    facilityName: "",
   });
 
   const isValidEmail = (email: string) => {
-    const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.(com)$/i;
+    const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/i;
 
     return emailRegex.test(email);
   };
@@ -38,7 +39,7 @@ export default function RegisterPage() {
     setIsLoadingButton(false);
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     setIsLoadingButton(true);
     if (formData.firstName === "" || formData.lastName === "") {
@@ -58,15 +59,15 @@ export default function RegisterPage() {
       return;
     }
 
-    if (formData.password !== formData.confirmPassword) {
-      setError("Please ensure password correlates!");
-      return;
-    }
-
-    console.log(formData);
+    // if (formData.password !== formData.confirmPassword) {
+    //   setError("Please ensure password correlates!");
+    //   return;
+    // }
 
     try {
-      navigate("/auth/login", { replace: true });
+      await axiosInstance.post("/auth/create-user", formData);
+
+      navigate("/auth/login");
     } catch (error) {
       console.error(error, "error");
       setIsLoadingButton(false);
@@ -131,12 +132,12 @@ export default function RegisterPage() {
                   placeholder="Create password"
                 />
                 <InputField
-                  type="password"
-                  label="Confirm Password"
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
+                  type="text"
+                  label="Facility Name"
+                  name="facilityName"
+                  value={formData.facilityName}
                   onChange={handleChange}
-                  placeholder="Confirm password"
+                  placeholder="Enter Hospital name"
                 />
                 <div style={{ marginTop: 20 }}>
                   <Button

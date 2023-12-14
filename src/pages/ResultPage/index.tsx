@@ -7,8 +7,8 @@ import {
   Stack,
 } from "@mui/material";
 import HeaderBreadCrumb from "../../components/HeaderBreadCrumb";
-import Users from "../../assets/users.svg";
-import Grids from "../../assets/grid.svg";
+import Users from "/assets/users.svg";
+import Grids from "/assets/grid.svg";
 import NoResultIllustration from "../../components/NoResult";
 
 export default function ResultPage() {

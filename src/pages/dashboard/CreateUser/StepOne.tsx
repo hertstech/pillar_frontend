@@ -13,9 +13,9 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import InputField from "../../components/InputField";
-import StatesData from "../../../states.json";
-import PhoneField from "../../components/PhoneInput";
+import InputField from "../../../components/InputField";
+import StatesData from "../../../../states.json";
+import PhoneField from "../../../components/PhoneInput";
 
 const relations = [
   { value: "father", label: "Father" },
@@ -58,7 +58,6 @@ export default function StepOne({
 
     return 0; // Return null if no date is selected
   };
-  // const ageValue = ;
 
   const handleChange = (
     event: React.ChangeEvent<{ name?: any; value: any }>
@@ -80,12 +79,13 @@ export default function StepOne({
         superHandleChange({ ...formData, phoneNumber: value });
         break;
       case "legalGuardianOneNumber":
-        // setlegalGuardianTwoPhone(value);
         superHandleChange({ ...formData, legalGuardianOneNumber: value });
         break;
       case "legalGuardianTwoNumber":
-        // setEmergencyContactPhone(value);
         superHandleChange({ ...formData, legalGuardianTwoNumber: value });
+        break;
+      case "nextOfKinNumber":
+        superHandleChange({ ...formData, nextOfKinNumber: value });
         break;
       default:
         break;
@@ -188,11 +188,10 @@ export default function StepOne({
             sx={{ marginTop: "5px" }}
             fullWidth
             name="height"
-            endAdornment={
-              <InputAdornment position="end">meters</InputAdornment>
-            }
+            endAdornment={<InputAdornment position="end">cm</InputAdornment>}
             inputProps={{
-              maxLength: 4,
+              max: 999,
+
               type: "number",
               min: 0,
             }}
@@ -208,7 +207,7 @@ export default function StepOne({
             name="weight"
             endAdornment={<InputAdornment position="end">kg</InputAdornment>}
             inputProps={{
-              maxLength: 4,
+              max: 999,
               type: "number",
               min: 0,
             }}
@@ -309,85 +308,11 @@ export default function StepOne({
               </svg>
             </button>
           </Stack>
-
-          <Box
-            sx={{
-              display: "grid",
-              columnGap: 2,
-              rowGap: 2,
-              gridTemplateColumns: {
-                xs: "repeat(1, 1fr)",
-                lg: "repeat(3, 1fr)",
-              },
-              marginBottom: 2,
-            }}
-          >
-            <InputField
-              type="text"
-              label="Legal Guardian 1"
-              name="LegalGuardianOne"
-              value={formData.parentOne}
-              onChange={handleChange}
-              placeholder="Please enter full name"
-            />
-
-            <PhoneField
-              name="legalGuardianOneNumber"
-              value={formData.legalGuardianOneNumber}
-              onChange={(value: any) =>
-                handlePhoneChange(value, "legalGuardianOneNumber")
-              }
-            />
-
-            <InputField
-              type="number"
-              required={ageValue}
-              label="NHR ID"
-              name="legalGuardianOneNHR_ID"
-              value={formData.legalGuardianOneNHR_ID}
-              onChange={handleChange}
-              placeholder="Enter NHR ID number"
-            />
-            {show && (
-              <>
-                <InputField
-                  type="text"
-                  label="Legal Guardian 2"
-                  name="legalGuardianTwo"
-                  value={formData.legalGuardianTwo}
-                  onChange={handleChange}
-                  placeholder=""
-                />
-
-                <PhoneField
-                  name="legalGuardianTwoNumber"
-                  value={formData.legalGuardianTwoNumber}
-                  onChange={(value: any) =>
-                    handlePhoneChange(value, "legalGuardianTwoNumber")
-                  }
-                />
-
-                <InputField
-                  type="text"
-                  label="NHR ID"
-                  name="legalGuardianTwoNHR_ID"
-                  value={formData.legalGuardianTwoNHR_ID}
-                  onChange={handleChange}
-                  placeholder=""
-                />
-              </>
-            )}
-          </Box>
-        </Box>
-      ) : (
-        //  {/* FAMILY/RELATIVE INFORMATION */}
-        <Box sx={{ marginBottom: 2 }}>
-          <Typography variant="h6">Next of Kin</Typography>
           <InputField
             type="text"
-            label="Full Name"
-            name="nextOfKin"
-            value={formData.parentOne}
+            label="Legal Guardian 1"
+            name="LegalGuardianOne"
+            value={formData.legalGuardianOne}
             onChange={handleChange}
             placeholder="Please enter full name"
           />
@@ -413,25 +338,159 @@ export default function StepOne({
               placeholder="Enter NHR ID number"
             />
 
-            <PhoneField name="" value="" onChange={""} />
+            <PhoneField
+              name="legalGuardianOneNumber"
+              value={formData.legalGuardianOneNumber}
+              onChange={(value: any) =>
+                handlePhoneChange(value, "legalGuardianOneNumber")
+              }
+            />
 
-            <label htmlFor="relationship">
-              Relationship
-              <TextField
-                select
-                sx={{ marginTop: "5px" }}
-                fullWidth
-                name="relationship"
-                value={formData.state}
-                onChange={handleChange}
-              >
-                {relations.map((item, index) => (
-                  <MenuItem key={index} value={item.value}>
-                    {item.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </label>
+            <div style={{ marginTop: 8 }}>
+              <label htmlFor="legalGuardianOneRelationship">
+                Relationship
+                <TextField
+                  select
+                  sx={{ marginTop: "5px" }}
+                  fullWidth
+                  name="legalGuardianOneRelationship"
+                  value={formData.legalGuardianOneRelationship}
+                  onChange={handleChange}
+                >
+                  {relations.map((item, index) => (
+                    <MenuItem key={index} value={item.value}>
+                      {item.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </label>
+            </div>
+          </Box>
+          {show && (
+            <>
+              <Box>
+                {" "}
+                <InputField
+                  type="text"
+                  label="Legal Guardian 2"
+                  name="legalGuardianTwo"
+                  value={formData.legalGuardianTwo}
+                  onChange={handleChange}
+                  placeholder="Please enter full name"
+                />
+                <Box
+                  sx={{
+                    display: "grid",
+                    columnGap: 2,
+                    rowGap: 2,
+                    gridTemplateColumns: {
+                      xs: "repeat(1, 1fr)",
+                      lg: "repeat(3, 1fr)",
+                    },
+                    marginBottom: 2,
+                  }}
+                >
+                  <InputField
+                    type="text"
+                    label="NHR ID"
+                    name="legalGuardianTwoNHR_ID"
+                    value={formData.legalGuardianTwoNHR_ID}
+                    onChange={handleChange}
+                    placeholder=""
+                  />
+                  <PhoneField
+                    name="legalGuardianTwoNumber"
+                    value={formData.legalGuardianTwoNumber}
+                    onChange={(value: any) =>
+                      handlePhoneChange(value, "legalGuardianTwoNumber")
+                    }
+                  />
+                  <div style={{ marginTop: 8 }}>
+                    <label htmlFor="legalGuardianTwoRelationship">
+                      Relationship
+                      <TextField
+                        select
+                        sx={{ marginTop: "5px" }}
+                        fullWidth
+                        name="legalGuardianTwoRelationship"
+                        value={formData.legalGuardianTwoRelationship}
+                        onChange={handleChange}
+                      >
+                        {relations.map((item, index) => (
+                          <MenuItem key={index} value={item.value}>
+                            {item.label}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                    </label>
+                  </div>
+                </Box>
+              </Box>
+            </>
+          )}
+        </Box>
+      ) : (
+        //  {/* FAMILY/RELATIVE INFORMATION */}
+        <Box sx={{ marginBottom: 2 }}>
+          <Typography variant="h6">Next of Kin</Typography>
+          <InputField
+            type="text"
+            label="Full Name"
+            name="nextOfKin"
+            value={formData.nextOfKinName}
+            onChange={handleChange}
+            placeholder="Please enter full name"
+          />
+
+          <Box
+            sx={{
+              display: "grid",
+              columnGap: 2,
+              rowGap: 2,
+              gridTemplateColumns: {
+                xs: "repeat(1, 1fr)",
+                lg: "repeat(3, 1fr)",
+              },
+              marginBottom: 2,
+            }}
+          >
+            <InputField
+              type="number"
+              required={ageValue}
+              label="NHR ID"
+              name="legalGuardianOneNHR_ID"
+              value={formData.nextOfKinNameNHR_ID}
+              onChange={handleChange}
+              placeholder="Enter NHR ID number"
+            />
+
+            <PhoneField
+              name="nextOfKinNumber"
+              value={formData.nextOfKinNumber}
+              onChange={(value: any) =>
+                handlePhoneChange(value, "nextOfKinNumber")
+              }
+            />
+
+            <div style={{ marginTop: 8 }}>
+              <label htmlFor="nextOfKinRelationship">
+                Relationship
+                <TextField
+                  select
+                  sx={{ marginTop: "5px" }}
+                  fullWidth
+                  name="nextOfKinRelationship"
+                  value={formData.nextOfKinRelationship}
+                  onChange={handleChange}
+                >
+                  {relations.map((item, index) => (
+                    <MenuItem key={index} value={item.value}>
+                      {item.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </label>
+            </div>
           </Box>
         </Box>
       )}
