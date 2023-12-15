@@ -114,7 +114,7 @@ import { dispatchSetAccessToken } from "../redux/userSlice";
 
 // export default PillarApi;
 
-const apiBaseUrl = "http://138.68.162.159:8000/";
+const apiBaseUrl = "https://hertz-server1.onrender.com";
 
 export const axiosInstance = axios.create({
   baseURL: apiBaseUrl,
@@ -155,7 +155,7 @@ axiosInstance.interceptors.response.use(
 
          // Extract the refresh token from your stored state
          const stored = store.getState();
-         const refreshToken = stored.user.refresh_token;
+         const refreshToken = stored.user.user.refresh_token;
 
          // Log information about token refresh
          console.log("Token expired. Refreshing...");
