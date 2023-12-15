@@ -18,10 +18,20 @@ import StepOne from "./StepOne";
 import StepTwo from "./StepTwo";
 import StepThree from "./StepThree";
 import Buttons from "../../../components/Button";
+// import { axiosInstance } from "../../../Utils/axios";
+// import axios from "axios";
+import { useSelector } from "react-redux";
+import { axiosInstance } from "../../../Utils/axios";
 
 export default function CreateUser() {
   const [activeStep, setActiveStep] = useState(0);
   const [result, setResult] = useState("");
+  const [data, setData] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const token = useSelector((state: any) => state.user.access_token);
+
+  console.log(token);
 
   const [formData, setFormData] = useState({
     // STEP ONE
@@ -36,7 +46,7 @@ export default function CreateUser() {
     address: "",
     state: "",
     lga: "",
-    tribalMark: "",
+    tribalMarks: "",
     parentOne: "",
     parentOneNumber: "",
     parentOneNHR_ID: "",
@@ -91,7 +101,7 @@ export default function CreateUser() {
     {
       label: "Generate NHR ID",
       description: "New ID for your client",
-      content: <StepThree />,
+      content: <StepThree data={data} />,
     },
   ];
 
@@ -101,20 +111,20 @@ export default function CreateUser() {
     }
   };
 
-  const handleClick = async () => {
-    try {
-      await verify();
-      // setResult(result);
+  // const handleClick = async () => {
+  //   try {
+  //     await verify();
+  //     // setResult(result);
 
-      if (result === "Verification Successful") {
-        handleNext();
-      }
-    } catch (error) {
-      console.error(error);
+  //     if (result === "Verification Successful") {
+  //       handleNext();
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
 
-      setResult("Verification failed");
-    }
-  };
+  //     setResult("Verification failed");
+  //   }
+  // };
 
   const verify = async () => {
     try {
@@ -129,9 +139,9 @@ export default function CreateUser() {
         // NIN is found in the JSON data
         setResult("Verification Successful");
 
-        setTimeout(() => {
-          handleNext(); // Call handleNext after 20 seconds
-        }, 5000);
+        // setTimeout(() => {
+        //   handleNext(); // Call handleNext after 20 seconds
+        // }, 5000);
       } else {
         // NIN is not found in the JSON data
         setResult("Verification Failed!");
@@ -148,12 +158,29 @@ export default function CreateUser() {
     }
   };
 
-  // const createUser = async () => {
-  //   try {
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
+  const createUser = async () => {
+    setIsLoading(true);
+    try {
+      const res = await axiosInstance.post(
+        "/create-serviceuser-profile",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setData(res.data);
+      console.log(res.data);
+      setIsLoading(false);
+
+      handleNext();
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+    }
+  };
   return (
     <Box sx={{ pt: 3 }}>
       <HeaderBreadCrumb
@@ -286,11 +313,17 @@ export default function CreateUser() {
               )}
 
               {activeStep > 0 && activeStep <= 1 && (
-                //   <Buttons onClick={fethcData} title={"Verify"} />
-                // )}
-
-                // {activeStep === steps.length - 1 && activeStep > 2 && (
-                <Buttons onClick={handleClick} title={"Continue"} />
+                <>
+                  {result === "Verification Successful" ? (
+                    <Buttons
+                      onClick={createUser}
+                      disabled={isLoading}
+                      title={"Continue"}
+                    />
+                  ) : (
+                    <Buttons onClick={verify} title={"Verify"} />
+                  )}
+                </>
               )}
             </Stack>
           </Card>

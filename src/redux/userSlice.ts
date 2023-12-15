@@ -13,6 +13,7 @@ interface UserState {
   access_token: string;
   user: User;
   userId: string;
+  refresh_token: string;
 }
 
 // Define the payload type for the actions

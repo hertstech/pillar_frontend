@@ -1,10 +1,11 @@
 import dayjs from "dayjs";
-import { Box, Stack, Typography, Link, Button } from "@mui/material";
+import { Box, Stack, Typography, Button } from "@mui/material";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import InputField from "../../../components/InputField";
 import Buttons from "../../../components/Button";
 import Styles from "./profile.module.css";
@@ -38,14 +39,17 @@ export default function ProfileHome() {
         </div>
         <Stack alignItems="start">
           <Link
-            href="/dashboard/new"
-            fontWeight={500}
-            color="#FFF"
-            underline="none"
-            variant="body2"
-            borderRadius={2}
-            gap={1}
-            sx={{ display: "flex", background: "#099250", p: 2 }}
+            to="/dashboard/new"
+            style={{
+              fontWeight: 500,
+              color: "#FFF",
+              textDecoration: "none",
+              borderRadius: 10,
+              display: "flex",
+              background: "#099250",
+              padding: 16,
+              gap: 5,
+            }}
           >
             <svg
               width="24"

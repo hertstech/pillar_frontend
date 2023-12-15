@@ -159,7 +159,7 @@ export default function StepOne({
           </LocalizationProvider>
         </label>
 
-        <label htmlFor="Religion">
+        <label htmlFor="religion">
           Religion
           <TextField
             select
@@ -169,10 +169,10 @@ export default function StepOne({
             value={formData.religion}
             onChange={handleChange}
           >
-            <MenuItem value="christian">Christian</MenuItem>
-            <MenuItem value="muslim">Muslim</MenuItem>
-            <MenuItem value="traditional">Traditional</MenuItem>
-            <MenuItem value="jehovah witness">Others</MenuItem>
+            <MenuItem value="Christian">Christian</MenuItem>
+            <MenuItem value="Muslim">Muslim</MenuItem>
+            <MenuItem value="Traditional">Traditional</MenuItem>
+            <MenuItem value="Others">Others</MenuItem>
           </TextField>
         </label>
 
@@ -213,6 +213,21 @@ export default function StepOne({
             }}
             onChange={handleChange}
           />
+        </label>
+
+        <label htmlFor="tribalMarks">
+          Tribal Mark
+          <TextField
+            select
+            sx={{ marginTop: "5px" }}
+            fullWidth
+            name="tribalMarks"
+            value={formData.tribalMarks}
+            onChange={handleChange}
+          >
+            <MenuItem value="Yes">Yes</MenuItem>
+            <MenuItem value="No">No</MenuItem>
+          </TextField>
         </label>
       </Box>
 
@@ -436,7 +451,7 @@ export default function StepOne({
           <InputField
             type="text"
             label="Full Name"
-            name="nextOfKin"
+            name="nokFullName"
             value={formData.nokFullName}
             onChange={handleChange}
             placeholder="Please enter full name"
@@ -456,9 +471,9 @@ export default function StepOne({
           >
             <InputField
               type="number"
-              required={ageValue}
+              // required={ageValue}
               label="NHR ID"
-              name="parentOneNHR_ID"
+              name="nokFullNameNHR_ID"
               value={formData.nokFullNameNHR_ID}
               onChange={handleChange}
               placeholder="Enter NHR ID number"

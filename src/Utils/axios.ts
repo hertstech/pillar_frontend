@@ -114,14 +114,13 @@ import { dispatchSetAccessToken } from "../redux/userSlice";
 
 // export default PillarApi;
 
-const apiBaseUrl = "https://138.68.162.159:8000/";
+const apiBaseUrl = "http://138.68.162.159:8000/";
 
 export const axiosInstance = axios.create({
   baseURL: apiBaseUrl,
   headers: {
     "Content-Type": "application/json",
   },
-  //  { withCredentials: true,}
 });
 
 axiosInstance.interceptors.request.use(
@@ -129,7 +128,7 @@ axiosInstance.interceptors.request.use(
     const stored = store.getState();
     const token = stored.user.access_token;
     if (token) {
-      request.headers["Authorization"] = `bearer ${token}`;
+      request.headers["Authorization"] = `Bearer ${token}`;
     }
     return request;
   },
@@ -143,23 +142,44 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   async (error) => {
-    if (
-      error?.response.status === 401 &&
-      error?.response.data.message === "Expired Session"
-    ) {
+    if (error?.response.status === 401) {
       try {
-        const response = await axiosInstance.post(
-          "https://138.68.162.159:8000/auth/refresh",
+        // // Log information about token refresh
+        // console.log("Token expired. Refreshing...");
 
-          { withCredentials: true }
-        );
+        // const response = await axiosInstance.post(
+        //   "http://138.68.162.159:8000/auth/refresh",
+        //   {},
+        //   { withCredentials: true }
+        // );
 
-        const { access_token } = response?.data?.data;
+         // Extract the refresh token from your stored state
+         const stored = store.getState();
+         const refreshToken = stored.user.refresh_token;
+
+         // Log information about token refresh
+         console.log("Token expired. Refreshing...");
+
+         const response = await axiosInstance.post(
+           "auth/refresh",
+           {},
+           {
+             withCredentials: true,
+             headers: {
+               Authorization: `Bearer ${refreshToken}`,
+             },
+           }
+         );
+
+        const { access_token } = response?.data;
 
         store.dispatch(dispatchSetAccessToken({ access_token }));
 
         // Update the local storage with the new access token
         window.localStorage.setItem("access_token", access_token);
+
+        // Log information about successful token refresh
+        console.log("Token refreshed successfully.");
 
         // Retry the original request with the new access token
         return axiosInstance(error.config);
@@ -167,5 +187,7 @@ axiosInstance.interceptors.response.use(
         return Promise.reject(error);
       }
     }
+    // Reject for other non-401 errors
+    return Promise.reject(error);
   }
 );

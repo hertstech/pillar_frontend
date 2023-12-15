@@ -2,10 +2,10 @@ import { Box, Typography } from "@mui/material";
 import { useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
-export default function StepThree() {
+export default function StepThree({ data }: any) {
   const [copied, setCopied] = useState(false);
 
-  const text = "485 777 3456";
+  // const text = { data };
 
   const onCopy = () => {
     setCopied(true);
@@ -83,10 +83,10 @@ export default function StepThree() {
           sx={{ color: "#1A1A21" }}
           variant="h3"
         >
-          {text}
+          {data.NHRID}
         </Typography>
 
-        <CopyToClipboard onCopy={onCopy} text={text}>
+        <CopyToClipboard onCopy={onCopy} text={data.NHRID}>
           <button
             style={{
               background: "#F0F2F5",
