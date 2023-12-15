@@ -144,32 +144,23 @@ axiosInstance.interceptors.response.use(
   async (error) => {
     if (error?.response.status === 401) {
       try {
-        // // Log information about token refresh
-        // console.log("Token expired. Refreshing...");
+        // Extract the refresh token from your stored state
+        const stored = store.getState();
+        const refreshToken = stored.user.user.refresh_token;
 
-        // const response = await axiosInstance.post(
-        //   "http://138.68.162.159:8000/auth/refresh",
-        //   {},
-        //   { withCredentials: true }
-        // );
+        // Log information about token refresh
+        console.log("Token expired. Refreshing...");
 
-         // Extract the refresh token from your stored state
-         const stored = store.getState();
-         const refreshToken = stored.user.user.refresh_token;
-
-         // Log information about token refresh
-         console.log("Token expired. Refreshing...");
-
-         const response = await axiosInstance.post(
-           "auth/refresh",
-           {},
-           {
-             withCredentials: true,
-             headers: {
-               Authorization: `Bearer ${refreshToken}`,
-             },
-           }
-         );
+        const response = await axiosInstance.post(
+          "auth/refresh",
+          {},
+          {
+            withCredentials: true,
+            headers: {
+              Authorization: `Bearer ${refreshToken}`,
+            },
+          }
+        );
 
         const { access_token } = response?.data;
 

@@ -59,8 +59,6 @@ export default function LoginPage() {
     try {
       const response = await axiosInstance.post("/auth/login", formData);
 
-      console.log(response);
-
       dispatch(
         dispatchUserLogin({
           user: response?.data,

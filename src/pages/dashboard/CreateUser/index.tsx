@@ -31,8 +31,6 @@ export default function CreateUser() {
 
   const token = useSelector((state: any) => state.user.access_token);
 
-  console.log(token);
-
   const [formData, setFormData] = useState({
     // STEP ONE
     firstName: "",
@@ -153,7 +151,6 @@ export default function CreateUser() {
 
   const handleNext = () => {
     if (activeStep < steps.length - 1) {
-      console.log(formData);
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
     }
   };
@@ -172,7 +169,7 @@ export default function CreateUser() {
       );
 
       setData(res.data);
-      console.log(res.data);
+
       setIsLoading(false);
 
       handleNext();
