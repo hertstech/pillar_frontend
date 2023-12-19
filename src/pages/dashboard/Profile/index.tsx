@@ -1,23 +1,88 @@
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { Box, Stack, Typography, Button } from "@mui/material";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import InputField from "../../../components/InputField";
 import Buttons from "../../../components/Button";
 import Styles from "./profile.module.css";
-// import { useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { axiosInstance } from "../../../Utils/axios";
 
 export default function ProfileHome() {
   const [searchOptions, setSearchOption] = useState(false);
-  //   const user = useSelector((state: any) => state.user.user);
+  const user = useSelector((state: any) => state.user.user);
 
-  //   console.log(user);
+  const token = useSelector((state: any) => state.user.access_token);
 
-  //   const firstName = user?.data?.user?.name.split(" ")[0];
+  const navigate = useNavigate();
+
+  const [numberValue, setNumberValue] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  // const today = new Date();
+
+  const [firstName, setfirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState("");
+
+  const name = user?.firstName.split(" ")[0];
+
+  const searchNHRID = async () => {
+    setIsLoading(true);
+
+    try {
+      const res = await axiosInstance.get(
+        `/search-service-user/${numberValue}`
+      );
+
+      navigate(`/dashboard/search-result/${numberValue}`, {
+        state: { searchResults: res.data },
+      });
+      setIsLoading(false);
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+    }
+  };
+
+  const searchNameDate = async (e: any) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    const payload = {
+      firstName,
+      lastName,
+      dateOfBirth,
+    };
+
+    try {
+      const res = await axiosInstance.get("/search-service-user", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: payload,
+      });
+
+      navigate(`/dashboard/search-result/${numberValue}`, {
+        state: { searchResults: res.data },
+      });
+      console.log(res);
+      setIsLoading(false);
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+    }
+  };
+
+  // Assuming dateObj is of type Dayjs | null
+  const handleDateChange = (dateObj: Dayjs | null) => {
+    // Convert Dayjs object to string or use an empty string if null
+    const dateString = dateObj ? dateObj.format("DD/MM/YYYY") : "";
+    setDateOfBirth(dateString);
+  };
 
   return (
     <Box>
@@ -31,7 +96,7 @@ export default function ProfileHome() {
       >
         <div>
           <Typography variant="subtitle2" fontWeight={600} fontSize={24}>
-            Welcome, Dr. Ciroma
+            Welcome, Dr. {name}
           </Typography>
           <Typography variant="body2" sx={{ color: "#667185" }}>
             Check and get client’s health record here
@@ -83,152 +148,172 @@ export default function ProfileHome() {
           </Link>
         </Stack>
       </Box>
+      <div className={Styles.boxContainer}>
+        <div className={Styles.boxWrapper}>
+          <div className="" style={{ background: "white" }}>
+            <div className={Styles.bttnWrapper}>
+              <Button
+                fullWidth
+                sx={{
+                  color: "#000",
+                  outline: "none",
+                  textTransform: "capitalize",
+                  fontWeight: 600,
+                  height: 48,
+                  background: searchOptions ? "#FFF" : "#EDFCF2",
+                  borderBottom: searchOptions ? "none" : "2px solid #3CCB7F",
+                  borderRadius: 0,
+                }}
+                size="large"
+                onClick={() => setSearchOption(false)}
+              >
+                NHR ID
+              </Button>
+              <Button
+                fullWidth
+                sx={{
+                  color: "#000",
+                  outline: "none",
+                  textTransform: "capitalize",
+                  fontWeight: 600,
+                  height: 48,
+                  background: searchOptions ? "#EDFCF2" : "#FFF",
+                  borderBottom: searchOptions ? "2px solid #3CCB7F" : "none",
+                  borderRadius: 0,
+                }}
+                size="large"
+                onClick={() => setSearchOption(true)}
+              >
+                Client Details
+              </Button>
+            </div>
 
-      <div className={Styles.boxWrapper}>
-        <div className={Styles.bttnWrapper}>
-          <Button
-            fullWidth
-            sx={{
-              color: "#000",
-              outline: "none",
-              textTransform: "capitalize",
-              fontWeight: 600,
-              height: 48,
-              background: searchOptions ? "#FFF" : "#EDFCF2",
-              borderBottom: searchOptions ? "none" : "2px solid #3CCB7F",
-              borderRadius: 0,
-            }}
-            size="large"
-            onClick={() => setSearchOption(false)}
-          >
-            NHR ID
-          </Button>
-          <Button
-            fullWidth
-            sx={{
-              color: "#000",
-              outline: "none",
-              textTransform: "capitalize",
-              fontWeight: 600,
-              height: 48,
-              background: searchOptions ? "#EDFCF2" : "#FFF",
-              borderBottom: searchOptions ? "2px solid #3CCB7F" : "none",
-              borderRadius: 0,
-            }}
-            size="large"
-            onClick={() => setSearchOption(true)}
-          >
-            Client Details
-          </Button>
-        </div>
+            {searchOptions ? (
+              // SECOND CHOICE CLIENT DETAILS
+              <form action="">
+                <div className={Styles.content}>
+                  <Typography
+                    variant="subtitle2"
+                    fontWeight={400}
+                    fontSize={18}
+                    sx={{ color: "#101828", textAlign: "center" }}
+                  >
+                    Welcome Dr, {firstName}
+                  </Typography>
+                  <Typography
+                    variant="subtitle2"
+                    fontWeight={600}
+                    // lineHeight={1}
+                    fontSize={28}
+                    sx={{
+                      color: "#101828",
+                      textAlign: "center",
+                      marginBottom: 3,
+                    }}
+                  >
+                    Enter client's details
+                  </Typography>
 
-        {searchOptions ? (
-          // SECOND CHOICE CLIENT DETAILS
-          <div className={Styles.content}>
-            <Typography
-              variant="subtitle2"
-              fontWeight={400}
-              fontSize={18}
-              sx={{ color: "#101828", textAlign: "center" }}
-            >
-              Welcome Dr, Ciroma
-            </Typography>
-            <Typography
-              variant="subtitle2"
-              fontWeight={600}
-              lineHeight={1}
-              fontSize={30}
-              sx={{ color: "#101828", textAlign: "center", marginBottom: 3 }}
-            >
-              Enter client's details
-            </Typography>
+                  <Box
+                    sx={{
+                      display: "grid",
+                      columnGap: 1.5,
+                      rowGap: 1.5,
+                      gridTemplateColumns: {
+                        xs: "repeat(1, 1fr)",
+                        md: "repeat(2, 1fr)",
+                      },
+                    }}
+                  >
+                    <InputField
+                      type="text"
+                      label="First Name"
+                      name="firstName"
+                      value={firstName}
+                      onChange={(e: any) => setfirstName(e.target.value)}
+                      placeholder=""
+                    />
 
-            <Box
-              sx={{
-                display: "grid",
-                columnGap: 1.5,
-                rowGap: 1.5,
-                gridTemplateColumns: {
-                  xs: "repeat(1, 1fr)",
-                  md: "repeat(2, 1fr)",
-                },
-              }}
-            >
-              <InputField
-                type="text"
-                label="First Name"
-                name="firstName"
-                value={""}
-                onChange={() => {}}
-                placeholder=""
-              />
+                    <InputField
+                      type="text"
+                      label="Last Name"
+                      name="lastName"
+                      value={lastName}
+                      onChange={(e: any) => setLastName(e.target.value)}
+                      placeholder=""
+                    />
+                  </Box>
+                  <label style={{ marginTop: 10 }} htmlFor="dateOfBirth">
+                    Date of Birth
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DemoContainer components={["DatePicker"]}>
+                        <DatePicker
+                          orientation="portrait"
+                          views={["year", "month", "day"]}
+                          format="DD/MM/YYYY"
+                          sx={{ marginTop: "5px", width: "100%" }}
+                          disableFuture={true}
+                          value={dayjs("")}
+                          onChange={handleDateChange}
+                        />
+                      </DemoContainer>
+                    </LocalizationProvider>
+                  </label>
+                  <div className={Styles.bttn}>
+                    <Buttons
+                      loading={isLoading}
+                      title="Search records"
+                      onClick={searchNameDate}
+                    />
+                  </div>
+                </div>
+              </form>
+            ) : (
+              // DEFAULT: NHR ID
+              <form action="">
+                <div className={Styles.content}>
+                  <Typography
+                    variant="subtitle2"
+                    fontWeight={400}
+                    fontSize={20}
+                    sx={{ color: "#101828", textAlign: "center" }}
+                  >
+                    Welcome Dr, {name}
+                  </Typography>
+                  <Typography
+                    variant="subtitle2"
+                    fontWeight={600}
+                    fontSize={28}
+                    // lineHeight={1}
+                    sx={{
+                      color: "#101828",
+                      textAlign: "center",
+                      marginBottom: 5,
+                    }}
+                  >
+                    Enter client's NHR ID
+                  </Typography>
 
-              <InputField
-                type="text"
-                label="Last Name"
-                name="lastName"
-                value={""}
-                onChange={() => {}}
-                placeholder=""
-              />
-            </Box>
-            <label style={{ marginTop: 8 }} htmlFor="dateOfBirth">
-              Date of Birth
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={["DatePicker"]}>
-                  <DatePicker
-                    orientation="portrait"
-                    views={["year", "month", "day"]}
-                    format="DD/MM/YYYY"
-                    sx={{ marginTop: "5px", width: "100%" }}
-                    disableFuture={true}
-                    value={dayjs("")}
-                    // onChange={(newValue) =>
-                    //   handleDateChange(newValue, "dateOfBirth")
-                    // }
+                  <InputField
+                    type="number"
+                    label="NHR ID"
+                    name="parentOneNHR_ID"
+                    value={numberValue}
+                    onChange={(e: any) => setNumberValue(e.target.value)}
+                    placeholder="Enter NHR ID number"
                   />
-                </DemoContainer>
-              </LocalizationProvider>
-            </label>
-            <div className={Styles.bttn}>
-              <Buttons title="Search records" onClick={() => {}} />
-            </div>
+                  <div className={Styles.bttn}>
+                    <Buttons
+                      title="Search records"
+                      loading={isLoading}
+                      onClick={searchNHRID}
+                    />
+                  </div>
+                </div>
+              </form>
+            )}
           </div>
-        ) : (
-          // DEFAULT: NHR ID
-
-          <div className={Styles.content}>
-            <Typography
-              variant="subtitle2"
-              fontWeight={400}
-              fontSize={20}
-              sx={{ color: "#101828", textAlign: "center" }}
-            >
-              Welcome Dr, Ciroma
-            </Typography>
-            <Typography
-              variant="subtitle2"
-              fontWeight={600}
-              fontSize={36}
-              lineHeight={1}
-              sx={{ color: "#101828", textAlign: "center", marginBottom: 5 }}
-            >
-              Enter client's NHR ID
-            </Typography>
-
-            <InputField
-              type="number"
-              label="NHR ID"
-              name="parentOneNHR_ID"
-              value={""}
-              onChange={() => {}}
-              placeholder="Enter NHR ID number"
-            />
-            <div className={Styles.bttn}>
-              <Buttons title="Search records" onClick={() => {}} />
-            </div>
-          </div>
-        )}
+        </div>
       </div>
     </Box>
   );

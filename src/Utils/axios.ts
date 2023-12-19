@@ -114,7 +114,7 @@ import { dispatchSetAccessToken } from "../redux/userSlice";
 
 // export default PillarApi;
 
-const apiBaseUrl = "https://hertz-server1.onrender.com";
+const apiBaseUrl = "https://www.pillartechnologybackend.com.ng/";
 
 export const axiosInstance = axios.create({
   baseURL: apiBaseUrl,
@@ -147,6 +147,7 @@ axiosInstance.interceptors.response.use(
         // Extract the refresh token from your stored state
         const stored = store.getState();
         const refreshToken = stored.user.user.refresh_token;
+        console.log(refreshToken);
 
         // Log information about token refresh
         console.log("Token expired. Refreshing...");
@@ -163,6 +164,8 @@ axiosInstance.interceptors.response.use(
         );
 
         const { access_token } = response?.data;
+
+        console.log(access_token);
 
         store.dispatch(dispatchSetAccessToken({ access_token }));
 

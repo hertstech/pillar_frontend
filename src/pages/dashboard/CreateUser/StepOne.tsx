@@ -67,7 +67,7 @@ export default function StepOne({
   };
 
   const handleDateChange = (newValue: any, name: string) => {
-    superHandleChange({ ...formData, [name]: newValue.toISOString() });
+    superHandleChange({ ...formData, [name]: newValue.format("DD/MM/YYYY") });
 
     // Check if the age is less than 18
     setAgeValue(calculateAge() !== null && calculateAge() < 18);

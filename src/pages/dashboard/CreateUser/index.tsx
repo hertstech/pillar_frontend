@@ -18,8 +18,6 @@ import StepOne from "./StepOne";
 import StepTwo from "./StepTwo";
 import StepThree from "./StepThree";
 import Buttons from "../../../components/Button";
-// import { axiosInstance } from "../../../Utils/axios";
-// import axios from "axios";
 import { useSelector } from "react-redux";
 import { axiosInstance } from "../../../Utils/axios";
 
@@ -109,21 +107,6 @@ export default function CreateUser() {
     }
   };
 
-  // const handleClick = async () => {
-  //   try {
-  //     await verify();
-  //     // setResult(result);
-
-  //     if (result === "Verification Successful") {
-  //       handleNext();
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-
-  //     setResult("Verification failed");
-  //   }
-  // };
-
   const verify = async () => {
     try {
       const res = await fetch("../../../nationalIdentificationNumber.json");
@@ -136,10 +119,6 @@ export default function CreateUser() {
       if (matchingRecord) {
         // NIN is found in the JSON data
         setResult("Verification Successful");
-
-        // setTimeout(() => {
-        //   handleNext(); // Call handleNext after 20 seconds
-        // }, 5000);
       } else {
         // NIN is not found in the JSON data
         setResult("Verification Failed!");
@@ -153,6 +132,7 @@ export default function CreateUser() {
     if (activeStep < steps.length - 1) {
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
     }
+    console.log(formData);
   };
 
   const createUser = async () => {
@@ -314,7 +294,7 @@ export default function CreateUser() {
                   {result === "Verification Successful" ? (
                     <Buttons
                       onClick={createUser}
-                      disabled={isLoading}
+                      loading={isLoading}
                       title={"Continue"}
                     />
                   ) : (

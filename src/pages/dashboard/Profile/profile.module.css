@@ -1,9 +1,18 @@
+.boxContainer {
+  height: calc(90vh - 57.69px);
+  display: grid;
+  place-items: center;
+}
+
 .boxWrapper {
   margin: 60px auto;
   border-radius: 12px;
-  max-width: 638px;
-  display: grid;
-  background-color: white;
+  max-width: 550px;
+  position: absolute;
+  top: 207px;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
 .bttnWrapper {
@@ -12,11 +21,12 @@
 }
 
 .content {
-  width: 400px;
+  width: 500px;
   margin: 50px auto;
   padding: 10px 10px 0;
 }
 
 .bttn {
-  margin-top: 25px;
+  margin: 25px 0px;
+  padding-bottom: 25px;
 }

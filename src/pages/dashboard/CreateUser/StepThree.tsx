@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Link, Typography } from "@mui/material";
 import { useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
@@ -97,6 +97,7 @@ export default function StepThree({ data }: any) {
               width: 97,
               height: 24,
               margin: "2px auto",
+              cursor: "pointer",
             }}
             type="button"
             onClick={onCopy}
@@ -146,6 +147,29 @@ export default function StepThree({ data }: any) {
             )}
           </button>
         </CopyToClipboard>
+
+        <div
+          style={{
+            marginTop: "auto",
+          }}
+        >
+          <Link
+            href="/dashboard"
+            fontWeight={500}
+            color="#FFF"
+            underline="none"
+            variant="body2"
+            borderRadius={2}
+            sx={{
+              display: "flex",
+              background: "#099250",
+              p: 2,
+              justifyContent: "center",
+            }}
+          >
+            Go to Dashboard
+          </Link>
+        </div>
       </Box>
     </>
   );

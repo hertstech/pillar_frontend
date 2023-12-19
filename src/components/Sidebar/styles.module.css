@@ -65,11 +65,14 @@ ul li {
   margin-bottom: 12px;
 }
 
+.bottom {
+  position: fixed;
+  bottom: 40px;
+}
+
 .logoWrapper {
   display: flex;
   align-items: center;
-  position: fixed;
-  bottom: 40px;
   gap: 8px;
 }
 

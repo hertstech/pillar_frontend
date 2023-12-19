@@ -7,6 +7,7 @@ import RegisterPage from "../pages/Auth/RegisterForm";
 import Page404 from "../pages/Page404";
 import ResultPage from "../pages/ResultPage";
 import ProfileHome from "../pages/dashboard/Profile";
+import Singleuser from "../pages/dashboard/serviceUsers";
 
 export const router = createBrowserRouter([
   // AUTH
@@ -32,13 +33,19 @@ export const router = createBrowserRouter([
       {
         path: "new",
         element: <Dashboard />,
-        // index: true,
       },
       {
         path: "setting",
         element: <Settings />,
       },
-      { path: "search-result", element: <ResultPage /> },
+      {
+        path: "search-result/:id",
+        element: <ResultPage />,
+      },
+      {
+        path: "user/:id",
+        element: <Singleuser />,
+      },
     ],
   },
 

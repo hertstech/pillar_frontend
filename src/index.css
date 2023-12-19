@@ -29,8 +29,21 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
-.css-anai2d-MuiInputBase-root-MuiOutlinedInput-root.Mui-error
-  .MuiOutlinedInput-notchedOutline {
-  /* outline: none; */
+.MuiOutlinedInput-notchedOutline.MuiOutlinedInput-notchedOutline {
   border-color: #d0d5dd !important;
+}
+
+/* .MuiDataGrid-root .MuiDataGrid-cell */
+
+.MuiTableCell-root {
+  border-bottom: none !important;
+}
+
+.MuiTabs-flexContainer {
+  display: flex;
+  gap: 12px;
+}
+
+.MuiTab-iconWrapper {
+  font-size: 20px;
 }

@@ -2,7 +2,7 @@ import { Box, Breadcrumbs, Typography, Link } from "@mui/material";
 
 interface LinkItem {
   label: string;
-  href: string;
+  href?: string;
   icon?: string;
 }
 

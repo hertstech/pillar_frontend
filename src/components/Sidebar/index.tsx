@@ -1,12 +1,15 @@
-import { Avatar } from "@mui/material";
-import { NavLink } from "react-router-dom";
+import { Avatar, Button } from "@mui/material";
+import { NavLink, useNavigate } from "react-router-dom";
 import Styles from "./styles.module.css";
+import { useDispatch, useSelector } from "react-redux";
+import { dispatchLogout } from "../../redux/userSlice";
+import { IoLogOutOutline } from "react-icons/io5";
 
 const navLinks = [
   {
     id: 0,
     name: "EHR Dashboard",
-    to: "/dashboard/new",
+    to: "/dashboard",
     icon: (
       <svg
         width="20"
@@ -79,13 +82,23 @@ const navLinks = [
   },
 ];
 export default function Sidebar() {
+  const user = useSelector((state: any) => state.user.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const logOut = () => {
+    dispatch(dispatchLogout());
+    return navigate("/");
+  };
   return (
     <aside className={Styles.container}>
       <nav>
         <div className={Styles.header}>
           <Avatar />
           <span className={Styles.nameId}>
-            <span className={Styles.userName}>Ciroma Adekunle</span>
+            <span className={Styles.userName}>
+              {user.firstName + " " + user.lastName}
+            </span>
             <span className={Styles.userID}>userID12382</span>
           </span>
         </div>
@@ -113,9 +126,22 @@ export default function Sidebar() {
           ))}
         </ul>
 
-        <div className={Styles.logoWrapper}>
-          <img src="/assets/logo.svg" alt="" style={{ width: 24 }} />
-          <h6 className={Styles.logoText}>Pillar</h6>
+        <div className={Styles.bottom}>
+          <Button
+            variant="contained"
+            onClick={logOut}
+            color="error"
+            sx={{ mb: 2 }}
+            startIcon={<IoLogOutOutline />}
+          >
+            Log out
+          </Button>
+
+          <div className={Styles.logoWrapper}>
+            <div className=""></div>
+            <img src="/assets/logo.svg" alt="" style={{ width: 24 }} />
+            <h6 className={Styles.logoText}>Pillar</h6>
+          </div>
         </div>
       </nav>
     </aside>
