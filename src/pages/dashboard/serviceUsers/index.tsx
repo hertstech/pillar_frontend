@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Avatar, Box, Stack, Typography } from "@mui/material";
 import { CiMedicalCross } from "react-icons/ci";
 import { RxExitFullScreen } from "react-icons/rx";
@@ -9,9 +10,12 @@ import HeaderTabs from "../../../components/HeaderTabs";
 import Health from "./Health";
 import Assessment from "./Assessment";
 import Allergies from "./Allergies";
+import { useParams } from "react-router-dom";
+import { axiosInstance } from "../../../Utils/axios";
+import moment from "moment";
 
 interface TextLabelProps {
-  text: string;
+  text: any;
   label: string;
 }
 
@@ -32,6 +36,29 @@ const TextLabel = ({ text, label }: TextLabelProps) => (
 );
 
 export default function Singleuser() {
+  const { id } = useParams();
+
+  const [userData, setUserData] = useState<any>(null); // State to store user data
+
+  useEffect(() => {
+    // Fetch user data based on the id
+    // Replace the following with your actual data fetching logic
+    const fetchUserData = async () => {
+      try {
+        // Example API call
+        const res = await axiosInstance.get(`/search-service-user/${id}`);
+
+        setUserData(res.data);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, [id]);
+
+  // console.log(userData);
+
   return (
     <Stack sx={{}}>
       <Box sx={{ width: { lg: "70%" } }}>
@@ -48,17 +75,29 @@ export default function Singleuser() {
             {
               label: "Primary Health",
               icon: <CiMedicalCross />,
-              content: <Health />,
+              content: (
+                <Health
+                // userDate={userData}
+                />
+              ),
             },
             {
               label: "Specialist Assessment",
               icon: <AiOutlineFundProjectionScreen />,
-              content: <Assessment />,
+              content: (
+                <Assessment
+                // userDate={userData}
+                />
+              ),
             },
             {
               label: "Allergies",
               icon: <RxExitFullScreen />,
-              content: <Allergies />,
+              content: (
+                <Allergies
+                // userDate={userData}
+                />
+              ),
             },
             {
               label: "Notes",
@@ -101,7 +140,7 @@ export default function Singleuser() {
             sx={{ display: "flex", flexDirection: "column", marginLeft: 2 }}
           >
             <span style={{ fontWeight: 500, fontSize: 18 }}>
-              Ciroma Afolabi
+              {userData?.firstName + " " + userData?.lastName}
             </span>
             <span style={{ fontWeight: 400, fontSize: 14, color: "#475467" }}>
               Last updated on 1st Oct, 2023
@@ -117,21 +156,27 @@ export default function Singleuser() {
           >
             Demographics
           </Typography>
-          <TextLabel label="NHR ID" text="485 777 3456" />
-          <TextLabel label="Email Address" text="olufalala110@gmail.com" />
+          <TextLabel label="NHR ID" text={userData?.id} />
+          <TextLabel label="Email Address" text={userData?.email || "None"} />
           <TextLabel
             label="Phone Number"
-            text="(+234) 809 205 4532"
+            text={userData?.phoneNumber}
           ></TextLabel>
           <TextLabel
             label="Address"
-            text="124, Oyediran Estate, Lagos, Nigeria, 5432"
+            text={userData?.address + " " + userData?.lga}
           />
-          <TextLabel label="Age" text="27" />
-          <TextLabel label="Date of Birth" text="15-05-1994" />
-          <TextLabel label="Height" text="6'7 In" />
-          <TextLabel label="Weight" text="80kg" />
-          <TextLabel label="HMO Plan" text="Hygeia" />
+          <TextLabel
+            label="Age"
+            text={moment(new Date()).diff(userData?.dateOfBirth, "years")}
+          />
+          <TextLabel
+            label="Date of Birth"
+            text={moment(userData?.dateOfBirth).format("L")}
+          />
+          <TextLabel label="Height" text={userData?.height + "" + "cm"} />
+          <TextLabel label="Weight" text={userData?.weight + "" + "kg"} />
+          <TextLabel label="HMO Plan" text={userData?.HMOPlan} />
         </Box>
       </Box>
     </Stack>

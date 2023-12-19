@@ -9,7 +9,7 @@ interface PhoneProps {
 
 export default function PhoneField({ name, value, onChange }: PhoneProps) {
   return (
-    <div style={{ marginTop: 8 }}>
+    <div>
       <label htmlFor={name}>
         Phone Number
         <PhoneInput

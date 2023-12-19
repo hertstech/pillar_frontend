@@ -26,7 +26,7 @@ export default function ProfileHome() {
 
   const [firstName, setfirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState("");
+  const [dateOfBirth, setValueThree] = useState("");
 
   const name = user?.firstName.split(" ")[0];
 
@@ -38,7 +38,7 @@ export default function ProfileHome() {
         `/search-service-user/${numberValue}`
       );
 
-      navigate(`/dashboard/search-result/${numberValue}`, {
+      navigate(`/dashboard/search-result`, {
         state: { searchResults: res.data },
       });
       setIsLoading(false);
@@ -65,11 +65,11 @@ export default function ProfileHome() {
         },
         params: payload,
       });
-
-      navigate(`/dashboard/search-result/${numberValue}`, {
-        state: { searchResults: res.data },
+      navigate(`/dashboard/search-result`, {
+        state: { searchResults: res.data.result[0] },
       });
-      console.log(res);
+
+      console.log(res.data.result);
       setIsLoading(false);
     } catch (error) {
       console.error(error);
@@ -80,8 +80,8 @@ export default function ProfileHome() {
   // Assuming dateObj is of type Dayjs | null
   const handleDateChange = (dateObj: Dayjs | null) => {
     // Convert Dayjs object to string or use an empty string if null
-    const dateString = dateObj ? dateObj.format("DD/MM/YYYY") : "";
-    setDateOfBirth(dateString);
+    const dateString = dateObj ? dateObj.format() : "";
+    setValueThree(dateString);
   };
 
   return (
@@ -253,7 +253,7 @@ export default function ProfileHome() {
                           format="DD/MM/YYYY"
                           sx={{ marginTop: "5px", width: "100%" }}
                           disableFuture={true}
-                          value={dayjs("")}
+                          value={dayjs(dateOfBirth)}
                           onChange={handleDateChange}
                         />
                       </DemoContainer>

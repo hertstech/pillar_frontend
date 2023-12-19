@@ -14,10 +14,13 @@ import UserCard from "../../components/UserCard";
 // import { users } from "./_users.tsx";
 import { useEffect, useState } from "react";
 import UserTable from "../../components/UserTable/index.tsx";
-import { useLocation, useParams } from "react-router-dom";
+import {
+  useLocation,
+  // , useParams
+} from "react-router-dom";
 
 export default function ResultPage() {
-  const { id } = useParams();
+  // const { id } = useParams();
 
   const location = useLocation();
 
@@ -33,7 +36,7 @@ export default function ResultPage() {
   return (
     <Box sx={{ pt: 2 }}>
       <HeaderBreadCrumb
-        heading={`Results for ${id}`}
+        heading={`Results`}
         links={[
           { label: "Dashboard", href: "/dashboard", icon: Grids },
           { label: "Clients", href: "", icon: Users },
@@ -196,28 +199,30 @@ export default function ResultPage() {
         </ButtonGroup>
       </Stack>
 
-      {isGrid ? (
-        <Box
-          sx={{
-            display: "grid",
-            marginBottom: 10,
-            gap: 3,
-            gridTemplateColumns: {
-              xs: "repeat(1, 1fr)",
-              sm: "repeat(2, 1fr)",
-              md: "repeat(3, 1fr)",
-              // lg: "repeat(3, 1fr)",
-              // xl: "repeat(4, 1fr)",
-            },
-          }}
-        >
-          <UserCard user={searchResults} />
-        </Box>
+      {searchResults ? (
+        <>
+          {isGrid ? (
+            <Box
+              sx={{
+                display: "grid",
+                marginBottom: 10,
+                gap: 3,
+                gridTemplateColumns: {
+                  xs: "repeat(1, 1fr)",
+                  sm: "repeat(2, 1fr)",
+                  md: "repeat(3, 1fr)",
+                },
+              }}
+            >
+              <UserCard user={searchResults} />
+            </Box>
+          ) : (
+            <UserTable results={searchResults} />
+          )}
+        </>
       ) : (
-        <UserTable results={searchResults} />
+        <NoResultIllustration />
       )}
-
-      {!searchResults && <NoResultIllustration />}
     </Box>
   );
 }

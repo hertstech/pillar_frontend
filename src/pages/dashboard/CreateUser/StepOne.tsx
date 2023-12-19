@@ -67,7 +67,7 @@ export default function StepOne({
   };
 
   const handleDateChange = (newValue: any, name: string) => {
-    superHandleChange({ ...formData, [name]: newValue.format("DD/MM/YYYY") });
+    superHandleChange({ ...formData, [name]: newValue.format() });
 
     // Check if the age is less than 18
     setAgeValue(calculateAge() !== null && calculateAge() < 18);
@@ -353,13 +353,15 @@ export default function StepOne({
               placeholder="Enter NHR ID number"
             />
 
-            <PhoneField
-              name="parentOneNumber"
-              value={formData.parentOneNumber}
-              onChange={(value: any) =>
-                handlePhoneChange(value, "parentOneNumber")
-              }
-            />
+            <div style={{ marginTop: 8 }}>
+              <PhoneField
+                name="parentOneNumber"
+                value={formData.parentOneNumber}
+                onChange={(value: any) =>
+                  handlePhoneChange(value, "parentOneNumber")
+                }
+              />
+            </div>
 
             <div style={{ marginTop: 8 }}>
               <label htmlFor="parentOneRelationship">
@@ -413,13 +415,17 @@ export default function StepOne({
                     onChange={handleChange}
                     placeholder=""
                   />
-                  <PhoneField
-                    name="parentTwoNumber"
-                    value={formData.parentTwoNumber}
-                    onChange={(value: any) =>
-                      handlePhoneChange(value, "parentTwoNumber")
-                    }
-                  />
+
+                  <div style={{ marginTop: 8 }}>
+                    <PhoneField
+                      name="parentTwoNumber"
+                      value={formData.parentTwoNumber}
+                      onChange={(value: any) =>
+                        handlePhoneChange(value, "parentTwoNumber")
+                      }
+                    />
+                  </div>
+
                   <div style={{ marginTop: 8 }}>
                     <label htmlFor="parentTwoRelationship">
                       Relationship
@@ -479,13 +485,15 @@ export default function StepOne({
               placeholder="Enter NHR ID number"
             />
 
-            <PhoneField
-              name="nokPhoneNumber"
-              value={formData.nokPhoneNumber}
-              onChange={(value: any) =>
-                handlePhoneChange(value, "nokPhoneNumber")
-              }
-            />
+            <div style={{ marginTop: 8 }}>
+              <PhoneField
+                name="nokPhoneNumber"
+                value={formData.nokPhoneNumber}
+                onChange={(value: any) =>
+                  handlePhoneChange(value, "nokPhoneNumber")
+                }
+              />
+            </div>
 
             <div style={{ marginTop: 8 }}>
               <label htmlFor="nokRelationship">
