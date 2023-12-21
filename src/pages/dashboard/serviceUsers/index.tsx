@@ -48,7 +48,8 @@ export default function Singleuser() {
         // Example API call
         const res = await axiosInstance.get(`/search-service-user/${id}`);
 
-        setUserData(res.data);
+        setUserData(res?.data.result[0]);
+        // console.log(res?.data.result[0]);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
