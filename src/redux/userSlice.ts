@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 // Define the type for the user object
 interface User {
   [x: string]: any;
-  refresh_token: any;
+  refresh_token: string;
   _id: string;
   // Add other properties based on your user object structure
   name: string; // Example property, replace it with actual properties

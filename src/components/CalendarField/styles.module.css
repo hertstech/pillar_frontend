@@ -1,0 +1,21 @@
+.wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon {
+  position: absolute;
+  right: 1.5rem;
+  cursor: pointer;
+  font-size: 24px;
+  line-height: 32px;
+  color: inherit;
+  top: 18px;
+}
+
+.calendar {
+  position: absolute;
+  background-color: white;
+}

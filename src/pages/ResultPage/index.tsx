@@ -1,22 +1,14 @@
-import {
-  Box,
-  Button,
-  ButtonGroup,
-  Checkbox,
-  FormControlLabel,
-  Stack,
-} from "@mui/material";
+import { Box, Button, ButtonGroup, Stack } from "@mui/material";
 import HeaderBreadCrumb from "../../components/HeaderBreadCrumb";
 import Users from "/assets/users.svg";
 import Grids from "/assets/grid.svg";
-import NoResultIllustration from "../../components/NoResult";
 import UserCard from "../../components/UserCard";
 // import { users } from "./_users.tsx";
 import { useEffect, useState } from "react";
 import UserTable from "../../components/UserTable/index.tsx";
 import {
   useLocation,
-  // , useParams
+  // , useNavigate, useParams
 } from "react-router-dom";
 
 export default function ResultPage() {
@@ -24,7 +16,7 @@ export default function ResultPage() {
 
   const location = useLocation();
 
-  const [searchResults, setSearchResults] = useState({});
+  const [searchResults, setSearchResults] = useState([]);
 
   const [isGrid, setIsGrid] = useState(true);
 
@@ -36,7 +28,7 @@ export default function ResultPage() {
   return (
     <Box sx={{ pt: 2 }}>
       <HeaderBreadCrumb
-        heading={`Results`}
+        heading="Results"
         links={[
           { label: "Dashboard", href: "/dashboard", icon: Grids },
           { label: "Clients", href: "", icon: Users },
@@ -44,35 +36,7 @@ export default function ResultPage() {
         ]}
       />
 
-      <Stack direction="row" justifyContent="space-between">
-        <ButtonGroup sx={{ alignItems: "center", my: 1.5 }}>
-          <p
-            style={{
-              fontSize: 14,
-              fontWeight: 600,
-              color: "#475367",
-              marginRight: 15,
-            }}
-          >
-            Filter by:
-          </p>
-          <FormControlLabel
-            control={<Checkbox size="small" />}
-            label="First Name"
-            labelPlacement="end"
-          />
-          <FormControlLabel
-            control={<Checkbox size="small" />}
-            label="Last Name"
-            labelPlacement="end"
-          />
-          <FormControlLabel
-            control={<Checkbox size="small" />}
-            label="Date of Birth"
-            labelPlacement="end"
-          />
-        </ButtonGroup>
-
+      <Stack direction="row" justifyContent="flex-end">
         <ButtonGroup>
           <Button
             sx={{
@@ -199,29 +163,23 @@ export default function ResultPage() {
         </ButtonGroup>
       </Stack>
 
-      {searchResults ? (
-        <>
-          {isGrid ? (
-            <Box
-              sx={{
-                display: "grid",
-                marginBottom: 10,
-                gap: 3,
-                gridTemplateColumns: {
-                  xs: "repeat(1, 1fr)",
-                  sm: "repeat(2, 1fr)",
-                  md: "repeat(3, 1fr)",
-                },
-              }}
-            >
-              <UserCard user={searchResults} />
-            </Box>
-          ) : (
-            <UserTable results={searchResults} />
-          )}
-        </>
+      {isGrid ? (
+        <Box
+          sx={{
+            display: "grid",
+            marginBottom: 10,
+            gap: 3,
+            gridTemplateColumns: {
+              xs: "repeat(1, 1fr)",
+              sm: "repeat(2, 1fr)",
+              md: "repeat(3, 1fr)",
+            },
+          }}
+        >
+          <UserCard user={searchResults} />
+        </Box>
       ) : (
-        <NoResultIllustration />
+        <UserTable results={searchResults} />
       )}
     </Box>
   );

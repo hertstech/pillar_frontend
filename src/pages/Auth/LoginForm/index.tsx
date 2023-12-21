@@ -8,6 +8,7 @@ import Button from "../../../components/Button";
 // import axios from "axios";
 import { dispatchUserLogin } from "../../../redux/userSlice";
 import { axiosInstance } from "../../../Utils/axios";
+import Swal from "sweetalert2";
 
 export default function LoginPage() {
   const [isLoadingButton, setIsLoadingButton] = useState(false);
@@ -67,9 +68,21 @@ export default function LoginPage() {
       );
 
       navigate("/dashboard", { replace: true });
-    } catch (error) {
-      console.error(error, "error");
+
+      return Swal.fire({
+        icon: "success",
+        title: `Welcome ${response.data.firstName}`,
+        text: `Welcome ${response.data.message}`,
+        confirmButtonColor: "#099250",
+      });
+    } catch (error: any) {
       setIsLoadingButton(false);
+      Swal.fire({
+        icon: "error",
+        title: "Login Error",
+        text: `${error.response.data.message}`,
+        confirmButtonColor: "#099250",
+      });
     }
   };
 

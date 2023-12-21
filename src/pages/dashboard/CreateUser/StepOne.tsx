@@ -150,6 +150,11 @@ export default function StepOne({
                 format="DD/MM/YYYY"
                 sx={{ marginTop: "5px", width: "100%" }}
                 disableFuture={true}
+                slotProps={{
+                  field: {
+                    readOnly: true,
+                  },
+                }}
                 value={dayjs(formData.dateOfBirth)}
                 onChange={(newValue) =>
                   handleDateChange(newValue, "dateOfBirth")

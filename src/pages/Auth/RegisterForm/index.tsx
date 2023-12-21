@@ -5,6 +5,7 @@ import InputField from "../../../components/InputField";
 import Button from "../../../components/Button";
 import { Link, useNavigate } from "react-router-dom";
 import { axiosInstance } from "../../../Utils/axios";
+import Swal from "sweetalert2";
 
 export default function RegisterPage() {
   const [isLoadingButton, setIsLoadingButton] = useState(false);
@@ -68,9 +69,23 @@ export default function RegisterPage() {
       await axiosInstance.post("/auth/create-user", formData);
 
       navigate("/auth/login");
-    } catch (error) {
+
+      // return Swal.fire({
+      //   icon: "success",
+      //   title: `Welcome ${response.data.firstName}`,
+      //   text: `Welcome ${response.data.message}`,
+      //   confirmButtonColor: "#099250",
+      // });
+    } catch (error: any) {
       console.error(error, "error");
       setIsLoadingButton(false);
+
+      Swal.fire({
+        icon: "error",
+        title: "Login Error",
+        text: `${error.response.data.message}`,
+        confirmButtonColor: "#099250",
+      });
     }
   };
   return (

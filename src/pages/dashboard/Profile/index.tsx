@@ -11,6 +11,7 @@ import Buttons from "../../../components/Button";
 import Styles from "./profile.module.css";
 import { useSelector } from "react-redux";
 import { axiosInstance } from "../../../Utils/axios";
+// import NoResultIllustration from "../../../components/NoResult";
 
 export default function ProfileHome() {
   const [searchOptions, setSearchOption] = useState(false);
@@ -21,17 +22,26 @@ export default function ProfileHome() {
   const navigate = useNavigate();
 
   const [numberValue, setNumberValue] = useState("");
+  const [numbError, setNumbError] = useState("");
+
   const [isLoading, setIsLoading] = useState(false);
-  // const today = new Date();
 
   const [firstName, setfirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [dateOfBirth, setValueThree] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState("");
+  const [error, setError] = useState("");
 
-  const name = user?.firstName.split(" ")[0];
+  const name = user?.lastName.split(" ")[0];
 
-  const searchNHRID = async () => {
+  const searchNHRID = async (e: any) => {
+    e.preventDefault();
     setIsLoading(true);
+
+    if (numberValue === "") {
+      setNumbError("Please input a valid NHR ID!");
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const res = await axiosInstance.get(
@@ -39,11 +49,12 @@ export default function ProfileHome() {
       );
 
       navigate(`/dashboard/search-result`, {
-        state: { searchResults: res.data },
+        state: { searchResults: res.data.result },
       });
       setIsLoading(false);
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      console.error(error.response);
+
       setIsLoading(false);
     }
   };
@@ -51,6 +62,12 @@ export default function ProfileHome() {
   const searchNameDate = async (e: any) => {
     e.preventDefault();
     setIsLoading(true);
+
+    if ((firstName === "" && lastName === "") || dateOfBirth === "") {
+      setError("Please input a valid name and date of birth!!!");
+      setIsLoading(false);
+      return;
+    }
 
     const payload = {
       firstName,
@@ -65,14 +82,15 @@ export default function ProfileHome() {
         },
         params: payload,
       });
+
       navigate(`/dashboard/search-result`, {
-        state: { searchResults: res.data.result[0] },
+        state: { searchResults: res.data.result },
       });
 
-      console.log(res.data.result);
+      console.log(res.data.result.length);
       setIsLoading(false);
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      console.error(error.response.data);
       setIsLoading(false);
     }
   };
@@ -81,7 +99,7 @@ export default function ProfileHome() {
   const handleDateChange = (dateObj: Dayjs | null) => {
     // Convert Dayjs object to string or use an empty string if null
     const dateString = dateObj ? dateObj.format() : "";
-    setValueThree(dateString);
+    setDateOfBirth(dateString);
   };
 
   return (
@@ -198,7 +216,7 @@ export default function ProfileHome() {
                     fontSize={18}
                     sx={{ color: "#101828", textAlign: "center" }}
                   >
-                    Welcome Dr, {firstName}
+                    Welcome Dr. {name}
                   </Typography>
                   <Typography
                     variant="subtitle2"
@@ -230,7 +248,10 @@ export default function ProfileHome() {
                       label="First Name"
                       name="firstName"
                       value={firstName}
-                      onChange={(e: any) => setfirstName(e.target.value)}
+                      onChange={(e: any) => {
+                        setfirstName(e.target.value);
+                        setError("");
+                      }}
                       placeholder=""
                     />
 
@@ -239,10 +260,17 @@ export default function ProfileHome() {
                       label="Last Name"
                       name="lastName"
                       value={lastName}
-                      onChange={(e: any) => setLastName(e.target.value)}
+                      onChange={(e: any) => {
+                        setLastName(e.target.value);
+                        setError("");
+                      }}
                       placeholder=""
                     />
                   </Box>
+                  <Typography sx={{ mb: 1 }} color="error" fontSize={12}>
+                    {error && error}
+                  </Typography>
+
                   <label style={{ marginTop: 10 }} htmlFor="dateOfBirth">
                     Date of Birth
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -254,11 +282,17 @@ export default function ProfileHome() {
                           sx={{ marginTop: "5px", width: "100%" }}
                           disableFuture={true}
                           value={dayjs(dateOfBirth)}
+                          slotProps={{
+                            field: {
+                              readOnly: true,
+                            },
+                          }}
                           onChange={handleDateChange}
                         />
                       </DemoContainer>
                     </LocalizationProvider>
                   </label>
+
                   <div className={Styles.bttn}>
                     <Buttons
                       loading={isLoading}
@@ -278,13 +312,12 @@ export default function ProfileHome() {
                     fontSize={20}
                     sx={{ color: "#101828", textAlign: "center" }}
                   >
-                    Welcome Dr, {name}
+                    Welcome Dr. {name}
                   </Typography>
                   <Typography
                     variant="subtitle2"
                     fontWeight={600}
                     fontSize={28}
-                    // lineHeight={1}
                     sx={{
                       color: "#101828",
                       textAlign: "center",
@@ -299,9 +332,16 @@ export default function ProfileHome() {
                     label="NHR ID"
                     name="parentOneNHR_ID"
                     value={numberValue}
-                    onChange={(e: any) => setNumberValue(e.target.value)}
+                    onChange={(e: any) => {
+                      setNumberValue(e.target.value);
+                      setNumbError("");
+                    }}
                     placeholder="Enter NHR ID number"
                   />
+                  <Typography sx={{ mb: 1 }} color="error" fontSize={12}>
+                    {numbError && numbError}
+                  </Typography>
+
                   <div className={Styles.bttn}>
                     <Buttons
                       title="Search records"
@@ -318,3 +358,5 @@ export default function ProfileHome() {
     </Box>
   );
 }
+
+// { "rewrites": [{ "source": "/(.*)", "destination": "/" }] }

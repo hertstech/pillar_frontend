@@ -116,6 +116,10 @@ import { dispatchSetAccessToken } from "../redux/userSlice";
 
 const apiBaseUrl = "https://www.pillartechnologybackend.com.ng/";
 
+const serverAxios = axios.create({
+  withCredentials: true,
+});
+
 export const axiosInstance = axios.create({
   baseURL: apiBaseUrl,
   headers: {
@@ -142,23 +146,25 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   async (error) => {
-    if (error?.response.status === 401) {
+    if (
+      error?.response.status === 401 &&
+      error?.response.data.detail === "expired_token"
+    ) {
       try {
+        // Log information about token refresh
+        console.log("Token expired. Refreshing...");
         // Extract the refresh token from your stored state
         const stored = store.getState();
         const refreshToken = stored.user.user.refresh_token;
         console.log(refreshToken);
 
-        // Log information about token refresh
-        console.log("Token expired. Refreshing...");
-
-        const response = await axiosInstance.post(
-          "auth/refresh",
-          {},
+        const response = await serverAxios.post(
+          `${apiBaseUrl}auth/refresh`,
+          null,
           {
             withCredentials: true,
             headers: {
-              Authorization: `Bearer ${refreshToken}`,
+              "Refresh-Token": `${refreshToken}`,
             },
           }
         );
