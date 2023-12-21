@@ -11,6 +11,7 @@ import Buttons from "../../../components/Button";
 import Styles from "./profile.module.css";
 import { useSelector } from "react-redux";
 import { axiosInstance } from "../../../Utils/axios";
+import Swal from "sweetalert2";
 // import NoResultIllustration from "../../../components/NoResult";
 
 export default function ProfileHome() {
@@ -53,8 +54,13 @@ export default function ProfileHome() {
       });
       setIsLoading(false);
     } catch (error: any) {
-      console.error(error.response);
-
+      // console.error(error.response);
+      Swal.fire({
+        icon: "info",
+        title: "Not Found",
+        text: `${error.response.data}`,
+        confirmButtonColor: "#099250",
+      });
       setIsLoading(false);
     }
   };
@@ -90,7 +96,13 @@ export default function ProfileHome() {
       console.log(res.data.result.length);
       setIsLoading(false);
     } catch (error: any) {
-      console.error(error.response.data);
+      // console.error(error.response.data);
+      Swal.fire({
+        icon: "info",
+        title: "Not Found",
+        text: `${error.response.data}`,
+        confirmButtonColor: "#099250",
+      });
       setIsLoading(false);
     }
   };
