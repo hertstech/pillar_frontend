@@ -1,12 +1,22 @@
 import { useState } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
+import dayjs from "dayjs";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import Style from "../../components/InputField/styles.module.css";
 import Styles from "./styles.module.css";
-
 import { MdOutlineCalendarToday } from "react-icons/md";
 
-export default function CalendarField({ value, selected, onSelect }: any) {
+interface Props {
+  value: string;
+  onChange: any;
+  label: string;
+}
+
+export function CalendarField({ value, selected, onSelect }: any) {
   const [showCalendar, setShowcalendar] = useState(false);
 
   return (
@@ -36,5 +46,31 @@ export default function CalendarField({ value, selected, onSelect }: any) {
         </div>
       )}
     </>
+  );
+}
+
+export function Calendar({ value, onChange, label }: Props) {
+  return (
+    <label style={{ marginTop: 10 }} htmlFor="dateOfBirth">
+      {label}
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DemoContainer components={["DatePicker"]}>
+          <DatePicker
+            orientation="portrait"
+            views={["year", "month", "day"]}
+            format="DD/MM/YYYY"
+            sx={{ marginTop: "5px", width: "100%" }}
+            disableFuture={true}
+            value={dayjs(value)}
+            slotProps={{
+              field: {
+                readOnly: true,
+              },
+            }}
+            onChange={onChange}
+          />
+        </DemoContainer>
+      </LocalizationProvider>
+    </label>
   );
 }

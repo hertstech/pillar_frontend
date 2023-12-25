@@ -54,16 +54,35 @@
   margin-left: 10px;
 }
 
-/* .lists li::before {
-  color: #d0d5dd;
-  content: "\2022";
-  font-weight: bold;
-  display: inline-block;
-  width: 0.8em;
-  font-size: 35px;
-} */
-
-::-webkit-scrollbar {
+.list::-webkit-scrollbar {
   display: none;
   scrollbar-width: none;
+}
+
+.input {
+  display: block;
+  outline: none;
+  border: 1px solid #d0d5dd;
+  padding: 16px;
+  height: 56px;
+  width: 60%;
+  border-radius: 6px;
+  margin-top: 5px;
+  font-size: 16px;
+}
+
+.area {
+  display: block;
+  outline: none;
+  border: 1px solid #d0d5dd;
+  padding: 16px;
+  /* height: 56px; */
+  width: 100%;
+  border-radius: 6px;
+  margin-top: 5px;
+  font-size: 16px;
+}
+
+textarea {
+  resize: none;
 }

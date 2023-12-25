@@ -33,6 +33,7 @@ export default function CreateUser() {
     // STEP ONE
     firstName: "",
     lastName: "",
+    email: "",
     gender: "",
     dateOfBirth: "",
     religion: "",

@@ -1,7 +1,8 @@
 // export const apiBaseUrl = viteEnvs.VITE_HOST_API;
 import axios from "axios";
 import { store } from "../redux/store";
-import { dispatchSetAccessToken } from "../redux/userSlice";
+import { dispatchLogout, dispatchSetAccessToken } from "../redux/userSlice";
+// import { useNavigate } from "react-router-dom";
 
 // function getLocalAccessToken() {
 //   const access_token = window.localStorage.getItem("access_token");
@@ -114,11 +115,9 @@ import { dispatchSetAccessToken } from "../redux/userSlice";
 
 // export default PillarApi;
 
-const apiBaseUrl = "https://www.pillartechnologybackend.com.ng/";
+// const navigate = useNavigate();
 
-const serverAxios = axios.create({
-  withCredentials: true,
-});
+const apiBaseUrl = "https://www.pillartechnologybackend.com.ng/";
 
 export const axiosInstance = axios.create({
   baseURL: apiBaseUrl,
@@ -141,13 +140,17 @@ axiosInstance.interceptors.request.use(
   }
 );
 
+// Counter to track the number of refresh attempts
+let refreshAttempts = 0;
+const maxRefreshAttempts = 5;
+
 axiosInstance.interceptors.response.use(
   (response) => {
     return response;
   },
   async (error) => {
     if (
-      error?.response.status === 401 &&
+      error?.response.status === 401 ||
       error?.response.data.detail === "expired_token"
     ) {
       try {
@@ -158,18 +161,17 @@ axiosInstance.interceptors.response.use(
         const refreshToken = stored.user.user.refresh_token;
         console.log(refreshToken);
 
-        const response = await serverAxios.post(
+        const response = await axiosInstance.post(
           `${apiBaseUrl}auth/refresh`,
-          null,
+          {},
           {
-            withCredentials: true,
             headers: {
-              "Refresh-Token": `${refreshToken}`,
+              "refresh-Token": `${refreshToken}`,
             },
           }
         );
 
-        const { access_token } = response?.data;
+        const access_token = response?.data.access_token;
 
         console.log(access_token);
 
@@ -184,6 +186,17 @@ axiosInstance.interceptors.response.use(
         // Retry the original request with the new access token
         return axiosInstance(error.config);
       } catch (error) {
+        // Check if the maximum number of refresh attempts has been reached
+        refreshAttempts++;
+        if (refreshAttempts >= maxRefreshAttempts) {
+          console.log("Exceeded maximum refresh attempts. Logging out...");
+
+          // Perform the logout action (you need to implement your logout logic)
+          // Example: store.dispatch(logoutAction());
+          store.dispatch(dispatchLogout());
+          // return navigate("/auth/login");
+        }
+
         return Promise.reject(error);
       }
     }

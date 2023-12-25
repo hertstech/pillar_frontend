@@ -16,10 +16,13 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import InputField from "../../../components/InputField";
 import StatesData from "../../../../states.json";
 import PhoneField from "../../../components/PhoneInput";
+// import { countries } from "../../../components/_mock/_countries";
 
 const relations = [
   { value: "father", label: "Father" },
   { value: "mother", label: "Mother" },
+  { value: "son", label: "Son" },
+  { value: "daughter", label: "Daughter" },
   { value: "grand mother", label: "Grand Mother" },
   { value: "grand father", label: "Grand Father" },
   { value: "brother", label: "Brother" },
@@ -113,7 +116,6 @@ export default function StepOne({
           name="firstName"
           value={formData.firstName}
           onChange={handleChange}
-          placeholder=""
         />
 
         <InputField
@@ -122,10 +124,17 @@ export default function StepOne({
           name="lastName"
           value={formData.lastName}
           onChange={handleChange}
-          placeholder=""
         />
 
-        <label htmlFor="gender">
+        <InputField
+          type="email"
+          label="Email Address"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+        />
+
+        <label htmlFor="gender" style={{ marginTop: 8 }}>
           Gender
           <TextField
             select
@@ -245,7 +254,6 @@ export default function StepOne({
           name="address"
           value={formData.address}
           onChange={handleChange}
-          placeholder=""
         />
 
         <Box
@@ -258,7 +266,6 @@ export default function StepOne({
               lg: "repeat(2, 1fr)",
             },
             marginTop: 2,
-            // marginBottom: 2,
           }}
         >
           <label htmlFor="state">
@@ -298,6 +305,24 @@ export default function StepOne({
               ))}
             </TextField>
           </label>
+
+          {/* <label htmlFor="state">
+            Country
+            <TextField
+              select
+              sx={{ marginTop: "5px" }}
+              fullWidth
+              name="country"
+              value={formData.country}
+              onChange={handleChange}
+            >
+              {countries.map((option: any) => (
+                <MenuItem key={option.code} value={option.label}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+          </label> */}
         </Box>
       </Box>
 
@@ -418,7 +443,6 @@ export default function StepOne({
                     name="parentTwoNHR_ID"
                     value={formData.parentTwoNHR_ID}
                     onChange={handleChange}
-                    placeholder=""
                   />
 
                   <div style={{ marginTop: 8 }}>
@@ -533,7 +557,6 @@ export default function StepOne({
           name="nominatedPharmacy"
           value={formData.nominatedPharmacy}
           onChange={handleChange}
-          placeholder=""
         />
         <InputField
           type="text"
@@ -541,7 +564,6 @@ export default function StepOne({
           name="registeredDoctor"
           value={formData.registeredDoctor}
           onChange={handleChange}
-          placeholder=""
         />
         <InputField
           type="text"
@@ -549,7 +571,6 @@ export default function StepOne({
           name="registeredHospital"
           value={formData.registeredHospital}
           onChange={handleChange}
-          placeholder=""
         />
 
         <InputField
@@ -558,7 +579,6 @@ export default function StepOne({
           name="HMOPlan"
           value={formData.HMOPlan}
           onChange={handleChange}
-          placeholder=""
         />
       </Box>
     </>

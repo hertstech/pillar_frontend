@@ -1,13 +1,95 @@
-import { Box, Divider, Stack, Typography } from "@mui/material";
-import Styles from "./styles.module.css";
-import { HiOutlineUser } from "react-icons/hi2";
-import { MdOutlineCalendarToday } from "react-icons/md";
-import { IoTimeOutline, IoLocationOutline } from "react-icons/io5";
+import {
+  Box,
+  Typography,
+  // , Divider, Stack, Typography
+} from "@mui/material";
+// import Styles from "./styles.module.css";
+// import { HiOutlineUser } from "react-icons/hi2";
+// import { MdOutlineCalendarToday } from "react-icons/md";
+// import { IoTimeOutline, IoLocationOutline } from "react-icons/io5";
+import InputField from "../../../components/InputField";
 
-export default function Health() {
+interface UserData {
+  id: string;
+  height: number;
+  weight: number;
+  HMOPlan: string;
+}
+
+interface PropType {
+  isEdit: boolean;
+  userData: UserData;
+}
+
+// const notes = [
+//   {
+//     date: "10/11/2023",
+//     comment:
+//       "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ipsam nostrum earum eius, doloremque voluptate rem culpa dolor eum, accusamus obcaecati perspiciatis animi? Officia, iusto eveniet at perferendis suscipit soluta nesciunt itaque corrupti! Perferendis tenetur voluptatem et fugit recusandae consequatur ex officia provident repellendus, nam ad, porro possimus accusantium nisi sequi.",
+//   },
+//   {
+//     date: "12/11/2023",
+//     comment:
+//       "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ipsam nostrum earum eius, doloremque voluptate rem culpa dolor eum, accusamus obcaecati perspiciatis animi? Officia, iusto eveniet at perferendis suscipit soluta nesciunt itaque corrupti! Perferendis tenetur voluptatem et fugit recusandae consequatur ex officia provident repellendus, nam ad, porro possimus accusantium nisi sequi.",
+//   },
+//   {
+//     date: "16/11/2023",
+//     comment:
+//       "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ipsam nostrum earum eius, doloremque voluptate rem culpa dolor eum, accusamus obcaecati perspiciatis animi? Officia, iusto eveniet at perferendis suscipit soluta nesciunt itaque corrupti! Perferendis tenetur voluptatem et fugit recusandae consequatur ex officia provident repellendus, nam ad, porro possimus accusantium nisi sequi.",
+//   },
+// ];
+
+export default function Health({ isEdit, userData }: PropType) {
   return (
-    <Box sx={{ gap: 4, flexDirection: "column", display: "flex", mb: 10 }}>
-      <Stack sx={{ flexDirection: "row", gap: 4 }}>
+    <Box
+      sx={{
+        gap: 4,
+        flexDirection: "column",
+        display: "flex",
+        mb: 10,
+        background: "white",
+        borderRadius: 2,
+        px: 3,
+        py: 2,
+      }}
+    >
+      <div className="">
+        <Typography sx={{ color: "#099250" }} fontWeight={500} fontSize={18}>
+          Vitals
+        </Typography>
+        <Box
+          sx={{
+            display: "grid",
+            columnGap: 1.5,
+            rowGap: 1.5,
+            gridTemplateColumns: {
+              xs: "repeat(1, 1fr)",
+              lg: "repeat(2, 1fr)",
+            },
+          }}
+        >
+          <InputField
+            type="text"
+            label="HMO Name"
+            name="hmoPlan"
+            value={userData?.HMOPlan || "None"}
+            disabled={!isEdit}
+            onChange={() => {}}
+          />
+        </Box>
+      </div>
+
+      {/* {userData.length > 0 ? (
+        <>
+          <ul>
+            {userData.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </>
+      ) : ( */}
+      {/* )} */}
+      {/* <Stack sx={{ flexDirection: "row", gap: 4 }}>
         <Box
           sx={{
             display: "flex",
@@ -254,12 +336,19 @@ export default function Health() {
               <li>Major depressive disorder</li>
             </ul>
             <div style={{ padding: "16px" }}>
-              <Typography fontWeight={400} fontSize={14} color={"#101928"}>
+              <Typography
+                fontWeight={400}
+                fontSize={14}
+                color={"#101928"}
+                sx={{ alignItems: "center", display: "flex", gap: 1, pl: 2.5 }}
+              >
+                <IoTimeOutline color="#667185" />
                 Thursday, 7th June • 5:30pm
               </Typography>
             </div>
           </div>
         </Box>
+
         <Box
           sx={{
             borderRadius: 2,
@@ -291,7 +380,7 @@ export default function Health() {
           </ul>
           <div
             style={{
-              padding: "16px",
+              padding: "16px 20px",
               color: "#101928",
             }}
           >
@@ -309,22 +398,45 @@ export default function Health() {
         </Box>
       </Stack>
 
-      <Stack>
-        <Box
-          sx={{
-            borderRadius: 2,
-            border: "1px #E4E7EC solid",
-            gap: 2,
-            background: "white",
-            width: "100%",
-          }}
-        >
+      <Stack
+        sx={{
+          background: "white",
+          borderRadius: 2,
+          border: "1px #E4E7EC solid",
+        }}
+      >
+        <Box sx={{}}>
           <Typography sx={{ py: 2, px: 3 }} fontWeight={600} fontSize={18}>
-            Activity
+            Notes
           </Typography>
           <Divider />
+
+          <Box sx={{ background: "white", px: 3 }}>
+            {notes.map((item, index) => (
+              <div style={{ margin: "20px auto" }} key={index}>
+                <span
+                  style={{ fontSize: 14, fontWeight: 700, color: "#101928" }}
+                >
+                  {item.date}
+                </span>
+                <Typography
+                  fontSize={14}
+                  sx={{
+                    border: "0.38px #E4E7EC solid",
+                    borderRadius: 2,
+                    background: "#F0F2F5",
+                    color: "#98A2B3",
+                    mt: 1,
+                    p: 2,
+                  }}
+                >
+                  {item.comment}
+                </Typography>
+              </div>
+            ))}
+          </Box>
         </Box>
-      </Stack>
+      </Stack> */}
     </Box>
   );
 }

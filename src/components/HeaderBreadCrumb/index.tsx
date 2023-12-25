@@ -33,7 +33,7 @@ export default function HeaderBreadCrumb({ heading, links }: Props) {
                   <Typography
                     variant="body2"
                     fontWeight={500}
-                    color="textPrimary"
+                    color="#667185"
                   >
                     {link.icon} {link.label}
                   </Typography>

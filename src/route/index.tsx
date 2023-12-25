@@ -5,7 +5,7 @@ import Dashboard from "../pages/dashboard/CreateUser";
 import Settings from "../pages/Settings";
 import RegisterPage from "../pages/Auth/RegisterForm";
 import Page404 from "../pages/Page404";
-import ResultPage from "../pages/ResultPage";
+import ResultPage from "../pages/dashboard/ResultPage";
 import ProfileHome from "../pages/dashboard/Profile";
 import Singleuser from "../pages/dashboard/serviceUsers";
 
@@ -44,6 +44,10 @@ export const router = createBrowserRouter([
       },
       {
         path: "user/:id",
+        element: <Singleuser />,
+      },
+      {
+        path: "user/:id/edit",
         element: <Singleuser />,
       },
     ],

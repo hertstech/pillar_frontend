@@ -71,8 +71,8 @@ export default function LoginPage() {
 
       return Swal.fire({
         icon: "success",
-        title: `Welcome ${response.data.firstName}`,
-        text: `Welcome ${response.data.message}`,
+        title: `${response.data.message}`,
+        text: `Welcome ${response.data.firstName}`,
         confirmButtonColor: "#099250",
       });
     } catch (error: any) {

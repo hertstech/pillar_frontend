@@ -3,11 +3,12 @@ import Styles from "./styles.module.css";
 interface TextProps {
   label: string;
   name: string;
-  value: string;
+  value: string | number;
   type: string;
   onChange: any;
-  placeholder: string;
+  placeholder?: string;
   required?: boolean;
+  disabled?: boolean;
 }
 
 export default function InputField({
@@ -18,6 +19,7 @@ export default function InputField({
   placeholder,
   type,
   required,
+  disabled,
 }: TextProps) {
   return (
     <div className={Styles.wrapper}>
@@ -31,6 +33,7 @@ export default function InputField({
           onChange={onChange}
           placeholder={placeholder}
           required={required}
+          disabled={disabled}
         />
       </label>
     </div>

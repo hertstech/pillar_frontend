@@ -9,7 +9,7 @@ const navLinks = [
   {
     id: 0,
     name: "EHR Dashboard",
-    to: "/dashboard",
+    to: "/dashboard/new",
     icon: (
       <svg
         width="20"

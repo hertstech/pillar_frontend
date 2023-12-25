@@ -18,6 +18,7 @@ export default function HeaderTabs({ heading, links }: TabProps) {
   const handleChange = (_event: any, newValue: number) => {
     setValue(newValue);
   };
+
   return (
     <Box sx={{ mb: 3 }}>
       <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -35,6 +36,8 @@ export default function HeaderTabs({ heading, links }: TabProps) {
           <Tabs
             TabIndicatorProps={{ style: { display: "none" } }}
             value={value}
+            variant="scrollable"
+            scrollButtons={false}
             onChange={handleChange}
             textColor="inherit"
           >
@@ -52,6 +55,7 @@ export default function HeaderTabs({ heading, links }: TabProps) {
                 key={index}
                 label={tab.label}
                 icon={tab.icon}
+                value={tab.content}
                 iconPosition="start"
                 onClick={() => setValue(index)} // Set the value when the tab is clicked
               />
