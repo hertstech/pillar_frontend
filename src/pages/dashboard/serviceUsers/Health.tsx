@@ -1,83 +1,213 @@
-import {
-  Box,
-  Typography,
-  // , Divider, Stack, Typography
-} from "@mui/material";
-// import Styles from "./styles.module.css";
-// import { HiOutlineUser } from "react-icons/hi2";
-// import { MdOutlineCalendarToday } from "react-icons/md";
-// import { IoTimeOutline, IoLocationOutline } from "react-icons/io5";
+import { Box, Button, Card, MenuItem, Stack, TextField } from "@mui/material";
+import Styles from "./styles.module.css";
 import InputField from "../../../components/InputField";
+import categories from "../../../../categories.json";
+import { useState } from "react";
+import NoResultIllustration from "../../../components/NoResult";
+import HealthPreview from "./HealthPreview";
 
-interface UserData {
-  id: string;
-  height: number;
-  weight: number;
-  HMOPlan: string;
+interface FormState {
+  categories: string;
+  type: string;
+  reading: string;
+  notes: string;
 }
 
-interface PropType {
-  isEdit: boolean;
-  userData: UserData;
-}
+const initialFormState = {
+  categories: "",
+  type: "",
+  reading: "",
+  notes: "",
+};
 
-// const notes = [
-//   {
-//     date: "10/11/2023",
-//     comment:
-//       "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ipsam nostrum earum eius, doloremque voluptate rem culpa dolor eum, accusamus obcaecati perspiciatis animi? Officia, iusto eveniet at perferendis suscipit soluta nesciunt itaque corrupti! Perferendis tenetur voluptatem et fugit recusandae consequatur ex officia provident repellendus, nam ad, porro possimus accusantium nisi sequi.",
-//   },
-//   {
-//     date: "12/11/2023",
-//     comment:
-//       "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ipsam nostrum earum eius, doloremque voluptate rem culpa dolor eum, accusamus obcaecati perspiciatis animi? Officia, iusto eveniet at perferendis suscipit soluta nesciunt itaque corrupti! Perferendis tenetur voluptatem et fugit recusandae consequatur ex officia provident repellendus, nam ad, porro possimus accusantium nisi sequi.",
-//   },
-//   {
-//     date: "16/11/2023",
-//     comment:
-//       "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ipsam nostrum earum eius, doloremque voluptate rem culpa dolor eum, accusamus obcaecati perspiciatis animi? Officia, iusto eveniet at perferendis suscipit soluta nesciunt itaque corrupti! Perferendis tenetur voluptatem et fugit recusandae consequatur ex officia provident repellendus, nam ad, porro possimus accusantium nisi sequi.",
-//   },
-// ];
+export default function Health() {
+  const [hide, setHide] = useState(false);
+  const [formField, setFormField] = useState<FormState[]>([]);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
-export default function Health({ isEdit, userData }: PropType) {
+  const addForm = () => {
+    setHide(true);
+    setFormField((prevForms) => [...prevForms, { ...initialFormState }]);
+  };
+
+  const deleteForm = (index: number) => {
+    setFormField((prevForms) => {
+      const newForms = [...prevForms];
+      newForms.splice(index, 1);
+      return newForms;
+    });
+  };
+
+  const handleFormChange = (index: number, field: any, value: any) => {
+    setFormField((prevForms) => {
+      const newForms = [...prevForms];
+      newForms[index] = {
+        ...newForms[index],
+        [field]: value,
+      };
+      return newForms;
+    });
+  };
   return (
     <Box
       sx={{
-        gap: 4,
+        position: "relative",
         flexDirection: "column",
         display: "flex",
-        mb: 10,
+        mb: 8,
         background: "white",
-        borderRadius: 2,
         px: 3,
-        py: 2,
+        pb: 3,
+        borderRadius: 2,
+        gap: 3,
       }}
     >
-      <div className="">
-        <Typography sx={{ color: "#099250" }} fontWeight={500} fontSize={18}>
-          Vitals
-        </Typography>
-        <Box
-          sx={{
-            display: "grid",
-            columnGap: 1.5,
-            rowGap: 1.5,
-            gridTemplateColumns: {
-              xs: "repeat(1, 1fr)",
-              lg: "repeat(2, 1fr)",
-            },
-          }}
+      <div style={{ marginBottom: "50px" }}>
+        <Stack
+          direction="row"
+          justifyContent="flex-end"
+          position={"absolute"}
+          p={1.5}
+          display={"flex"}
+          right={0}
         >
-          <InputField
-            type="text"
-            label="HMO Name"
-            name="hmoPlan"
-            value={userData?.HMOPlan || "None"}
-            disabled={!isEdit}
-            onChange={() => {}}
-          />
-        </Box>
+          <Button
+            variant="contained"
+            sx={{
+              color: "#FFF",
+              outline: "none",
+              textTransform: "capitalize",
+              fontWeight: 600,
+              background: "#099250",
+              "&:hover": { backgroundColor: "#099250" },
+            }}
+            onClick={addForm}
+          >
+            Add New
+          </Button>
+        </Stack>
       </div>
+
+      {formField.map((form: any, index: any) => (
+        <form>
+          <Card sx={{ p: 2 }}>
+            <Box
+              sx={{
+                display: "grid",
+                columnGap: 1.5,
+                rowGap: 1.5,
+                gridTemplateColumns: {
+                  xs: "repeat(1, 1fr)",
+                  lg: "repeat(3, 1fr)",
+                },
+              }}
+            >
+              <label
+                htmlFor={`category_${index}`}
+                style={{ marginTop: "10px" }}
+              >
+                Category
+                <TextField
+                  select
+                  sx={{ marginTop: "5px" }}
+                  fullWidth
+                  name="categories"
+                  value={form.categories}
+                  onChange={(e) =>
+                    handleFormChange(index, "categories", e.target.value)
+                  }
+                >
+                  {categories.map((item, index) => (
+                    <MenuItem key={index} value={item.name}>
+                      {item.name}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </label>
+
+              <label htmlFor={`types${index}`} style={{ marginTop: "10px" }}>
+                Type
+                <TextField
+                  select
+                  sx={{ marginTop: "5px" }}
+                  fullWidth
+                  name="type"
+                  value={form.type}
+                  onChange={(e) =>
+                    handleFormChange(index, "type", e.target.value)
+                  }
+                >
+                  {categories
+                    ?.find((category) => category.name === form.categories)
+                    ?.type.map((item, index) => (
+                      <MenuItem key={index} value={item}>
+                        {item ? item : ""}
+                      </MenuItem>
+                    ))}
+                </TextField>
+              </label>
+
+              <div style={{ marginTop: "5px" }}>
+                <InputField
+                  type="text"
+                  label="Reading or Description"
+                  name={`reading_${index}`}
+                  value={form.reading}
+                  onChange={(e: any) =>
+                    handleFormChange(index, "reading", e.target.value)
+                  }
+                />
+              </div>
+            </Box>
+
+            <label htmlFor="notes" style={{ marginTop: "10px" }}>
+              Additional Notes
+              <textarea
+                className={Styles.area}
+                name={`notes_${index}`}
+                rows={7}
+                cols={50}
+                value={form.notes}
+                onChange={(e: any) =>
+                  handleFormChange(index, "notes", e.target.value)
+                }
+              ></textarea>
+            </label>
+
+            <Stack
+              direction="row"
+              justifyContent="flex-end"
+              marginTop={2}
+              gap={5}
+            >
+              <Button
+                sx={{
+                  color: "#FFF",
+                  outline: "none",
+                  fontWeight: 600,
+                  background: "#099250",
+                  "&:hover": { backgroundColor: "#099250" },
+                  px: 3,
+                }}
+                variant="outlined"
+                onClick={() => setIsOpen(true)}
+              >
+                Preview
+              </Button>
+              <Button
+                variant="outlined"
+                color="error"
+                onClick={() => deleteForm(index)}
+              >
+                Delete Form
+              </Button>
+            </Stack>
+          </Card>
+        </form>
+      ))}
+
+      {/* INITIAL STATE WHEN EMPTY */}
+      {!hide && formField.length === 0 && <NoResultIllustration />}
 
       {/* {userData.length > 0 ? (
         <>
@@ -437,6 +567,17 @@ export default function Health({ isEdit, userData }: PropType) {
           </Box>
         </Box>
       </Stack> */}
+      {formField.map((form, index) => (
+        <HealthPreview
+          key={index}
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          categories={form.categories}
+          type={form.type}
+          reading={form.reading}
+          notes={form.notes}
+        />
+      ))}
     </Box>
   );
 }

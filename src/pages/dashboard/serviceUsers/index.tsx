@@ -65,7 +65,12 @@ export default function Singleuser() {
     {
       label: "Health Summary",
       icon: <CiMedicalCross />,
-      content: <Health isEdit={isEdit} userData={userData} />,
+      content: (
+        <Health
+        // isEdit={isEdit}
+        // userData={userData}
+        />
+      ),
     },
     {
       label: "Medication",

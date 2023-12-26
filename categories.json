@@ -1,0 +1,64 @@
+[
+  {
+    "name": "Vitals",
+    "type": [
+      "Blood pressure",
+      "Body Temperature",
+      "Pulse Rate",
+      "Respiration Rate",
+      "Oxygen Saturation",
+      "Blood type"
+    ]
+  },
+  {
+    "name": "Immunization",
+    "type": [
+      "Hepatitis B",
+      "MMR",
+      "HPV",
+      "Yellow fever",
+      "Covid",
+      "Name of vaccine"
+    ]
+  },
+  {
+    "name": "Medical Conditions",
+    "type": ["Type 2 Diabetic", "Cancer", "Asthma", "Hypertension"]
+  },
+  {
+    "name": "Diagnosis",
+    "type": []
+  },
+  {
+    "name": "Clinical Observations",
+    "type": []
+  },
+  {
+    "name": "Treatment",
+    "type": []
+  },
+  {
+    "name": "Personal Preferences",
+    "type": []
+  },
+  {
+    "name": "Recent Surgeries",
+    "type": []
+  },
+  {
+    "name": "Investigation Result",
+    "type": []
+  },
+  {
+    "name": "Risk Factors",
+    "type": []
+  },
+  {
+    "name": "Hospital Visits",
+    "type": []
+  },
+  {
+    "name": "Emergency Contacts",
+    "type": []
+  }
+]

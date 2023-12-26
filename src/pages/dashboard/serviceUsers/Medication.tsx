@@ -282,6 +282,7 @@ export default function Assessment() {
               <Calendar
                 label="Date Prescribed"
                 value={form.datePrescribed}
+                disableFuture={false}
                 onChange={(newValue: any) =>
                   handleFormChange(index, "datePrescribed", newValue.format())
                 }
@@ -289,6 +290,7 @@ export default function Assessment() {
               <Calendar
                 label="Start Date"
                 value={form.startDate}
+                disableFuture={false}
                 onChange={(newValue: any) =>
                   handleFormChange(index, "startDate", newValue.format())
                 }
@@ -297,6 +299,7 @@ export default function Assessment() {
               <Calendar
                 label="End Date"
                 value={form.endDate}
+                disableFuture={false}
                 onChange={(newValue: any) =>
                   handleFormChange(index, "endDate", newValue.format())
                 }
@@ -318,7 +321,7 @@ export default function Assessment() {
               <textarea
                 className={Styles.area}
                 name={`additionalNote_${index}`}
-                rows={4}
+                rows={5}
                 cols={50}
                 value={form.additionalNote}
                 onChange={(e) =>

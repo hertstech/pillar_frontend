@@ -67,7 +67,7 @@
   height: 56px;
   width: 60%;
   border-radius: 6px;
-  margin-top: 5px;
+  margin-top: 8px;
   font-size: 16px;
 }
 
@@ -75,7 +75,7 @@
   display: block;
   outline: none;
   border: 1px solid #d0d5dd;
-  padding: 16px;
+  padding: 12px;
   /* height: 56px; */
   width: 100%;
   border-radius: 6px;
@@ -85,4 +85,5 @@
 
 textarea {
   resize: none;
+  overflow: hidden;
 }

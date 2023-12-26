@@ -93,3 +93,39 @@ export const reportedBy = [
     value: "Other (pls specify in comment box)",
   },
 ];
+
+export const category = [
+  {
+    name: "Vitals",
+    type: [
+      "Blood pressure",
+      "Body Temperature",
+      "Pulse Rate",
+      "Respiration Rate",
+      "Oxygen Saturation",
+      "Blood type",
+    ],
+  },
+];
+//   { value: "Vitals", label: "Vitals" },
+//   { value: "Immunization", label: "Immunization" },
+//   { value: "Medical Conditions", label: "Medical Conditions" },
+//   { value: "Diagnosis", label: "Diagnosis" },
+//   { value: "Clinical Observations", label: "Clinical Observations" },
+//   { value: "Treatment", label: "Treatment" },
+//   { value: "Personal Preferences", label: "Personal Preferences" },
+//   { value: "Recent Surgeries", label: "Recent Surgeries" },
+//   { value: "Investigation Results", label: "Investigation Results" },
+//   { value: "Risk Factors", label: "Risk Factors" },
+//   { value: "Hospital Visits", label: "Hospital Visits" },
+//   { value: "Emergency Contact", label: "Emergency Contact" },
+// ];
+
+// export const vitals = [
+//   { value: "Blood pressure", label: "Blood pressure" },
+//   { value:  label: "Body Temperature" },
+//   { value:  label: "Pulse Rate" },
+//   { value:  label: "Respiration Rate" },
+//   { value:  label: "Oxygen Saturation" },
+//   { value:  label: "Blood type" },
+// ];
