@@ -48,8 +48,8 @@ export const substance = [
   { label: "Dust", value: "Dust" },
   { label: "Palm Oil", value: "Palm Oil" },
   { label: "Pepper", value: "Pepper" },
-  { label: "vegetable oil", value: "vegetable oil" },
-  { label: " tramadol", value: " tramadol" },
+  { label: "Vegetable Oil", value: "Vegetable Oil" },
+  { label: "Tramadol", value: "Tramadol" },
 ];
 
 export const reactionType = [
