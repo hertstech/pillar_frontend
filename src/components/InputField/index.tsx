@@ -1,3 +1,4 @@
+import { Typography } from "@mui/material";
 import Styles from "./styles.module.css";
 
 interface TextProps {
@@ -39,3 +40,24 @@ export default function InputField({
     </div>
   );
 }
+
+interface TextLabelProps {
+  text: any;
+  label: string;
+}
+export const TextLabel = ({ text, label }: TextLabelProps) => (
+  <label
+    style={{
+      fontWeight: 400,
+      color: "#475467",
+      fontSize: 16,
+      margin: "10px 0px",
+      textTransform: "capitalize",
+    }}
+  >
+    {label}
+    <Typography fontWeight={600} fontSize={18} color={"#101928"}>
+      {text}
+    </Typography>
+  </label>
+);

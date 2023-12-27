@@ -20,6 +20,7 @@ import StepThree from "./StepThree";
 import Buttons from "../../../components/Button";
 import { useSelector } from "react-redux";
 import { axiosInstance } from "../../../Utils/axios";
+import { Navigate } from "react-router-dom";
 
 export default function CreateUser() {
   const [activeStep, setActiveStep] = useState(0);
@@ -159,6 +160,11 @@ export default function CreateUser() {
       setIsLoading(false);
     }
   };
+
+  if (!token) {
+    <Navigate to={"/auth/login"} />;
+  }
+
   return (
     <Box sx={{ pt: 3 }}>
       <HeaderBreadCrumb

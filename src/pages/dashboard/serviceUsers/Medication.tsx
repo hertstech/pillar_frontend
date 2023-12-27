@@ -49,6 +49,7 @@ const initialFormState = {
 
 export default function Assessment() {
   const [hide, setHide] = useState(false);
+
   const [formField, setFormField] = useState<FormState[]>([]);
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -195,7 +196,7 @@ export default function Assessment() {
                 Dosage Form
                 <TextField
                   select
-                  sx={{ marginTop: "5px" }}
+                  sx={{ marginTop: "8px" }}
                   fullWidth
                   name={`medicationDosageForm_${index}`}
                   value={form.medicationDosageForm}
@@ -229,7 +230,7 @@ export default function Assessment() {
                   />
                   <TextField
                     select
-                    sx={{ marginTop: "5px", width: "40%" }}
+                    sx={{ marginTop: "8px", width: "40%" }}
                     name={`dosagemeasurement_${index}`}
                     value={form.dosagemeasurement}
                     onChange={(e) =>
@@ -263,7 +264,7 @@ export default function Assessment() {
                   />
                   <TextField
                     select
-                    sx={{ marginTop: "5px", width: "40%" }}
+                    sx={{ marginTop: "8px", width: "40%" }}
                     name={`frequencyType_${index}`}
                     value={form.frequencyType}
                     onChange={(e) =>
@@ -365,101 +366,6 @@ export default function Assessment() {
       {/* INITIAL STATE WHEN EMPTY */}
       {!hide && formField.length === 0 && <NoResultIllustration />}
 
-      {/* <Stack>
-        <Box
-          sx={{
-            borderRadius: 2,
-            border: "1px #E4E7EC solid",
-            gap: 2,
-            background: "white",
-            width: "100%",
-          }}
-        >
-          <Typography sx={{ py: 2, px: 3 }} fontWeight={600} fontSize={18}>
-            Dr Ojo’s Assessment - 7th October 2021
-          </Typography>
-
-          <Divider />
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(2, 1fr)",
-              padding: "16px 24px",
-            }}
-          >
-            <TextLabel label="Health Condition" text="Severe Headache" />
-            <TextLabel label="Prescription" text="Paracetamol tablet" />
-            <TextLabel
-              label="Comment"
-              text="Patient looking to respond tp treatment"
-            />
-          </div>
-        </Box>
-      </Stack> */}
-
-      {/* <Stack>
-        <Box
-          sx={{
-            borderRadius: 2,
-            border: "1px #E4E7EC solid",
-            gap: 2,
-            background: "white",
-            width: "100%",
-          }}
-        >
-          <Typography sx={{ py: 2, px: 3 }} fontWeight={600} fontSize={18}>
-            Dr Ojo’s Assessment - 6th October 2021
-          </Typography>
-
-          <Divider />
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(2, 1fr)",
-              padding: "16px 24px",
-            }}
-          >
-            <TextLabel label="Health Condition" text="Severe Headache" />
-            <TextLabel label="Prescription" text="Paracetamol tablet" />
-            <TextLabel
-              label="Comment"
-              text="Patient looking to respond tp treatment"
-            />
-          </div>
-        </Box>
-      </Stack> */}
-
-      {/* <Stack>
-        <Box
-          sx={{
-            borderRadius: 2,
-            border: "1px #E4E7EC solid",
-            gap: 2,
-            background: "white",
-            width: "100%",
-          }}
-        >
-          <Typography sx={{ py: 2, px: 3 }} fontWeight={600} fontSize={18}>
-            Dr Ojo’s Assessment - 5th October 2021
-          </Typography>
-
-          <Divider />
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(2, 1fr)",
-              padding: "16px 24px",
-            }}
-          >
-            <TextLabel label="Health Condition" text="Severe Headache" />
-            <TextLabel label="Prescription" text="Paracetamol tablet" />
-            <TextLabel
-              label="Comment"
-              text="Patient looking to respond tp treatment"
-            />
-          </div>
-        </Box>
-      </Stack> */}
       {formField.map((form, index) => (
         <Preview
           key={index}

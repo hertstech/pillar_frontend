@@ -6,9 +6,13 @@
       "Body Temperature",
       "Pulse Rate",
       "Respiration Rate",
-      "Oxygen Saturation",
-      "Blood type"
+      "Oxygen Saturation"
     ]
+  },
+  {
+    "name": "Genetic Information",
+    "type": ["Blood Type", "Genotype"],
+    "sample": ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-", "Other"]
   },
   {
     "name": "Immunization",
@@ -27,38 +31,38 @@
   },
   {
     "name": "Diagnosis",
-    "type": []
+    "type": ["No type provided"]
   },
   {
     "name": "Clinical Observations",
-    "type": []
+    "type": ["No type provided"]
   },
   {
     "name": "Treatment",
-    "type": []
+    "type": ["No type provided"]
   },
   {
     "name": "Personal Preferences",
-    "type": []
+    "type": ["No type provided"]
   },
   {
     "name": "Recent Surgeries",
-    "type": []
+    "type": ["No type provided"]
   },
   {
     "name": "Investigation Result",
-    "type": []
+    "type": ["No type provided"]
   },
   {
     "name": "Risk Factors",
-    "type": []
+    "type": ["No type provided"]
   },
   {
     "name": "Hospital Visits",
-    "type": []
+    "type": ["No type provided"]
   },
   {
     "name": "Emergency Contacts",
-    "type": []
+    "type": ["No type provided"]
   }
 ]

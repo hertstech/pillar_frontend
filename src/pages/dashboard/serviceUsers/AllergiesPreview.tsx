@@ -76,7 +76,7 @@ export default function AllergiesPreview({
           fontWeight={500}
           sx={{ flexGrow: 1 }}
         >
-          Preview Allergies Report
+          Preview Allergies Record
         </Typography>
       </DialogActions>
       {hasContent ? (
