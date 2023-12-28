@@ -20,7 +20,7 @@ import { axiosInstance } from "../../../Utils/axios";
 import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import moment from "moment";
-// import { useSelector } from "react-redux";
+import { IoTimeOutline } from "react-icons/io5";
 
 interface FormState {
   categories: string;
@@ -94,8 +94,6 @@ export default function Health() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [record, setRecord] = useState<apiResponse[]>([]);
 
-  // const token = useSelector((state: any) => state.user.access_token);
-
   const { id } = useParams();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -120,7 +118,6 @@ export default function Health() {
   const handleSubmit = async () => {
     setIsLoading(true);
     const dataObject = formField[0];
-    console.log(dataObject);
 
     try {
       const res = await axiosInstance.post(
@@ -140,7 +137,6 @@ export default function Health() {
       setFormField([]);
     } catch (error: any) {
       console.error(error);
-      setIsOpen(false);
       setIsLoading(false);
       Swal.fire({
         icon: "error",
@@ -163,6 +159,7 @@ export default function Health() {
         setIsLoading(false);
       } catch (error) {
         console.error(error);
+        setIsLoading(false);
       }
     };
 
@@ -191,6 +188,7 @@ export default function Health() {
         pb: 3,
         borderRadius: 2,
         gap: 3,
+        minHeight: "610px",
       }}
     >
       <div style={{ marginBottom: "50px" }}>
@@ -512,6 +510,25 @@ export default function Health() {
                 <TextLabel label="Blood Type" text={item.bloodType || "None"} />
               </Box>
               <TextLabel label="Additional Notes" text={item.notes || "None"} />
+
+              <div
+                style={{
+                  padding: "16px 0px",
+                  color: "#101928",
+                }}
+              >
+                <Typography fontWeight={400} fontSize={12}>
+                  Administered by
+                </Typography>
+                <Typography
+                  fontWeight={400}
+                  fontSize={14}
+                  sx={{ display: "flex", gap: 1, alignItems: "center" }}
+                >
+                  <IoTimeOutline style={{ height: 15, width: 15 }} /> ID: #
+                  {item.pillar_user_id_fk}
+                </Typography>
+              </div>
             </div>
           )}
         </Box>

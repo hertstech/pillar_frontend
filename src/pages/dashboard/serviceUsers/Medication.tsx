@@ -1,6 +1,6 @@
 import { Box, Stack, Button, Card, TextField, MenuItem } from "@mui/material";
 import NoResultIllustration from "../../../components/NoResult";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Styles from "./styles.module.css";
 import { Calendar } from "../../../components/CalendarField";
 import InputField from "../../../components/InputField";
@@ -61,6 +61,8 @@ export default function Assessment() {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const [record, setRecord] = useState([]);
+
   const addForm = () => {
     setHide(true);
     setFormField((prevForms) => [...prevForms, { ...initialFormState }]);
@@ -106,6 +108,8 @@ export default function Assessment() {
         text: `Welcome ${res.data.message}`,
         confirmButtonColor: "#099250",
       });
+
+      setFormField([]);
     } catch (error: any) {
       console.error(error);
       setIsLoading(false);
@@ -117,6 +121,25 @@ export default function Assessment() {
       });
     }
   };
+
+  useEffect(() => {
+    const getMedication = async () => {
+      setIsLoading(true);
+      try {
+        const res = await axiosInstance.get(
+          `/serviceuser-allergiesrecord/${id}`
+        );
+
+        setRecord(res?.data.result);
+        setIsLoading(false);
+      } catch (error) {
+        console.error(error);
+        setIsLoading(false);
+      }
+    };
+
+    // getMedication();
+  }, [id]);
 
   return (
     <Box
@@ -404,7 +427,7 @@ export default function Assessment() {
       ))}
 
       {/* INITIAL STATE WHEN EMPTY */}
-      {!hide && formField.length === 0 && <NoResultIllustration />}
+      {!hide && record.length === 0 && <NoResultIllustration />}
 
       {formField.map((form, index) => (
         <Preview

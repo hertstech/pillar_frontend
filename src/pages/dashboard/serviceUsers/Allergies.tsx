@@ -1,8 +1,17 @@
-import { Box, Stack, Button, Card, TextField, MenuItem } from "@mui/material";
+import {
+  Box,
+  Stack,
+  Button,
+  Card,
+  TextField,
+  MenuItem,
+  Typography,
+} from "@mui/material";
 import Styles from "./styles.module.css";
 import NoResultIllustration from "../../../components/NoResult";
-import { useState } from "react";
-import InputField from "../../../components/InputField";
+import { FaAngleUp, FaAngleDown } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import InputField, { TextLabel } from "../../../components/InputField";
 import AllergiesPreview from "./AllergiesPreview";
 import {
   certainty,
@@ -14,6 +23,8 @@ import {
 } from "./shared";
 import { useParams } from "react-router-dom";
 import { axiosInstance } from "../../../Utils/axios";
+import Swal from "sweetalert2";
+import moment from "moment";
 
 interface FormState {
   substance: string;
@@ -39,13 +50,35 @@ const initialState = {
   notes: "",
 };
 
+interface apiResponse {
+  certainty: string;
+  date_created: string;
+  evidence: string;
+  id: string;
+  notes: string;
+  pillar_faclityname_fk: string;
+  pillar_user_id_fk: string;
+  reaction: string;
+  reactionType: string;
+  relativeName: string;
+  reportedBy: string;
+  serviceuser_id_fk: string;
+  severity: string;
+  substance: string;
+}
+
 export default function Allergies() {
   const [hide, setHide] = useState(false);
+
+  const [show, setShow] = useState("");
+
   const [formField, setFormField] = useState<FormState[]>([]);
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const { id } = useParams();
+
+  const [record, setRecord] = useState<apiResponse[]>([]);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -60,6 +93,10 @@ export default function Allergies() {
       newForms.splice(index, 1);
       return newForms;
     });
+  };
+
+  const handleToggle = (index: any) => {
+    setShow((prevIndex) => (prevIndex === index ? null : index));
   };
 
   const handleFormChange = (index: number, field: any, value: any) => {
@@ -80,16 +117,50 @@ export default function Allergies() {
 
     try {
       const res = await axiosInstance.post(
-        `/create-serviceuser-allergiesrecord/${id}`,dataObject
+        `/create-serviceuser-allergiesrecord/${id}`,
+        dataObject
       );
 
-      console.log(res.data);
+      setIsOpen(false);
       setIsLoading(false);
-    } catch (error) {
+
+      Swal.fire({
+        icon: "success",
+        title: `Successful`,
+        text: `Welcome ${res.data.message}`,
+        confirmButtonColor: "#099250",
+      });
+      setFormField([]);
+    } catch (error: any) {
       console.error(error);
       setIsLoading(false);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: `${error.response.data.message}`,
+        confirmButtonColor: "#099250",
+      });
     }
   };
+
+  useEffect(() => {
+    const getAllergy = async () => {
+      setIsLoading(true);
+      try {
+        const res = await axiosInstance.get(
+          `/serviceuser-allergiesrecord/${id}`
+        );
+
+        setRecord(res?.data.result);
+        setIsLoading(false);
+      } catch (error) {
+        console.error(error);
+        setIsLoading(false);
+      }
+    };
+
+    getAllergy();
+  }, [id]);
 
   return (
     <Box
@@ -102,6 +173,7 @@ export default function Allergies() {
         px: 3,
         pb: 3,
         borderRadius: 2,
+        minHeight: "610px",
         gap: 3,
       }}
     >
@@ -205,7 +277,10 @@ export default function Allergies() {
                 </TextField>
               </label>
 
-              <label htmlFor={`severity_${index}`}>
+              <label
+                htmlFor={`severity_${index}`}
+                style={{ marginTop: "10px" }}
+              >
                 Severity
                 <TextField
                   select
@@ -225,7 +300,10 @@ export default function Allergies() {
                 </TextField>
               </label>
 
-              <label htmlFor={`certainty_${index}`}>
+              <label
+                htmlFor={`certainty_${index}`}
+                style={{ marginTop: "10px" }}
+              >
                 Certainty
                 <TextField
                   select
@@ -333,128 +411,83 @@ export default function Allergies() {
       ))}
 
       {/* INITIAL STATE WHEN EMPTY */}
-      {!hide && formField.length === 0 && <NoResultIllustration />}
-      {/* <Stack>
-        <Box
-          sx={{
-            borderRadius: 2,
-            border: "1px #E4E7EC solid",
-            gap: 2,
-            background: "white",
-            width: "100%",
-          }}
-        >
-          <Typography sx={{ py: 2, px: 3 }} fontWeight={600} fontSize={18}>
-            Dr Ojo’s Assessment - 7th October 2021
-          </Typography>
+      {!hide || (record.length === 0 && <NoResultIllustration />)}
 
-          <Divider />
-
-          <ul className={Styles.lists}>
-            <li>Anxiety disorder, unspecified</li>
-            <li>Adjustement disorder and anxiety</li>
-            <li>Major depressive disorder</li>
-          </ul>
-          <div
-            style={{
-              padding: "16px",
-              color: "#101928",
+      {record.map((item, index) => (
+        <Box key={index}>
+          <Button
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              p: 2,
+              userSelect: "none",
+              fontSize: 18,
+              justifyContent: "space-between",
+              border: "1px #E4E7EC solid",
+              textTransform: "capitalize",
+              color: "#099250",
             }}
+            fullWidth
+            onClick={() => handleToggle(`${item?.substance}${index}`)}
           >
-            <Typography fontWeight={400} fontSize={12}>
-              Administered by
-            </Typography>
-            <Typography
-              fontWeight={400}
-              fontSize={14}
-              sx={{ display: "flex", gap: 1, alignItems: "center" }}
-            >
-              <IoTimeOutline style={{ height: 15, width: 15 }} /> ID: #37493873
-            </Typography>
-          </div>
+            <span>{item?.substance}</span>
+            <span>
+              {show === `${item?.substance}${index}` ? (
+                <FaAngleUp />
+              ) : (
+                <FaAngleDown />
+              )}
+            </span>
+          </Button>
+
+          {show === `${item?.substance}${index}` && (
+            <div style={{ padding: 6 }}>
+              <Box
+                sx={{
+                  display: "grid",
+                  columnGap: 1.5,
+                  rowGap: 1.5,
+                  gridTemplateColumns: {
+                    xs: "repeat(1, 1fr)",
+                    lg: "repeat(3, 1fr)",
+                  },
+                }}
+              >
+                <TextLabel
+                  label="Reaction Type"
+                  text={item.reactionType || "None"}
+                />
+                <TextLabel label="Reaction" text={item.reaction || "None"} />
+                <TextLabel label="Severity" text={item.severity || "None"} />
+                <TextLabel label="Certainty" text={item.certainty || "None"} />
+                <TextLabel label="EVidence" text={item.evidence || "None"} />
+                <TextLabel
+                  label="Reported by"
+                  text={item.reportedBy || "None"}
+                />
+
+                <TextLabel
+                  label="Name of reporter"
+                  text={item.relativeName || "None"}
+                />
+              </Box>
+              <TextLabel label="Additional Notes" text={item.notes || "None"} />
+
+              <div
+                style={{
+                  padding: "16px 0px",
+                  color: "#101928",
+                }}
+              >
+                <Typography fontWeight={400} fontSize={16}>
+                  Report created on {moment(item.date_created).format("l")} by
+                  ID: #{item.pillar_user_id_fk}
+                </Typography>
+              </div>
+            </div>
+          )}
         </Box>
-      </Stack> */}
-
-      {/* <Stack>
-        <Box
-          sx={{
-            borderRadius: 2,
-            border: "1px #E4E7EC solid",
-            gap: 2,
-            background: "white",
-            width: "100%",
-          }}
-        >
-          <Typography sx={{ py: 2, px: 3 }} fontWeight={600} fontSize={18}>
-            Dr Ojo’s Assessment - 6th October 2021
-          </Typography>
-
-          <Divider />
-
-          <ul className={Styles.lists}>
-            <li>Anxiety disorder, unspecified</li>
-            <li>Adjustement disorder and anxiety</li>
-            <li>Major depressive disorder</li>
-          </ul>
-          <div
-            style={{
-              padding: "16px",
-              color: "#101928",
-            }}
-          >
-            <Typography fontWeight={400} fontSize={12}>
-              Administered by
-            </Typography>
-            <Typography
-              fontWeight={400}
-              fontSize={14}
-              sx={{ display: "flex", gap: 1, alignItems: "center" }}
-            >
-              <IoTimeOutline style={{ height: 15, width: 15 }} /> ID: #37493873
-            </Typography>
-          </div>
-        </Box>
-      </Stack> */}
-
-      {/* <Stack>
-        <Box
-          sx={{
-            borderRadius: 2,
-            border: "1px #E4E7EC solid",
-            gap: 2,
-            background: "white",
-            width: "100%",
-          }}
-        >
-          <Typography sx={{ py: 2, px: 3 }} fontWeight={600} fontSize={18}>
-            Dr Ojo’s Assessment - 5th October 2021
-          </Typography>
-
-          <Divider />
-          <ul className={Styles.lists}>
-            <li>Anxiety disorder, unspecified</li>
-            <li>Adjustement disorder and anxiety</li>
-            <li>Major depressive disorder</li>
-          </ul>
-          <div
-            style={{
-              padding: "16px",
-              color: "#101928",
-            }}
-          >
-            <Typography fontWeight={400} fontSize={12}>
-              Administered by
-            </Typography>
-            <Typography
-              fontWeight={400}
-              fontSize={14}
-              sx={{ display: "flex", gap: 1, alignItems: "center" }}
-            >
-              <IoTimeOutline style={{ height: 15, width: 15 }} /> ID: #37493873
-            </Typography>
-          </div>
-        </Box>
-      </Stack> */}
+      ))}
 
       {formField.map((form, index) => (
         <AllergiesPreview

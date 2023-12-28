@@ -123,7 +123,7 @@ export default function ProfileHome() {
         }}
       >
         <div>
-          <Typography variant="subtitle2" fontWeight={600} fontSize={24}>
+          <Typography variant="subtitle2" fontWeight={600} fontSize={24} textTransform={'capitalize'}>
             Welcome, {user?.title} {name}
           </Typography>
           <Typography variant="body2" sx={{ color: "#667185" }}>
