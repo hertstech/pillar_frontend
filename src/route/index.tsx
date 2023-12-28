@@ -7,7 +7,7 @@ import RegisterPage from "../pages/Auth/RegisterForm";
 import Page404 from "../pages/Page404";
 import ResultPage from "../pages/dashboard/ResultPage";
 import ProfileHome from "../pages/dashboard/Profile";
-import Singleuser from "../pages/dashboard/ServiceUsers";
+import Singleuser from "../pages/dashboard/serviceUsers";
 // import Singleuser from "../pages/dashboard/ServiceUsers";
 
 export const router = createBrowserRouter([
