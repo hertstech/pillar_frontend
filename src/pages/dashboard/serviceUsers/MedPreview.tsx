@@ -26,6 +26,8 @@ interface Props {
   prescriber: string;
   additionalNote: string;
   onClose: any;
+  isLoading: boolean;
+  createNewMedication: any;
 }
 
 interface TextLabelProps {
@@ -65,6 +67,8 @@ export default function Preview({
   endDate,
   prescriber,
   additionalNote,
+  createNewMedication,
+  isLoading,
 }: Props) {
   const hasContent =
     medicationName ||
@@ -154,7 +158,8 @@ export default function Preview({
           variant="contained"
           sx={{ px: 5 }}
           color="success"
-          onClick={() => {}}
+          onClick={createNewMedication}
+          disabled={isLoading}
         >
           Submit
         </Button>

@@ -96,8 +96,8 @@ textarea {
   gap: 10px;
 }
 
-@media  (min-width: 768px) {
-  .display{
+@media (min-width: 768px) {
+  .display {
     grid-template-columns: repeat(2, 1fr);
   }
 }

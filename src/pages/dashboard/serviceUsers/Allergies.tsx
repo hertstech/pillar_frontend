@@ -2,6 +2,8 @@ import { Box, Stack, Button, Card, TextField, MenuItem } from "@mui/material";
 import Styles from "./styles.module.css";
 import NoResultIllustration from "../../../components/NoResult";
 import { useState } from "react";
+import InputField from "../../../components/InputField";
+import AllergiesPreview from "./AllergiesPreview";
 import {
   certainty,
   reaction,
@@ -10,8 +12,8 @@ import {
   severity,
   substance,
 } from "./shared";
-import InputField from "../../../components/InputField";
-import AllergiesPreview from "./AllergiesPreview";
+import { useParams } from "react-router-dom";
+import { axiosInstance } from "../../../Utils/axios";
 
 interface FormState {
   substance: string;
@@ -43,6 +45,10 @@ export default function Allergies() {
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
+  const { id } = useParams();
+
+  const [isLoading, setIsLoading] = useState(false);
+
   const addForm = () => {
     setHide(true);
     setFormField((prevForms) => [...prevForms, { ...initialState }]);
@@ -66,6 +72,25 @@ export default function Allergies() {
       return newForms;
     });
   };
+
+  const createNewRecord = async () => {
+    setIsLoading(true);
+    const dataObject = formField[0];
+    console.log(dataObject);
+
+    try {
+      const res = await axiosInstance.post(
+        `/create-serviceuser-allergiesrecord/${id}`,dataObject
+      );
+
+      console.log(res.data);
+      setIsLoading(false);
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -445,6 +470,8 @@ export default function Allergies() {
           relativeName={form.relativeName}
           notes={form.notes}
           onClose={() => setIsOpen(false)}
+          createNewRecord={createNewRecord}
+          isLoading={isLoading}
         />
       ))}
     </Box>

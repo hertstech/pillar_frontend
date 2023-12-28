@@ -21,7 +21,7 @@ export default function HeaderBreadCrumb({ heading, links }: Props) {
             gutterBottom
             fontWeight={600}
             fontSize={28}
-            sx={{ color: "#000" }}
+            sx={{ color: "#000", textTransform: "capitalize" }}
           >
             {heading}
           </Typography>
@@ -30,11 +30,7 @@ export default function HeaderBreadCrumb({ heading, links }: Props) {
             {links.map((link, index) => (
               <div key={index}>
                 {index === links.length - 1 ? (
-                  <Typography
-                    variant="body2"
-                    fontWeight={500}
-                    color="#667185"
-                  >
+                  <Typography variant="body2" fontWeight={500} color="#667185">
                     {link.icon} {link.label}
                   </Typography>
                 ) : (

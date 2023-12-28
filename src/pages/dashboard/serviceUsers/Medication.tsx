@@ -1,18 +1,21 @@
 import { Box, Stack, Button, Card, TextField, MenuItem } from "@mui/material";
 import NoResultIllustration from "../../../components/NoResult";
 import { useState } from "react";
-import {
-  medDosage,
-  medDosageForm,
-  medFrequency,
-  medName,
-  medRoute,
-  medType,
-} from "./shared";
 import Styles from "./styles.module.css";
 import { Calendar } from "../../../components/CalendarField";
 import InputField from "../../../components/InputField";
 import Preview from "./MedPreview";
+import {
+  medName,
+  medType,
+  medRoute,
+  medDosageForm,
+  medDosage,
+  medFrequency,
+} from "./shared";
+import { axiosInstance } from "../../../Utils/axios";
+import { useParams } from "react-router-dom";
+import Swal from "sweetalert2";
 
 // Define the type for your form state
 interface FormState {
@@ -54,6 +57,10 @@ export default function Assessment() {
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
+  const { id } = useParams();
+
+  const [isLoading, setIsLoading] = useState(false);
+
   const addForm = () => {
     setHide(true);
     setFormField((prevForms) => [...prevForms, { ...initialFormState }]);
@@ -76,6 +83,39 @@ export default function Assessment() {
       };
       return newForms;
     });
+  };
+
+  const createNewMedication = async () => {
+    setIsLoading(true);
+    const dataObject = formField[0];
+    console.log(dataObject);
+
+    try {
+      const res = await axiosInstance.post(
+        `/create-serviceuser-medicationrecord/${id}`,
+        dataObject
+      );
+
+      console.log(res.data);
+      setIsOpen(false);
+      setIsLoading(false);
+
+      Swal.fire({
+        icon: "success",
+        title: `Successful`,
+        text: `Welcome ${res.data.message}`,
+        confirmButtonColor: "#099250",
+      });
+    } catch (error: any) {
+      console.error(error);
+      setIsLoading(false);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: `${error.response.data.message}`,
+        confirmButtonColor: "#099250",
+      });
+    }
   };
 
   return (
@@ -384,6 +424,8 @@ export default function Assessment() {
           additionalNote={form.additionalNote}
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
+          createNewMedication={createNewMedication}
+          isLoading={isLoading}
         />
       ))}
     </Box>

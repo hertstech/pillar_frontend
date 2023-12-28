@@ -16,7 +16,14 @@ interface Props {
   type: string;
   reading: string;
   notes: string;
+  bloodType: string;
+  genotype: string;
+  manufacturer: string;
+  batchNumber: string;
+  administrationDate: string;
+  expirationDate: string;
   handleSubmit: any;
+  isLoading: boolean;
 }
 
 interface TextLabelProps {
@@ -46,8 +53,15 @@ export default function HealthPreview({
   categories,
   type,
   reading,
+  bloodType,
+  genotype,
+  manufacturer,
+  batchNumber,
+  administrationDate,
+  expirationDate,
   notes,
   handleSubmit,
+  isLoading,
 }: Props) {
   const hasContent = categories || type || reading || notes;
   return (
@@ -79,6 +93,12 @@ export default function HealthPreview({
             <TextLabel label="Category" text={categories} />
             <TextLabel label="TYpe" text={type} />
             <TextLabel label="Reading/Description" text={reading} />
+            <TextLabel label="Blood Type" text={bloodType} />
+            <TextLabel label="Genotype" text={genotype} />
+            <TextLabel label="Manufacturer" text={manufacturer} />
+            <TextLabel label="Batch Number" text={batchNumber} />
+            <TextLabel label="Administration Date" text={administrationDate} />
+            <TextLabel label="Expiration Date" text={expirationDate} />
             <TextLabel label="Notes" text={notes} />
           </Box>
         </DialogContent>
@@ -103,10 +123,10 @@ export default function HealthPreview({
           sx={{ px: 5 }}
           color="success"
           onClick={handleSubmit}
+          disabled={isLoading}
         >
           Submit
         </Button>
-        {/* <Buttons loading={isLoading} title="Submit" /> */}
       </Stack>
     </Dialog>
   );

@@ -20,6 +20,8 @@ interface Props {
   reportedBy: string;
   relativeName: string;
   notes: string;
+  createNewRecord: any;
+  isLoading: boolean;
 }
 
 interface TextLabelProps {
@@ -54,7 +56,9 @@ export default function AllergiesPreview({
   evidence,
   reportedBy,
   relativeName,
+  isLoading,
   notes,
+  createNewRecord,
 }: Props) {
   const hasContent =
     substance ||
@@ -124,7 +128,8 @@ export default function AllergiesPreview({
           variant="contained"
           sx={{ px: 5 }}
           color="success"
-          onClick={() => {}}
+          onClick={createNewRecord}
+          disabled={isLoading}
         >
           Submit
         </Button>

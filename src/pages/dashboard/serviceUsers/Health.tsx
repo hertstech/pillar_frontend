@@ -10,12 +10,17 @@ import {
 import Styles from "./styles.module.css";
 import InputField from "../../../components/InputField";
 import categories from "../../../../categories.json";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NoResultIllustration from "../../../components/NoResult";
-import HealthPreview from "./HealthPreview";
 import { FaAngleUp, FaAngleDown } from "react-icons/fa";
-import { bloodType } from "./shared";
 import { Calendar } from "../../../components/CalendarField";
+import { bloodTypes } from "./shared";
+import HealthPreview from "./HealthPreview";
+import { axiosInstance } from "../../../Utils/axios";
+import { useParams } from "react-router-dom";
+import Swal from "sweetalert2";
+import moment from "moment";
+// import { useSelector } from "react-redux";
 
 interface FormState {
   categories: string;
@@ -30,6 +35,24 @@ interface FormState {
   notes: string;
 }
 
+interface apiResponse {
+  administrationDate: string;
+  batchNumber: string;
+  bloodType: string;
+  categories: string;
+  date_created: string;
+  expirationDate: string;
+  genotype: string;
+  id: string;
+  manufacturer: string;
+  notes: string;
+  pillar_faclityname_fk: string;
+  pillar_user_id_fk: string;
+  reading: string;
+  serviceuser_id_fk: string;
+  type: string;
+}
+
 const initialFormState = {
   categories: "",
   type: "",
@@ -42,36 +65,6 @@ const initialFormState = {
   reading: "",
   notes: "",
 };
-const details = [
-  {
-    category: "Vitals",
-    notes:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nulla,modi. Lorem ipsum dolor, sit amet consectetur adipisicing elit.Officiis, sapiente nemo impedit eligendi tempore dicta consectetur molestiae. Aut quidem distinctio accusantium soluta eligendi.",
-    reading: "118/75 mm/hg",
-    type: "Blood pressure",
-  },
-  {
-    category: "Immunization",
-    notes:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nulla,modi. Lorem ipsum dolor, sit amet consectetur adipisicing elit.Officiis, sapiente nemo impedit eligendi tempore dicta consectetur molestiae. Aut quidem distinctio accusantium soluta eligendi.",
-    reading: "",
-    type: "Hepatitis B",
-  },
-  {
-    category: "Medical Conditions",
-    notes:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nulla,modi. Lorem ipsum dolor, sit amet consectetur adipisicing elit.Officiis, sapiente nemo impedit eligendi tempore dicta consectetur molestiae. Aut quidem distinctio accusantium soluta eligendi.",
-    reading: "4.4ml",
-    type: "Type 2 Diabetic",
-  },
-  {
-    category: "Diagnosis",
-    notes:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nulla,modi. Lorem ipsum dolor, sit amet consectetur adipisicing elit.Officiis, sapiente nemo impedit eligendi tempore dicta consectetur molestiae. Aut quidem distinctio accusantium soluta eligendi.",
-    reading: "",
-    type: "",
-  },
-];
 
 interface TextLabelProps {
   text: any;
@@ -99,6 +92,13 @@ export default function Health() {
   const [show, setShow] = useState("");
   const [formField, setFormField] = useState<FormState[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [record, setRecord] = useState<apiResponse[]>([]);
+
+  // const token = useSelector((state: any) => state.user.access_token);
+
+  const { id } = useParams();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleToggle = (index: any) => {
     setShow((prevIndex) => (prevIndex === index ? null : index));
@@ -117,9 +117,57 @@ export default function Health() {
     });
   };
 
-  const handleSubmit = () => {
-    console.log(formField);
+  const handleSubmit = async () => {
+    setIsLoading(true);
+    const dataObject = formField[0];
+    console.log(dataObject);
+
+    try {
+      const res = await axiosInstance.post(
+        `/create-serviceuser-healthsummary/${id}`,
+        dataObject
+      );
+
+      setIsOpen(false);
+      setIsLoading(false);
+      Swal.fire({
+        icon: "success",
+        title: `Successful`,
+        text: `Welcome ${res.data.message}`,
+        confirmButtonColor: "#099250",
+      });
+
+      setFormField([]);
+    } catch (error: any) {
+      console.error(error);
+      setIsOpen(false);
+      setIsLoading(false);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: `${error.response.data.message}`,
+        confirmButtonColor: "#099250",
+      });
+    }
   };
+
+  useEffect(() => {
+    const getHealthRecord = async () => {
+      setIsLoading(true);
+      try {
+        const res = await axiosInstance.get(
+          `/serviceuser-healthsummaryrecord/${id}`
+        );
+
+        setRecord(res?.data.result);
+        setIsLoading(false);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    getHealthRecord();
+  }, [id]);
 
   const handleFormChange = (index: number, field: any, value: any) => {
     setFormField((prevForms) => {
@@ -246,7 +294,7 @@ export default function Health() {
                       handleFormChange(index, "bloodType", e.target.value)
                     }
                   >
-                    {bloodType.map((item, index) => (
+                    {bloodTypes.map((item, index) => (
                       <MenuItem key={index} value={item.value}>
                         {item.label}
                       </MenuItem>
@@ -404,9 +452,9 @@ export default function Health() {
       ))}
 
       {/* INITIAL STATE WHEN EMPTY */}
-      {!hide || (details.length === 0 && <NoResultIllustration />)}
+      {!hide || (record.length === 0 && <NoResultIllustration />)}
 
-      {details.map((item, index) => (
+      {record.map((item, index) => (
         <Box key={index}>
           <Button
             sx={{
@@ -421,11 +469,11 @@ export default function Health() {
               color: "#099250",
             }}
             fullWidth
-            onClick={() => handleToggle(`${item.category}${index}`)}
+            onClick={() => handleToggle(`${item?.categories}${index}`)}
           >
-            <span>{item.category}</span>
+            <span>{item?.categories}</span>
             <span>
-              {show === `${item.category}${index}` ? (
+              {show === `${item?.categories}${index}` ? (
                 <FaAngleUp />
               ) : (
                 <FaAngleDown />
@@ -433,11 +481,37 @@ export default function Health() {
             </span>
           </Button>
 
-          {show === `${item.category}${index}` && (
+          {show === `${item?.categories}${index}` && (
             <div style={{ padding: 6 }}>
-              <TextLabel label="Type" text={item.type} />
-              <TextLabel label="Reading" text={item.reading || "None"} />
-              <TextLabel label="Additional Notes" text={item.notes} />
+              <Box
+                sx={{
+                  display: "grid",
+                  columnGap: 1.5,
+                  rowGap: 1.5,
+                  gridTemplateColumns: {
+                    xs: "repeat(1, 1fr)",
+                    lg: "repeat(3, 1fr)",
+                  },
+                }}
+              >
+                <TextLabel
+                  label="Date Created"
+                  text={moment(item.date_created).format("l") || "None"}
+                />
+                <TextLabel label="Type" text={item.type || "None"} />
+                <TextLabel label="Reading" text={item.reading || "None"} />
+                <TextLabel
+                  label="Manufacturer"
+                  text={item.manufacturer || "None"}
+                />
+                <TextLabel
+                  label="Batch Number"
+                  text={item.batchNumber || "None"}
+                />
+                <TextLabel label="Genotype" text={item.genotype || "None"} />
+                <TextLabel label="Blood Type" text={item.bloodType || "None"} />
+              </Box>
+              <TextLabel label="Additional Notes" text={item.notes || "None"} />
             </div>
           )}
         </Box>
@@ -452,7 +526,14 @@ export default function Health() {
           type={form.type}
           reading={form.reading}
           notes={form.notes}
+          bloodType={form.bloodType}
+          genotype={form.genotype}
+          manufacturer={form.manufacturer}
+          batchNumber={form.batchNumber}
+          administrationDate={form.administrationDate}
+          expirationDate={form.expirationDate}
           handleSubmit={handleSubmit}
+          isLoading={isLoading}
         />
       ))}
     </Box>

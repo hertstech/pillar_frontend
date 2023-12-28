@@ -12,19 +12,19 @@ import { CiMedicalCross, CiSquarePlus } from "react-icons/ci";
 import { RxExitFullScreen } from "react-icons/rx";
 import { FiBook } from "react-icons/fi";
 import { AiOutlineFundProjectionScreen } from "react-icons/ai";
+import moment from "moment";
+import { useSelector } from "react-redux";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import HeaderBreadCrumb from "../../../components/HeaderBreadCrumb";
 import Grids from "/assets/grid.svg";
 import HeaderTabs from "../../../components/HeaderTabs";
+import { axiosInstance } from "../../../Utils/axios";
+import Demogrphics from "./Demogrphics";
 import Health from "./Health";
 import Assessment from "./Medication";
 import Allergies from "./Allergies";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { axiosInstance } from "../../../Utils/axios";
-import moment from "moment";
-import Notes from "./Notes";
 import Referral from "./Referral";
-import Demogrphics from "./Demogrphics";
-import { useSelector } from "react-redux";
+import Notes from "./Notes";
 
 const activity = [
   { time: "9:40am", purpose: "Diagnosed by #3948934" },
@@ -232,7 +232,13 @@ export default function Singleuser() {
           <Typography
             sx={{ display: "flex", flexDirection: "column", marginLeft: 2 }}
           >
-            <span style={{ fontWeight: 500, fontSize: 18 }}>
+            <span
+              style={{
+                fontWeight: 500,
+                fontSize: 18,
+                textTransform: "capitalize",
+              }}
+            >
               {userData?.firstName + " " + userData?.lastName}
             </span>
             <span style={{ fontWeight: 400, fontSize: 14, color: "#475467" }}>

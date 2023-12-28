@@ -121,7 +121,7 @@ export const category = [
 //   { value: "Emergency Contact", label: "Emergency Contact" },
 // ];
 
-export const bloodType = [
+export const bloodTypes = [
   { value: "A+", label: "A+" },
   { value: "A-", label: "A-" },
   { value: "B+", label: "B+" },
