@@ -3,7 +3,8 @@ import NoResultIllustration from "../../../components/NoResult";
 import { useEffect, useState } from "react";
 import Styles from "./styles.module.css";
 import { Calendar } from "../../../components/CalendarField";
-import InputField from "../../../components/InputField";
+import { FaAngleUp, FaAngleDown } from "react-icons/fa";
+import InputField, { TextLabel } from "../../../components/InputField";
 import Preview from "./MedPreview";
 import {
   medName,
@@ -16,6 +17,7 @@ import {
 import { axiosInstance } from "../../../Utils/axios";
 import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
+import moment from "moment";
 
 // Define the type for your form state
 interface FormState {
@@ -50,8 +52,31 @@ const initialFormState = {
   additionalNote: "",
 };
 
+interface apiResponse {
+  additionalNote: string;
+  datePrescribed: string;
+  date_created: string;
+  dosage: string;
+  dosagemeasurement: string;
+  endDate: string;
+  frequencyNumber: string;
+  frequencyType: string;
+  id: string;
+  medicationDosageForm: string;
+  medicationName: string;
+  medicationRoute: string;
+  medicationType: string;
+  pillar_faclityname_fk: string;
+  pillar_user_id_fk: string;
+  prescriber: string;
+  serviceuser_id_fk: string;
+  startDate: string;
+}
+
 export default function Assessment() {
   const [hide, setHide] = useState(false);
+
+  const [show, setShow] = useState("");
 
   const [formField, setFormField] = useState<FormState[]>([]);
 
@@ -61,7 +86,7 @@ export default function Assessment() {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const [record, setRecord] = useState([]);
+  const [record, setRecord] = useState<apiResponse[]>([]);
 
   const addForm = () => {
     setHide(true);
@@ -74,6 +99,10 @@ export default function Assessment() {
       newForms.splice(index, 1);
       return newForms;
     });
+  };
+
+  const handleToggle = (index: any) => {
+    setShow((prevIndex) => (prevIndex === index ? null : index));
   };
 
   const handleFormChange = (index: number, field: any, value: any) => {
@@ -127,7 +156,7 @@ export default function Assessment() {
       setIsLoading(true);
       try {
         const res = await axiosInstance.get(
-          `/serviceuser-allergiesrecord/${id}`
+          `/serviceuser-medicationrecord/${id}`
         );
 
         setRecord(res?.data.result);
@@ -138,7 +167,7 @@ export default function Assessment() {
       }
     };
 
-    // getMedication();
+    getMedication();
   }, [id]);
 
   return (
@@ -152,6 +181,7 @@ export default function Assessment() {
         px: 3,
         pb: 3,
         borderRadius: 2,
+        minHeight: "610px",
         gap: 3,
       }}
     >
@@ -428,6 +458,85 @@ export default function Assessment() {
 
       {/* INITIAL STATE WHEN EMPTY */}
       {!hide && record.length === 0 && <NoResultIllustration />}
+
+      {record.map((item, index) => (
+        <Box key={index}>
+          <Button
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              p: 2,
+              userSelect: "none",
+              fontSize: 18,
+              justifyContent: "space-between",
+              border: "1px #E4E7EC solid",
+              textTransform: "capitalize",
+              color: "#099250",
+            }}
+            fullWidth
+            onClick={() => handleToggle(`${item?.medicationName}${index}`)}
+          >
+            <span>{item?.medicationName}</span>
+            <span>
+              {show === `${item?.medicationName}${index}` ? (
+                <FaAngleUp />
+              ) : (
+                <FaAngleDown />
+              )}
+            </span>
+          </Button>
+
+          {show === `${item?.medicationName}${index}` && (
+            <div style={{ padding: 6 }}>
+              <Box
+                sx={{
+                  display: "grid",
+                  columnGap: 1.5,
+                  rowGap: 1.5,
+                  gridTemplateColumns: {
+                    xs: "repeat(1, 1fr)",
+                    lg: "repeat(3, 1fr)",
+                  },
+                }}
+              >
+                <TextLabel
+                  label="Date Prescribed"
+                  text={moment(item.date_created).format("l") || "None"}
+                />
+                <TextLabel
+                  label="Name of Medication"
+                  text={item.medicationName || "None"}
+                />
+                <TextLabel
+                  label="Type of Medication"
+                  text={item.medicationType || "None"}
+                />
+                <TextLabel
+                  label="Route"
+                  text={item.medicationRoute || "None"}
+                />
+                <TextLabel
+                  label="Dosage Form"
+                  text={item.medicationDosageForm || "None"}
+                />
+                <TextLabel label="Dosage" text={item.dosage || "None"} />
+                <TextLabel
+                  label="Frequency"
+                  text={item.frequencyType || "None"}
+                />
+              </Box>
+              <TextLabel
+                label="Prescriber Information"
+                text={item.prescriber || "None"}
+              />
+              <TextLabel
+                label="Additional Notes"
+                text={item.additionalNote || "None"}
+              />
+            </div>
+          )}
+        </Box>
+      ))}
 
       {formField.map((form, index) => (
         <Preview
