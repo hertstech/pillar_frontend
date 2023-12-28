@@ -87,3 +87,17 @@ textarea {
   resize: none;
   overflow: hidden;
 }
+
+.display {
+  display: grid;
+  column-gap: 1.5;
+  row-gap: 1.5;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 10px;
+}
+
+@media  (min-width: 768px) {
+  .display{
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

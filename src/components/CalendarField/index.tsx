@@ -15,6 +15,7 @@ interface Props {
   onChange: any;
   label: string;
   disableFuture?: boolean;
+  disablePast?: boolean;
 }
 
 export function CalendarField({ value, selected, onSelect }: any) {
@@ -50,7 +51,13 @@ export function CalendarField({ value, selected, onSelect }: any) {
   );
 }
 
-export function Calendar({ value, onChange, label, disableFuture }: Props) {
+export function Calendar({
+  value,
+  onChange,
+  label,
+  disableFuture,
+  disablePast,
+}: Props) {
   return (
     <label style={{ marginTop: 10 }} htmlFor="dateOfBirth">
       {label}
@@ -62,6 +69,7 @@ export function Calendar({ value, onChange, label, disableFuture }: Props) {
             format="DD/MM/YYYY"
             sx={{ marginTop: "5px", width: "100%" }}
             disableFuture={disableFuture}
+            disablePast={disablePast}
             value={dayjs(value)}
             slotProps={{
               field: {

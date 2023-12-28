@@ -1,5 +1,13 @@
 import { useState, useEffect } from "react";
-import { Avatar, Box, Divider, Stack, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Divider,
+  Stack,
+  Typography,
+  Button,
+  Skeleton,
+} from "@mui/material";
 import { CiMedicalCross, CiSquarePlus } from "react-icons/ci";
 import { RxExitFullScreen } from "react-icons/rx";
 import { FiBook } from "react-icons/fi";
@@ -30,9 +38,10 @@ const activity = [
 interface TextLabelProps {
   text: any;
   label: string;
+  isLoading?: boolean;
 }
 
-const TextLabel = ({ text, label }: TextLabelProps) => (
+const TextLabel = ({ text, label, isLoading }: TextLabelProps) => (
   <label
     style={{
       fontWeight: 400,
@@ -42,9 +51,18 @@ const TextLabel = ({ text, label }: TextLabelProps) => (
     }}
   >
     {label}
-    <Typography fontWeight={600} fontSize={16} color={"#101928"}>
-      {text}
-    </Typography>
+    {isLoading ? (
+      <Skeleton
+        variant="text"
+        animation="wave"
+        width={300}
+        sx={{ fontSize: "18px" }}
+      />
+    ) : (
+      <Typography fontWeight={600} fontSize={16} color={"#101928"}>
+        {text}
+      </Typography>
+    )}
   </label>
 );
 
@@ -57,6 +75,8 @@ export default function Singleuser() {
 
   const [userData, setUserData] = useState<any>(null);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const token = useSelector((state: any) => state.user.access_token);
 
   const navigate = useNavigate();
@@ -65,7 +85,13 @@ export default function Singleuser() {
     {
       label: "Demographics",
       icon: <CiMedicalCross />,
-      content: <Demogrphics isEdit={isEdit} userData={userData} />,
+      content: (
+        <Demogrphics
+          isEdit={isEdit}
+          userData={userData}
+          isLoading={isLoading}
+        />
+      ),
     },
     {
       label: "Health Summary",
@@ -121,13 +147,15 @@ export default function Singleuser() {
 
   useEffect(() => {
     const fetchUserData = async () => {
+      setIsLoading(true);
       try {
-        // Example API call
-        const res = await axiosInstance.get(`/search-service-user/${id}`);
+        const res = await axiosInstance.get(`/search-serviceuser/${id}`);
 
         setUserData(res?.data.result[0]);
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching user data:", error);
+        setIsLoading(false);
       }
     };
 
@@ -135,7 +163,7 @@ export default function Singleuser() {
   }, [id]);
 
   if (!token) {
-    return navigate("/auth/login");
+    navigate("/auth/login");
   }
 
   return (
@@ -156,6 +184,23 @@ export default function Singleuser() {
               { label: `${userData?.firstName} ${userData?.lastName}` },
             ]}
           />
+          <Stack alignItems="start">
+            <Button
+              style={{
+                fontWeight: 500,
+                color: "#FFF",
+                textDecoration: "none",
+                borderRadius: 10,
+                display: "flex",
+                background: "#099250",
+                padding: 12,
+                gap: 5,
+              }}
+              // to={`/dashboard/user/${id}/edit`}
+            >
+              Send Message
+            </Button>
+          </Stack>
         </Box>
 
         <HeaderTabs links={tabs} />
@@ -210,27 +255,47 @@ export default function Singleuser() {
           </Typography>
           <Divider sx={{ position: "absolute", width: "100%", right: 0 }} />
 
-          <TextLabel label="NHR ID" text={userData?.id} />
-          <TextLabel label="Email Address" text={userData?.email || "None"} />
+          <TextLabel isLoading={isLoading} label="NHR ID" text={userData?.id} />
           <TextLabel
+            isLoading={isLoading}
+            label="Email Address"
+            text={userData?.email || "None"}
+          />
+          <TextLabel
+            isLoading={isLoading}
             label="Phone Number"
             text={userData?.phoneNumber}
           ></TextLabel>
           <TextLabel
+            isLoading={isLoading}
             label="Address"
-            text={userData?.address + " " + userData?.lga}
+            text={userData?.address}
           />
           <TextLabel
+            isLoading={isLoading}
             label="Age"
             text={moment(new Date()).diff(userData?.dateOfBirth, "years")}
           />
           <TextLabel
+            isLoading={isLoading}
             label="Date of Birth"
             text={moment(userData?.dateOfBirth).format("L")}
           />
-          <TextLabel label="Height" text={userData?.height + " " + "cm"} />
-          <TextLabel label="Weight" text={userData?.weight + " " + "kg"} />
-          <TextLabel label="HMO Plan" text={userData?.HMOPlan || "None"} />
+          <TextLabel
+            isLoading={isLoading}
+            label="Height"
+            text={userData?.height + " " + "cm"}
+          />
+          <TextLabel
+            isLoading={isLoading}
+            label="Weight"
+            text={userData?.weight + " " + "kg"}
+          />
+          <TextLabel
+            isLoading={isLoading}
+            label="HMO Plan"
+            text={userData?.HMOPlan || "None"}
+          />
         </Box>
         <Divider sx={{ position: "absolute", width: "100%", right: 0 }} />
         <Box>

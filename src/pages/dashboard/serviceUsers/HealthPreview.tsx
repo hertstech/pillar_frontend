@@ -16,6 +16,7 @@ interface Props {
   type: string;
   reading: string;
   notes: string;
+  handleSubmit: any;
 }
 
 interface TextLabelProps {
@@ -46,6 +47,7 @@ export default function HealthPreview({
   type,
   reading,
   notes,
+  handleSubmit,
 }: Props) {
   const hasContent = categories || type || reading || notes;
   return (
@@ -100,7 +102,7 @@ export default function HealthPreview({
           variant="contained"
           sx={{ px: 5 }}
           color="success"
-          onClick={() => {}}
+          onClick={handleSubmit}
         >
           Submit
         </Button>

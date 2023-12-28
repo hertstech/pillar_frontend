@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Skeleton, Typography } from "@mui/material";
 import Styles from "./styles.module.css";
 
 interface TextProps {
@@ -44,8 +44,9 @@ export default function InputField({
 interface TextLabelProps {
   text: any;
   label: string;
+  isLoading?: boolean;
 }
-export const TextLabel = ({ text, label }: TextLabelProps) => (
+export const TextLabel = ({ text, label, isLoading }: TextLabelProps) => (
   <label
     style={{
       fontWeight: 400,
@@ -56,8 +57,17 @@ export const TextLabel = ({ text, label }: TextLabelProps) => (
     }}
   >
     {label}
-    <Typography fontWeight={600} fontSize={18} color={"#101928"}>
-      {text}
-    </Typography>
+    {isLoading ? (
+      <Skeleton
+        variant="text"
+        animation="wave"
+        width={300}
+        sx={{ fontSize: "18px" }}
+      />
+    ) : (
+      <Typography fontWeight={600} fontSize={18} color={"#101928"}>
+        {text}
+      </Typography>
+    )}
   </label>
 );

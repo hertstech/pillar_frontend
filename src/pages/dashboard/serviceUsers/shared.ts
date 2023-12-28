@@ -64,8 +64,8 @@ export const reaction = [
   { value: "Dizziness", label: "Dizziness" },
   { value: "Death", label: "Death" },
   { value: "Skin irrtation", label: "Skin irrtation" },
-  { value: "vomitting", label: "vomitting" },
-  { value: "unknown", label: "unknown" },
+  { value: "Vomitting", label: "Vomitting" },
+  { value: "Unknown", label: "Unknown" },
 ];
 
 export const severity = [
@@ -121,11 +121,14 @@ export const category = [
 //   { value: "Emergency Contact", label: "Emergency Contact" },
 // ];
 
-// export const vitals = [
-//   { value: "Blood pressure", label: "Blood pressure" },
-//   { value:  label: "Body Temperature" },
-//   { value:  label: "Pulse Rate" },
-//   { value:  label: "Respiration Rate" },
-//   { value:  label: "Oxygen Saturation" },
-//   { value:  label: "Blood type" },
-// ];
+export const bloodType = [
+  { value: "A+", label: "A+" },
+  { value: "A-", label: "A-" },
+  { value: "B+", label: "B+" },
+  { value: "B-", label: "B-" },
+  { value: "AB+", label: "AB+" },
+  { value: "AB-", label: "AB-" },
+  { value: "O+", label: "O+" },
+  { value: "O-", label: "O-" },
+  { value: "Other", label: "Other" },
+];

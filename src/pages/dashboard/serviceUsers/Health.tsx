@@ -14,10 +14,18 @@ import { useState } from "react";
 import NoResultIllustration from "../../../components/NoResult";
 import HealthPreview from "./HealthPreview";
 import { FaAngleUp, FaAngleDown } from "react-icons/fa";
+import { bloodType } from "./shared";
+import { Calendar } from "../../../components/CalendarField";
 
 interface FormState {
   categories: string;
   type: string;
+  bloodType: string;
+  genotype: string;
+  manufacturer: string;
+  batchNumber: string;
+  administrationDate: string;
+  expirationDate: string;
   reading: string;
   notes: string;
 }
@@ -25,6 +33,12 @@ interface FormState {
 const initialFormState = {
   categories: "",
   type: "",
+  bloodType: "",
+  genotype: "",
+  manufacturer: "",
+  batchNumber: "",
+  administrationDate: "",
+  expirationDate: "",
   reading: "",
   notes: "",
 };
@@ -101,6 +115,10 @@ export default function Health() {
       newForms.splice(index, 1);
       return newForms;
     });
+  };
+
+  const handleSubmit = () => {
+    console.log(formField);
   };
 
   const handleFormChange = (index: number, field: any, value: any) => {
@@ -212,6 +230,120 @@ export default function Health() {
                 </TextField>
               </label>
 
+              {form.type === "Blood Type" && (
+                <label
+                  htmlFor={`bloodType${index}`}
+                  style={{ marginTop: "10px" }}
+                >
+                  Blood Type
+                  <TextField
+                    select
+                    sx={{ marginTop: "5px" }}
+                    fullWidth
+                    name="bloodType"
+                    value={form.bloodType}
+                    onChange={(e) =>
+                      handleFormChange(index, "bloodType", e.target.value)
+                    }
+                  >
+                    {bloodType.map((item, index) => (
+                      <MenuItem key={index} value={item.value}>
+                        {item.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </label>
+              )}
+
+              {form.type === "Genotype" && (
+                <label
+                  htmlFor={`genotype${index}`}
+                  style={{ marginTop: "10px" }}
+                >
+                  Genotype
+                  <TextField
+                    select
+                    sx={{ marginTop: "5px" }}
+                    fullWidth
+                    name="genotype"
+                    value={form.genotype}
+                    onChange={(e) =>
+                      handleFormChange(index, "genotype", e.target.value)
+                    }
+                  >
+                    <MenuItem value="AA">AA</MenuItem>
+                    <MenuItem value="AS">AS</MenuItem>
+                    <MenuItem value="SS">SS</MenuItem>
+                    <MenuItem value="Other">Other</MenuItem>
+                  </TextField>
+                </label>
+              )}
+
+              {form.categories === "Immunization" && (
+                <label
+                  htmlFor={`manufacturer${index}`}
+                  style={{ marginTop: "10px" }}
+                >
+                  Manufacturer
+                  <TextField
+                    select
+                    sx={{ marginTop: "5px" }}
+                    fullWidth
+                    name="manufacturer"
+                    value={form.manufacturer}
+                    onChange={(e) =>
+                      handleFormChange(index, "manufacturer", e.target.value)
+                    }
+                  >
+                    <MenuItem value="Lonza">Lonza</MenuItem>
+                    <MenuItem value="Pfizer">Pfizer</MenuItem>
+                    <MenuItem value="Sanofi">Sanofi</MenuItem>
+                    <MenuItem value="Moderna">Moderna</MenuItem>
+                    <MenuItem value="Sinovac">Sinovac</MenuItem>
+                  </TextField>
+                </label>
+              )}
+
+              {form.categories === "Immunization" && (
+                <div style={{ marginTop: "5px" }}>
+                  <InputField
+                    type="text"
+                    label="Batch Number"
+                    name={`batchNumber_${index}`}
+                    value={form.batchNumber}
+                    onChange={(e: any) =>
+                      handleFormChange(index, "batchNumber", e.target.value)
+                    }
+                  />
+                </div>
+              )}
+
+              {form.categories === "Immunization" && (
+                <Calendar
+                  label="Administration Date"
+                  value={form.administrationDate}
+                  disableFuture={false}
+                  onChange={(newValue: any) =>
+                    handleFormChange(
+                      index,
+                      "administrationDate",
+                      newValue.format()
+                    )
+                  }
+                />
+              )}
+
+              {form.categories === "Immunization" && (
+                <Calendar
+                  label="Expiration Date"
+                  value={form.expirationDate}
+                  disableFuture={false}
+                  onChange={(newValue: any) =>
+                    handleFormChange(index, "expirationDate", newValue.format())
+                  }
+                />
+              )}
+
               <div style={{ marginTop: "5px" }}>
                 <InputField
                   type="text"
@@ -320,6 +452,7 @@ export default function Health() {
           type={form.type}
           reading={form.reading}
           notes={form.notes}
+          handleSubmit={handleSubmit}
         />
       ))}
     </Box>

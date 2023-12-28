@@ -1,11 +1,32 @@
 import { useState } from "react";
-import { Box, Container, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Container,
+  MenuItem,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import Styles from "../sytles.module.css";
 import InputField from "../../../components/InputField";
 import Button from "../../../components/Button";
 import { Link, useNavigate } from "react-router-dom";
 import { axiosInstance } from "../../../Utils/axios";
 import Swal from "sweetalert2";
+
+const title = [
+  "Mr.",
+  "Mrs.",
+  "Miss",
+  "Ms.",
+  "Dr.",
+  "Prof.",
+  "Rev.",
+  "Hon.",
+  "Capt.",
+  "Sir.",
+  "Dame",
+];
 
 export default function RegisterPage() {
   const [isLoadingButton, setIsLoadingButton] = useState(false);
@@ -18,6 +39,8 @@ export default function RegisterPage() {
     email: "",
     password: "",
     facilityName: "",
+    title: "",
+    confirmPassword: "",
   });
 
   const isValidEmail = (email: string) => {
@@ -60,10 +83,10 @@ export default function RegisterPage() {
       return;
     }
 
-    // if (formData.password !== formData.confirmPassword) {
-    //   setError("Please ensure password correlates!");
-    //   return;
-    // }
+    if (formData.password !== formData.confirmPassword) {
+      setError("Please ensure password correlates!");
+      return;
+    }
 
     try {
       await axiosInstance.post("/auth/create-user", formData);
@@ -82,7 +105,7 @@ export default function RegisterPage() {
 
       Swal.fire({
         icon: "error",
-        title: "Login Error",
+        title: "Error",
         text: `${error.response.data.message}`,
         confirmButtonColor: "#099250",
       });
@@ -112,24 +135,48 @@ export default function RegisterPage() {
               </Box>
 
               <form className={Styles.form}>
-                <div className={Styles.name}>
-                  <InputField
-                    type="text"
-                    label="First Name"
-                    name="firstName"
-                    value={formData.firstName}
-                    onChange={handleChange}
-                    placeholder="First Name"
-                  />
-                  <InputField
-                    type="text"
-                    label="Last Name"
-                    name="lastName"
-                    value={formData.lastName}
-                    onChange={handleChange}
-                    placeholder="Last Name"
-                  />
+                <div style={{ display: "flex", gap: 10 }}>
+                  <label
+                    htmlFor="title"
+                    style={{ marginTop: 9 }}
+                  >
+                    Title
+                    <TextField
+                      select
+                      sx={{ marginTop: "5px" }}
+                      fullWidth
+                      name="title"
+                      value={formData.title}
+                      onChange={handleChange}
+                    >
+                      {title.map((item, index) => (
+                        <MenuItem key={index} value={item}>
+                          {item}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </label>
+
+                  <div className={Styles.name}>
+                    <InputField
+                      type="text"
+                      label="First Name"
+                      name="firstName"
+                      value={formData.firstName}
+                      onChange={handleChange}
+                      placeholder="First Name"
+                    />
+                    <InputField
+                      type="text"
+                      label="Last Name"
+                      name="lastName"
+                      value={formData.lastName}
+                      onChange={handleChange}
+                      placeholder="Last Name"
+                    />
+                  </div>
                 </div>
+
                 <InputField
                   type="text"
                   label="Email"
@@ -145,6 +192,14 @@ export default function RegisterPage() {
                   value={formData.password}
                   onChange={handleChange}
                   placeholder="Create password"
+                />
+                <InputField
+                  type="password"
+                  label="Confirm Password"
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  placeholder="Confirm password"
                 />
                 <InputField
                   type="text"

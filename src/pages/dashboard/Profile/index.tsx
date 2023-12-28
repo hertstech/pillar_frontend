@@ -45,9 +45,7 @@ export default function ProfileHome() {
     }
 
     try {
-      const res = await axiosInstance.get(
-        `/search-service-user/${numberValue}`
-      );
+      const res = await axiosInstance.get(`/search-serviceuser/${numberValue}`);
 
       navigate(`/dashboard/search-result`, {
         state: { searchResults: res.data.result },
@@ -82,7 +80,7 @@ export default function ProfileHome() {
     };
 
     try {
-      const res = await axiosInstance.get("/search-service-user", {
+      const res = await axiosInstance.get("/search-serviceuser", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -126,7 +124,7 @@ export default function ProfileHome() {
       >
         <div>
           <Typography variant="subtitle2" fontWeight={600} fontSize={24}>
-            Welcome, Dr. {name}
+            Welcome, {user?.title} {name}
           </Typography>
           <Typography variant="body2" sx={{ color: "#667185" }}>
             Check and get client’s health record here
@@ -226,9 +224,13 @@ export default function ProfileHome() {
                     variant="subtitle2"
                     fontWeight={400}
                     fontSize={18}
-                    sx={{ color: "#101828", textAlign: "center" }}
+                    sx={{
+                      color: "#101828",
+                      textAlign: "center",
+                      textTransform: "capitalize",
+                    }}
                   >
-                    Welcome Dr. {name}
+                    Welcome {user?.title} {name}
                   </Typography>
                   <Typography
                     variant="subtitle2"
@@ -322,9 +324,13 @@ export default function ProfileHome() {
                     variant="subtitle2"
                     fontWeight={400}
                     fontSize={20}
-                    sx={{ color: "#101828", textAlign: "center" }}
+                    sx={{
+                      color: "#101828",
+                      textAlign: "center",
+                      textTransform: "capitalize",
+                    }}
                   >
-                    Welcome Dr. {name}
+                    Welcome {user?.title} {name}
                   </Typography>
                   <Typography
                     variant="subtitle2"
