@@ -508,16 +508,29 @@ export default function Health() {
                 />
                 <TextLabel label="Type" text={item.type || "None"} />
                 <TextLabel label="Reading" text={item.reading || "None"} />
-                <TextLabel
-                  label="Manufacturer"
-                  text={item.manufacturer || "None"}
-                />
-                <TextLabel
-                  label="Batch Number"
-                  text={item.batchNumber || "None"}
-                />
-                <TextLabel label="Genotype" text={item.genotype || "None"} />
-                <TextLabel label="Blood Type" text={item.bloodType || "None"} />
+
+                {item.categories === "Immunization" && (
+                  <TextLabel
+                    label="Manufacturer"
+                    text={item.manufacturer || "None"}
+                  />
+                )}
+                {item.categories === "Immunization" && (
+                  <TextLabel
+                    label="Batch Number"
+                    text={item.batchNumber || "None"}
+                  />
+                )}
+                {item.type === "Genotype" && (
+                  <TextLabel label="Genotype" text={item.genotype || "None"} />
+                )}
+
+                {item.categories === "Genetic Information" && (
+                  <TextLabel
+                    label="Blood Type"
+                    text={item.bloodType || "None"}
+                  />
+                )}
               </Box>
               <TextLabel label="Additional Notes" text={item.notes || "None"} />
 
