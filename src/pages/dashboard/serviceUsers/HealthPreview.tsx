@@ -91,14 +91,29 @@ export default function HealthPreview({
             }}
           >
             <TextLabel label="Category" text={categories} />
-            <TextLabel label="TYpe" text={type} />
+            <TextLabel label="Type" text={type} />
             <TextLabel label="Reading/Description" text={reading} />
-            <TextLabel label="Blood Type" text={bloodType} />
-            <TextLabel label="Genotype" text={genotype} />
-            <TextLabel label="Manufacturer" text={manufacturer} />
-            <TextLabel label="Batch Number" text={batchNumber} />
-            <TextLabel label="Administration Date" text={administrationDate} />
-            <TextLabel label="Expiration Date" text={expirationDate} />
+            {categories === "Genetic Information" && (
+              <TextLabel label="Blood Type" text={bloodType} />
+            )}
+            {type === "Genotype" && (
+              <TextLabel label="Genotype" text={genotype} />
+            )}
+            {categories === "Immunization" && (
+              <TextLabel label="Manufacturer" text={manufacturer} />
+            )}
+            {categories === "Immunization" && (
+              <TextLabel label="Batch Number" text={batchNumber} />
+            )}
+            {categories === "Immunization" && (
+              <TextLabel
+                label="Administration Date"
+                text={administrationDate}
+              />
+            )}
+            {categories === "Immunization" && (
+              <TextLabel label="Expiration Date" text={expirationDate} />
+            )}
             <TextLabel label="Notes" text={notes} />
           </Box>
         </DialogContent>
