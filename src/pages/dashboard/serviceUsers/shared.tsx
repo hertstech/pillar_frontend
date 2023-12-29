@@ -107,19 +107,6 @@ export const category = [
     ],
   },
 ];
-//   { value: "Vitals", label: "Vitals" },
-//   { value: "Immunization", label: "Immunization" },
-//   { value: "Medical Conditions", label: "Medical Conditions" },
-//   { value: "Diagnosis", label: "Diagnosis" },
-//   { value: "Clinical Observations", label: "Clinical Observations" },
-//   { value: "Treatment", label: "Treatment" },
-//   { value: "Personal Preferences", label: "Personal Preferences" },
-//   { value: "Recent Surgeries", label: "Recent Surgeries" },
-//   { value: "Investigation Results", label: "Investigation Results" },
-//   { value: "Risk Factors", label: "Risk Factors" },
-//   { value: "Hospital Visits", label: "Hospital Visits" },
-//   { value: "Emergency Contact", label: "Emergency Contact" },
-// ];
 
 export const bloodTypes = [
   { value: "A+", label: "A+" },

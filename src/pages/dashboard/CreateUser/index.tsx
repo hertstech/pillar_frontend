@@ -185,7 +185,7 @@ export default function CreateUser() {
               display: "flex",
               justifyContent: "space-between",
               flexDirection: "column",
-              gap: 24,
+              height: "100%",
             }}
           >
             <Stepper

@@ -73,7 +73,7 @@ export default function HealthPreview({
           fontWeight={500}
           sx={{ flexGrow: 1 }}
         >
-          Preview Medication Details
+          Preview Health Details
         </Typography>
       </DialogActions>
       {hasContent ? (

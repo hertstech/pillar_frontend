@@ -217,113 +217,125 @@ export default function Demogrphics({ userData, isLoading }: PropType) {
           Emergency Contact
         </Typography>
         <Stack>
-          <Typography fontWeight={500} fontSize={18}>
-            Parent One
-          </Typography>
-          <Box
-            sx={{
-              display: "grid",
-              columnGap: 1.5,
-              rowGap: 1.5,
-              gridTemplateColumns: {
-                xs: "repeat(1, 1fr)",
-                lg: "repeat(4, 1fr)",
-              },
-            }}
-          >
-            <TextLabel
-              label="Full Name"
-              text={userData?.parentOne || "Not Available"}
-              isLoading={isLoading}
-            />
-            <TextLabel
-              label="Phone Number"
-              text={userData?.parentOneNumber || "Not Available"}
-              isLoading={isLoading}
-            />
-            <TextLabel
-              label="NHR ID"
-              text={userData?.parentOneNHR_ID || "Not Available"}
-              isLoading={isLoading}
-            />
-            <TextLabel
-              label="Relationship"
-              text={userData?.parentOneRelationship || "Not Available"}
-              isLoading={isLoading}
-            />
-          </Box>
+          {userData?.parentOne === "" ? null : (
+            <>
+              <Typography fontWeight={500} fontSize={18}>
+                Parent One
+              </Typography>
+              <Box
+                sx={{
+                  display: "grid",
+                  columnGap: 1.5,
+                  rowGap: 1.5,
+                  gridTemplateColumns: {
+                    xs: "repeat(1, 1fr)",
+                    lg: "repeat(4, 1fr)",
+                  },
+                }}
+              >
+                <TextLabel
+                  label="Full Name"
+                  text={userData?.parentOne || "Not Available"}
+                  isLoading={isLoading}
+                />
+                <TextLabel
+                  label="Phone Number"
+                  text={userData?.parentOneNumber || "Not Available"}
+                  isLoading={isLoading}
+                />
+                <TextLabel
+                  label="NHR ID"
+                  text={userData?.parentOneNHR_ID || "Not Available"}
+                  isLoading={isLoading}
+                />
+                <TextLabel
+                  label="Relationship"
+                  text={userData?.parentOneRelationship || "Not Available"}
+                  isLoading={isLoading}
+                />
+              </Box>
+            </>
+          )}
 
-          <Typography sx={{ mt: 2 }} fontWeight={500} fontSize={18}>
-            Parent Two
-          </Typography>
-          <Box
-            sx={{
-              display: "grid",
-              columnGap: 1.5,
-              rowGap: 1.5,
-              gridTemplateColumns: {
-                xs: "repeat(1, 1fr)",
-                lg: "repeat(4, 1fr)",
-              },
-            }}
-          >
-            <TextLabel
-              label="Parent Two"
-              text={userData?.parentTwo || "Not Available"}
-              isLoading={isLoading}
-            />
-            <TextLabel
-              label="Phone Number"
-              text={userData?.parentTwoNumber || "Not Available"}
-              isLoading={isLoading}
-            />
-            <TextLabel
-              label="NHR ID"
-              text={userData?.parentTwoNHR_ID || "Not Available"}
-              isLoading={isLoading}
-            />
-            <TextLabel
-              label="Relationship"
-              text={userData?.parentTwoRelationship || "Not Available"}
-              isLoading={isLoading}
-            />
-          </Box>
+          {userData?.parentTwo === "" ? null : (
+            <>
+              <Typography sx={{ mt: 2 }} fontWeight={500} fontSize={18}>
+                Parent Two
+              </Typography>
+              <Box
+                sx={{
+                  display: "grid",
+                  columnGap: 1.5,
+                  rowGap: 1.5,
+                  gridTemplateColumns: {
+                    xs: "repeat(1, 1fr)",
+                    lg: "repeat(4, 1fr)",
+                  },
+                }}
+              >
+                <TextLabel
+                  label="Parent Two"
+                  text={userData?.parentTwo || "Not Available"}
+                  isLoading={isLoading}
+                />
+                <TextLabel
+                  label="Phone Number"
+                  text={userData?.parentTwoNumber || "Not Available"}
+                  isLoading={isLoading}
+                />
+                <TextLabel
+                  label="NHR ID"
+                  text={userData?.parentTwoNHR_ID || "Not Available"}
+                  isLoading={isLoading}
+                />
+                <TextLabel
+                  label="Relationship"
+                  text={userData?.parentTwoRelationship || "Not Available"}
+                  isLoading={isLoading}
+                />
+              </Box>
+            </>
+          )}
 
-          <Typography sx={{ mt: 2 }} fontWeight={500} fontSize={18}>
-            Next of Kin
-          </Typography>
-          <Box
-            sx={{
-              display: "grid",
-              columnGap: 1.5,
-              rowGap: 1.5,
-              gridTemplateColumns: {
-                xs: "repeat(1, 1fr)",
-                lg: "repeat(4, 1fr)",
-              },
-            }}
-          >
-            <TextLabel
-              label="Next of Kin"
-              text={userData?.nokFullName || "Not Available"}
-              isLoading={isLoading}
-            />
-            <TextLabel
-              label="Phone Number"
-              text={userData?.nokPhoneNumber || "Not Available"}
-              isLoading={isLoading}
-            />
-            <TextLabel
-              label="NHR ID"
-              text={userData?.nokNHR_ID || "Not Available"}
-              isLoading={isLoading}
-            />
-            <TextLabel
-              label="Relationship"
-              text={userData?.nokRelationship || "Not Available"}
-              isLoading={isLoading}
-            />
-          </Box>
+          {userData?.nokFullName === "" ? null : (
+            <>
+              <Typography sx={{ mt: 2 }} fontWeight={500} fontSize={18}>
+                Next of Kin
+              </Typography>
+              <Box
+                sx={{
+                  display: "grid",
+                  columnGap: 1.5,
+                  rowGap: 1.5,
+                  gridTemplateColumns: {
+                    xs: "repeat(1, 1fr)",
+                    lg: "repeat(4, 1fr)",
+                  },
+                }}
+              >
+                <TextLabel
+                  label="Next of Kin"
+                  text={userData?.nokFullName || "Not Available"}
+                  isLoading={isLoading}
+                />
+                <TextLabel
+                  label="Phone Number"
+                  text={userData?.nokPhoneNumber || "Not Available"}
+                  isLoading={isLoading}
+                />
+                <TextLabel
+                  label="NHR ID"
+                  text={userData?.nokNHR_ID || "Not Available"}
+                  isLoading={isLoading}
+                />
+                <TextLabel
+                  label="Relationship"
+                  text={userData?.nokRelationship || "Not Available"}
+                  isLoading={isLoading}
+                />
+              </Box>
+            </>
+          )}
         </Stack>
       </div>
 

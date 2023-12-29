@@ -83,6 +83,14 @@ export default function Allergies() {
   const [isLoading, setIsLoading] = useState(false);
 
   const addForm = () => {
+    // Check if any of the form fields have a value
+    const isFormEmpty = Object.values(formField).every((value) => !value);
+
+    if (!isFormEmpty) {
+      // If any form field has a value, disable the "Add New" button
+      return;
+    }
+
     setHide(true);
     setFormField((prevForms) => [...prevForms, { ...initialState }]);
   };
@@ -93,6 +101,7 @@ export default function Allergies() {
       newForms.splice(index, 1);
       return newForms;
     });
+    setHide(false);
   };
 
   const handleToggle = (index: any) => {
@@ -197,6 +206,7 @@ export default function Allergies() {
               "&:hover": { backgroundColor: "#099250" },
             }}
             onClick={addForm}
+            disabled={hide}
           >
             Add New
           </Button>

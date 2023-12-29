@@ -26,14 +26,14 @@ import Allergies from "./Allergies";
 import Referral from "./Referral";
 import Notes from "./Notes";
 
-const activity = [
-  { time: "9:40am", purpose: "Diagnosed by #3948934" },
-  { time: "9:40am", purpose: "Visited Cottage Medics" },
-  { time: "9:40am", purpose: "Vitals recorded" },
-  { time: "9:40am", purpose: "Treatment plan completed" },
-  { time: "9:40am", purpose: "Visited Cottage Medics" },
-  { time: "9:40am", purpose: "Visited Cottage Medics" },
-];
+// const activity = [
+//   { time: "9:40am", purpose: "Diagnosed by #3948934" },
+//   { time: "9:40am", purpose: "Visited Cottage Medics" },
+//   { time: "9:40am", purpose: "Vitals recorded" },
+//   { time: "9:40am", purpose: "Treatment plan completed" },
+//   { time: "9:40am", purpose: "Visited Cottage Medics" },
+//   { time: "9:40am", purpose: "Visited Cottage Medics" },
+// ];
 
 interface TextLabelProps {
   text: any;
@@ -242,7 +242,7 @@ export default function Singleuser() {
               {userData?.firstName + " " + userData?.lastName}
             </span>
             <span style={{ fontWeight: 400, fontSize: 14, color: "#475467" }}>
-              Created: {moment(userData?.dateOfBirth).format("LL")}
+              Created: {moment(userData?.date_created).format("LL")}
             </span>
           </Typography>
         </Box>
@@ -304,7 +304,7 @@ export default function Singleuser() {
           />
         </Box>
         <Divider sx={{ position: "absolute", width: "100%", right: 0 }} />
-        <Box>
+        {/* <Box>
           <Typography
             fontWeight={600}
             fontSize={18}
@@ -330,7 +330,7 @@ export default function Singleuser() {
               </span>
             </Typography>
           ))}
-        </Box>
+        </Box> */}
       </Box>
     </Stack>
   );

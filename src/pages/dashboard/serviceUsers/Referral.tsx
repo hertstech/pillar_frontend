@@ -41,6 +41,14 @@ export default function Referral() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const addForm = () => {
+    // Check if any of the form fields have a value
+    const isFormEmpty = Object.values(formField).every((value) => !value);
+
+    if (!isFormEmpty) {
+      // If any form field has a value, disable the "Add New" button
+      return;
+    }
+
     setHide(true);
     setFormField((prevForms) => [...prevForms, { ...initialFormState }]);
   };
@@ -51,6 +59,7 @@ export default function Referral() {
       newForms.splice(index, 1);
       return newForms;
     });
+    setHide(false);
   };
 
   const handleFormChange = (index: number, field: any, value: any) => {
@@ -97,6 +106,7 @@ export default function Referral() {
               "&:hover": { backgroundColor: "#099250" },
             }}
             onClick={addForm}
+            disabled={hide}
           >
             Add New
           </Button>
