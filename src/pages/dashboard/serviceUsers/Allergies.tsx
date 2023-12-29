@@ -127,7 +127,7 @@ export default function Allergies() {
       Swal.fire({
         icon: "success",
         title: `Successful`,
-        text: `Welcome ${res.data.message}`,
+        text: `${res.data.message}`,
         confirmButtonColor: "#099250",
       });
       setFormField([]);
@@ -396,7 +396,7 @@ export default function Allergies() {
                 variant="outlined"
                 onClick={() => setIsOpen(true)}
               >
-                Preview
+                Continue
               </Button>
               <Button
                 variant="outlined"

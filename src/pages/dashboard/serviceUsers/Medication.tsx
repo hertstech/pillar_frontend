@@ -134,7 +134,7 @@ export default function Assessment() {
       Swal.fire({
         icon: "success",
         title: `Successful`,
-        text: `Welcome ${res.data.message}`,
+        text: `${res.data.message}`,
         confirmButtonColor: "#099250",
       });
 
@@ -442,7 +442,7 @@ export default function Assessment() {
                 variant="outlined"
                 onClick={() => setIsOpen(true)}
               >
-                Preview
+                Continue
               </Button>
               <Button
                 variant="outlined"

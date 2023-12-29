@@ -130,7 +130,7 @@ export default function Health() {
       Swal.fire({
         icon: "success",
         title: `Successful`,
-        text: `Welcome ${res.data.message}`,
+        text: `${res.data.message}`,
         confirmButtonColor: "#099250",
       });
 
@@ -435,7 +435,7 @@ export default function Health() {
                 variant="outlined"
                 onClick={() => setIsOpen(true)}
               >
-                Preview
+                Continue
               </Button>
               <Button
                 variant="outlined"

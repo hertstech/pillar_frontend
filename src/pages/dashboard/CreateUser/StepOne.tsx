@@ -508,8 +508,8 @@ export default function StepOne({
               type="number"
               // required={ageValue}
               label="NHR ID"
-              name="nokFullNameNHR_ID"
-              value={formData.nokFullNameNHR_ID}
+              name="nokNHR_ID"
+              value={formData.nokNHR_ID}
               onChange={handleChange}
               placeholder="Enter NHR ID number"
             />
@@ -554,8 +554,8 @@ export default function StepOne({
         <InputField
           type="text"
           label="Nominated Pharmacy"
-          name="nominatedPharmacy"
-          value={formData.nominatedPharmacy}
+          name="nominatedPharmarcy"
+          value={formData.nominatedPharmarcy}
           onChange={handleChange}
         />
         <InputField

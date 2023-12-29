@@ -15,7 +15,6 @@ interface FormState {
   urgencyStatus: string;
   waitingStatus: string;
   teamReferredTo: string;
-  referralComment: string;
   referralDateReceived: string;
   referralAcceptedDate: string;
   additionalNote: string;
@@ -30,7 +29,6 @@ const initialFormState = {
   urgencyStatus: "",
   waitingStatus: "",
   teamReferredTo: "",
-  referralComment: "",
   referralDateReceived: "",
   referralAcceptedDate: "",
   additionalNote: "",
@@ -242,16 +240,6 @@ export default function Referral() {
                 }
               />
 
-              <InputField
-                type="text"
-                label="Referral Comment"
-                name={`referralComment_${index}`}
-                value={form.referralComment}
-                onChange={(e: any) =>
-                  handleFormChange(index, "referralComment", e.target.value)
-                }
-              />
-
               <Calendar
                 label="Date Referral was Received"
                 value={form.referralDateReceived}
@@ -310,7 +298,7 @@ export default function Referral() {
                 variant="outlined"
                 onClick={() => setIsOpen(true)}
               >
-                Preview
+                Continue
               </Button>
               <Button
                 variant="outlined"
@@ -336,7 +324,6 @@ export default function Referral() {
           urgencyStatus={form.urgencyStatus}
           waitingStatus={form.waitingStatus}
           teamReferredTo={form.teamReferredTo}
-          referralComment={form.referralComment}
           referralDateReceived={form.referralDateReceived}
           referralAcceptedDate={form.referralAcceptedDate}
           additionalNote={form.additionalNote}

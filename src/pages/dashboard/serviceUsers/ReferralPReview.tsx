@@ -20,7 +20,6 @@ interface Props {
   urgencyStatus: string;
   waitingStatus: string;
   teamReferredTo: string;
-  referralComment: string;
   referralDateReceived: string;
   referralAcceptedDate: string;
   additionalNote: string;
@@ -58,7 +57,6 @@ export default function ReferralPReview({
   urgencyStatus,
   waitingStatus,
   teamReferredTo,
-  referralComment,
   referralDateReceived,
   referralAcceptedDate,
 
@@ -73,7 +71,6 @@ export default function ReferralPReview({
     urgencyStatus ||
     waitingStatus ||
     teamReferredTo ||
-    referralComment ||
     referralDateReceived ||
     referralAcceptedDate ||
     additionalNote;
@@ -118,7 +115,6 @@ export default function ReferralPReview({
             <TextLabel label="Urgency Status" text={urgencyStatus} />
             <TextLabel label="Waiting Status" text={waitingStatus} />
             <TextLabel label="Team Referred to" text={teamReferredTo} />
-            <TextLabel label="Referral Comment" text={referralComment} />
             <TextLabel
               label="Date referral received"
               text={moment(referralDateReceived).format("l")}
