@@ -89,7 +89,7 @@ export default function Sidebar() {
 
   const logOut = () => {
     dispatch(dispatchLogout());
-    dispatch(resetClientState());
+    dispatch(resetClientState("tab1"));
     return navigate("/");
   };
   return (
