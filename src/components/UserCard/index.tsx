@@ -4,8 +4,15 @@ import { Box, Card, Chip, Typography } from "@mui/material";
 import Avatars from "../Avatar";
 import { Link } from "react-router-dom";
 import NoResultIllustration from "../NoResult";
+import { useDispatch } from "react-redux";
+import { dispatchClient } from "../../redux/clientSlice";
 
 export default function UserCard({ user }: { user: any }) {
+  const dispatch = useDispatch();
+
+  const handleClick = () => {
+    dispatch(dispatchClient({ tabId: "tab1", client: user }));
+  };
   return (
     <>
       {user.length > 0 ? (
@@ -13,6 +20,7 @@ export default function UserCard({ user }: { user: any }) {
           <Link
             to={`/dashboard/user/${item.id}`}
             style={{ textDecoration: "none" }}
+            onClick={handleClick}
           >
             <Card
               sx={{

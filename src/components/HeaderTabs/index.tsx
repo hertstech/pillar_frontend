@@ -1,18 +1,20 @@
 import { Box, Tab, Tabs, Typography } from "@mui/material";
 import React, { ReactNode } from "react";
+import { Loader } from "../NoResult";
 
 interface LinkItem {
   label: string;
   icon?: React.ReactElement;
   content?: ReactNode; // New property for tab content
+
 }
 
 interface TabProps {
   heading?: string;
-  links: LinkItem[];
+  links: LinkItem[];isLoaded?: boolean;
 }
 
-export default function HeaderTabs({ heading, links }: TabProps) {
+export default function HeaderTabs({ heading, links, isLoaded }: TabProps) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (_event: any, newValue: number) => {
@@ -63,7 +65,9 @@ export default function HeaderTabs({ heading, links }: TabProps) {
           </Tabs>
 
           {/* Display the content of the selected tab */}
-          <Box sx={{ marginTop: 2 }}>{links[value].content}</Box>
+          <Box sx={{ marginTop: 2 }}>
+            {isLoaded ? <Loader /> : links[value].content}
+          </Box>
         </Box>
       </Box>
     </Box>

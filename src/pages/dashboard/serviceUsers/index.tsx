@@ -14,7 +14,7 @@ import { FiBook } from "react-icons/fi";
 import { AiOutlineFundProjectionScreen } from "react-icons/ai";
 import moment from "moment";
 import { useSelector } from "react-redux";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import HeaderBreadCrumb from "../../../components/HeaderBreadCrumb";
 import Grids from "/assets/grid.svg";
 import HeaderTabs from "../../../components/HeaderTabs";
@@ -69,15 +69,12 @@ const TextLabel = ({ text, label, isLoading }: TextLabelProps) => (
 export default function Singleuser() {
   const { id } = useParams();
 
-  const { pathname } = useLocation();
-
-  const isEdit = pathname.includes("edit");
-
-  const [userData, setUserData] = useState<any>(null);
+  // const [userData, setUserData] = useState<any>({});
 
   const [isLoading, setIsLoading] = useState(false);
 
   const token = useSelector((state: any) => state.user.access_token);
+  const client = useSelector((state: any) => state.client.clients.tab1[0]);
 
   const navigate = useNavigate();
 
@@ -87,8 +84,8 @@ export default function Singleuser() {
       icon: <CiMedicalCross />,
       content: (
         <Demogrphics
-          isEdit={isEdit}
-          userData={userData}
+          // userData={userData}
+          client={client}
           isLoading={isLoading}
         />
       ),
@@ -96,52 +93,27 @@ export default function Singleuser() {
     {
       label: "Health Summary",
       icon: <CiMedicalCross />,
-      content: (
-        <Health
-        // isEdit={isEdit}
-        // userData={userData}
-        />
-      ),
+      content: <Health />,
     },
     {
       label: "Medication",
       icon: <AiOutlineFundProjectionScreen />,
-      content: (
-        <Assessment
-        // isEdit={isEdit}
-        // userData={userData}
-        />
-      ),
+      content: <Assessment />,
     },
     {
       label: `Allergies`,
       icon: <RxExitFullScreen />,
-      content: (
-        <Allergies
-        // isEdit={isEdit}
-        // userData={userData}
-        />
-      ),
+      content: <Allergies />,
     },
     {
       label: "Referrals",
       icon: <FiBook />,
-      content: (
-        <Referral
-        // isEdit={isEdit}
-        // userData={userData}
-        />
-      ),
+      content: <Referral />,
     },
     {
       label: "Additional Information",
       icon: <CiSquarePlus />,
-      content: (
-        <Notes
-        // isEdit={isEdit}
-        // userData={userData}
-        />
-      ),
+      content: <Notes />,
     },
   ];
 
@@ -149,9 +121,9 @@ export default function Singleuser() {
     const fetchUserData = async () => {
       setIsLoading(true);
       try {
-        const res = await axiosInstance.get(`/search-serviceuser/${id}`);
+        await axiosInstance.get(`/search-serviceuser/${id}`);
 
-        setUserData(res?.data.result[0]);
+        // setUserData(res?.data.result[0]);
         setIsLoading(false);
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -163,7 +135,7 @@ export default function Singleuser() {
   }, [id]);
 
   if (!token) {
-    navigate("/auth/login");
+    navigate("/");
   }
 
   return (
@@ -178,10 +150,10 @@ export default function Singleuser() {
           }}
         >
           <HeaderBreadCrumb
-            heading={`${userData?.firstName} ${userData?.lastName}`}
+            heading={`${client?.firstName} ${client?.lastName}`}
             links={[
               { label: "Dashboard", href: "/dashboard", icon: Grids },
-              { label: `${userData?.firstName} ${userData?.lastName}` },
+              { label: `${client?.firstName} ${client?.lastName}` },
             ]}
           />
           <Stack alignItems="start">
@@ -239,10 +211,10 @@ export default function Singleuser() {
                 textTransform: "capitalize",
               }}
             >
-              {userData?.firstName + " " + userData?.lastName}
+              {client?.firstName + " " + client?.lastName}
             </span>
             <span style={{ fontWeight: 400, fontSize: 14, color: "#475467" }}>
-              Created: {moment(userData?.date_created).format("LL")}
+              Created: {moment(client?.date_created).format("LL")}
             </span>
           </Typography>
         </Box>
@@ -261,46 +233,46 @@ export default function Singleuser() {
           </Typography>
           <Divider sx={{ position: "absolute", width: "100%", right: 0 }} />
 
-          <TextLabel isLoading={isLoading} label="NHR ID" text={userData?.id} />
+          <TextLabel isLoading={isLoading} label="NHR ID" text={client?.id} />
           <TextLabel
             isLoading={isLoading}
             label="Email Address"
-            text={userData?.email || "None"}
+            text={client?.email || "None"}
           />
           <TextLabel
             isLoading={isLoading}
             label="Phone Number"
-            text={userData?.phoneNumber}
+            text={client?.phoneNumber}
           ></TextLabel>
           <TextLabel
             isLoading={isLoading}
             label="Address"
-            text={userData?.address}
+            text={client?.address}
           />
           <TextLabel
             isLoading={isLoading}
             label="Age"
-            text={moment(new Date()).diff(userData?.dateOfBirth, "years")}
+            text={moment(new Date()).diff(client?.dateOfBirth, "years")}
           />
           <TextLabel
             isLoading={isLoading}
             label="Date of Birth"
-            text={moment(userData?.dateOfBirth).format("L")}
+            text={moment(client?.dateOfBirth).format("DD/MM/YYYY")}
           />
           <TextLabel
             isLoading={isLoading}
             label="Height"
-            text={userData?.height + " " + "cm"}
+            text={client?.height + " " + "cm"}
           />
           <TextLabel
             isLoading={isLoading}
             label="Weight"
-            text={userData?.weight + " " + "kg"}
+            text={client?.weight + " " + "kg"}
           />
           <TextLabel
             isLoading={isLoading}
             label="HMO Plan"
-            text={userData?.HMOPlan || "None"}
+            text={client?.HMOPlan || "None"}
           />
         </Box>
         <Divider sx={{ position: "absolute", width: "100%", right: 0 }} />

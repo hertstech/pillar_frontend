@@ -1,5 +1,7 @@
 import { Skeleton, Typography } from "@mui/material";
 import Styles from "./styles.module.css";
+import { useState } from "react";
+import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 
 interface TextProps {
   label: string;
@@ -22,12 +24,16 @@ export default function InputField({
   required,
   disabled,
 }: TextProps) {
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <div className={Styles.wrapper}>
       <label htmlFor={name}>
         {label}
         <input
-          type={type}
+          type={
+            type === "password" ? (showPassword ? "text" : "password") : type
+          }
           className={Styles.input}
           name={name}
           value={value}
@@ -36,6 +42,14 @@ export default function InputField({
           required={required}
           disabled={disabled}
         />
+        {type === "password" && (
+          <div
+            className={Styles.icon}
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
+          </div>
+        )}
       </label>
     </div>
   );
@@ -48,12 +62,13 @@ interface TextLabelProps {
 }
 export const TextLabel = ({ text, label, isLoading }: TextLabelProps) => (
   <label
+    className={Styles.label}
     style={{
-      fontWeight: 400,
+      fontWeight: 600,
       color: "#475467",
       fontSize: 16,
       margin: "10px 0px",
-      textTransform: "capitalize",
+      // textTransform: "capitalize",
     }}
   >
     {label}
@@ -65,7 +80,16 @@ export const TextLabel = ({ text, label, isLoading }: TextLabelProps) => (
         sx={{ fontSize: "18px" }}
       />
     ) : (
-      <Typography fontWeight={600} fontSize={18} color={"#101928"}>
+      <Typography
+        sx={{
+          "&::first-letter": {
+            textTransform: "uppercase",
+          },
+        }}
+        fontWeight={400}
+        fontSize={16}
+        color={"#101928"}
+      >
         {text}
       </Typography>
     )}

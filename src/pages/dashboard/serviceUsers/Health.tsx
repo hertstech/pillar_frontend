@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import Styles from "./styles.module.css";
-import InputField from "../../../components/InputField";
+import InputField, { TextLabel } from "../../../components/InputField";
 import categories from "../../../../categories.json";
 import { useEffect, useState } from "react";
 import NoResultIllustration from "../../../components/NoResult";
@@ -65,27 +65,6 @@ const initialFormState = {
   reading: "",
   notes: "",
 };
-
-interface TextLabelProps {
-  text: any;
-  label: string;
-}
-const TextLabel = ({ text, label }: TextLabelProps) => (
-  <label
-    style={{
-      fontWeight: 600,
-      color: "#475467",
-      fontSize: 18,
-      margin: "10px 0px",
-      textTransform: "capitalize",
-    }}
-  >
-    {label}
-    <Typography fontWeight={400} marginTop={1} fontSize={16} color={"#101928"}>
-      {text}
-    </Typography>
-  </label>
-);
 
 export default function Health() {
   const [hide, setHide] = useState(false);
@@ -504,7 +483,9 @@ export default function Health() {
               >
                 <TextLabel
                   label="Date Created"
-                  text={moment(item.date_created).format("l") || "None"}
+                  text={
+                    moment(item.date_created).format("DD/MM/YYYY") || "None"
+                  }
                 />
                 <TextLabel label="Type" text={item.type || "None"} />
                 <TextLabel label="Reading" text={item.reading || "None"} />

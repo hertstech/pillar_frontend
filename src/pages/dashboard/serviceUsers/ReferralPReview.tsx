@@ -23,6 +23,8 @@ interface Props {
   referralDateReceived: string;
   referralAcceptedDate: string;
   additionalNote: string;
+  handleSubmit: any;
+  isLoading: boolean;
 }
 
 interface TextLabelProps {
@@ -59,7 +61,8 @@ export default function ReferralPReview({
   teamReferredTo,
   referralDateReceived,
   referralAcceptedDate,
-
+  handleSubmit,
+  isLoading,
   additionalNote,
 }: Props) {
   const hasContent =
@@ -75,7 +78,7 @@ export default function ReferralPReview({
     referralAcceptedDate ||
     additionalNote;
   return (
-    <Dialog maxWidth="md" fullWidth open={isOpen} onClose={onClose}>
+    <Dialog maxWidth="md" fullWidth open={isOpen}>
       <DialogActions sx={{ py: 2, px: 3 }}>
         <Typography
           textAlign={"center"}
@@ -103,7 +106,7 @@ export default function ReferralPReview({
             <TextLabel label="Created By" text={referralName} />
             <TextLabel
               label="Referral Initiated Date"
-              text={moment(dateInitiated).format("l")}
+              text={moment(dateInitiated).format("DD/MM/YYYY")}
             />
             <TextLabel label="Care Setting" text={careSetting} />
             <TextLabel label="Referral Source" text={referralSource} />
@@ -117,11 +120,11 @@ export default function ReferralPReview({
             <TextLabel label="Team Referred to" text={teamReferredTo} />
             <TextLabel
               label="Date referral received"
-              text={moment(referralDateReceived).format("l")}
+              text={moment(referralDateReceived).format("DD/MM/YYYY")}
             />
             <TextLabel
               label="Referral accepted Date"
-              text={moment(referralAcceptedDate).format("l")}
+              text={moment(referralAcceptedDate).format("DD/MM/YYYY")}
             />
             <TextLabel label="Additional Notes" text={additionalNote} />
           </Box>
@@ -146,7 +149,8 @@ export default function ReferralPReview({
           variant="contained"
           sx={{ px: 5 }}
           color="success"
-          onClick={() => {}}
+          onClick={handleSubmit}
+          disabled={isLoading}
         >
           Submit
         </Button>

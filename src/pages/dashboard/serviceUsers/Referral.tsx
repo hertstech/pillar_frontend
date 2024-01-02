@@ -1,10 +1,24 @@
-import { Box, Button, Card, MenuItem, Stack, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  MenuItem,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import NoResultIllustration from "../../../components/NoResult";
 import Styles from "./styles.module.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { FaAngleUp, FaAngleDown } from "react-icons/fa";
 import { Calendar } from "../../../components/CalendarField";
-import InputField from "../../../components/InputField";
+import InputField, { TextLabel } from "../../../components/InputField";
 import ReferralPReview from "./ReferralPReview";
+import { useParams } from "react-router-dom";
+import { axiosInstance } from "../../../Utils/axios";
+import Swal from "sweetalert2";
+import moment from "moment";
+import { IoTimeOutline } from "react-icons/io5";
 
 interface FormState {
   dateInitiated: string;
@@ -18,6 +32,25 @@ interface FormState {
   referralDateReceived: string;
   referralAcceptedDate: string;
   additionalNote: string;
+}
+
+interface apiResponse {
+  additionalNote: string;
+  careSetting: string;
+  dateInitiated: string;
+  date_created: string;
+  id: string;
+  pillar_faclityname_fk: string;
+  pillar_user_id_fk: string;
+  referralComment: string;
+  referralDateReceived: string;
+  referralName: string;
+  referralReason: string;
+  referralSource: string;
+  serviceuser_id_fk: string;
+  teamReferredTo: string;
+  urgencyStatus: string;
+  waitingStatus: string;
 }
 
 const initialFormState = {
@@ -38,7 +71,15 @@ export default function Referral() {
   const [hide, setHide] = useState(false);
   const [formField, setFormField] = useState<FormState[]>([]);
 
+  const [show, setShow] = useState("");
+
+  const [record, setRecord] = useState<apiResponse[]>([]);
+
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { id } = useParams();
 
   const addForm = () => {
     // Check if any of the form fields have a value
@@ -62,6 +103,10 @@ export default function Referral() {
     setHide(false);
   };
 
+  const handleToggle = (index: any) => {
+    setShow((prevIndex) => (prevIndex === index ? null : index));
+  };
+
   const handleFormChange = (index: number, field: any, value: any) => {
     setFormField((prevForms) => {
       const newForms = [...prevForms];
@@ -72,6 +117,57 @@ export default function Referral() {
       return newForms;
     });
   };
+
+  const handleSubmit = async () => {
+    setIsLoading(true);
+    const dataObject = formField[0];
+
+    try {
+      const res = await axiosInstance.post(
+        `/create-serviceuser-referralrecord/${id}`,
+        dataObject
+      );
+
+      setIsOpen(false);
+      setIsLoading(false);
+      Swal.fire({
+        icon: "success",
+        title: `Successful`,
+        text: `${res.data.message}`,
+        confirmButtonColor: "#099250",
+      });
+
+      setFormField([]);
+    } catch (error: any) {
+      console.error(error);
+      setIsLoading(false);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: `${error.response.data.message}`,
+        confirmButtonColor: "#099250",
+      });
+    }
+  };
+
+  useEffect(() => {
+    const getHealthRecord = async () => {
+      setIsLoading(true);
+      try {
+        const res = await axiosInstance.get(
+          `/serviceuser-allergiesreferrals/${id}`
+        );
+
+        setRecord(res?.data.result);
+        setIsLoading(false);
+      } catch (error) {
+        console.error(error);
+        setIsLoading(false);
+      }
+    };
+
+    getHealthRecord();
+  }, [id]);
   return (
     <Box
       sx={{
@@ -321,7 +417,114 @@ export default function Referral() {
           </Card>
         </form>
       ))}
-      {!hide && formField.length === 0 && <NoResultIllustration />}
+
+      {!hide && record.length === 0 && <NoResultIllustration />}
+
+      {record.map((item, index) => (
+        <Box key={index}>
+          <Button
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              p: 2,
+              userSelect: "none",
+              fontSize: 18,
+              justifyContent: "space-between",
+              border: "1px #E4E7EC solid",
+              textTransform: "capitalize",
+              color: "#099250",
+            }}
+            fullWidth
+            onClick={() => handleToggle(`${item?.urgencyStatus}${index}`)}
+          >
+            <span>{item?.urgencyStatus}</span>
+            <span>
+              {show === `${item?.urgencyStatus}${index}` ? (
+                <FaAngleUp />
+              ) : (
+                <FaAngleDown />
+              )}
+            </span>
+          </Button>
+
+          {show === `${item?.urgencyStatus}${index}` && (
+            <div style={{ padding: 6 }}>
+              <Box
+                sx={{
+                  display: "grid",
+                  columnGap: 1.5,
+                  rowGap: 1.5,
+                  gridTemplateColumns: {
+                    xs: "repeat(1, 1fr)",
+                    lg: "repeat(3, 1fr)",
+                  },
+                }}
+              >
+                <TextLabel
+                  label="Date Created"
+                  text={
+                    moment(item.date_created).format("DD/MM/YYYY") || "None"
+                  }
+                />
+                <TextLabel
+                  label="Care Setting"
+                  text={item.careSetting || "None"}
+                />
+                <TextLabel
+                  label="Referral Source"
+                  text={item.referralSource || "None"}
+                />
+                <TextLabel
+                  label="Referral Name"
+                  text={item.referralName || "None"}
+                />
+                <TextLabel
+                  label="Referral reason"
+                  text={item.referralReason || "None"}
+                />
+                <TextLabel
+                  label="Waiting Status"
+                  text={item.waitingStatus || "None"}
+                />
+                <TextLabel
+                  label="Team referred to"
+                  text={item.teamReferredTo || "None"}
+                />
+                <TextLabel
+                  label="Date referral was received"
+                  text={
+                    moment(item.referralDateReceived).format("DD/MM/YYYY") ||
+                    "None"
+                  }
+                />
+              </Box>
+              <TextLabel
+                label="Additional Notes"
+                text={item.additionalNote || "None"}
+              />
+
+              <div
+                style={{
+                  padding: "16px 0px",
+                  color: "#101928",
+                }}
+              >
+                <Typography fontWeight={400} fontSize={12}>
+                  Administered by
+                </Typography>
+                <Typography
+                  fontWeight={400}
+                  fontSize={14}
+                  sx={{ display: "flex", gap: 1, alignItems: "center" }}
+                >
+                  <IoTimeOutline style={{ height: 15, width: 15 }} /> ID: #
+                  {item.pillar_user_id_fk}
+                </Typography>
+              </div>
+            </div>
+          )}
+        </Box>
+      ))}
 
       {formField.map((form, index) => (
         <ReferralPReview
@@ -339,6 +542,8 @@ export default function Referral() {
           additionalNote={form.additionalNote}
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
+          handleSubmit={handleSubmit}
+          isLoading={isLoading}
         />
       ))}
     </Box>

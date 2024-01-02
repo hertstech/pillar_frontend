@@ -65,7 +65,7 @@ export default function HealthPreview({
 }: Props) {
   const hasContent = categories || type || reading || notes;
   return (
-    <Dialog maxWidth="md" fullWidth open={isOpen} onClose={onClose}>
+    <Dialog maxWidth="md" fullWidth open={isOpen}>
       <DialogActions sx={{ py: 2, px: 3 }}>
         <Typography
           textAlign={"center"}

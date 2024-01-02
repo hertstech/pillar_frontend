@@ -490,7 +490,7 @@ export default function Allergies() {
                 }}
               >
                 <Typography fontWeight={400} fontSize={16}>
-                  Report created on {moment(item.date_created).format("l")} by
+                  Report created on {moment(item.date_created).format("DD/MM/YYYY")} by
                   ID: #{item.pillar_user_id_fk}
                 </Typography>
               </div>

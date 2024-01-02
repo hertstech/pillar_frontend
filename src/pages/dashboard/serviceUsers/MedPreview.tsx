@@ -88,7 +88,7 @@ export default function Preview({
   // const [isLoading, setIsLoading] = useState(false);
 
   return (
-    <Dialog maxWidth="md" fullWidth open={isOpen} onClose={onClose}>
+    <Dialog maxWidth="md" fullWidth open={isOpen}>
       <DialogActions sx={{ py: 2, px: 3 }}>
         <Typography
           textAlign={"center"}
@@ -127,13 +127,16 @@ export default function Preview({
             />
             <TextLabel
               label="Date Prescribed"
-              text={moment(datePrescribed).format("l")}
+              text={moment(datePrescribed).format("DD/MM/YYYY")}
             />
             <TextLabel
               label="Start Date"
-              text={moment(startDate).format("l")}
+              text={moment(startDate).format("DD/MM/YYYY")}
             />
-            <TextLabel label="End Date" text={moment(endDate).format("l")} />
+            <TextLabel
+              label="End Date"
+              text={moment(endDate).format("DD/MM/YYYY")}
+            />
             <TextLabel label="Prescriber Information" text={prescriber} />
             <TextLabel label="Additional Notes" text={additionalNote} />
           </Box>

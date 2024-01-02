@@ -15,11 +15,15 @@ import {
 import moment from "moment";
 import InputField, { TextLabel } from "../../../components/InputField";
 import { useState } from "react";
-// import { useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import StatesData from "../../../../states.json";
 import { MdEdit } from "react-icons/md";
 import PhoneField from "../../../components/PhoneInput";
 import Style from "./styles.module.css";
+import { AiOutlineClose } from "react-icons/ai";
+import { axiosInstance } from "../../../Utils/axios";
+import Swal from "sweetalert2";
+// import { useSelector } from "react-redux";
 
 const relations = [
   { value: "father", label: "Father" },
@@ -36,7 +40,7 @@ const relations = [
   { value: "other", label: "Other" },
 ];
 
-interface UserData {
+interface client {
   id: string;
   email: string;
   phoneNumber: string;
@@ -68,15 +72,75 @@ interface UserData {
   nokRelationship: string;
 }
 interface PropType {
-  isEdit: boolean;
-  userData: UserData;
+  client: client;
   isLoading: boolean;
 }
 
-export default function Demogrphics({ userData, isLoading }: PropType) {
-  // const { id } = useParams();
+export default function Demogrphics({ client, isLoading }: PropType) {
+  // const client=useSelector((state: any) => state.client.clients.tab1[0])
+  // console.log(client)
+  const { id } = useParams();
+
+  const [isLoad, setIsLoad] = useState(false);
 
   const [showEdit, setShowEdit] = useState(false);
+
+  const [editForm, setEditForm] = useState({
+    phoneNumber: client.phoneNumber,
+    address: client.address,
+    state: client.state,
+    lga: client.lga,
+    height: client.height,
+    weight: client.weight,
+    parentOne: client.parentOne,
+    parentOneNumber: client.parentOneNumber,
+    parentOneNHRID: client.parentOneNHR_ID,
+    parentOneRelationship: client.parentOneRelationship,
+    parentTwo: client.parentTwo,
+    parentTwoNumber: client.parentTwoNumber,
+    parentTwoNHRID: client.parentTwoNHR_ID,
+    parentTwoRelationship: client.parentTwoRelationship,
+    HMOPlan: client.HMOPlan,
+    nominatedPharmarcy: client.nominatedPharmarcy,
+    registeredDoctor: client.registeredDoctor,
+  });
+
+  const handleChange = (name: string, value: any) => {
+    setEditForm({
+      ...editForm,
+      [name || ""]: value,
+    });
+  };
+
+  const updateUser = async () => {
+    setIsLoad(true);
+
+    try {
+      const res = await axiosInstance.put(
+        `/update-serviceiuser-profile/${id}`,
+        editForm
+      );
+      console.log(res.data);
+
+      setShowEdit(false);
+      setIsLoad(false);
+      Swal.fire({
+        icon: "success",
+        title: `Successful`,
+        text: `${res.data.message}`,
+        confirmButtonColor: "#099250",
+      });
+    } catch (error: any) {
+      console.error(error.response);
+      setIsLoad(false);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        // text: `${error.response.data.message}`,
+        confirmButtonColor: "#099250",
+      });
+    }
+  };
 
   return (
     <Box
@@ -120,7 +184,7 @@ export default function Demogrphics({ userData, isLoading }: PropType) {
           </Button>
         </Stack>
       </div>
-      <div className="">
+      <div>
         <Typography sx={{ color: "#099250" }} fontWeight={500} fontSize={18}>
           Personal Information
         </Typography>
@@ -137,35 +201,35 @@ export default function Demogrphics({ userData, isLoading }: PropType) {
         >
           <TextLabel
             label="Full Name"
-            text={userData?.firstName + " " + userData?.lastName}
+            text={client?.firstName + " " + client?.lastName}
             isLoading={isLoading}
           />
           <TextLabel
             label="Gender"
-            text={userData?.gender}
+            text={client?.gender}
             isLoading={isLoading}
           />
 
           <TextLabel
             label="Religion"
-            text={userData?.religion}
+            text={client?.religion}
             isLoading={isLoading}
           />
           <TextLabel
             label="Tribal Mark"
-            text={userData?.tribalMarks}
+            text={client?.tribalMarks}
             isLoading={isLoading}
           />
         </Stack>
       </div>
 
-      <div className="">
+      <div>
         <Typography sx={{ color: "#099250" }} fontWeight={500} fontSize={18}>
           Contact details
         </Typography>
         <TextLabel
           label="Address"
-          text={userData?.address}
+          text={client?.address}
           isLoading={isLoading}
         />
         <Stack
@@ -181,43 +245,43 @@ export default function Demogrphics({ userData, isLoading }: PropType) {
         >
           <TextLabel
             label="State"
-            text={userData?.state || "Nill"}
+            text={client?.state || "Nill"}
             isLoading={isLoading}
           />
           <TextLabel
             label="LGA"
-            text={userData?.lga || "Nill"}
+            text={client?.lga || "Nill"}
             isLoading={isLoading}
           />
           <TextLabel
             label="Date of Birth"
-            text={moment(userData?.dateOfBirth).format("L")}
+            text={moment(client?.dateOfBirth).format("DD/MM/YYYY")}
             isLoading={isLoading}
           />
           <TextLabel
             label="Age"
-            text={moment(new Date()).diff(userData?.dateOfBirth, "years")}
+            text={moment(new Date()).diff(client?.dateOfBirth, "years")}
             isLoading={isLoading}
           />
           <TextLabel
             label="Email Address"
-            text={userData?.email || "None"}
+            text={client?.email || "None"}
             isLoading={isLoading}
           />
           <TextLabel
             label="Phone Number"
-            text={userData?.phoneNumber}
+            text={client?.phoneNumber}
             isLoading={isLoading}
           />
         </Stack>
       </div>
 
-      <div className="">
+      <div>
         <Typography sx={{ color: "#099250" }} fontWeight={500} fontSize={18}>
           Emergency Contact
         </Typography>
         <Stack>
-          {userData?.parentOne === "" ? null : (
+          {!client?.parentOne || client?.parentOne === "" ? null : (
             <>
               <Typography fontWeight={500} fontSize={18}>
                 Parent One
@@ -235,29 +299,29 @@ export default function Demogrphics({ userData, isLoading }: PropType) {
               >
                 <TextLabel
                   label="Full Name"
-                  text={userData?.parentOne || "Not Available"}
+                  text={client?.parentOne || "Not Available"}
                   isLoading={isLoading}
                 />
                 <TextLabel
                   label="Phone Number"
-                  text={userData?.parentOneNumber || "Not Available"}
+                  text={client?.parentOneNumber || "Not Available"}
                   isLoading={isLoading}
                 />
                 <TextLabel
                   label="NHR ID"
-                  text={userData?.parentOneNHR_ID || "Not Available"}
+                  text={client?.parentOneNHR_ID || "Not Available"}
                   isLoading={isLoading}
                 />
                 <TextLabel
                   label="Relationship"
-                  text={userData?.parentOneRelationship || "Not Available"}
+                  text={client?.parentOneRelationship || "Not Available"}
                   isLoading={isLoading}
                 />
               </Box>
             </>
           )}
 
-          {userData?.parentTwo === "" ? null : (
+          {!client?.parentTwo || client?.parentTwo === "" ? null : (
             <>
               <Typography sx={{ mt: 2 }} fontWeight={500} fontSize={18}>
                 Parent Two
@@ -275,29 +339,29 @@ export default function Demogrphics({ userData, isLoading }: PropType) {
               >
                 <TextLabel
                   label="Parent Two"
-                  text={userData?.parentTwo || "Not Available"}
+                  text={client?.parentTwo || "Not Available"}
                   isLoading={isLoading}
                 />
                 <TextLabel
                   label="Phone Number"
-                  text={userData?.parentTwoNumber || "Not Available"}
+                  text={client?.parentTwoNumber || "Not Available"}
                   isLoading={isLoading}
                 />
                 <TextLabel
                   label="NHR ID"
-                  text={userData?.parentTwoNHR_ID || "Not Available"}
+                  text={client?.parentTwoNHR_ID || "Not Available"}
                   isLoading={isLoading}
                 />
                 <TextLabel
                   label="Relationship"
-                  text={userData?.parentTwoRelationship || "Not Available"}
+                  text={client?.parentTwoRelationship || "Not Available"}
                   isLoading={isLoading}
                 />
               </Box>
             </>
           )}
 
-          {userData?.nokFullName === "" ? null : (
+          {!client?.nokFullName || client?.nokFullName === "" ? null : (
             <>
               <Typography sx={{ mt: 2 }} fontWeight={500} fontSize={18}>
                 Next of Kin
@@ -315,22 +379,22 @@ export default function Demogrphics({ userData, isLoading }: PropType) {
               >
                 <TextLabel
                   label="Next of Kin"
-                  text={userData?.nokFullName || "Not Available"}
+                  text={client?.nokFullName || "Not Available"}
                   isLoading={isLoading}
                 />
                 <TextLabel
                   label="Phone Number"
-                  text={userData?.nokPhoneNumber || "Not Available"}
+                  text={client?.nokPhoneNumber || "Not Available"}
                   isLoading={isLoading}
                 />
                 <TextLabel
                   label="NHR ID"
-                  text={userData?.nokNHR_ID || "Not Available"}
+                  text={client?.nokNHR_ID || "Not Available"}
                   isLoading={isLoading}
                 />
                 <TextLabel
                   label="Relationship"
-                  text={userData?.nokRelationship || "Not Available"}
+                  text={client?.nokRelationship || "Not Available"}
                   isLoading={isLoading}
                 />
               </Box>
@@ -339,7 +403,7 @@ export default function Demogrphics({ userData, isLoading }: PropType) {
         </Stack>
       </div>
 
-      <div className="">
+      <div>
         <Typography sx={{ color: "#099250" }} fontWeight={500} fontSize={18}>
           Health Plan
         </Typography>
@@ -350,17 +414,17 @@ export default function Demogrphics({ userData, isLoading }: PropType) {
         >
           <TextLabel
             label="HMO Plan"
-            text={userData?.HMOPlan}
+            text={client?.HMOPlan}
             isLoading={isLoading}
           />
           <TextLabel
             label="Nominated Pharmacy"
-            text={userData?.nominatedPharmarcy || "None"}
+            text={client?.nominatedPharmarcy || "None"}
             isLoading={isLoading}
           />
           <TextLabel
             label="Registered Doctor"
-            text={userData?.registeredDoctor || "None"}
+            text={client?.registeredDoctor || "None"}
             isLoading={isLoading}
           />
         </Stack>
@@ -368,17 +432,22 @@ export default function Demogrphics({ userData, isLoading }: PropType) {
 
       {showEdit && (
         <>
-          <Dialog
-            // sx={{ maxWidth: "500px", mx: "auto" }}
-            maxWidth={"xl"}
-            open={showEdit}
-            onClose={() => setShowEdit(false)}
-          >
+          <Dialog maxWidth={"xl"} open={showEdit}>
             <DialogTitle textAlign={"center"} p={2}>
               Edit Service User Details
             </DialogTitle>
+            <AiOutlineClose
+              style={{
+                position: "absolute",
+                right: 22,
+                top: 18,
+                fontSize: 32,
+                cursor: "pointer",
+              }}
+              onClick={() => setShowEdit(false)}
+            />
             <DialogContent>
-              <div className="">
+              <div>
                 <Box
                   sx={{
                     display: "grid",
@@ -386,14 +455,17 @@ export default function Demogrphics({ userData, isLoading }: PropType) {
                     rowGap: 1.5,
                     gridTemplateColumns: {
                       xs: "repeat(1, 1fr)",
-                      lg: "repeat(2, 1fr)",
+                      lg: "repeat(3, 1fr)",
                     },
                   }}
                 >
                   <div style={{ marginTop: 8 }}>
                     <PhoneField
                       name="phoneNumber"
-                      value={userData?.phoneNumber}
+                      value={editForm.phoneNumber}
+                      onChange={(value: any) =>
+                        handleChange("phoneNumber", value)
+                      }
                     />
                   </div>
 
@@ -401,8 +473,10 @@ export default function Demogrphics({ userData, isLoading }: PropType) {
                     type="text"
                     label="Address"
                     name="address"
-                    value={userData?.address}
-                    onChange={() => {}}
+                    value={editForm.address}
+                    onChange={(e: any) =>
+                      handleChange("address", e.target.value)
+                    }
                   />
 
                   <label htmlFor="state" style={{ marginTop: 8 }}>
@@ -412,8 +486,10 @@ export default function Demogrphics({ userData, isLoading }: PropType) {
                       sx={{ marginTop: "5px" }}
                       fullWidth
                       name="state"
-                      defaultValue={userData?.state}
-                      onChange={() => {}}
+                      defaultValue={editForm.state}
+                      onChange={(e: any) =>
+                        handleChange("state", e.target.value)
+                      }
                     >
                       {StatesData.map((state, index) => (
                         <MenuItem key={index} value={state.name}>
@@ -430,11 +506,11 @@ export default function Demogrphics({ userData, isLoading }: PropType) {
                       sx={{ marginTop: "5px" }}
                       fullWidth
                       name="lga"
-                      value={userData?.lga}
-                      onChange={() => {}}
+                      value={editForm.lga}
+                      onChange={(e: any) => handleChange("lga", e.target.value)}
                     >
                       {StatesData?.find(
-                        (state) => state.name === userData?.state || state
+                        (state) => state.name === editForm.state
                       )?.lgas.map((lga, index) => (
                         <MenuItem key={index} value={lga}>
                           {lga ? lga : ""}
@@ -442,10 +518,52 @@ export default function Demogrphics({ userData, isLoading }: PropType) {
                       ))}
                     </TextField>
                   </label>
+
+                  <label htmlFor="height" style={{ marginTop: 10 }}>
+                    Height
+                    <OutlinedInput
+                      sx={{ marginTop: "5px" }}
+                      fullWidth
+                      name="height"
+                      value={editForm.height}
+                      endAdornment={
+                        <InputAdornment position="end">cm</InputAdornment>
+                      }
+                      inputProps={{
+                        max: 999,
+                        type: "number",
+                        min: 0,
+                      }}
+                      onChange={(e: any) =>
+                        handleChange("height", e.target.value)
+                      }
+                    />
+                  </label>
+
+                  <label style={{ marginTop: 10 }}>
+                    Weight
+                    <OutlinedInput
+                      sx={{ marginTop: "5px" }}
+                      fullWidth
+                      name="weight"
+                      value={editForm.weight}
+                      endAdornment={
+                        <InputAdornment position="end">kg</InputAdornment>
+                      }
+                      inputProps={{
+                        max: 999,
+                        type: "number",
+                        min: 0,
+                      }}
+                      onChange={(e: any) =>
+                        handleChange("weight", e.target.value)
+                      }
+                    />
+                  </label>
                 </Box>
               </div>
 
-              <div className="">
+              <div style={{ marginTop: 10 }}>
                 <Box
                   sx={{
                     display: "grid",
@@ -458,57 +576,24 @@ export default function Demogrphics({ userData, isLoading }: PropType) {
                     },
                   }}
                 >
-                  <label htmlFor="height">
-                    Height
-                    <OutlinedInput
-                      sx={{ marginTop: "5px" }}
-                      fullWidth
-                      name="height"
-                      value={userData?.height}
-                      endAdornment={
-                        <InputAdornment position="end">cm</InputAdornment>
-                      }
-                      inputProps={{
-                        max: 999,
-                        type: "number",
-                        min: 0,
-                      }}
-                      onChange={() => {}}
-                    />
-                  </label>
-
-                  <label>
-                    Weight
-                    <OutlinedInput
-                      sx={{ marginTop: "5px" }}
-                      fullWidth
-                      name="weight"
-                      value={userData?.weight}
-                      endAdornment={
-                        <InputAdornment position="end">kg</InputAdornment>
-                      }
-                      inputProps={{
-                        max: 999,
-                        type: "number",
-                        min: 0,
-                      }}
-                      onChange={() => {}}
-                    />
-                  </label>
-
                   <div className={Style.display}>
                     <InputField
                       type="text"
                       label="Parent One"
                       name="parentOne"
-                      value={userData?.parentOne || "None"}
-                      onChange={() => {}}
+                      value={editForm.parentOne}
+                      onChange={(e: any) =>
+                        handleChange("parentOne", e.target.value)
+                      }
                     />
 
                     <div style={{ marginTop: 8 }}>
                       <PhoneField
                         name="parentOneNumber"
-                        value={userData?.phoneNumber}
+                        value={editForm.parentOneNumber}
+                        onChange={(value: any) =>
+                          handleChange("parentOneNumber", value)
+                        }
                       />
                     </div>
 
@@ -516,19 +601,26 @@ export default function Demogrphics({ userData, isLoading }: PropType) {
                       type="text"
                       label="NHR ID"
                       name="parentOneNHR_ID"
-                      value={userData?.parentOneNHR_ID || "None"}
-                      onChange={() => {}}
+                      value={editForm.parentOneNHRID}
+                      onChange={(e: any) =>
+                        handleChange("parentOneNHRID", e.target.value)
+                      }
                     />
 
-                    <label htmlFor="parentOneRelationship">
+                    <label
+                      htmlFor="parentOneRelationship"
+                      style={{ marginTop: 10 }}
+                    >
                       Relationship
                       <TextField
                         select
                         sx={{ marginTop: "5px" }}
                         fullWidth
                         name="parentOneRelationship"
-                        value={userData.parentOneRelationship}
-                        // onChange={handleChange}
+                        value={editForm.parentOneRelationship}
+                        onChange={(e: any) =>
+                          handleChange("parentOneRelationship", e.target.value)
+                        }
                       >
                         {relations.map((item, index) => (
                           <MenuItem key={index} value={item.value}>
@@ -544,13 +636,18 @@ export default function Demogrphics({ userData, isLoading }: PropType) {
                       type="text"
                       label="Parent Two"
                       name="parentTwo"
-                      value={userData?.parentTwo || "None"}
-                      onChange={() => {}}
+                      value={editForm.parentTwo}
+                      onChange={(e: any) =>
+                        handleChange("parentTwo", e.target.value)
+                      }
                     />
                     <div style={{ marginTop: 8 }}>
                       <PhoneField
                         name="parentTwoNumber"
-                        value={userData?.parentTwoNumber}
+                        value={editForm.parentTwoNumber}
+                        onChange={(value: any) =>
+                          handleChange("parentTwoNumber", value)
+                        }
                       />
                     </div>
 
@@ -558,40 +655,83 @@ export default function Demogrphics({ userData, isLoading }: PropType) {
                       type="text"
                       label="NHR ID"
                       name="parentTwoNHR_ID"
-                      value={userData?.parentTwoNHR_ID || "None"}
-                      onChange={() => {}}
+                      value={editForm.parentTwoNHRID}
+                      onChange={(e: any) =>
+                        handleChange("parentTwoNHRID", e.target.value)
+                      }
                     />
+
+                    <label
+                      htmlFor="parentOneRelationship"
+                      style={{ marginTop: 10 }}
+                    >
+                      Relationship
+                      <TextField
+                        select
+                        sx={{ marginTop: "5px" }}
+                        fullWidth
+                        name="parentTwoRelationship"
+                        value={editForm.parentTwoRelationship}
+                        onChange={(e: any) =>
+                          handleChange("parentTwoRelationship", e.target.value)
+                        }
+                      >
+                        {relations.map((item, index) => (
+                          <MenuItem key={index} value={item.value}>
+                            {item.label}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                    </label>
                   </div>
 
                   <InputField
                     type="text"
                     label="HMO Name"
-                    name="hmoPlan"
-                    value={userData?.HMOPlan || "None"}
-                    onChange={() => {}}
+                    name="HMOPlan"
+                    value={editForm.HMOPlan}
+                    onChange={(value: any) => handleChange("HMOPlan", value)}
                   />
 
                   <InputField
                     type="text"
-                    label="HMO Name"
+                    label="Nominated Pharmacy"
                     name="nominatedPharmarcy"
-                    value={userData?.nominatedPharmarcy || "None"}
-                    onChange={() => {}}
+                    value={editForm.nominatedPharmarcy}
+                    onChange={(e: any) =>
+                      handleChange("nominatedPharmarcy", e.target.value)
+                    }
                   />
 
                   <InputField
                     type="text"
-                    label="HMO Name"
+                    label="Registered Doctor"
                     name="registeredDoctor"
-                    value={userData?.registeredDoctor || "None"}
-                    onChange={() => {}}
+                    value={editForm.registeredDoctor}
+                    onChange={(e: any) =>
+                      handleChange("registeredDoctor", e.target.value)
+                    }
                   />
                 </Box>
               </div>
             </DialogContent>
 
-            <DialogActions>
-              <Button variant="outlined">Save changes</Button>
+            <DialogActions sx={{ p: 3 }}>
+              <Button
+                variant="contained"
+                sx={{
+                  color: "#FFF",
+                  outline: "none",
+                  textTransform: "capitalize",
+                  fontWeight: 600,
+                  background: "#099250",
+                  "&:hover": { backgroundColor: "#099250" },
+                }}
+                onClick={updateUser}
+                disabled={isLoad}
+              >
+                Save changes
+              </Button>
             </DialogActions>
           </Dialog>
         </>

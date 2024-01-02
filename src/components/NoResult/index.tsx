@@ -10,3 +10,13 @@ export default function NoResultIllustration() {
     </div>
   );
 }
+
+export const Loader = () => {
+  return (
+    <div style={{ minHeight: "610px" }} className="">
+      <div className="wrapp">
+        <div className="pulseLoad" />
+      </div>
+    </div>
+  );
+};

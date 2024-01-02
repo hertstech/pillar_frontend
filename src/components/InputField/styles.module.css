@@ -1,6 +1,7 @@
 .wrapper {
   margin: 8px 0 0;
   width: 100%;
+  position: relative;
 }
 
 .input {
@@ -19,4 +20,13 @@
   color: #98a2b3;
   font-size: 14px;
   font-weight: normal;
+}
+
+.icon {
+  position: absolute;
+  right: 0.8rem;
+  cursor: pointer;
+  font-size: 24px;
+  color: grey;
+  top: 38px;
 }

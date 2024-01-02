@@ -376,5 +376,3 @@ export default function ProfileHome() {
     </Box>
   );
 }
-
-// { "rewrites": [{ "source": "/(.*)", "destination": "/" }] }

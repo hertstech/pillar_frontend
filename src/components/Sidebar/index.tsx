@@ -4,6 +4,7 @@ import Styles from "./styles.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { dispatchLogout } from "../../redux/userSlice";
 import { IoLogOutOutline } from "react-icons/io5";
+import { resetClientState } from "../../redux/clientSlice";
 
 const navLinks = [
   {
@@ -88,6 +89,7 @@ export default function Sidebar() {
 
   const logOut = () => {
     dispatch(dispatchLogout());
+    dispatch(resetClientState());
     return navigate("/");
   };
   return (

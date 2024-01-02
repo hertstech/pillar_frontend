@@ -16,6 +16,7 @@ interface Props {
   label: string;
   disableFuture?: boolean;
   disablePast?: boolean;
+  minDate?: any;
 }
 
 export function CalendarField({ value, selected, onSelect }: any) {
@@ -57,6 +58,7 @@ export function Calendar({
   label,
   disableFuture,
   disablePast,
+  minDate,
 }: Props) {
   return (
     <label style={{ marginTop: 10 }} htmlFor="dateOfBirth">
@@ -67,6 +69,7 @@ export function Calendar({
             orientation="portrait"
             views={["year", "month", "day"]}
             format="DD/MM/YYYY"
+            minDate={minDate}
             sx={{ marginTop: "5px", width: "100%" }}
             disableFuture={disableFuture}
             disablePast={disablePast}

@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { Box, Stack, Button, Card, TextField, MenuItem } from "@mui/material";
 import NoResultIllustration from "../../../components/NoResult";
 import { useEffect, useState } from "react";
@@ -395,7 +396,7 @@ export default function Assessment() {
                 label="Start Date"
                 value={form.startDate}
                 disableFuture={false}
-                disablePast={true}
+                // disablePast={false}
                 onChange={(newValue: any) =>
                   handleFormChange(index, "startDate", newValue.format())
                 }
@@ -404,8 +405,9 @@ export default function Assessment() {
               <Calendar
                 label="End Date"
                 value={form.endDate}
-                disableFuture={false}
-                disablePast={true}
+                disableFuture={form.startDate}
+                minDate={dayjs(form.startDate)}
+                // disablePast={true}
                 onChange={(newValue: any) =>
                   handleFormChange(index, "endDate", newValue.format())
                 }
@@ -513,7 +515,9 @@ export default function Assessment() {
               >
                 <TextLabel
                   label="Date Prescribed"
-                  text={moment(item.date_created).format("l") || "None"}
+                  text={
+                    moment(item.date_created).format("DD/MM/YYYY") || "None"
+                  }
                 />
                 <TextLabel
                   label="Name of Medication"
