@@ -149,6 +149,7 @@ export default function LoginPage() {
           </Stack>
         </div>
       </Container>
+      
       <div style={{ width: "100%" }}>
         <img className={Styles.images} src="/assets/Frame 625882.svg" alt="" />
       </div>

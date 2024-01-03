@@ -33,6 +33,8 @@ const relations = [
   { value: "other", label: "Other" },
 ];
 
+const title = ["Mr", "Mrs", "Miss", "Ms", "Chief", "Dr", "Prof"];
+
 export default function StepOne({
   formData,
   handleChange: superHandleChange,
@@ -110,6 +112,23 @@ export default function StepOne({
           marginBottom: 2,
         }}
       >
+        <label htmlFor="title" style={{ marginTop: 9 }}>
+          Title
+          <TextField
+            select
+            sx={{ marginTop: "5px" }}
+            fullWidth
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+          >
+            {title.map((item, index) => (
+              <MenuItem key={index} value={item}>
+                {item}
+              </MenuItem>
+            ))}
+          </TextField>
+        </label>
         <InputField
           type="text"
           label="First Name"

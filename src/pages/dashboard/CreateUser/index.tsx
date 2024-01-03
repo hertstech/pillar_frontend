@@ -61,6 +61,7 @@ export default function CreateUser() {
     registeredDoctor: "",
     registeredHospital: "",
     HMOPlan: "",
+    title: "",
 
     // STEP TWO
     NIN: "",
