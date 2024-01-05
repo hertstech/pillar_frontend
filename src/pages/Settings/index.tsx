@@ -6,6 +6,8 @@ import {
   HiOutlineUser,
   HiOutlineUsers,
 } from "react-icons/hi2";
+import General from "./General";
+import Personal from "./Personal";
 
 export default function Settings() {
   return (
@@ -16,24 +18,12 @@ export default function Settings() {
           {
             label: "General",
             icon: <HiOutlineBuildingOffice2 />,
-            content: (
-              <Box>
-                <Typography>Content for Tab 1</Typography>
-                <Typography>
-                  Any additional components or text can go here.
-                </Typography>
-              </Box>
-            ),
+            content: <General />,
           },
           {
             label: "Personal",
             icon: <HiOutlineUser />,
-            content: (
-              <Box>
-                <Typography>Content for Tab 2</Typography>
-                <Typography>More content can be added here.</Typography>
-              </Box>
-            ),
+            content: <Personal />,
           },
           {
             label: "User Permission",

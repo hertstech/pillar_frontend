@@ -21,6 +21,7 @@ import Buttons from "../../../components/Button";
 import { useSelector } from "react-redux";
 import { axiosInstance } from "../../../Utils/axios";
 import { Navigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 export default function CreateUser() {
   const [activeStep, setActiveStep] = useState(0);
@@ -94,6 +95,7 @@ export default function CreateUser() {
           formData={formData}
           result={result}
           handleChange={handleChange}
+          isLoading={isLoading}
         />
       ),
     },
@@ -156,8 +158,14 @@ export default function CreateUser() {
       setIsLoading(false);
 
       handleNext();
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: `${error.response.data.message}`,
+        confirmButtonColor: "#099250",
+      });
       setIsLoading(false);
     }
   };
@@ -285,7 +293,7 @@ export default function CreateUser() {
                     fontWeight: 600,
                     height: 48,
                   }}
-                  disabled={activeStep <= 0}
+                  disabled={activeStep <= 0 || isLoading}
                   variant="outlined"
                   onClick={handleBack}
                 >

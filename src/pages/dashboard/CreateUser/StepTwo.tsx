@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Box, MenuItem, TextField, Typography } from "@mui/material";
 import InputField from "../../../components/InputField";
+import { Loader } from "../../../components/NoResult";
 
 let months = [
   "January",
@@ -21,6 +22,7 @@ export default function StepTwo({
   formData,
   handleChange: superHandleChange,
   result,
+  isLoading,
 }: any) {
   const [selectedValue, setSelectedValue] = useState("NIN");
   const [years] = useState(new Date().getFullYear());
@@ -52,54 +54,171 @@ export default function StepTwo({
           minHeight: 469,
         }}
       >
-        <Box>
-          <label htmlFor="IDType">
-            ID Type
-            <TextField
-              select
-              sx={{ marginTop: "5px" }}
-              fullWidth
-              value={selectedValue}
-              onChange={handleSelectChange}
-            >
-              <MenuItem value="NIN">NIN</MenuItem>
-              <MenuItem value="Birth Certificate">Birth Certificate</MenuItem>
-              <MenuItem value="Drivers Licence">Drivers Licence</MenuItem>
-              <MenuItem value="International Passport">
-                International Passport
-              </MenuItem>
-            </TextField>
-          </label>
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <Box>
+            <label htmlFor="IDType">
+              ID Type
+              <TextField
+                select
+                sx={{ marginTop: "5px" }}
+                fullWidth
+                value={selectedValue}
+                onChange={handleSelectChange}
+              >
+                <MenuItem value="NIN">NIN</MenuItem>
+                <MenuItem value="Birth Certificate">Birth Certificate</MenuItem>
+                <MenuItem value="Drivers Licence">Drivers Licence</MenuItem>
+                <MenuItem value="International Passport">
+                  International Passport
+                </MenuItem>
+              </TextField>
+            </label>
 
-          {selectedValue === "NIN" && (
-            <InputField
-              type="text"
-              label="Enter client’s NIN"
-              name="NIN"
-              value={formData.NIN}
-              onChange={handleChange}
-              placeholder="1234-567-8901 enter NIN without the dash"
-            />
-          )}
-
-          <Typography
-            color={result === "Verification Successful" ? "green" : "red"}
-            sx={{ my: 2 }}
-          >
-            {result}
-          </Typography>
-
-          {selectedValue === "Drivers Licence" && (
-            <>
+            {selectedValue === "NIN" && (
               <InputField
                 type="text"
-                label="Enter License Number"
-                name="driversLicense"
-                value={formData.driversLicense}
+                label="Enter client’s NIN"
+                name="NIN"
+                value={formData.NIN}
                 onChange={handleChange}
-                placeholder=""
+                placeholder="1234-567-8901 enter NIN without the dash"
               />
+            )}
 
+            <Typography
+              color={result === "Verification Successful" ? "green" : "red"}
+              sx={{ my: 2 }}
+            >
+              {result}
+            </Typography>
+
+            {selectedValue === "Drivers Licence" && (
+              <>
+                <InputField
+                  type="text"
+                  label="Enter License Number"
+                  name="driversLicense"
+                  value={formData.driversLicense}
+                  onChange={handleChange}
+                  placeholder=""
+                />
+
+                <Box
+                  sx={{
+                    display: "grid",
+                    columnGap: 1.5,
+                    rowGap: 1.5,
+                    gridTemplateColumns: {
+                      xs: "repeat(1, 1fr)",
+                      lg: "repeat(2, 1fr)",
+                    },
+                    marginTop: 2,
+                  }}
+                >
+                  <label htmlFor="years">
+                    Year of Expiry
+                    <TextField
+                      select
+                      name="year"
+                      sx={{ marginTop: "5px" }}
+                      fullWidth
+                      value={formData.year}
+                      onChange={handleChange}
+                    >
+                      {yearList.map((months) => (
+                        <MenuItem key={months} value={months}>
+                          {months}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </label>
+
+                  <label htmlFor="months">
+                    Month of Expiry
+                    <TextField
+                      select
+                      name="month"
+                      sx={{ marginTop: "5px" }}
+                      fullWidth
+                      value={formData.month}
+                      onChange={handleChange}
+                    >
+                      {months.map((months) => (
+                        <MenuItem key={months} value={months}>
+                          {months}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </label>
+                </Box>
+              </>
+            )}
+
+            {selectedValue === "International Passport" && (
+              <>
+                <InputField
+                  type="text"
+                  label="Passport Number"
+                  name="passportNumber"
+                  value={formData.passportNumber}
+                  onChange={handleChange}
+                  placeholder=""
+                />
+
+                <Box
+                  sx={{
+                    display: "grid",
+                    columnGap: 1.5,
+                    rowGap: 1.5,
+                    gridTemplateColumns: {
+                      xs: "repeat(1, 1fr)",
+                      lg: "repeat(2, 1fr)",
+                    },
+                    marginTop: 2,
+                  }}
+                >
+                  <label htmlFor="years">
+                    Year of Expiry
+                    <TextField
+                      select
+                      name="year"
+                      sx={{ marginTop: "5px" }}
+                      fullWidth
+                      value={formData.year}
+                      onChange={handleChange}
+                    >
+                      {yearList.map((months) => (
+                        <MenuItem key={months} value={months}>
+                          {months}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </label>
+
+                  <label htmlFor="months">
+                    Month of Expiry
+                    <TextField
+                      select
+                      name="month"
+                      sx={{ marginTop: "5px" }}
+                      fullWidth
+                      value={formData.month}
+                      onChange={handleChange}
+                    >
+                      {months.map((months) => (
+                        <MenuItem key={months} value={months}>
+                          {months}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </label>
+                </Box>
+              </>
+            )}
+
+            {selectedValue === "Birth Certificate" && (
               <Box
                 sx={{
                   display: "grid",
@@ -107,31 +226,31 @@ export default function StepTwo({
                   rowGap: 1.5,
                   gridTemplateColumns: {
                     xs: "repeat(1, 1fr)",
-                    lg: "repeat(2, 1fr)",
+                    lg: "repeat(3, 1fr)",
                   },
                   marginTop: 2,
                 }}
               >
-                <label htmlFor="years">
-                  Year of Expiry
+                <label htmlFor="days">
+                  Day
                   <TextField
                     select
-                    name="year"
+                    name="day"
                     sx={{ marginTop: "5px" }}
                     fullWidth
-                    value={formData.year}
+                    value={formData.day}
                     onChange={handleChange}
                   >
-                    {yearList.map((months) => (
-                      <MenuItem key={months} value={months}>
-                        {months}
+                    {dayList.map((day) => (
+                      <MenuItem key={day} value={day}>
+                        {day}
                       </MenuItem>
                     ))}
                   </TextField>
                 </label>
 
                 <label htmlFor="months">
-                  Month of Expiry
+                  Month
                   <TextField
                     select
                     name="month"
@@ -147,35 +266,9 @@ export default function StepTwo({
                     ))}
                   </TextField>
                 </label>
-              </Box>
-            </>
-          )}
 
-          {selectedValue === "International Passport" && (
-            <>
-              <InputField
-                type="text"
-                label="Passport Number"
-                name="passportNumber"
-                value={formData.passportNumber}
-                onChange={handleChange}
-                placeholder=""
-              />
-
-              <Box
-                sx={{
-                  display: "grid",
-                  columnGap: 1.5,
-                  rowGap: 1.5,
-                  gridTemplateColumns: {
-                    xs: "repeat(1, 1fr)",
-                    lg: "repeat(2, 1fr)",
-                  },
-                  marginTop: 2,
-                }}
-              >
                 <label htmlFor="years">
-                  Year of Expiry
+                  Year
                   <TextField
                     select
                     name="year"
@@ -184,104 +277,17 @@ export default function StepTwo({
                     value={formData.year}
                     onChange={handleChange}
                   >
-                    {yearList.map((months) => (
-                      <MenuItem key={months} value={months}>
-                        {months}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </label>
-
-                <label htmlFor="months">
-                  Month of Expiry
-                  <TextField
-                    select
-                    name="month"
-                    sx={{ marginTop: "5px" }}
-                    fullWidth
-                    value={formData.month}
-                    onChange={handleChange}
-                  >
-                    {months.map((months) => (
-                      <MenuItem key={months} value={months}>
-                        {months}
+                    {yearList.map((years) => (
+                      <MenuItem key={years} value={years}>
+                        {years}
                       </MenuItem>
                     ))}
                   </TextField>
                 </label>
               </Box>
-            </>
-          )}
-
-          {selectedValue === "Birth Certificate" && (
-            <Box
-              sx={{
-                display: "grid",
-                columnGap: 1.5,
-                rowGap: 1.5,
-                gridTemplateColumns: {
-                  xs: "repeat(1, 1fr)",
-                  lg: "repeat(3, 1fr)",
-                },
-                marginTop: 2,
-              }}
-            >
-              <label htmlFor="days">
-                Day
-                <TextField
-                  select
-                  name="day"
-                  sx={{ marginTop: "5px" }}
-                  fullWidth
-                  value={formData.day}
-                  onChange={handleChange}
-                >
-                  {dayList.map((day) => (
-                    <MenuItem key={day} value={day}>
-                      {day}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </label>
-
-              <label htmlFor="months">
-                Month
-                <TextField
-                  select
-                  name="month"
-                  sx={{ marginTop: "5px" }}
-                  fullWidth
-                  value={formData.month}
-                  onChange={handleChange}
-                >
-                  {months.map((months) => (
-                    <MenuItem key={months} value={months}>
-                      {months}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </label>
-
-              <label htmlFor="years">
-                Year
-                <TextField
-                  select
-                  name="year"
-                  sx={{ marginTop: "5px" }}
-                  fullWidth
-                  value={formData.year}
-                  onChange={handleChange}
-                >
-                  {yearList.map((years) => (
-                    <MenuItem key={years} value={years}>
-                      {years}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </label>
-            </Box>
-          )}
-        </Box>
+            )}
+          </Box>
+        )}
       </Box>
     </>
   );

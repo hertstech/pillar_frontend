@@ -1,10 +1,22 @@
+import { Avatar } from "@mui/material";
 import Styles from "./styles.module.css";
+import { useSelector } from "react-redux";
 
 export default function Notification() {
+  const user = useSelector((state: any) => state.user.user);
   return (
     <header className={Styles.header}>
       <div className={Styles.item}>
-        <button className={Styles.button}>
+        <div className={Styles.head}>
+          <Avatar />
+          <span className={Styles.nameId}>
+            <span className={Styles.userName}>
+              {user.firstName + " " + user.lastName}
+            </span>
+            <span className={Styles.userID}>HRT-132422</span>
+          </span>
+        </div>
+        {/* <button className={Styles.button}>
           <svg
             width="20"
             height="20"
@@ -20,7 +32,7 @@ export default function Notification() {
               fill="#344054"
             />
           </svg>
-        </button>
+        </button> */}
       </div>
     </header>
   );

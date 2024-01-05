@@ -89,16 +89,16 @@ export default function RegisterPage() {
     }
 
     try {
-      await axiosInstance.post("/auth/create-user", formData);
+      const res = await axiosInstance.post("/auth/create-user", formData);
 
+      Swal.fire({
+        icon: "success",
+        title: `Sign up Successful`,
+        text: `${res.data.message}`,
+        confirmButtonColor: "#099250",
+      });
+      
       navigate("/auth/login");
-
-      // return Swal.fire({
-      //   icon: "success",
-      //   title: `Welcome ${response.data.firstName}`,
-      //   text: `Welcome ${response.data.message}`,
-      //   confirmButtonColor: "#099250",
-      // });
     } catch (error: any) {
       console.error(error, "error");
       setIsLoadingButton(false);
@@ -136,10 +136,7 @@ export default function RegisterPage() {
 
               <form className={Styles.form}>
                 <div style={{ display: "flex", gap: 10 }}>
-                  <label
-                    htmlFor="title"
-                    style={{ marginTop: 9 }}
-                  >
+                  <label htmlFor="title" style={{ marginTop: 9 }}>
                     Title
                     <TextField
                       select

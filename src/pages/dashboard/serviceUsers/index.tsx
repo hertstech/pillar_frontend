@@ -8,6 +8,7 @@ import {
   Button,
   Skeleton,
 } from "@mui/material";
+import { FaRegUser } from "react-icons/fa6";
 import { CiMedicalCross, CiSquarePlus } from "react-icons/ci";
 import { RxExitFullScreen } from "react-icons/rx";
 import { FiBook } from "react-icons/fi";
@@ -81,7 +82,7 @@ export default function Singleuser() {
   const tabs = [
     {
       label: "Demographics",
-      icon: <CiMedicalCross />,
+      icon: <FaRegUser />,
       content: (
         <Demogrphics
           // userData={userData}

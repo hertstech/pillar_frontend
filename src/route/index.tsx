@@ -24,6 +24,7 @@ export const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: <DashboardLayout />,
+    
     children: [
       { element: <Navigate to="/dashboard/profile" replace />, index: true },
 

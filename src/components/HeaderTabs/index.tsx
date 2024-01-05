@@ -6,12 +6,12 @@ interface LinkItem {
   label: string;
   icon?: React.ReactElement;
   content?: ReactNode; // New property for tab content
-
 }
 
 interface TabProps {
   heading?: string;
-  links: LinkItem[];isLoaded?: boolean;
+  links: LinkItem[];
+  isLoaded?: boolean;
 }
 
 export default function HeaderTabs({ heading, links, isLoaded }: TabProps) {

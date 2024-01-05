@@ -63,19 +63,19 @@ export default function NotePreview({
       {hasContent ? (
         <DialogContent>
           <Box
-            sx={{
-              mb: 10,
-              display: "grid",
-              columnGap: 1.5,
-              rowGap: 1.5,
-              gridTemplateColumns: {
-                xs: "repeat(1, 1fr)",
-                lg: "repeat(3, 1fr)",
-              },
-            }}
+          // sx={{
+          //   mb: 10,
+          //   display: "grid",
+          //   columnGap: 1.5,
+          //   rowGap: 1.5,
+          //   gridTemplateColumns: {
+          //     xs: "repeat(1, 1fr)",
+          //     lg: "repeat(3, 1fr)",
+          //   },
+          // }}
           >
-            <TextLabel label="Written By" text={writtenBy} />
             <TextLabel label="Additional Notes" text={additionalNote} />
+            <TextLabel label="Written By" text={writtenBy} />
           </Box>
         </DialogContent>
       ) : (

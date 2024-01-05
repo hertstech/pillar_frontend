@@ -1,23 +1,27 @@
 import { Stack, Box, Button, Card } from "@mui/material";
 import NoResultIllustration from "../../../components/NoResult";
-import { useState } from "react";
-import InputField from "../../../components/InputField";
+import { useEffect, useState } from "react";
+import InputField, { TextLabel } from "../../../components/InputField";
 import Styles from "./styles.module.css";
 import NotePreview from "./NotePreview";
+import Swal from "sweetalert2";
+import { axiosInstance } from "../../../Utils/axios";
+import { useParams } from "react-router-dom";
 
 interface FormState {
   writtenBy: string;
   additionalNote: string;
 }
 
-// interface apiResponse {
-//   additionalNote: string;
-//   date_created: string;
-//   id: string;
-//   pillar_faclityname_fk: string;
-//   pillar_user_id_fk: string;
-//   serviceuser_id_fk: string;
-// }
+interface apiResponse {
+  additionalNote: string;
+  writtenBy: string;
+  date_created: string;
+  id: string;
+  pillar_faclityname_fk: string;
+  pillar_user_id_fk: string;
+  serviceuser_id_fk: string;
+}
 
 const initialFormState = {
   writtenBy: "",
@@ -28,15 +32,13 @@ export default function Notes() {
   const [hide, setHide] = useState(false);
   const [formField, setFormField] = useState<FormState[]>([]);
 
-  // const [show, setShow] = useState("");
-
-  // const [record, setRecord] = useState<apiResponse[]>([]);
+  const [record, setRecord] = useState<apiResponse[]>([]);
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const [isLoading, setIsLoading] = useState(false);
 
-  // const { id } = useParams();
+  const { id } = useParams();
 
   const addForm = () => {
     // Check if any of the form fields have a value
@@ -65,7 +67,53 @@ export default function Notes() {
     const dataObject = formField[0];
 
     console.log(dataObject);
+
+    try {
+      const res = await axiosInstance.post(
+        `/create-serviceuser-additionalnotes/${id}`,
+        dataObject
+      );
+
+      setIsOpen(false);
+      setIsLoading(false);
+      Swal.fire({
+        icon: "success",
+        title: `Successful`,
+        text: `${res.data.message}`,
+        confirmButtonColor: "#099250",
+      });
+
+      setFormField([]);
+    } catch (error: any) {
+      console.error(error);
+      setIsLoading(false);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: `${error.response.data.message}`,
+        confirmButtonColor: "#099250",
+      });
+    }
   };
+
+  useEffect(() => {
+    const getNotes = async () => {
+      setIsLoading(true);
+      try {
+        const res = await axiosInstance.get(
+          `/serviceuser-addtionalnotes/${id}`
+        );
+
+        setRecord(res?.data.result);
+        setIsLoading(false);
+      } catch (error) {
+        console.error(error);
+        setIsLoading(false);
+      }
+    };
+
+    getNotes();
+  }, [id]);
 
   const handleFormChange = (index: number, field: any, value: any) => {
     setFormField((prevForms) => {
@@ -166,7 +214,7 @@ export default function Notes() {
                   px: 3,
                 }}
                 variant="outlined"
-                // onClick={() => setIsOpen(true)}
+                onClick={() => setIsOpen(true)}
               >
                 Continue
               </Button>
@@ -182,7 +230,14 @@ export default function Notes() {
         </form>
       ))}
 
-      {!hide && formField.length === 0 && <NoResultIllustration />}
+      {!hide && record.length === 0 && <NoResultIllustration />}
+
+      {record.map((item, index) => (
+        <Card sx={{ p: 2 }} key={index}>
+          <TextLabel label="Note" text={item.additionalNote} />
+          <TextLabel label="Written By" text={item.writtenBy} />
+        </Card>
+      ))}
 
       {formField.map((form, index) => (
         <NotePreview

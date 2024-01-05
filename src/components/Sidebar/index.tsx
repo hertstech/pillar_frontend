@@ -1,9 +1,11 @@
-import { Avatar, Button } from "@mui/material";
+import { Button } from "@mui/material";
 import { NavLink, useNavigate } from "react-router-dom";
 import Styles from "./styles.module.css";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { dispatchLogout } from "../../redux/userSlice";
 import { IoLogOutOutline } from "react-icons/io5";
+import { FiGrid } from "react-icons/fi";
+import { FaUsers } from "react-icons/fa";
 import { resetClientState } from "../../redux/clientSlice";
 
 const navLinks = [
@@ -11,44 +13,13 @@ const navLinks = [
     id: 0,
     name: "EHR Dashboard",
     to: "/dashboard/profile",
-    icon: (
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 20 20"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <g id="icon / grid">
-          <g id="icon">
-            <path
-              fillRule="evenodd"
-              clipRule="evenodd"
-              d="M3.33333 9.58333C2.18274 9.58333 1.25 8.65059 1.25 7.5V3.33333C1.25 2.18274 2.18274 1.25 3.33333 1.25H7.5C8.65059 1.25 9.58333 2.18274 9.58333 3.33333V7.5C9.58333 8.65059 8.65059 9.58333 7.5 9.58333H3.33333ZM2.91667 7.5C2.91667 7.73012 3.10321 7.91667 3.33333 7.91667L7.5 7.91667C7.73012 7.91667 7.91667 7.73012 7.91667 7.5V3.33333C7.91667 3.10322 7.73012 2.91667 7.5 2.91667L3.33333 2.91667C3.10321 2.91667 2.91667 3.10322 2.91667 3.33333L2.91667 7.5Z"
-              fill="#344054"
-            />
-            <path
-              fillRule="evenodd"
-              clipRule="evenodd"
-              d="M1.25 16.6667C1.25 17.8173 2.18274 18.75 3.33333 18.75H7.5C8.65059 18.75 9.58333 17.8173 9.58333 16.6667V12.5C9.58333 11.3494 8.65059 10.4167 7.5 10.4167H3.33333C2.18274 10.4167 1.25 11.3494 1.25 12.5V16.6667ZM3.33333 17.0833C3.10321 17.0833 2.91667 16.8968 2.91667 16.6667L2.91667 12.5C2.91667 12.2699 3.10321 12.0833 3.33333 12.0833H7.5C7.73012 12.0833 7.91667 12.2699 7.91667 12.5V16.6667C7.91667 16.8968 7.73012 17.0833 7.5 17.0833H3.33333Z"
-              fill="#344054"
-            />
-            <path
-              fillRule="evenodd"
-              clipRule="evenodd"
-              d="M10.4167 16.6667C10.4167 17.8173 11.3494 18.75 12.5 18.75H16.6667C17.8173 18.75 18.75 17.8173 18.75 16.6667V12.5C18.75 11.3494 17.8173 10.4167 16.6667 10.4167H12.5C11.3494 10.4167 10.4167 11.3494 10.4167 12.5V16.6667ZM12.5 17.0833C12.2699 17.0833 12.0833 16.8968 12.0833 16.6667V12.5C12.0833 12.2699 12.2699 12.0833 12.5 12.0833H16.6667C16.8968 12.0833 17.0833 12.2699 17.0833 12.5V16.6667C17.0833 16.8968 16.8968 17.0833 16.6667 17.0833H12.5Z"
-              fill="#344054"
-            />
-            <path
-              fillRule="evenodd"
-              clipRule="evenodd"
-              d="M10.4167 7.5C10.4167 8.65059 11.3494 9.58333 12.5 9.58333H16.6667C17.8173 9.58333 18.75 8.65059 18.75 7.5V3.33333C18.75 2.18274 17.8173 1.25 16.6667 1.25H12.5C11.3494 1.25 10.4167 2.18274 10.4167 3.33333V7.5ZM12.5 7.91667C12.2699 7.91667 12.0833 7.73012 12.0833 7.5V3.33333C12.0833 3.10322 12.2699 2.91667 12.5 2.91667L16.6667 2.91667C16.8968 2.91667 17.0833 3.10322 17.0833 3.33333V7.5C17.0833 7.73012 16.8968 7.91667 16.6667 7.91667L12.5 7.91667Z"
-              fill="#344054"
-            />
-          </g>
-        </g>
-      </svg>
-    ),
+    icon: <FiGrid size={24} />,
+  },
+  {
+    id: 0,
+    name: "HCPs (DO NOT TAP!)",
+    to: "/dashboard/practitioners",
+    icon: <FaUsers size={24} />,
   },
   {
     id: 1,
@@ -56,8 +27,8 @@ const navLinks = [
     to: "/dashboard/setting",
     icon: (
       <svg
-        width="20"
-        height="20"
+        width="24"
+        height="24"
         viewBox="0 0 20 20"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -83,7 +54,6 @@ const navLinks = [
   },
 ];
 export default function Sidebar() {
-  const user = useSelector((state: any) => state.user.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -95,14 +65,10 @@ export default function Sidebar() {
   return (
     <aside className={Styles.container}>
       <nav>
-        <div className={Styles.header}>
-          <Avatar />
-          <span className={Styles.nameId}>
-            <span className={Styles.userName}>
-              {user.firstName + " " + user.lastName}
-            </span>
-            <span className={Styles.userID}>userID12382</span>
-          </span>
+        <div className={Styles.logoWrapper}>
+          <div className=""></div>
+          <img src="/assets/logo.svg" alt="" style={{ width: 40 }} />
+          <h6 className={Styles.logoText}>Pillar</h6>
         </div>
 
         <ul>
@@ -138,12 +104,6 @@ export default function Sidebar() {
           >
             Log out
           </Button>
-
-          <div className={Styles.logoWrapper}>
-            <div className=""></div>
-            <img src="/assets/logo.svg" alt="" style={{ width: 24 }} />
-            <h6 className={Styles.logoText}>Pillar</h6>
-          </div>
         </div>
       </nav>
     </aside>

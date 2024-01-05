@@ -421,7 +421,7 @@ export default function Allergies() {
       ))}
 
       {/* INITIAL STATE WHEN EMPTY */}
-      {!hide || (record.length === 0 && <NoResultIllustration />)}
+      {!hide && record.length === 0 && <NoResultIllustration />}
 
       {record.map((item, index) => (
         <Box key={index}>
@@ -490,8 +490,9 @@ export default function Allergies() {
                 }}
               >
                 <Typography fontWeight={400} fontSize={16}>
-                  Report created on {moment(item.date_created).format("DD/MM/YYYY")} by
-                  ID: #{item.pillar_user_id_fk}
+                  Report created on{" "}
+                  {moment(item.date_created).format("DD/MM/YYYY")} by ID: #
+                  {item.pillar_user_id_fk}
                 </Typography>
               </div>
             </div>

@@ -46,19 +46,6 @@ input::-webkit-inner-spin-button {
   font-size: 20px;
 }
 
-
-.animate-spin {
-  /* position: relative; */
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  border-top: 8px solid #f6655f;
-  border-left: 8px solid rgb(246, 101, 95);
-  border-right: 8px solid rgba(246, 101, 95, 0.5);
-
-  animation: spin 1s infinite linear;
-}
-
 @keyframes pulse {
   0% {
     transform: scale(0.15);
@@ -73,20 +60,28 @@ input::-webkit-inner-spin-button {
   }
 }
 
+.wrapped{
+  min-height: inherit;
+  display: grid;
+  place-items: center;
+  position: absolute;
+  /* background: #00000080; */
+  width: 52%;
+}
 .wrapp {
   display: flex;
   place-items: center;
   height: 80px;
   width: 80px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
+  position: relative;
+  /* top: 50%;
+  left: 50%; */
 }
 
 .pulseLoad {
   width: 64px;
   height: 64px;
-  background: #212b36;
+  background: #099250;
   border-radius: 50%;
   margin: auto;
   animation: pulse 0.85s infinite linear;

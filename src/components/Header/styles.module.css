@@ -6,16 +6,37 @@
   justify-content: flex-end;
   align-items: center;
   background: white;
+  border-bottom: 1px #e7e9fb solid;
 }
 
-.item {
+/* .item {
   display: flex;
   align-items: center;
   justify-content: flex-end;
+} */
+
+.head {
+  display: flex;
+  gap: 8px;
+  padding: 10px;
 }
 
-.button {
-  border: none;
-  border-radius: 100%;
-  padding: 10px;
+.nameId {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  font-size: 14px;
+}
+
+.userName {
+  color: #101928;
+  font-weight: 600;
+  line-height: 20px;
+  text-transform: capitalize;
+}
+
+.userId {
+  color: #475367;
+  font-weight: 400;
+  line-height: 20px;
 }
