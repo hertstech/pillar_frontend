@@ -74,6 +74,11 @@ export const severity = [
   { value: "Severe", label: "Severe" },
   { value: "Life-threatening", label: "Life-threatening" },
   { value: "Fatal", label: "Fatal" },
+  { value: "Chronic", label: "Chronic" },
+  { value: "Acute", label: "Acute" },
+  { value: "Critical", label: "Critical" },
+  { value: "Stable", label: "Stable" },
+  { value: "Progressive", label: "Progressive" },
 ];
 
 export const certainty = [
@@ -118,4 +123,76 @@ export const bloodTypes = [
   { value: "O+", label: "O+" },
   { value: "O-", label: "O-" },
   { value: "Other", label: "Other" },
+];
+
+export const primaryDiagnosis = [
+  "Pneumonia",
+  "Type 2 Diabetes Mellitus",
+  "Hypertension",
+  "Asthma",
+  "Coronary Artery Disease",
+  "Depression",
+  "Osteoarthritis",
+  "Urinary Tract Infection (UTI)",
+  "Migraine Headaches",
+  "Gastroesophageal Reflux Disease (GERD)",
+  "Cancer",
+];
+
+export const secondaryDiagnosis = [
+  "Respiratory Failure",
+  "Hypoxemia",
+  "Sepsis",
+  "Peripheral Neuropathy",
+  "Hypertension",
+  "Retinopathy",
+  "Cardiogenic Shock",
+  "Arrhythmia",
+  "Coronary Artery Disease",
+];
+
+export const treatmentStatus = [
+  "Pending",
+  "Active",
+  "Completed",
+  "Discharged",
+  "On Hold",
+  "Cancelled",
+  "Suspended",
+];
+
+export const treatmentType = [
+  "Other",
+  "Medication",
+  "Surgery",
+  "Physical therapy",
+  "Occupational therapy",
+  "Radiation therapy",
+  "Chemotherapy",
+  "CBT",
+  "Alternative therapy",
+  "Immunotherapy",
+  "Dialysis",
+  "Transplantation",
+  "Electroconvulsive Therapy",
+  "Hormone Therapy",
+  "Palliative care",
+  "Respiratory Therapy",
+  "Referred",
+];
+
+export const followUpPlans = [
+  "Other",
+  "Regular check ups",
+  "Further diagnostic tests",
+  "Medication review",
+  "Specialist Referral",
+  "Physical therapy sessions",
+  "Dietary of lifestyle counselling",
+  "Psychological or counselling sessions",
+  "Care coordination meetings",
+  "Home health visits",
+  "Patient education",
+  "Monitoring symptoms",
+  "Advance Directive Review",
 ];

@@ -130,10 +130,10 @@ export default function ProfileHome() {
             fontSize={24}
             textTransform={"capitalize"}
           >
-            Welcome, {user?.title} {name}
+            Welcome back, {user?.title} {name}
           </Typography>
           <Typography variant="body2" sx={{ color: "#667185" }}>
-          Search client’s health record here
+            Search client’s health record here
           </Typography>
         </div>
         <Stack alignItems="start">
@@ -141,17 +141,16 @@ export default function ProfileHome() {
             to="/dashboard/new"
             style={{
               fontWeight: 500,
-              color: "#FFF",
+              color: "#099250",
               textDecoration: "none",
               borderRadius: 10,
               display: "flex",
-              background: "#099250",
+              background: "#EDFCF2",
               padding: 16,
               gap: 7,
               alignItems: "center",
             }}
           >
-
             <TiUserAddOutline size={30} />
             <span>Add New Record</span>
           </Link>
@@ -159,7 +158,10 @@ export default function ProfileHome() {
       </Box>
       <div className={Styles.boxContainer}>
         <div className={Styles.boxWrapper}>
-          <div className="" style={{ background: "white" }}>
+          <div
+            className=""
+            style={{ background: "white", border: "1px #E7E9FB solid" }}
+          >
             <div className={Styles.bttnWrapper}>
               <Button
                 fullWidth
@@ -172,12 +174,14 @@ export default function ProfileHome() {
                   background: searchOptions ? "#FFF" : "#EDFCF2",
                   borderBottom: searchOptions ? "none" : "2px solid #3CCB7F",
                   borderRadius: 0,
+                  fontSize: 18,
                 }}
                 size="large"
                 onClick={() => setSearchOption(false)}
               >
                 NHR ID
               </Button>
+              
               <Button
                 fullWidth
                 sx={{
@@ -189,6 +193,7 @@ export default function ProfileHome() {
                   background: searchOptions ? "#EDFCF2" : "#FFF",
                   borderBottom: searchOptions ? "2px solid #3CCB7F" : "none",
                   borderRadius: 0,
+                  fontSize: 18,
                 }}
                 size="large"
                 onClick={() => setSearchOption(true)}
@@ -203,21 +208,8 @@ export default function ProfileHome() {
                 <div className={Styles.content}>
                   <Typography
                     variant="subtitle2"
-                    fontWeight={400}
-                    fontSize={18}
-                    sx={{
-                      color: "#101828",
-                      textAlign: "center",
-                      textTransform: "capitalize",
-                    }}
-                  >
-                    Welcome {user?.title} {name}
-                  </Typography>
-                  <Typography
-                    variant="subtitle2"
-                    fontWeight={600}
-                    // lineHeight={1}
-                    fontSize={28}
+                    fontWeight={700}
+                    fontSize={32}
                     sx={{
                       color: "#101828",
                       textAlign: "center",
@@ -303,20 +295,8 @@ export default function ProfileHome() {
                 <div className={Styles.content}>
                   <Typography
                     variant="subtitle2"
-                    fontWeight={400}
-                    fontSize={20}
-                    sx={{
-                      color: "#101828",
-                      textAlign: "center",
-                      textTransform: "capitalize",
-                    }}
-                  >
-                    Welcome {user?.title} {name}
-                  </Typography>
-                  <Typography
-                    variant="subtitle2"
-                    fontWeight={600}
-                    fontSize={28}
+                    fontWeight={700}
+                    fontSize={32}
                     sx={{
                       color: "#101828",
                       textAlign: "center",

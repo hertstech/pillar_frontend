@@ -14,13 +14,23 @@ import { useEffect, useState } from "react";
 import NoResultIllustration from "../../../components/NoResult";
 import { FaAngleUp, FaAngleDown } from "react-icons/fa";
 import { Calendar } from "../../../components/CalendarField";
-import { bloodTypes } from "./shared";
+import {
+  bloodTypes,
+  followUpPlans,
+  primaryDiagnosis,
+  secondaryDiagnosis,
+  severity,
+  treatmentStatus,
+  treatmentType,
+} from "./shared";
 import HealthPreview from "./HealthPreview";
 import { axiosInstance } from "../../../Utils/axios";
 import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import moment from "moment";
 import { IoTimeOutline } from "react-icons/io5";
+
+const title = ["Dr.", "Mrs.", "Ms."];
 
 interface FormState {
   categories: string;
@@ -33,6 +43,19 @@ interface FormState {
   expirationDate: string;
   reading: string;
   notes: string;
+  systolic: string;
+  diasttolic: string;
+  bpm: string;
+  title: string;
+  mgDl: string;
+  degreeRating: string;
+  primaryDiagnosis: string;
+  secondaryDiagnosis: string;
+  severity: string;
+  treatmentStatus: string;
+  treatmentType: string;
+  followUpPlans: string;
+  progressNote: string;
 }
 
 interface apiResponse {
@@ -61,6 +84,19 @@ const initialFormState = {
   manufacturer: "",
   batchNumber: "",
   administrationDate: "",
+  systolic: "",
+  diasttolic: "",
+  bpm: "",
+  title: "",
+  mgDl: "",
+  degreeRating: "",
+  primaryDiagnosis: "",
+  secondaryDiagnosis: "",
+  severity: "",
+  treatmentStatus: "",
+  treatmentType: "",
+  followUpPlans: "",
+  progressNote: "",
   expirationDate: "",
   reading: "",
   notes: "",
@@ -265,54 +301,143 @@ export default function Health() {
                 </TextField>
               </label>
 
-              {form.type === "Blood Type" && (
-                <label
-                  htmlFor={`bloodType${index}`}
-                  style={{ marginTop: "10px" }}
-                >
-                  Blood Type
-                  <TextField
-                    select
-                    sx={{ marginTop: "5px" }}
-                    fullWidth
-                    name="bloodType"
-                    value={form.bloodType}
-                    onChange={(e) =>
-                      handleFormChange(index, "bloodType", e.target.value)
+              {form.categories === "Vitals" &&
+                form.type === "Blood pressure" && (
+                  <div style={{ marginTop: "5px", display: "flex", gap: 5 }}>
+                    <InputField
+                      type="text"
+                      label="Systolic"
+                      name={`systolic_${index}`}
+                      value={form.systolic}
+                      onChange={(e: any) =>
+                        handleFormChange(index, "systolic", e.target.value)
+                      }
+                    />
+
+                    <InputField
+                      type="text"
+                      label="Diastolic"
+                      name={`diastolic_${index}`}
+                      value={form.diastolic}
+                      onChange={(e: any) =>
+                        handleFormChange(index, "diastolic", e.target.value)
+                      }
+                    />
+                  </div>
+                )}
+
+              {form.categories === "Vitals" && form.type === "Pulse Rate" && (
+                <div style={{ marginTop: "5px" }}>
+                  <InputField
+                    type="text"
+                    label="bpm"
+                    name={`bpm_${index}`}
+                    value={form.bpm}
+                    onChange={(e: any) =>
+                      handleFormChange(index, "bpm", e.target.value)
                     }
-                  >
-                    {bloodTypes.map((item, index) => (
-                      <MenuItem key={index} value={item.value}>
-                        {item.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </label>
+                  />
+                </div>
               )}
 
-              {form.type === "Genotype" && (
-                <label
-                  htmlFor={`genotype${index}`}
-                  style={{ marginTop: "10px" }}
-                >
-                  Genotype
-                  <TextField
-                    select
-                    sx={{ marginTop: "5px" }}
-                    fullWidth
-                    name="genotype"
-                    value={form.genotype}
-                    onChange={(e) =>
-                      handleFormChange(index, "genotype", e.target.value)
-                    }
+              {form.categories === "Vitals" &&
+                form.type === "Glucose Level" && (
+                  <div style={{ marginTop: "5px" }}>
+                    <InputField
+                      type="text"
+                      label="mg/dl"
+                      name={`mg_dl_${index}`}
+                      value={form.mg_dl}
+                      onChange={(e: any) =>
+                        handleFormChange(index, "mg_dl", e.target.value)
+                      }
+                    />
+                  </div>
+                )}
+
+              {form.categories === "Vitals" &&
+                form.type === "Body Temperature" && (
+                  <div style={{ marginTop: "5px", display: "flex", gap: 5 }}>
+                    <InputField
+                      type="text"
+                      label="Reading"
+                      name={`reading_${index}`}
+                      value={form.reading}
+                      onChange={(e: any) =>
+                        handleFormChange(index, "reading", e.target.value)
+                      }
+                    />
+                    <label
+                      htmlFor={`degreeRating${index}`}
+                      style={{ marginTop: "10px" }}
+                    >
+                      <TextField
+                        select
+                        sx={{ marginTop: "19px", marginRight: "32px" }}
+                        fullWidth
+                        name="degreeRating"
+                        // value={form.degreeRating}
+                        // onChange={(e) =>
+                        //   handleFormChange(index, "degreeRating", e.target.value)
+                        // }
+                      >
+                        <MenuItem value="&deg;C">&deg;C</MenuItem>
+                        <MenuItem value="&deg;F">&deg;F</MenuItem>
+                      </TextField>
+                    </label>
+                  </div>
+                )}
+
+              {form.categories === "Genetic Information" &&
+                form.type === "Blood Type" && (
+                  <label
+                    htmlFor={`bloodType${index}`}
+                    style={{ marginTop: "10px" }}
                   >
-                    <MenuItem value="AA">AA</MenuItem>
-                    <MenuItem value="AS">AS</MenuItem>
-                    <MenuItem value="SS">SS</MenuItem>
-                    <MenuItem value="Other">Other</MenuItem>
-                  </TextField>
-                </label>
-              )}
+                    Blood Type
+                    <TextField
+                      select
+                      sx={{ marginTop: "5px" }}
+                      fullWidth
+                      name="bloodType"
+                      value={form.bloodType}
+                      onChange={(e) =>
+                        handleFormChange(index, "bloodType", e.target.value)
+                      }
+                    >
+                      {bloodTypes.map((item, index) => (
+                        <MenuItem key={index} value={item.value}>
+                          {item.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </label>
+                )}
+
+              {form.categories === "Genetic Information" &&
+                form.type === "Genotype" && (
+                  <label
+                    htmlFor={`genotype${index}`}
+                    style={{ marginTop: "10px" }}
+                  >
+                    Genotype
+                    <TextField
+                      select
+                      sx={{ marginTop: "5px" }}
+                      fullWidth
+                      name="genotype"
+                      value={form.genotype}
+                      onChange={(e) =>
+                        handleFormChange(index, "genotype", e.target.value)
+                      }
+                    >
+                      <MenuItem value="AA">AA</MenuItem>
+                      <MenuItem value="AS">AS</MenuItem>
+                      <MenuItem value="SS">SS</MenuItem>
+                      <MenuItem value="Other">Other</MenuItem>
+                    </TextField>
+                  </label>
+                )}
 
               {form.categories === "Immunization" && (
                 <label
@@ -379,10 +504,191 @@ export default function Health() {
                 />
               )}
 
-              <div style={{ marginTop: "5px" }}>
+              {form.categories === "Diagnosis" &&
+                form.type === "Primary Diagnosis" && (
+                  <label
+                    htmlFor={`primaryDiagnosis${index}`}
+                    style={{ marginTop: "10px" }}
+                  >
+                    Primary Diagnosis
+                    <TextField
+                      select
+                      sx={{ marginTop: "5px" }}
+                      fullWidth
+                      name="primaryDiagnosis"
+                      value={form.primaryDiagnosis}
+                      onChange={(e) =>
+                        handleFormChange(
+                          index,
+                          "primaryDiagnosis",
+                          e.target.value
+                        )
+                      }
+                    >
+                      {primaryDiagnosis.map((item, index) => (
+                        <MenuItem key={index} value={item}>
+                          {item}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </label>
+                )}
+
+              {form.categories === "Diagnosis" &&
+                form.type === "Secondary Diagnosis" && (
+                  <label
+                    htmlFor={`secondaryDiagnosis${index}`}
+                    style={{ marginTop: "10px" }}
+                  >
+                    Secondary Diagnosis
+                    <TextField
+                      select
+                      sx={{ marginTop: "5px" }}
+                      fullWidth
+                      name="secondaryDiagnosis"
+                      value={form.secondaryDiagnosis}
+                      onChange={(e) =>
+                        handleFormChange(
+                          index,
+                          "secondaryDiagnosis",
+                          e.target.value
+                        )
+                      }
+                    >
+                      {secondaryDiagnosis.map((item, index) => (
+                        <MenuItem key={index} value={item}>
+                          {item}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </label>
+                )}
+
+              {form.categories === "Diagnosis" && (
+                <label
+                  htmlFor={`severity${index}`}
+                  style={{ marginTop: "10px" }}
+                >
+                  Severity
+                  <TextField
+                    select
+                    sx={{ marginTop: "5px" }}
+                    fullWidth
+                    name="severity"
+                    value={form.severity}
+                    onChange={(e) =>
+                      handleFormChange(index, "severity", e.target.value)
+                    }
+                  >
+                    {severity.map((item, index) => (
+                      <MenuItem key={index} value={item.value}>
+                        {item.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </label>
+              )}
+
+              {form.categories === "Diagnosis" && (
+                <label
+                  htmlFor={`treatmentStatus${index}`}
+                  style={{ marginTop: "10px" }}
+                >
+                  Treatment Status
+                  <TextField
+                    select
+                    sx={{ marginTop: "5px" }}
+                    fullWidth
+                    name="treatmentStatus"
+                    value={form.treatmentStatus}
+                    onChange={(e) =>
+                      handleFormChange(index, "treatmentStatus", e.target.value)
+                    }
+                  >
+                    {treatmentStatus.map((item, index) => (
+                      <MenuItem key={index} value={item}>
+                        {item}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </label>
+              )}
+
+              {form.categories === "Diagnosis" && (
+                <label
+                  htmlFor={`treatmentType${index}`}
+                  style={{ marginTop: "10px" }}
+                >
+                  Treatment Type
+                  <TextField
+                    select
+                    sx={{ marginTop: "5px" }}
+                    fullWidth
+                    name="treatmentType"
+                    value={form.treatmentType}
+                    onChange={(e) =>
+                      handleFormChange(index, "treatmentType", e.target.value)
+                    }
+                  >
+                    {treatmentType.map((item, index) => (
+                      <MenuItem key={index} value={item}>
+                        {item}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </label>
+              )}
+
+              {form.categories === "Diagnosis" && (
+                <label
+                  htmlFor={`followUpPlans${index}`}
+                  style={{ marginTop: "10px" }}
+                >
+                  Follow Up Plan
+                  <TextField
+                    select
+                    sx={{ marginTop: "5px" }}
+                    fullWidth
+                    name="followUpPlans"
+                    value={form.followUpPlans}
+                    onChange={(e) =>
+                      handleFormChange(index, "followUpPlans", e.target.value)
+                    }
+                  >
+                    {followUpPlans.map((item, index) => (
+                      <MenuItem key={index} value={item}>
+                        {item}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </label>
+              )}
+            </Box>
+
+            {form.categories === "Diagnosis" && (
+              <div style={{ marginTop: "5px", display: "flex", gap: 5 }}>
+                <label htmlFor={`title${index}`} style={{ marginTop: "10px" }}>
+                  Title
+                  <TextField
+                    select
+                    sx={{ marginTop: "5px" }}
+                    fullWidth
+                    name="title"
+                    value={form.title}
+                    onChange={(e) =>
+                      handleFormChange(index, "title", e.target.value)
+                    }
+                  >
+                    {title.map((item, index) => (
+                      <MenuItem key={index} value={item}>
+                        {item}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </label>
                 <InputField
                   type="text"
-                  label="Reading or Description"
+                  label="Name"
                   name={`reading_${index}`}
                   value={form.reading}
                   onChange={(e: any) =>
@@ -390,7 +696,23 @@ export default function Health() {
                   }
                 />
               </div>
-            </Box>
+            )}
+
+            {form.categories === "Diagnosis" && (
+              <label htmlFor="notes" style={{ marginTop: "10px" }}>
+                Progress Notes
+                <textarea
+                  className={Styles.area}
+                  name={`progressNote_${index}`}
+                  rows={4}
+                  cols={50}
+                  value={form.progressNote}
+                  onChange={(e: any) =>
+                    handleFormChange(index, "progressNote", e.target.value)
+                  }
+                ></textarea>
+              </label>
+            )}
 
             <label htmlFor="notes" style={{ marginTop: "10px" }}>
               Additional Notes

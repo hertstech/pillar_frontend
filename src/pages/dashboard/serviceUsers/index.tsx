@@ -26,15 +26,7 @@ import Assessment from "./Medication";
 import Allergies from "./Allergies";
 import Referral from "./Referral";
 import Notes from "./Notes";
-
-// const activity = [
-//   { time: "9:40am", purpose: "Diagnosed by #3948934" },
-//   { time: "9:40am", purpose: "Visited Cottage Medics" },
-//   { time: "9:40am", purpose: "Vitals recorded" },
-//   { time: "9:40am", purpose: "Treatment plan completed" },
-//   { time: "9:40am", purpose: "Visited Cottage Medics" },
-//   { time: "9:40am", purpose: "Visited Cottage Medics" },
-// ];
+import Overview from "./Overview";
 
 interface TextLabelProps {
   text: any;
@@ -81,6 +73,11 @@ export default function Singleuser() {
 
   const tabs = [
     {
+      label: "Overview",
+      icon: <FaRegUser />,
+      content: <Overview />,
+    },
+    {
       label: "Demographics",
       icon: <FaRegUser />,
       content: (
@@ -92,7 +89,7 @@ export default function Singleuser() {
       ),
     },
     {
-      label: "Health Summary",
+      label: "Health Information",
       icon: <CiMedicalCross />,
       content: <Health />,
     },
@@ -141,7 +138,7 @@ export default function Singleuser() {
 
   return (
     <Stack sx={{}}>
-      <Box sx={{ width: { lg: "70%" } }}>
+      <Box sx={{ width: { lg: "72%" } }}>
         <Box
           sx={{
             display: "flex",

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Card,
@@ -28,6 +28,18 @@ export default function CreateUser() {
   const [result, setResult] = useState("");
   const [data, setData] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener("mouseenter", Swal.stopTimer);
+      toast.addEventListener("mouseleave", Swal.resumeTimer);
+    },
+  });
 
   const token = useSelector((state: any) => state.user.access_token);
 
@@ -74,6 +86,29 @@ export default function CreateUser() {
 
     // STEP THREE
   });
+
+  window.addEventListener("offline", () => {
+    Toast.fire({
+      icon: "error",
+      title: "Network not available",
+    });
+  });
+
+  window.addEventListener("online", () => {
+    Toast.fire({
+      icon: "success",
+      title: "Network is now available",
+    });
+  });
+
+  // if (navigator.onLine) {
+
+  // } else {
+  // }
+
+  useEffect(() => {
+    localStorage.setItem("formData", JSON.stringify(formData));
+  }, [formData]);
 
   const handleChange = (data: any) => {
     setFormData({ ...formData, ...data });

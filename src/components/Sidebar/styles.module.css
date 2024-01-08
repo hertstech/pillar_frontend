@@ -1,5 +1,5 @@
 .container {
-  padding: 24px 16px;
+  /* padding: 24px 16px; */
   border-right: 1px solid #e4e7ec;
   width: 272px;
   height: 100vh;
@@ -8,7 +8,7 @@
 
 ul {
   margin: 24px 0;
-  border-bottom: 1px solid #f0f2f5;
+  border-bottom: 1px solid #f0f2f5;padding: 24px 16px;
 }
 
 ul li {
@@ -43,15 +43,15 @@ ul li {
 
 .bottom {
   position: fixed;
-  bottom: 20px;
+  bottom: 20px;padding: 24px 16px;
 }
 
 .logoWrapper {
   display: flex;
   align-items: center;
   gap: 10px;
-  height: 56px;
-  border-bottom: 1px solid #e7e9fb;
+  height: 80px;
+  border-bottom: 1px solid #e7e9fb;padding: 24px 16px;
 }
 
 .logoText {

@@ -70,7 +70,11 @@ export default function General() {
               >
                 Upload Image
               </Button>
-              <Button variant="outlined" color="error">
+              <Button
+                variant="outlined"
+                color="error"
+                onClick={(e: any) => setPreviewImage(e.target.value)}
+              >
                 Delete
               </Button>
             </Stack>

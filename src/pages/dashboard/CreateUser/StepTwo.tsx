@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Box, MenuItem, TextField, Typography } from "@mui/material";
+import { Box, Button, MenuItem, TextField, Typography } from "@mui/material";
 import InputField from "../../../components/InputField";
 import { Loader } from "../../../components/NoResult";
+import { FaCloudUploadAlt } from "react-icons/fa";
 
 let months = [
   "January",
@@ -153,6 +154,25 @@ export default function StepTwo({
                     </TextField>
                   </label>
                 </Box>
+
+                <Button
+                  component="label"
+                  variant="contained"
+                  startIcon={<FaCloudUploadAlt />}
+                  sx={{
+                    background: "#099250",
+                    "&:hover": { backgroundColor: "#099250" },
+                    mt: 2,
+                  }}
+                >
+                  Upload file
+                  <input
+                    style={{ display: "none" }}
+                    type="file"
+                    accept="image/*, capture=camera "
+                    id="fusk"
+                  />
+                </Button>
               </>
             )}
 
@@ -215,76 +235,116 @@ export default function StepTwo({
                     </TextField>
                   </label>
                 </Box>
+
+                <Button
+                  component="label"
+                  variant="contained"
+                  startIcon={<FaCloudUploadAlt />}
+                  sx={{
+                    background: "#099250",
+                    "&:hover": { backgroundColor: "#099250" },
+                    mt: 2,
+                  }}
+                >
+                  Upload file
+                  <input
+                    style={{ display: "none" }}
+                    type="file"
+                    accept="image/*, capture=camera "
+                    id="fusk"
+                  />
+                </Button>
               </>
             )}
 
             {selectedValue === "Birth Certificate" && (
-              <Box
-                sx={{
-                  display: "grid",
-                  columnGap: 1.5,
-                  rowGap: 1.5,
-                  gridTemplateColumns: {
-                    xs: "repeat(1, 1fr)",
-                    lg: "repeat(3, 1fr)",
-                  },
-                  marginTop: 2,
-                }}
-              >
-                <label htmlFor="days">
-                  Day
-                  <TextField
-                    select
-                    name="day"
-                    sx={{ marginTop: "5px" }}
-                    fullWidth
-                    value={formData.day}
-                    onChange={handleChange}
-                  >
-                    {dayList.map((day) => (
-                      <MenuItem key={day} value={day}>
-                        {day}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </label>
+              <>
+                <Box
+                  sx={{
+                    display: "grid",
+                    columnGap: 1.5,
+                    rowGap: 1.5,
+                    gridTemplateColumns: {
+                      xs: "repeat(1, 1fr)",
+                      lg: "repeat(3, 1fr)",
+                    },
+                    marginTop: 2,
+                  }}
+                >
+                  <label htmlFor="days">
+                    Day
+                    <TextField
+                      select
+                      name="day"
+                      sx={{ marginTop: "5px" }}
+                      fullWidth
+                      value={formData.day}
+                      onChange={handleChange}
+                    >
+                      {dayList.map((day) => (
+                        <MenuItem key={day} value={day}>
+                          {day}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </label>
 
-                <label htmlFor="months">
-                  Month
-                  <TextField
-                    select
-                    name="month"
-                    sx={{ marginTop: "5px" }}
-                    fullWidth
-                    value={formData.month}
-                    onChange={handleChange}
-                  >
-                    {months.map((months) => (
-                      <MenuItem key={months} value={months}>
-                        {months}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </label>
+                  <label htmlFor="months">
+                    Month
+                    <TextField
+                      select
+                      name="month"
+                      sx={{ marginTop: "5px" }}
+                      fullWidth
+                      value={formData.month}
+                      onChange={handleChange}
+                    >
+                      {months.map((months) => (
+                        <MenuItem key={months} value={months}>
+                          {months}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </label>
 
-                <label htmlFor="years">
-                  Year
-                  <TextField
-                    select
-                    name="year"
-                    sx={{ marginTop: "5px" }}
-                    fullWidth
-                    value={formData.year}
-                    onChange={handleChange}
-                  >
-                    {yearList.map((years) => (
-                      <MenuItem key={years} value={years}>
-                        {years}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </label>
-              </Box>
+                  <label htmlFor="years">
+                    Year
+                    <TextField
+                      select
+                      name="year"
+                      sx={{ marginTop: "5px" }}
+                      fullWidth
+                      value={formData.year}
+                      onChange={handleChange}
+                    >
+                      {yearList.map((years) => (
+                        <MenuItem key={years} value={years}>
+                          {years}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </label>
+                </Box>
+
+                <Button
+                  component="label"
+                  variant="contained"
+                  startIcon={<FaCloudUploadAlt />}
+                  sx={{
+                    background: "#099250",
+                    "&:hover": { backgroundColor: "#099250" },
+                    mt: 2,
+                  }}
+                >
+                  Upload file
+                  <input
+                    style={{ display: "none" }}
+                    type="file"
+                    accept="image/*, capture=camera "
+                    id="fusk"
+                  />
+                </Button>
+              </>
             )}
           </Box>
         )}

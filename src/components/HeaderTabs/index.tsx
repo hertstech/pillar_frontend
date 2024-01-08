@@ -23,7 +23,7 @@ export default function HeaderTabs({ heading, links, isLoaded }: TabProps) {
 
   return (
     <Box sx={{ mb: 3 }}>
-      <Box sx={{ display: "flex", alignItems: "center" }}>
+      <Box>
         <Box sx={{ flexGrow: 1 }}>
           <Typography
             variant="h4"

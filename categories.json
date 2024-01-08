@@ -6,7 +6,8 @@
       "Body Temperature",
       "Pulse Rate",
       "Respiration Rate",
-      "Oxygen Saturation"
+      "Oxygen Saturation",
+      "Glucose Level"
     ]
   },
   {
@@ -25,12 +26,8 @@
     ]
   },
   {
-    "name": "Medical Conditions",
-    "type": ["Type 2 Diabetic", "Cancer", "Asthma", "Hypertension"]
-  },
-  {
     "name": "Diagnosis",
-    "type": ["No type provided"]
+    "type": ["Primary Diagnosis", "Secondary Diagnosis"]
   },
   {
     "name": "Clinical Observations",
