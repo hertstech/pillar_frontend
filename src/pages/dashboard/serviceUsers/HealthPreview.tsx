@@ -7,6 +7,7 @@ import {
   Button,
   Stack,
 } from "@mui/material";
+import moment from "moment";
 //   import moment from "moment";
 
 interface Props {
@@ -16,9 +17,22 @@ interface Props {
   type: string;
   reading: string;
   notes: string;
+  systolic: string;
+  diasttolic: string;
   bloodType: string;
   genotype: string;
   manufacturer: string;
+  bpm: string;
+  title: string;
+  mgDl: string;
+  degreeRating: string;
+  primaryDiagnosis: string;
+  secondaryDiagnosis: string;
+  severity: string;
+  treatmentStatus: string;
+  treatmentType: string;
+  followUpPlans: string;
+  progressNote: string;
   batchNumber: string;
   administrationDate: string;
   expirationDate: string;
@@ -62,6 +76,19 @@ export default function HealthPreview({
   notes,
   handleSubmit,
   isLoading,
+  systolic,
+  diasttolic,
+  bpm,
+  title,
+  mgDl,
+  degreeRating,
+  primaryDiagnosis,
+  secondaryDiagnosis,
+  severity,
+  treatmentStatus,
+  treatmentType,
+  followUpPlans,
+  progressNote,
 }: Props) {
   const hasContent = categories || type || reading || notes;
   return (
@@ -99,6 +126,15 @@ export default function HealthPreview({
             {type === "Genotype" && (
               <TextLabel label="Genotype" text={genotype} />
             )}
+
+            {type === "Blood pressure" && (
+              <TextLabel label="Genotype" text={systolic} />
+            )}
+
+            {type === "Blood pressure" && (
+              <TextLabel label="Genotype" text={diasttolic} />
+            )}
+
             {categories === "Immunization" && (
               <TextLabel label="Manufacturer" text={manufacturer} />
             )}
@@ -108,11 +144,14 @@ export default function HealthPreview({
             {categories === "Immunization" && (
               <TextLabel
                 label="Administration Date"
-                text={administrationDate}
+                text={moment(administrationDate).format("DD/MM/YYYY")}
               />
             )}
             {categories === "Immunization" && (
-              <TextLabel label="Expiration Date" text={expirationDate} />
+              <TextLabel
+                label="Expiration Date"
+                text={moment(expirationDate).format("DD/MM/YYYY")}
+              />
             )}
             <TextLabel label="Notes" text={notes} />
           </Box>

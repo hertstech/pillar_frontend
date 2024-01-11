@@ -29,6 +29,7 @@ import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import moment from "moment";
 import { IoTimeOutline } from "react-icons/io5";
+import dayjs from "dayjs";
 
 const title = ["Dr.", "Mrs.", "Ms."];
 
@@ -159,6 +160,7 @@ export default function Health() {
       });
 
       setFormField([]);
+      setHide(false);
     } catch (error: any) {
       console.error(error);
       setIsLoading(false);
@@ -317,10 +319,10 @@ export default function Health() {
                     <InputField
                       type="text"
                       label="Diastolic"
-                      name={`diastolic_${index}`}
-                      value={form.diastolic}
+                      name={`diasttolic_${index}`}
+                      value={form.diasttolic}
                       onChange={(e: any) =>
-                        handleFormChange(index, "diastolic", e.target.value)
+                        handleFormChange(index, "diasttolic", e.target.value)
                       }
                     />
                   </div>
@@ -497,7 +499,8 @@ export default function Health() {
                 <Calendar
                   label="Expiration Date"
                   value={form.expirationDate}
-                  disableFuture={false}
+                  minDate={dayjs(form.administrationDate)}
+                  // disableFuture={false}
                   onChange={(newValue: any) =>
                     handleFormChange(index, "expirationDate", newValue.format())
                   }
@@ -867,8 +870,21 @@ export default function Health() {
           onClose={() => setIsOpen(false)}
           categories={form.categories}
           type={form.type}
+          systolic={form.systolic}
+          diasttolic={form.diasttolic}
           reading={form.reading}
           notes={form.notes}
+          bpm={form.bpm}
+          title={form.title}
+          mgDl={form.mgDl}
+          degreeRating={form.degreeRating}
+          primaryDiagnosis={form.primaryDiagnosis}
+          secondaryDiagnosis={form.secondaryDiagnosis}
+          severity={form.severity}
+          treatmentStatus={form.treatmentStatus}
+          treatmentType={form.treatmentType}
+          followUpPlans={form.followUpPlans}
+          progressNote={form.progressNote}
           bloodType={form.bloodType}
           genotype={form.genotype}
           manufacturer={form.manufacturer}

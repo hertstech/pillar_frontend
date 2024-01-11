@@ -405,7 +405,7 @@ export default function Assessment() {
               <Calendar
                 label="End Date"
                 value={form.endDate}
-                disableFuture={form.startDate}
+                // disableFuture={form.startDate}
                 minDate={dayjs(form.startDate)}
                 // disablePast={true}
                 onChange={(newValue: any) =>

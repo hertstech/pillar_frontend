@@ -33,8 +33,6 @@ export default function ProfileHome() {
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [error, setError] = useState("");
 
-  const name = user?.lastName.split(" ")[0];
-
   const searchNHRID = async (e: any) => {
     e.preventDefault();
     setIsLoading(true);
@@ -130,7 +128,7 @@ export default function ProfileHome() {
             fontSize={24}
             textTransform={"capitalize"}
           >
-            Welcome back, {user?.title} {name}
+            Welcome back, {user?.title} {user?.lastName}
           </Typography>
           <Typography variant="body2" sx={{ color: "#667185" }}>
             Search client’s health record here
@@ -181,7 +179,7 @@ export default function ProfileHome() {
               >
                 NHR ID
               </Button>
-              
+
               <Button
                 fullWidth
                 sx={{
