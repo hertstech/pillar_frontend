@@ -110,8 +110,16 @@ export default function AllergiesPreview({
         </DialogContent>
       ) : (
         <>
-          <div style={{ height: "90vh" }} className="grid place-items-center">
-            Loading....
+          <div
+            style={{
+              height: "90vh",
+              display: "grid",
+              placeItems: "center",
+              fontSize: "20px",
+            }}
+          >
+            No data was entered or something went wrong, please cancel and try
+            again...
           </div>
         </>
       )}

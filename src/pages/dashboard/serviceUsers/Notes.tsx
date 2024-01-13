@@ -84,6 +84,7 @@ export default function Notes() {
       });
 
       setFormField([]);
+      setHide(false);
     } catch (error: any) {
       console.error(error);
       setIsLoading(false);

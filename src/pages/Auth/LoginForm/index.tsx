@@ -52,7 +52,7 @@ export default function LoginPage() {
 
     if (!isStrongPassword(formData.password) || formData.password.length < 8) {
       setError(
-        "Password must contain 8 characters, one uppercase letter, one lowercase letter, one number and one special character"
+        "Authentication failed!!!"
       );
       return;
     }
@@ -80,7 +80,7 @@ export default function LoginPage() {
       Swal.fire({
         icon: "error",
         title: "Login Error",
-        text: `${error.response.data.message}`,
+        text: `Authentication failed!!!`,
         confirmButtonColor: "#099250",
       });
     }

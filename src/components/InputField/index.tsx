@@ -12,6 +12,7 @@ interface TextProps {
   placeholder?: string;
   required?: boolean;
   disabled?: boolean;
+  pattern?: string;
 }
 
 export default function InputField({
@@ -23,6 +24,7 @@ export default function InputField({
   type,
   required,
   disabled,
+  pattern,
 }: TextProps) {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -41,6 +43,7 @@ export default function InputField({
           placeholder={placeholder}
           required={required}
           disabled={disabled}
+          pattern={pattern}
         />
         {type === "password" && (
           <div

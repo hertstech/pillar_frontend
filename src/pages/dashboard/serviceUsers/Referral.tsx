@@ -138,6 +138,7 @@ export default function Referral() {
       });
 
       setFormField([]);
+      setHide(false);
     } catch (error: any) {
       console.error(error);
       setIsLoading(false);

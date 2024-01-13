@@ -348,10 +348,10 @@ export default function Health() {
                     <InputField
                       type="text"
                       label="mg/dl"
-                      name={`mg_dl_${index}`}
-                      value={form.mg_dl}
+                      name={`mgDl_${index}`}
+                      value={form.mgDl}
                       onChange={(e: any) =>
-                        handleFormChange(index, "mg_dl", e.target.value)
+                        handleFormChange(index, "mgDl", e.target.value)
                       }
                     />
                   </div>

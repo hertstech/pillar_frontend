@@ -62,7 +62,9 @@ const TextLabel = ({ text, label, isLoading }: TextLabelProps) => (
 export default function Singleuser() {
   const { id } = useParams();
 
-  // const [userData, setUserData] = useState<any>({});
+  const formattedValue = (value: string) => {
+    return value.replace(/-/g, "").replace(/(\d{4})(?=\d)/g, "$1-");
+  };
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -131,6 +133,8 @@ export default function Singleuser() {
 
     fetchUserData();
   }, [id]);
+
+  const NHRID = formattedValue(client?.id || "");
 
   if (!token) {
     navigate("/");
@@ -231,7 +235,8 @@ export default function Singleuser() {
           </Typography>
           <Divider sx={{ position: "absolute", width: "100%", right: 0 }} />
 
-          <TextLabel isLoading={isLoading} label="NHR ID" text={client?.id} />
+          <TextLabel isLoading={isLoading} label="NHR ID" text={NHRID} />
+
           <TextLabel
             isLoading={isLoading}
             label="Email Address"

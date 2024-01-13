@@ -33,6 +33,27 @@ export default function ProfileHome() {
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [error, setError] = useState("");
 
+  function formatNumberForView(number: string) {
+    // Add a dash after every 4 characters
+    return number.replace(/(\d{4})(?=\d)/g, "$1-");
+  }
+
+  function parseNumberForApi(number: any) {
+    // Remove dashes before sending to the API
+    return number.replace(/-/g, "");
+  }
+
+  const handleIDChange = (e: any) => {
+    const inputValue  = e.target.value;
+
+    const numericValue = inputValue.replace(/-/g, '');
+
+    const formattedValue = formatNumberForView(numericValue );
+
+    setNumberValue(formattedValue);
+    setNumbError("");
+  };
+
   const searchNHRID = async (e: any) => {
     e.preventDefault();
     setIsLoading(true);
@@ -43,8 +64,11 @@ export default function ProfileHome() {
       return;
     }
 
+    // Remove dashes before sending to the API
+    const apiData = parseNumberForApi(numberValue);
+
     try {
-      const res = await axiosInstance.get(`/search-serviceuser/${numberValue}`);
+      const res = await axiosInstance.get(`/search-serviceuser/${apiData}`);
 
       navigate(`/dashboard/search-result`, {
         state: { searchResults: res.data.result },
@@ -305,14 +329,11 @@ export default function ProfileHome() {
                   </Typography>
 
                   <InputField
-                    type="number"
+                    type="text"
                     label="NHR ID"
-                    name="parentOneNHR_ID"
+                    name="NHR_ID"
                     value={numberValue}
-                    onChange={(e: any) => {
-                      setNumberValue(e.target.value);
-                      setNumbError("");
-                    }}
+                    onChange={handleIDChange}
                     placeholder="Enter NHR ID number"
                   />
                   <Typography sx={{ mb: 1 }} color="error" fontSize={12}>

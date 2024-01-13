@@ -119,47 +119,126 @@ export default function HealthPreview({
           >
             <TextLabel label="Category" text={categories} />
             <TextLabel label="Type" text={type} />
-            <TextLabel label="Reading/Description" text={reading} />
-            {categories === "Genetic Information" && (
+
+            {/* VITALS DATA VIEW*/}
+            {type === "Blood pressure" && (
+              <TextLabel label="Systolic Reading" text={systolic} />
+            )}
+
+            {type === "Blood pressure" && (
+              <TextLabel label="Diastolic Reading" text={diasttolic} />
+            )}
+
+            {type === "Body Temperature" && (
+              <TextLabel
+                label="Reading"
+                text={`${reading} ${degreeRating}` || "N/A"}
+              />
+            )}
+
+            {type === "Pulse Rate" && (
+              <TextLabel label="Beat Per Minute" text={bpm} />
+            )}
+
+            {type === "Glucose Level" && (
+              <TextLabel label="Glucose level" text={mgDl} />
+            )}
+
+            {/* GENETIC INFORMATION */}
+            {type === "Blood Type" && (
               <TextLabel label="Blood Type" text={bloodType} />
             )}
+
             {type === "Genotype" && (
-              <TextLabel label="Genotype" text={genotype} />
+              <TextLabel label="Genotype" text={genotype || "N/A"} />
             )}
 
-            {type === "Blood pressure" && (
-              <TextLabel label="Genotype" text={systolic} />
-            )}
-
-            {type === "Blood pressure" && (
-              <TextLabel label="Genotype" text={diasttolic} />
+            {/* IMMUNIZATION DATA */}
+            {categories === "Immunization" && (
+              <TextLabel label="Manufacturer" text={manufacturer || "N/A"} />
             )}
 
             {categories === "Immunization" && (
-              <TextLabel label="Manufacturer" text={manufacturer} />
+              <TextLabel label="Batch Number" text={batchNumber || "N/A"} />
             )}
-            {categories === "Immunization" && (
-              <TextLabel label="Batch Number" text={batchNumber} />
-            )}
+
             {categories === "Immunization" && (
               <TextLabel
                 label="Administration Date"
                 text={moment(administrationDate).format("DD/MM/YYYY")}
               />
             )}
+
             {categories === "Immunization" && (
               <TextLabel
                 label="Expiration Date"
                 text={moment(expirationDate).format("DD/MM/YYYY")}
               />
             )}
+
+            {/* DIAGNOSIS DATA VIEW*/}
+            {type === "Primary Diagnosis" && (
+              <TextLabel
+                label="Primary Diagnosis"
+                text={primaryDiagnosis || "N/A"}
+              />
+            )}
+
+            {type === "Secondary Diagnosis" && (
+              <TextLabel
+                label="Secondary Diagnosis"
+                text={secondaryDiagnosis || "N/A"}
+              />
+            )}
+
+            {categories === "Diagnosis" && (
+              <TextLabel label="Severity" text={severity || "N/A"} />
+            )}
+
+            {categories === "Diagnosis" && (
+              <TextLabel
+                label="Treatment Status"
+                text={treatmentStatus || "N/A"}
+              />
+            )}
+
+            {categories === "Diagnosis" && (
+              <TextLabel label="Treatment type" text={treatmentType || "N/A"} />
+            )}
+
+            {categories === "Diagnosis" && (
+              <TextLabel
+                label="Follow up Plans"
+                text={followUpPlans || "N/A"}
+              />
+            )}
+
+            {categories === "Diagnosis" && (
+              <TextLabel
+                label="Prescribed by"
+                text={`${title} ${reading}` || "N/A"}
+              />
+            )}
+
+            {categories === "Diagnosis" && (
+              <TextLabel label="Progress notes" text={progressNote} />
+            )}
+
             <TextLabel label="Notes" text={notes} />
           </Box>
         </DialogContent>
       ) : (
         <>
-          <div style={{ height: "90vh" }} className="grid place-items-center">
-            Loading....
+          <div
+            style={{
+              height: "90vh",
+              display: "grid",
+              placeItems: "center",
+              fontSize: "20px",
+            }}
+          >
+            No data was entered or something went wrong, please cancel and try
+            again...
           </div>
         </>
       )}
