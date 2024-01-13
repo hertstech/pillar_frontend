@@ -60,6 +60,19 @@ interface FormState {
 }
 
 interface apiResponse {
+  systolic: string;
+  diasttolic: string;
+  bpm: string;
+  mgDl: string;
+  primaryDiagnosis: string;
+  secondaryDiagnosis: string;
+  severity: string;
+  treatmentStatus: string;
+  treatmentType: string;
+  followUpPlans: string;
+  title: string;
+  progressNote: string;
+  degreeRating: string;
   administrationDate: string;
   batchNumber: string;
   bloodType: string;
@@ -813,7 +826,7 @@ export default function Health() {
                   }
                 />
                 <TextLabel label="Type" text={item.type || "None"} />
-                <TextLabel label="Reading" text={item.reading || "None"} />
+                {/* <TextLabel label="Reading" text={item.reading || "None"} />
 
                 {item.categories === "Immunization" && (
                   <TextLabel
@@ -836,8 +849,122 @@ export default function Health() {
                     label="Blood Type"
                     text={item.bloodType || "None"}
                   />
+                )} */}
+
+                {/* VITALS DATA VIEW*/}
+                {item.type === "blood pressure" && (
+                  <TextLabel label="Systolic Reading" text={item.systolic} />
+                )}
+
+                {item.type === "blood pressure" && (
+                  <TextLabel label="Diastolic Reading" text={item.diasttolic} />
+                )}
+
+                {item.type === "body temperature" && (
+                  <TextLabel
+                    label="Reading"
+                    text={`${item.reading} ${item.degreeRating}` || "N/A"}
+                  />
+                )}
+
+                {item.type === "pulse rate" && (
+                  <TextLabel label="Beat Per Minute" text={item.bpm} />
+                )}
+
+                {item.type === "glucose level" && (
+                  <TextLabel label="Glucose level" text={item.mgDl} />
+                )}
+
+                {/* GENETIC INFORMATION */}
+                {item.type === "blood type" && (
+                  <TextLabel label="Blood Type" text={item.bloodType} />
+                )}
+
+                {item.type === "genotype" && (
+                  <TextLabel label="Genotype" text={item.genotype || "N/A"} />
+                )}
+
+                {/* IMMUNIZATION DATA */}
+                {item.categories === "immunization" && (
+                  <TextLabel
+                    label="Manufacturer"
+                    text={item.manufacturer || "N/A"}
+                  />
+                )}
+
+                {item.categories === "immunization" && (
+                  <TextLabel
+                    label="Batch Number"
+                    text={item.batchNumber || "N/A"}
+                  />
+                )}
+
+                {item.categories === "immunization" && (
+                  <TextLabel
+                    label="Administration Date"
+                    text={moment(item.administrationDate).format("DD/MM/YYYY")}
+                  />
+                )}
+
+                {item.categories === "immunization" && (
+                  <TextLabel
+                    label="Expiration Date"
+                    text={moment(item.expirationDate).format("DD/MM/YYYY")}
+                  />
+                )}
+
+                {/* DIAGNOSIS DATA VIEW*/}
+                {item.type === "primary diagnosis" && (
+                  <TextLabel
+                    label="Primary Diagnosis"
+                    text={item.primaryDiagnosis || "N/A"}
+                  />
+                )}
+
+                {item.type === "secondary diagnosis" && (
+                  <TextLabel
+                    label="Secondary Diagnosis"
+                    text={item.secondaryDiagnosis || "N/A"}
+                  />
+                )}
+
+                {item.categories === "diagnosis" && (
+                  <TextLabel label="Severity" text={item.severity || "N/A"} />
+                )}
+
+                {item.categories === "diagnosis" && (
+                  <TextLabel
+                    label="Treatment Status"
+                    text={item.treatmentStatus || "N/A"}
+                  />
+                )}
+
+                {item.categories === "diagnosis" && (
+                  <TextLabel
+                    label="Treatment type"
+                    text={item.treatmentType || "N/A"}
+                  />
+                )}
+
+                {item.categories === "diagnosis" && (
+                  <TextLabel
+                    label="Follow up Plans"
+                    text={item.followUpPlans || "N/A"}
+                  />
+                )}
+
+                {item.categories === "diagnosis" && (
+                  <TextLabel
+                    label="Prescribed by"
+                    text={`${item.title} ${item.reading}` || "N/A"}
+                  />
+                )}
+
+                {item.categories === "diagnosis" && (
+                  <TextLabel label="Progress notes" text={item.progressNote} />
                 )}
               </Box>
+
               <TextLabel label="Additional Notes" text={item.notes || "None"} />
 
               <div
