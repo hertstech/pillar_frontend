@@ -16,13 +16,13 @@ const navLinks = [
     icon: <FiGrid size={24} />,
   },
   {
-    id: 0,
+    id: 1,
     name: "HCPs (DO NOT TAP!)",
     to: "/dashboard/practitioners",
     icon: <FaUsers size={24} />,
   },
   {
-    id: 1,
+    id: 2,
     name: "Settings",
     to: "/dashboard/setting",
     icon: (

@@ -62,6 +62,7 @@ interface TextLabelProps {
   text: any;
   label: string;
   isLoading?: boolean;
+  suffix?: string;
 }
 export const TextLabel = ({ text, label, isLoading }: TextLabelProps) => (
   <label
@@ -98,3 +99,46 @@ export const TextLabel = ({ text, label, isLoading }: TextLabelProps) => (
     )}
   </label>
 );
+
+export const ItemLabel = ({
+  text,
+  label,
+  isLoading,
+  suffix,
+}: TextLabelProps) => {
+  return (
+    <label
+      className=""
+      style={{
+        fontWeight: 400,
+        color: "#475467",
+        fontSize: 14,
+        margin: "10px 0px",
+      }}
+    >
+      {label}
+      {isLoading ? (
+        <Skeleton
+          variant="text"
+          animation="wave"
+          width={80}
+          sx={{ fontSize: "18px" }}
+        />
+      ) : (
+        <Typography
+          sx={{
+            "&::first-letter": {
+              textTransform: "uppercase",
+            },
+          }}
+          fontWeight={600}
+          fontSize={16}
+          color={"#101928"}
+        >
+          {text}
+          {suffix}
+        </Typography>
+      )}
+    </label>
+  );
+};

@@ -77,18 +77,12 @@ export default function Singleuser() {
     {
       label: "Overview",
       icon: <FaRegUser />,
-      content: <Overview />,
+      content: <Overview client={client} />,
     },
     {
       label: "Demographics",
       icon: <FaRegUser />,
-      content: (
-        <Demogrphics
-          // userData={userData}
-          client={client}
-          isLoading={isLoading}
-        />
-      ),
+      content: <Demogrphics client={client} isLoading={isLoading} />,
     },
     {
       label: "Health Information",

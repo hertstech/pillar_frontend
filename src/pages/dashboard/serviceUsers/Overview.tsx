@@ -1,5 +1,5 @@
-import { Box, Divider, Grid, Stack, Typography } from "@mui/material";
-// import React from "react";
+import { Avatar, Box, Divider, Grid, Stack, Typography } from "@mui/material";
+import React, { useEffect } from "react";
 import {
   Chart as ChartJS,
   LineElement,
@@ -9,8 +9,15 @@ import {
   Legend,
   Tooltip,
 } from "chart.js";
+import moment from "moment";
 import { Line } from "react-chartjs-2";
 import { BsDropletHalf } from "react-icons/bs";
+// import { FaHeartbeat } from "react-icons/fa";
+import { GiHeartDrop } from "react-icons/gi";
+import { FaTemperatureQuarter } from "react-icons/fa6";
+import { ItemLabel } from "../../../components/InputField";
+import { axiosInstance } from "../../../Utils/axios";
+import { useParams } from "react-router-dom";
 
 const activity = [
   {
@@ -30,30 +37,6 @@ const activity = [
   },
 ];
 
-const Data = {
-  labels: ["MON", "TUE", "WED", "THURS", "FRI", "SAT", "SUN"],
-  datasets: [
-    {
-      label: "SYS",
-      data: [65, 59, 80, 81, 56, 55, 40],
-      fill: false,
-      borderColor: "#EF6820",
-      pointBorderColor: "#EF6820",
-      backgroundColor: "#EF6820",
-      tension: 0.1,
-    },
-    {
-      label: "DIA",
-      data: [30, 45, 28, 40, 55, 67, 72],
-      fill: false,
-      borderColor: "#444CE7",
-      pointBorderColor: "#444CE7",
-      backgroundColor: "#444CE7",
-      tension: 0.1,
-    },
-  ],
-};
-
 ChartJS.register(
   LineElement,
   LinearScale,
@@ -63,7 +46,57 @@ ChartJS.register(
   Tooltip
 );
 
-export default function Overview() {
+interface client {
+  id: string;
+  email: string;
+  phoneNumber: string;
+  address: string;
+  lga: string;
+  dateOfBirth: Date;
+  height: number;
+  weight: number;
+  HMOPlan: string;
+  firstName: string;
+  lastName: string;
+  state: string;
+  gender: string;
+  religion: string;
+  tribalMarks: string;
+  parentOne: string;
+  parentOneNumber: string;
+  parentOneNHR_ID: string;
+  parentOneRelationship: string;
+  parentTwo: string;
+  parentTwoNumber: string;
+  parentTwoNHR_ID: string;
+  parentTwoRelationship: string;
+  nominatedPharmarcy: string;
+  registeredDoctor: string;
+  nokFullName: string;
+  nokNHR_ID: string;
+  nokPhoneNumber: string;
+  nokRelationship: string;
+}
+
+interface PropType {
+  client: client;
+}
+
+export default function Overview({ client }: PropType) {
+  const { id } = useParams();
+
+  const [temp, setTemp] = React.useState<any>({});
+
+  const [glucose, setGlucose] = React.useState<any>({});
+
+  const [bloodGroup, setBloodGroup] = React.useState<any>({});
+
+  const [genotype, setGenotype] = React.useState<any>({});
+
+  const [pressure, setPressure] = React.useState([]);
+
+  const [pulse, setPulse] = React.useState([]);
+
   const options = {
     maintainAspectRatio: false,
     responsive: true,
@@ -76,283 +109,422 @@ export default function Overview() {
       },
     },
   };
+
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  useEffect(() => {
+    const getOverview = async () => {
+      setIsLoading(true);
+
+      try {
+        const res1 = await axiosInstance.get(
+          `serviceuser-bodytemperature/${id}`
+        );
+        const res2 = await axiosInstance.get(`serviceuser-glucoselevel/${id}`);
+        const res3 = await axiosInstance.get(`serviceuser-bloodgroup/${id}`);
+        const res4 = await axiosInstance.get(`serviceuser-genotype/${id}`);
+        const res5 = await axiosInstance.get(`serviceuser-pulserate/${id}`);
+        const res6 = await axiosInstance.get(`serviceuser-bloodpressure/${id}`);
+
+        setTemp(res1?.data);
+        setGlucose(res2?.data);
+        setBloodGroup(res3?.data);
+        setGenotype(res4?.data);
+        setPulse(res5?.data?.result);
+        setPressure(res6?.data?.result);
+
+        setIsLoading(false);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    getOverview();
+  }, [id]);
+
+  const pressureData = {
+    labels: pressure
+      ?.reverse()
+      .map((x: any) => moment(x.date_created).format("MMM-YYYY")),
+    datasets: [
+      {
+        label: "SYS",
+        data: pressure?.map((x: any) => x.systolic),
+        fill: false,
+        borderColor: "#EF6820",
+        pointBorderColor: "#EF6820",
+        backgroundColor: "#EF6820",
+        tension: 0.1,
+      },
+      {
+        label: "DIA",
+        data: pressure?.map((x: any) => x.diasttolic),
+        fill: false,
+        borderColor: "#444CE7",
+        pointBorderColor: "#444CE7",
+        backgroundColor: "#444CE7",
+        tension: 0.1,
+      },
+    ],
+  };
+
+  const pulseData = {
+    labels: pulse
+      ?.reverse()
+      .map((x: any) => moment(x.date_created).format("MMM-YYYY")),
+    datasets: [
+      {
+        label: "SYS",
+        data: pulse?.map((x: any) => x.bpm),
+        fill: false,
+        borderColor: "#E31B54",
+        pointBorderColor: "#E31B54",
+        backgroundColor: "#E31B54",
+        tension: 0.1,
+      },
+    ],
+  };
+
+  const formattedValue = (value: string) => {
+    return value.replace(/-/g, "").replace(/(\d{4})(?=\d)/g, "$1-");
+  };
+
+  const NHRID = formattedValue(client?.id || "");
   return (
     <Box sx={{ mb: 10 }}>
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
-          <Stack
+          <Box
             sx={{
-              display: "grid",
-              gridTemplateColumns: {
-                xs: "repeat(1, 1fr)",
-                lg: "repeat(2, 1fr)",
-              },
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              gap: { xs: "24px" },
             }}
+            // gap={3}
           >
-            <Box
+            <Stack>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  background: "white",
+                  borderRadius: 2,
+                  border: "1px #E4E7EC solid",
+                }}
+              >
+                <div style={{ padding: 12, borderRight: "1px #F2F4F7 solid" }}>
+                  <Avatar />
+                  <Typography
+                    sx={{
+                      display: "flex",
+                      alignItems: "start",
+                      flexDirection: "column",
+                    }}
+                  >
+                    <span
+                      style={{
+                        color: "#101928",
+                        fontWeight: "600",
+                        fontSize: 18,
+                      }}
+                    >
+                      {client?.firstName} {client?.lastName}
+                    </span>
+                    <span
+                      style={{
+                        color: "#475367",
+                        fontWeight: "400",
+                        fontSize: 14,
+                        // marginTop: 5,
+                      }}
+                    >
+                      NHR ID: {NHRID}
+                    </span>
+                  </Typography>
+                </div>
+
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    padding: 12,
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      gap: 30,
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <ItemLabel
+                      isLoading={isLoading}
+                      label="Age"
+                      text={moment(new Date()).diff(
+                        client?.dateOfBirth,
+                        "years"
+                      )}
+                      suffix="Yrs"
+                    />
+                    <ItemLabel
+                      isLoading={isLoading}
+                      label="Height"
+                      text={client?.height || "N/A"}
+                      suffix="cm"
+                    />
+                    <ItemLabel
+                      isLoading={isLoading}
+                      label="Weight"
+                      text={client?.weight || "N/A"}
+                      suffix="kg"
+                    />
+                  </div>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      gap: 30,
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <ItemLabel
+                      isLoading={isLoading}
+                      label="Date of Birth"
+                      text={"15/01/2024"}
+                    />
+
+                    <ItemLabel
+                      isLoading={isLoading}
+                      label="Phone Number"
+                      text={client?.phoneNumber}
+                    />
+                  </div>
+                </div>
+              </Box>
+            </Stack>
+
+            <Stack
               sx={{
-                display: "flex",
-                flexDirection: "row",
-                borderRadius: 1,
-                border: "1px #E4E7EC solid",
-                p: 2,
-                gap: 2,
-                background: "white",
+                display: "grid",
+                gridTemplateColumns: {
+                  xs: "repeat(1, 1fr)",
+                  lg: "repeat(2, 1fr)",
+                },
               }}
             >
-              <div className="">
-                <Typography fontWeight={400} fontSize={14} color={"#475367"}>
-                  Blood Group
-                </Typography>
-                <Typography color={"#344054"} sx={{ my: 1.5 }}>
-                  <span style={{ fontWeight: 600, fontSize: 20 }}>O</span>
-                  <span style={{ fontWeight: 400, fontSize: 14 }}>-ve</span>
-                </Typography>
-                <Typography
-                  fontWeight={400}
-                  fontStyle={"italic"}
-                  fontSize={12}
-                  color={"#101928"}
-                >
-                  last: 12/03/2019 • 5:30pm
-                </Typography>
-              </div>
-              <div style={{}}>
-                <BsDropletHalf />
-              </div>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                borderRadius: 1,
-                border: "1px #E4E7EC solid",
-                p: 2,
-                gap: 2,
-                background: "white",
-              }}
-            >
-              <div className="">
-                <Typography fontWeight={400} fontSize={14} color={"#475367"}>
-                  Cholestrol levels
-                </Typography>
-                <Typography color={"#344054"} sx={{ my: 1.5 }}>
-                  <span style={{ fontWeight: 600, fontSize: 20 }}>164</span>
-                  <span style={{ fontWeight: 400, fontSize: 14 }}>mg/dl</span>
-                </Typography>
-                <Typography
-                  fontWeight={400}
-                  fontStyle={"italic"}
-                  fontSize={12}
-                  color={"#101928"}
-                >
-                  last: 12/03/2019 • 5:30pm
-                </Typography>
-              </div>
-              <div style={{}}>
-                <svg
-                  width="40"
-                  height="40"
-                  viewBox="0 0 40 40"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <rect
-                    x="0.5"
-                    y="0.5"
-                    width="39"
-                    height="39"
-                    rx="19.5"
-                    fill="white"
-                  />
-                  <rect
-                    x="0.5"
-                    y="0.5"
-                    width="39"
-                    height="39"
-                    rx="19.5"
-                    stroke="#E4E7EC"
-                  />
-                  <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M20.0003 11.6667C19.6033 11.6667 19.2111 11.7543 18.8518 11.9234L13.581 14.4038C12.4127 14.9536 11.667 16.1286 11.667 17.4199V23.3333C11.667 24.1648 12.1472 24.9215 12.8995 25.2755L18.8518 28.0766C19.2111 28.2457 19.6033 28.3333 20.0003 28.3333C20.3974 28.3333 20.7896 28.2457 21.1488 28.0766L27.1011 25.2755C27.8535 24.9215 28.3337 24.1648 28.3337 23.3333V17.4199C28.3337 16.1286 27.588 14.9536 26.4196 14.4038L21.1488 11.9234C20.7896 11.7543 20.3974 11.6667 20.0003 11.6667ZM26.667 21.985L20.8337 19.0683V13.6171L25.71 15.9118C26.2941 16.1867 26.667 16.7742 26.667 17.4199V21.985ZM20.0003 20.515L26.4456 23.7377C26.4283 23.7487 26.4103 23.7586 26.3915 23.7675L20.4392 26.5686C20.3019 26.6332 20.152 26.6667 20.0003 26.6667C19.8486 26.6667 19.6988 26.6332 19.5615 26.5686L13.6092 23.7675C13.5904 23.7586 13.5723 23.7487 13.5551 23.7377L20.0003 20.515ZM19.167 19.0683L13.3337 21.985V17.4199C13.3337 16.7742 13.7065 16.1867 14.2907 15.9118L19.167 13.6171V19.0683Z"
-                    fill="black"
-                  />
-                </svg>
-              </div>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                borderRadius: 1,
-                border: "1px #E4E7EC solid",
-                p: 2,
-                gap: 2,
-                background: "white",
-              }}
-            >
-              <div className="">
-                <Typography fontWeight={400} fontSize={14} color={"#475367"}>
-                  Glucose levels
-                </Typography>
-                <Typography color={"#344054"} sx={{ my: 1.5 }}>
-                  <span style={{ fontWeight: 600, fontSize: 20 }}> 5.5</span>
-                  <span style={{ fontWeight: 400, fontSize: 14 }}>mmol/L</span>
-                </Typography>
-                <Typography
-                  fontWeight={400}
-                  fontStyle={"italic"}
-                  fontSize={12}
-                  color={"#101928"}
-                >
-                  last: 12/03/2019 • 5:30pm
-                </Typography>
-              </div>
-              <div style={{}}>
-                <svg
-                  width="40"
-                  height="40"
-                  viewBox="0 0 40 40"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <rect
-                    x="0.5"
-                    y="0.5"
-                    width="39"
-                    height="39"
-                    rx="19.5"
-                    fill="white"
-                  />
-                  <rect
-                    x="0.5"
-                    y="0.5"
-                    width="39"
-                    height="39"
-                    rx="19.5"
-                    stroke="#E4E7EC"
-                  />
-                  <path
-                    d="M20.8338 11.6667C20.8338 11.2064 20.4607 10.8333 20.0005 10.8333C19.5402 10.8333 19.1671 11.2064 19.1671 11.6667V12.9167C19.1671 13.3769 19.5402 13.75 20.0005 13.75C20.4607 13.75 20.8338 13.3769 20.8338 12.9167V11.6667Z"
-                    fill="black"
-                  />
-                  <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M14.1671 20C14.1671 16.7783 16.7788 14.1667 20.0005 14.1667C23.2221 14.1667 25.8338 16.7783 25.8338 20C25.8338 23.2217 23.2221 25.8333 20.0005 25.8333C16.7788 25.8333 14.1671 23.2217 14.1671 20ZM20.0005 15.8333C17.6993 15.8333 15.8338 17.6988 15.8338 20C15.8338 22.3012 17.6993 24.1667 20.0005 24.1667C22.3017 24.1667 24.1671 22.3012 24.1671 20C24.1671 17.6988 22.3017 15.8333 20.0005 15.8333Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M20.0005 25.8333C20.4607 25.8333 20.8338 26.2064 20.8338 26.6667V27.9167C20.8338 28.3769 20.4607 28.75 20.0005 28.75C19.5402 28.75 19.1671 28.3769 19.1671 27.9167V26.6667C19.1671 26.2064 19.5402 25.8333 20.0005 25.8333Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M25.412 22.9167C25.6421 22.5181 26.1518 22.3815 26.5504 22.6116L27.6329 23.2366C28.0315 23.4668 28.168 23.9764 27.9379 24.375C27.7078 24.7736 27.1981 24.9101 26.7996 24.68L25.717 24.055C25.3184 23.8249 25.1819 23.3152 25.412 22.9167Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M25.717 15.945C25.3184 16.1751 25.1819 16.6848 25.412 17.0833C25.6421 17.4819 26.1518 17.6185 26.5504 17.3883L27.6329 16.7633C28.0315 16.5332 28.168 16.0236 27.9379 15.625C27.7078 15.2264 27.1981 15.0899 26.7996 15.32L25.717 15.945Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M13.2003 15.1116C12.8018 14.8815 12.2921 15.0181 12.062 15.4167C11.8319 15.8152 11.9684 16.3249 12.367 16.555L13.4495 17.18C13.8481 17.4101 14.3578 17.2736 14.5879 16.875C14.818 16.4764 14.6814 15.9668 14.2829 15.7366L13.2003 15.1116Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M12.062 24.5833C11.8319 24.1848 11.9684 23.6751 12.367 23.445L13.4495 22.82C13.8481 22.5899 14.3578 22.7264 14.5879 23.125C14.818 23.5236 14.6814 24.0332 14.2829 24.2633L13.2003 24.8883C12.8018 25.1185 12.2921 24.9819 12.062 24.5833Z"
-                    fill="black"
-                  />
-                </svg>
-              </div>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                borderRadius: 1,
-                border: "1px #E4E7EC solid",
-                p: 2,
-                gap: 2,
-                background: "white",
-              }}
-            >
-              <div className="">
-                <Typography fontWeight={400} fontSize={14} color={"#475367"}>
-                  Glucose levels
-                </Typography>
-                <Typography color={"#344054"} sx={{ my: 1.5 }}>
-                  <span style={{ fontWeight: 600, fontSize: 20 }}> 5.5</span>
-                  <span style={{ fontWeight: 400, fontSize: 14 }}>mmol/L</span>
-                </Typography>
-                <Typography
-                  fontWeight={400}
-                  fontStyle={"italic"}
-                  fontSize={12}
-                  color={"#101928"}
-                >
-                  last: 12/03/2019 • 5:30pm
-                </Typography>
-              </div>
-              <div style={{}}>
-                <svg
-                  width="40"
-                  height="40"
-                  viewBox="0 0 40 40"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <rect
-                    x="0.5"
-                    y="0.5"
-                    width="39"
-                    height="39"
-                    rx="19.5"
-                    fill="white"
-                  />
-                  <rect
-                    x="0.5"
-                    y="0.5"
-                    width="39"
-                    height="39"
-                    rx="19.5"
-                    stroke="#E4E7EC"
-                  />
-                  <path
-                    d="M20.8338 11.6667C20.8338 11.2064 20.4607 10.8333 20.0005 10.8333C19.5402 10.8333 19.1671 11.2064 19.1671 11.6667V12.9167C19.1671 13.3769 19.5402 13.75 20.0005 13.75C20.4607 13.75 20.8338 13.3769 20.8338 12.9167V11.6667Z"
-                    fill="black"
-                  />
-                  <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M14.1671 20C14.1671 16.7783 16.7788 14.1667 20.0005 14.1667C23.2221 14.1667 25.8338 16.7783 25.8338 20C25.8338 23.2217 23.2221 25.8333 20.0005 25.8333C16.7788 25.8333 14.1671 23.2217 14.1671 20ZM20.0005 15.8333C17.6993 15.8333 15.8338 17.6988 15.8338 20C15.8338 22.3012 17.6993 24.1667 20.0005 24.1667C22.3017 24.1667 24.1671 22.3012 24.1671 20C24.1671 17.6988 22.3017 15.8333 20.0005 15.8333Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M20.0005 25.8333C20.4607 25.8333 20.8338 26.2064 20.8338 26.6667V27.9167C20.8338 28.3769 20.4607 28.75 20.0005 28.75C19.5402 28.75 19.1671 28.3769 19.1671 27.9167V26.6667C19.1671 26.2064 19.5402 25.8333 20.0005 25.8333Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M25.412 22.9167C25.6421 22.5181 26.1518 22.3815 26.5504 22.6116L27.6329 23.2366C28.0315 23.4668 28.168 23.9764 27.9379 24.375C27.7078 24.7736 27.1981 24.9101 26.7996 24.68L25.717 24.055C25.3184 23.8249 25.1819 23.3152 25.412 22.9167Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M25.717 15.945C25.3184 16.1751 25.1819 16.6848 25.412 17.0833C25.6421 17.4819 26.1518 17.6185 26.5504 17.3883L27.6329 16.7633C28.0315 16.5332 28.168 16.0236 27.9379 15.625C27.7078 15.2264 27.1981 15.0899 26.7996 15.32L25.717 15.945Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M13.2003 15.1116C12.8018 14.8815 12.2921 15.0181 12.062 15.4167C11.8319 15.8152 11.9684 16.3249 12.367 16.555L13.4495 17.18C13.8481 17.4101 14.3578 17.2736 14.5879 16.875C14.818 16.4764 14.6814 15.9668 14.2829 15.7366L13.2003 15.1116Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M12.062 24.5833C11.8319 24.1848 11.9684 23.6751 12.367 23.445L13.4495 22.82C13.8481 22.5899 14.3578 22.7264 14.5879 23.125C14.818 23.5236 14.6814 24.0332 14.2829 24.2633L13.2003 24.8883C12.8018 25.1185 12.2921 24.9819 12.062 24.5833Z"
-                    fill="black"
-                  />
-                </svg>
-              </div>
-            </Box>
-          </Stack>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  border: "1px #F2F4F7 solid",
+                  p: 2,
+                  gap: 2,
+                  background: "white",
+                  borderTopLeftRadius: 6,
+                }}
+              >
+                <div className="">
+                  <Typography fontWeight={400} fontSize={14} color={"#475367"}>
+                    Blood group
+                  </Typography>
+                  <Typography color={"#344054"} sx={{ my: 1.5 }}>
+                    <span style={{ fontWeight: 600, fontSize: 20 }}>
+                      {bloodGroup.bloodgroup || "N/A"}
+                    </span>
+                  </Typography>
+                  <Typography
+                    fontWeight={400}
+                    fontStyle={"italic"}
+                    fontSize={12}
+                    color={"#101928"}
+                  >
+                    last: {moment(bloodGroup.date_created).format("l")}{" "}
+                    {moment(bloodGroup.date_created).format("LT")}
+                  </Typography>
+                </div>
+                <div className="flex justify-center items-center">
+                  <BsDropletHalf color={"#F18264"} size={28} />
+                </div>
+              </Box>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  border: "1px #F2F4F7 solid",
+                  p: 2,
+                  gap: 2,
+                  background: "white",
+                  borderTopRightRadius: 6,
+                }}
+              >
+                <div className="">
+                  <Typography fontWeight={400} fontSize={14} color={"#475367"}>
+                    Genotype
+                  </Typography>
+                  <Typography color={"#344054"} sx={{ my: 1.5 }}>
+                    <span style={{ fontWeight: 600, fontSize: 20 }}>
+                      {genotype.genotype || "N/A"}
+                    </span>
+                  </Typography>
+                  <Typography
+                    fontWeight={400}
+                    fontStyle={"italic"}
+                    fontSize={12}
+                    color={"#101928"}
+                  >
+                    last: {moment(genotype.date_created).format("l")}{" "}
+                    {moment(genotype.date_created).format("LT")}
+                  </Typography>
+                </div>
+                <div className="flex justify-center items-center">
+                  <svg
+                    width="28"
+                    height="28"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g id="DNA icon 1" clip-path="url(#clip0_1857_5408)">
+                      <path
+                        id="Vector"
+                        d="M9.8743 10.127L10.0398 10.184C12.7556 11.119 16.0264 10.2249 18.3346 7.91666M9.8743 10.127L9.4098 9.96716C6.87503 9.0945 3.82234 9.92891 1.66797 12.0833M9.8743 10.127L9.8173 9.9615C8.8823 7.24567 9.77638 3.97492 12.0846 1.66666M9.8743 10.127L10.0341 10.5915C10.9068 13.1262 10.0724 16.1789 7.91797 18.3333"
+                        stroke="#00C3FF"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                      />
+                      <path
+                        id="Vector_2"
+                        d="M8.33284 12.5L9.86876 14.1014M5.63672 9.86942L6.66618 10.8988"
+                        stroke="#00C3FF"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                      />
+                      <path
+                        id="Vector_3"
+                        d="M9.87109 5.63721L11.6679 7.5M13.3346 9.16666L14.1031 9.86925"
+                        stroke="#00C3FF"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                      />
+                      <path
+                        id="Vector_4"
+                        d="M3.33203 10.8333L6.2487 13.75"
+                        stroke="#00C3FF"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                      />
+                      <path
+                        id="Vector_5"
+                        d="M16.4831 9.0755L13.5664 6.15885"
+                        stroke="#00C3FF"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                      />
+                      <path
+                        id="Vector_6"
+                        d="M7.75391 15.1595L9.07641 16.482"
+                        stroke="#00C3FF"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                      />
+                      <path
+                        id="Vector_7"
+                        d="M12.1545 4.65576L10.832 3.33324"
+                        stroke="#00C3FF"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                      />
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_1857_5408">
+                        <rect width="20" height="20" fill="white" />
+                      </clipPath>
+                    </defs>
+                  </svg>
+                </div>
+              </Box>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  border: "1px #F2F4F7 solid",
+                  p: 2,
+                  gap: 2,
+                  background: "white",
+                  borderBottomLeftRadius: 6,
+                }}
+              >
+                <div className="">
+                  <Typography fontWeight={400} fontSize={14} color={"#475367"}>
+                    Glucose levels
+                  </Typography>
+                  <Typography color={"#344054"} sx={{ my: 1.5 }}>
+                    <span style={{ fontWeight: 600, fontSize: 20 }}>
+                      {glucose.mgDl || "N/A"}
+                    </span>
+                    <span style={{ fontWeight: 400, fontSize: 14 }}>mg/dl</span>
+                  </Typography>
+                  <Typography
+                    fontWeight={400}
+                    fontStyle={"italic"}
+                    fontSize={12}
+                    color={"#101928"}
+                  >
+                    last: {moment(glucose.date_created).format("l")}{" "}
+                    {moment(glucose.date_created).format("LT")}
+                  </Typography>
+                </div>
+                <div className="flex justify-center items-center">
+                  <GiHeartDrop color={"#21E0D8"} size={28} />
+                </div>
+              </Box>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  border: "1px #F2F4F7 solid",
+                  p: 2,
+                  gap: 2,
+                  background: "white",
+                  borderBottomRightRadius: 6,
+                }}
+              >
+                <div className="">
+                  <Typography fontWeight={400} fontSize={14} color={"#475367"}>
+                    Body temperature
+                  </Typography>
+                  <Typography color={"#344054"} sx={{ my: 1.5 }}>
+                    <span style={{ fontWeight: 600, fontSize: 20 }}>
+                      {temp.reading || "N/A"} {temp.degreeRating || <>&deg;</>}
+                    </span>
+                  </Typography>
+                  <Typography
+                    fontWeight={400}
+                    fontStyle={"italic"}
+                    fontSize={12}
+                    color={"#101928"}
+                  >
+                    last: {moment(temp.date_created).format("l")}{" "}
+                    {moment(temp.date_created).format("LT")}
+                  </Typography>
+                </div>
+                <div className="flex justify-center items-center">
+                  <FaTemperatureQuarter color={"#4A5BC3"} size={28} />
+                </div>
+              </Box>
+            </Stack>
+          </Box>
         </Grid>
 
         <Grid item xs={12} md={6}>
@@ -386,8 +558,8 @@ export default function Overview() {
 
               <Divider />
 
-              <div style={{ height: 254, backgroundColor: "#FFF" }}>
-                <Line options={options} data={Data} />
+              <div style={{ height: 361, backgroundColor: "#FFF" }}>
+                <Line options={options} data={pulseData} />
               </div>
             </Box>
 
@@ -410,8 +582,8 @@ export default function Overview() {
 
               <Divider />
 
-              <div style={{ height: 254, backgroundColor: "#FFF" }}>
-                <Line options={options} data={Data} />
+              <div style={{ height: 361, backgroundColor: "#FFF" }}>
+                <Line options={options} data={pressureData} />
               </div>
             </Box>
           </Box>

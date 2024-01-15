@@ -21,6 +21,7 @@ export default function UserCard({ user }: { user: any }) {
             to={`/dashboard/user/${item.id}`}
             style={{ textDecoration: "none" }}
             onClick={handleClick}
+            key={item.id}
           >
             <Card
               sx={{
