@@ -125,14 +125,6 @@ export default function AllergiesPreview({
       )}
       <Stack direction="row" justifyContent="flex-end" gap={5} p={3}>
         <Button
-          variant="outlined"
-          color="error"
-          onClick={onClose}
-          sx={{ px: 5 }}
-        >
-          Cancel
-        </Button>
-        <Button
           variant="contained"
           sx={{ px: 5 }}
           color="success"
@@ -141,7 +133,14 @@ export default function AllergiesPreview({
         >
           Submit
         </Button>
-        {/* <Buttons loading={isLoading} title="Submit" /> */}
+        <Button
+          variant="outlined"
+          color="error"
+          onClick={onClose}
+          sx={{ px: 5 }}
+        >
+          Cancel
+        </Button>
       </Stack>
     </Dialog>
   );

@@ -96,7 +96,6 @@ export default function Personal() {
         >
           Update Profile
         </Button>
-        {/* <Buttons loading={isLoading} title="Submit" /> */}
       </Stack>
     </Box>
   );
