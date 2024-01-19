@@ -4,7 +4,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Inter", sans-serif;
+  font-family: fontNormal;
 }
 
 label {
@@ -26,12 +26,15 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-
 .MuiOutlinedInput-notchedOutline.MuiOutlinedInput-notchedOutline {
   border-color: #d0d5dd !important;
 }
-
-/* .MuiDataGrid-root .MuiDataGrid-cell */
+.MuiInputBase-input.MuiOutlinedInput-input {
+  font-family: fontNormal;
+}
+.MuiButtonBase-root.MuiMenuItem-root {
+  font-family: fontNormal;
+}
 
 .MuiTableCell-root {
   border-bottom: none !important;
@@ -40,6 +43,8 @@ input::-webkit-inner-spin-button {
 .MuiTabs-flexContainer {
   display: flex;
   gap: 12px;
+  background: white;
+  border-bottom: 1px solid #e7e9fb;
 }
 
 .MuiTab-iconWrapper {
@@ -60,7 +65,7 @@ input::-webkit-inner-spin-button {
   }
 }
 
-.wrapped{
+.wrapped {
   min-height: inherit;
   display: grid;
   place-items: center;
@@ -85,4 +90,14 @@ input::-webkit-inner-spin-button {
   border-radius: 50%;
   margin: auto;
   animation: pulse 0.85s infinite linear;
+}
+
+@font-face {
+  font-family: fontNormal;
+  src: url("/fonts/MaisonNeueExtended-Thin.otf") format("opentype");
+}
+
+@font-face {
+  font-family: fontBold;
+  src: url("/fonts/MaisonNeueExtended-Demi.otf") format("opentype");
 }

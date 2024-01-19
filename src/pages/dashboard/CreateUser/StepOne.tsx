@@ -16,6 +16,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import InputField from "../../../components/InputField";
 import StatesData from "../../../../states.json";
 import PhoneField from "../../../components/PhoneInput";
+import moment from "moment";
 // import { countries } from "../../../components/_mock/_countries";
 
 const relations = [
@@ -40,29 +41,29 @@ export default function StepOne({
   handleChange: superHandleChange,
 }: any) {
   const [show, setShow] = useState(false);
-  const [ageValue, setAgeValue] = useState(false);
 
-  const calculateAge = () => {
-    if (formData.dateOfBirth) {
-      const currentDate = new Date();
-      const birthDate = new Date(formData.dateOfBirth);
+  // SUSPENDED DATE/AGE CHECK FUCTION
+  // const calculateAge = () => {
+  //   if (formData.dateOfBirth) {
+  //     const currentDate = new Date();
+  //     const birthDate = new Date(formData.dateOfBirth);
 
-      let age = currentDate.getFullYear() - birthDate.getFullYear();
+  //     let age = currentDate.getFullYear() - birthDate.getFullYear();
 
-      // Check if the birthday has occurred this year
-      if (
-        currentDate.getMonth() < birthDate.getMonth() ||
-        (currentDate.getMonth() === birthDate.getMonth() &&
-          currentDate.getDate() < birthDate.getDate())
-      ) {
-        age--;
-      }
+  //     // Check if the birthday has occurred this year
+  //     if (
+  //       currentDate.getMonth() < birthDate.getMonth() ||
+  //       (currentDate.getMonth() === birthDate.getMonth() &&
+  //         currentDate.getDate() < birthDate.getDate())
+  //     ) {
+  //       age--;
+  //     }
 
-      return age;
-    }
+  //     return age;
+  //   }
 
-    return 0; // Return null if no date is selected
-  };
+  //   return 0; // Return null if no date is selected
+  // };
 
   const handleChange = (
     event: React.ChangeEvent<{ name?: any; value: any }>
@@ -73,9 +74,6 @@ export default function StepOne({
 
   const handleDateChange = (newValue: any, name: string) => {
     superHandleChange({ ...formData, [name]: newValue.format() });
-
-    // Check if the age is less than 18
-    setAgeValue(calculateAge() !== null && calculateAge() < 18);
   };
 
   const handlePhoneChange = (value: any, identifier: any) => {
@@ -134,6 +132,14 @@ export default function StepOne({
           label="First Name"
           name="firstName"
           value={formData.firstName}
+          onChange={handleChange}
+        />
+
+        <InputField
+          type="text"
+          label="Middle Name"
+          name="middleName"
+          value={formData.middleName}
           onChange={handleChange}
         />
 
@@ -345,7 +351,7 @@ export default function StepOne({
         </Box>
       </Box>
 
-      {ageValue ? (
+      {moment(new Date()).diff(formData.dateOfBirth, "years") < 18 ? (
         // {/* PARENT INFORMATION */}
         <Box sx={{ marginBottom: 2 }}>
           <Stack direction="row" justifyContent="space-between">
@@ -394,7 +400,6 @@ export default function StepOne({
           >
             <InputField
               type="number"
-              required={ageValue}
               label="NHR ID"
               name="parentOneNHR_ID"
               value={formData.parentOneNHR_ID}
@@ -435,7 +440,6 @@ export default function StepOne({
           {show && (
             <>
               <Box>
-                {" "}
                 <InputField
                   type="text"
                   label="Legal Guardian 2"
@@ -525,7 +529,6 @@ export default function StepOne({
           >
             <InputField
               type="number"
-              // required={ageValue}
               label="NHR ID"
               name="nokNHR_ID"
               value={formData.nokNHR_ID}

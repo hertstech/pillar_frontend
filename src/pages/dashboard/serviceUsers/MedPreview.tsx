@@ -8,7 +8,6 @@ import {
   Stack,
 } from "@mui/material";
 import moment from "moment";
-// import { useState } from "react";
 
 interface Props {
   isOpen: boolean;
@@ -84,8 +83,6 @@ export default function Preview({
     endDate ||
     prescriber ||
     additionalNote;
-
-  // const [isLoading, setIsLoading] = useState(false);
 
   return (
     <Dialog maxWidth="md" fullWidth open={isOpen}>

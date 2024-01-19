@@ -14,6 +14,8 @@
   border-radius: 6px;
   margin-top: 5px;
   font-size: 16px;
+  /* color: #6671858a; */
+  color: #101928;
 }
 
 .input::placeholder {

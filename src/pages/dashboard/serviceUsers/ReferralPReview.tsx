@@ -53,7 +53,6 @@ export default function ReferralPReview({
   onClose,
   dateInitiated,
   careSetting,
-  referralSource,
   referralName,
   referralReason,
   urgencyStatus,
@@ -68,7 +67,6 @@ export default function ReferralPReview({
   const hasContent =
     dateInitiated ||
     careSetting ||
-    referralSource ||
     referralName ||
     referralReason ||
     urgencyStatus ||
@@ -109,7 +107,7 @@ export default function ReferralPReview({
               text={moment(dateInitiated).format("DD/MM/YYYY")}
             />
             <TextLabel label="Care Setting" text={careSetting} />
-            <TextLabel label="Referral Source" text={referralSource} />
+            {/* <TextLabel label="Referral Source" text={referralSource} /> */}
             <TextLabel
               label="Referral (Name of referral)"
               text={referralName}

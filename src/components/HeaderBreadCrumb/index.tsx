@@ -14,7 +14,9 @@ interface Props {
 export default function HeaderBreadCrumb({ heading, links }: Props) {
   return (
     <Box sx={{ mb: 3 }}>
-      <Box sx={{ display: "flex", alignItems: "center" }}>
+      <Box
+        sx={{ display: "flex", alignItems: "center", px: "20px", pt: "20px" }}
+      >
         <Box sx={{ flexGrow: 1 }}>
           <Typography
             variant="h4"

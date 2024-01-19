@@ -46,6 +46,7 @@ export default function CreateUser() {
   const [formData, setFormData] = useState({
     // STEP ONE
     firstName: "",
+    middleName: "",
     lastName: "",
     email: "",
     gender: "",
@@ -172,7 +173,6 @@ export default function CreateUser() {
     if (activeStep < steps.length - 1) {
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
     }
-    console.log(formData);
   };
 
   const createUser = async () => {
@@ -194,7 +194,6 @@ export default function CreateUser() {
 
       handleNext();
     } catch (error: any) {
-      console.error(error);
       Swal.fire({
         icon: "error",
         title: "Error",
@@ -220,7 +219,7 @@ export default function CreateUser() {
         ]}
       />
 
-      <Grid container spacing={3} sx={{ pb: 15 }}>
+      <Grid container spacing={3} sx={{ pb: 15, px: 2.5 }}>
         <Grid item xs={12} md={5}>
           <Card
             sx={{

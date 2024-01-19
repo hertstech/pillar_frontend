@@ -11,7 +11,7 @@ export const medName = [
 
 export const medType = [
   { label: "New prescription", value: "New prescription" },
-  { label: "Repeat prescription", value: "Rrepeat prescription" },
+  { label: "Repeat prescription", value: "Repeat prescription" },
   { label: "Over the counter", value: "Over the counter" },
 ];
 

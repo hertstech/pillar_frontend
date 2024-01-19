@@ -1,6 +1,5 @@
 import moment from "moment";
-
-import { Box, Card, Chip, Typography } from "@mui/material";
+import { Box, Card, Typography } from "@mui/material";
 import Avatars from "../Avatar";
 import { Link } from "react-router-dom";
 import NoResultIllustration from "../NoResult";
@@ -27,110 +26,179 @@ export default function UserCard({ user }: { user: any }) {
               sx={{
                 display: "flex",
                 alignItems: "center",
-                p: 3,
                 cursor: "pointer",
                 flexDirection: "column",
-                maxWidth: 350,
+                maxWidth: 320,
                 margin: "auto",
                 borderRadius: 1.5,
                 justifyContent: "space-between",
+                border: "1px #E7E9FB solid",
               }}
             >
               <Box
                 sx={{
+                  background: "white",
                   display: "flex",
-                  justifyContent: "space-between",
-                  gap: 20,
+                  alignItems: "center",
+                  flexDirection: "column",
+                  px: 3,
+                  pt: 3,
                 }}
               >
-                <Chip
-                  label={"active"}
-                  sx={{
-                    background:
-                      item.status === "active" ? "#FBEAE9" : "#E7F6EC",
-                    color: item.status === "active" ? "#9E0A05" : "#036B26",
-                    textTransform: "capitalize",
-                  }}
-                />
-                <Chip
-                  label={item.gender}
-                  sx={{
-                    background: "#F7F9FC",
-                    color: "#344054",
-                    textTransform: "capitalize",
-                  }}
-                />
+                <Avatars height={"100px"} width={"100px"} />
+
+                <div style={{ margin: "8px 0px 20px" }}>
+                  <Typography
+                    variant="subtitle2"
+                    fontWeight={600}
+                    fontSize={16}
+                    sx={{ color: "#101828", textAlign: "center" }}
+                  >
+                    {item.firstName + " " + item.lastName}
+                  </Typography>
+
+                  <Typography fontSize={14} sx={{ textAlign: "center" }}>
+                    <span style={{ color: "##475367", fontWeight: 400 }}>
+                      NHR ID:
+                    </span>
+                    <span
+                      style={{
+                        color: "##475367",
+                        fontWeight: 700,
+                        marginLeft: 4,
+                      }}
+                    >
+                      {item.id}
+                    </span>
+                  </Typography>
+                </div>
               </Box>
 
-              <Avatars height={"100px"} width={"100px"} />
-
-              <div style={{ margin: "8px 0px 20px" }}>
-                <Typography
-                  variant="subtitle2"
-                  fontWeight={600}
-                  fontSize={16}
-                  sx={{ color: "#101828", textAlign: "center" }}
+              <Box
+                sx={{
+                  background: "#FCFCFD",
+                  p: 3,
+                  borderTop: "1px #F2F4F7 solid",
+                }}
+              >
+                <div
+                  style={{
+                    marginBottom: 20,
+                    display: "grid",
+                    gridTemplateColumns: "repeat(3, 1fr)",
+                  }}
                 >
-                  {item.firstName + " " + item.lastName}
-                </Typography>
-
-                <Typography fontSize={14} sx={{ textAlign: "center" }}>
-                  <span style={{ color: "##475367", fontWeight: 400 }}>
-                    NHR ID:
-                  </span>
-                  <span
+                  <div
                     style={{
-                      color: "##475367",
-                      fontWeight: 700,
-                      marginLeft: 4,
+                      textAlign: "center",
+                      display: "flex",
+                      flexDirection: "column",
                     }}
                   >
-                    {item.id}
-                  </span>
-                </Typography>
-              </div>
+                    <span
+                      style={{
+                        fontWeight: 400,
+                        fontSize: 14,
+                        color: "#475367",
+                      }}
+                    >
+                      Status
+                    </span>
+                    <Typography
+                      sx={{
+                        fontWeight: 700,
+                        fontSize: 16,
+                        color: item.status === "active" ? "#36A150" : "#036B26",
+                        textTransform: "capitalize",
+                      }}
+                    >
+                      active
+                    </Typography>
+                  </div>
 
-              <div style={{ marginBottom: 20 }}>
-                <Typography
-                  sx={{
+                  <div
+                    style={{
+                      textAlign: "center",
+                      display: "flex",
+                      flexDirection: "column",
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontWeight: 400,
+                        fontSize: 14,
+                        color: "#475367",
+                      }}
+                    >
+                      Age
+                    </span>
+                    <Typography
+                      sx={{
+                        fontWeight: 700,
+                        fontSize: 16,
+                        color: "#101928",
+                      }}
+                    >
+                      {moment(new Date()).diff(item.dateOfBirth, "years")}Yrs
+                    </Typography>
+                  </div>
+
+                  <div
+                    style={{
+                      textAlign: "center",
+                      display: "flex",
+                      flexDirection: "column",
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontWeight: 400,
+                        fontSize: 14,
+                        color: "#475367",
+                      }}
+                    >
+                      Gender
+                    </span>
+                    <Typography
+                      sx={{
+                        fontWeight: 700,
+                        fontSize: 16,
+                        color: "#101928",
+                        textTransform: "capitalize",
+                      }}
+                    >
+                      {item.gender}
+                    </Typography>
+                  </div>
+                </div>
+
+                <div
+                  style={{
                     textAlign: "center",
                     display: "flex",
                     flexDirection: "column",
                   }}
                 >
                   <span
-                    style={{ fontWeight: 400, fontSize: 14, color: "#475367" }}
-                  >
-                    Age
-                  </span>
-                  <span
-                    style={{ fontWeight: 700, fontSize: 16, color: "#101928" }}
-                  >
-                    {moment(new Date()).diff(item.dateOfBirth, "years")} Years
-                  </span>
-                </Typography>
-              </div>
-
-              <div className="">
-                <Typography
-                  sx={{
-                    textAlign: "center",
-                    display: "flex",
-                    flexDirection: "column",
-                  }}
-                >
-                  <span
-                    style={{ fontWeight: 400, fontSize: 14, color: "#475367" }}
+                    style={{
+                      fontWeight: 400,
+                      fontSize: 14,
+                      color: "#667185",
+                    }}
                   >
                     Address
                   </span>
-                  <span
-                    style={{ fontWeight: 500, fontSize: 14, color: "#101928" }}
+                  <Typography
+                    sx={{
+                      fontWeight: 500,
+                      fontSize: 14,
+                      color: "#101928",
+                    }}
                   >
-                    {item.address + " " + item.lga}
-                  </span>
-                </Typography>
-              </div>
+                    {item.address}
+                  </Typography>
+                </div>
+              </Box>
             </Card>
           </Link>
         ))

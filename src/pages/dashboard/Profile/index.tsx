@@ -13,7 +13,6 @@ import { useSelector } from "react-redux";
 import { axiosInstance } from "../../../Utils/axios";
 import Swal from "sweetalert2";
 import { TiUserAddOutline } from "react-icons/ti";
-// import NoResultIllustration from "../../../components/NoResult";
 
 export default function ProfileHome() {
   const [searchOptions, setSearchOption] = useState(false);
@@ -44,11 +43,11 @@ export default function ProfileHome() {
   }
 
   const handleIDChange = (e: any) => {
-    const inputValue  = e.target.value;
+    const inputValue = e.target.value;
 
-    const numericValue = inputValue.replace(/-/g, '');
+    const numericValue = inputValue.replace(/-/g, "");
 
-    const formattedValue = formatNumberForView(numericValue );
+    const formattedValue = formatNumberForView(numericValue);
 
     setNumberValue(formattedValue);
     setNumbError("");
@@ -75,7 +74,6 @@ export default function ProfileHome() {
       });
       setIsLoading(false);
     } catch (error: any) {
-      // console.error(error.response);
       Swal.fire({
         icon: "info",
         title: "Not Found",
@@ -114,10 +112,8 @@ export default function ProfileHome() {
         state: { searchResults: res.data.result },
       });
 
-      console.log(res.data.result.length);
       setIsLoading(false);
     } catch (error: any) {
-      // console.error(error.response.data);
       Swal.fire({
         icon: "info",
         title: "Not Found",
@@ -143,6 +139,8 @@ export default function ProfileHome() {
           alignItems: "center",
           flexDirection: "row",
           justifyContent: "space-between",
+          px: 2.5,
+          pt: 2.5,
         }}
       >
         <div>
@@ -154,9 +152,9 @@ export default function ProfileHome() {
           >
             Welcome back, {user?.title} {user?.lastName}
           </Typography>
-          <Typography variant="body2" sx={{ color: "#667185" }}>
+          <span style={{ color: "#667185" }}>
             Search client’s health record here
-          </Typography>
+          </span>
         </div>
         <Stack alignItems="start">
           <Link
@@ -178,6 +176,7 @@ export default function ProfileHome() {
           </Link>
         </Stack>
       </Box>
+
       <div className={Styles.boxContainer}>
         <div className={Styles.boxWrapper}>
           <div

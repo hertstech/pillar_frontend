@@ -5,8 +5,6 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 export default function StepThree({ data }: any) {
   const [copied, setCopied] = useState(false);
 
-  // const text = { data };
-
   const onCopy = () => {
     setCopied(true);
   };
@@ -18,7 +16,6 @@ export default function StepThree({ data }: any) {
           display: "flex",
           justifyContent: "center",
           flexDirection: "column",
-          //   gap: 25,
           minHeight: 517,
           textAlign: "center",
         }}
@@ -79,7 +76,6 @@ export default function StepThree({ data }: any) {
         <Typography
           fontWeight={600}
           fontSize={32}
-          //   lineHeight={40}
           sx={{ color: "#1A1A21" }}
           variant="h3"
         >

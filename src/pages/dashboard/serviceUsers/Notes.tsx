@@ -1,4 +1,12 @@
-import { Stack, Box, Button, Card } from "@mui/material";
+import {
+  Stack,
+  Box,
+  Button,
+  Card,
+  Avatar,
+  Divider,
+  Typography,
+} from "@mui/material";
 import NoResultIllustration from "../../../components/NoResult";
 import { useEffect, useState } from "react";
 import InputField, { TextLabel } from "../../../components/InputField";
@@ -7,6 +15,7 @@ import NotePreview from "./NotePreview";
 import Swal from "sweetalert2";
 import { axiosInstance } from "../../../Utils/axios";
 import { useParams } from "react-router-dom";
+import moment from "moment";
 
 interface FormState {
   writtenBy: string;
@@ -28,7 +37,43 @@ const initialFormState = {
   additionalNote: "",
 };
 
-export default function Notes() {
+interface client {
+  id: string;
+  email: string;
+  phoneNumber: string;
+  address: string;
+  lga: string;
+  dateOfBirth: Date;
+  height: number;
+  weight: number;
+  HMOPlan: string;
+  firstName: string;
+  lastName: string;
+  state: string;
+  gender: string;
+  religion: string;
+  date_created: string;
+  tribalMarks: string;
+  parentOne: string;
+  parentOneNumber: string;
+  parentOneNHR_ID: string;
+  parentOneRelationship: string;
+  parentTwo: string;
+  parentTwoNumber: string;
+  parentTwoNHR_ID: string;
+  parentTwoRelationship: string;
+  nominatedPharmarcy: string;
+  registeredDoctor: string;
+  nokFullName: string;
+  nokNHR_ID: string;
+  nokPhoneNumber: string;
+  nokRelationship: string;
+}
+interface PropType {
+  client: client;
+}
+
+export default function Notes({ client }: PropType) {
   const [hide, setHide] = useState(false);
   const [formField, setFormField] = useState<FormState[]>([]);
 
@@ -66,7 +111,29 @@ export default function Notes() {
     setIsLoading(true);
     const dataObject = formField[0];
 
-    console.log(dataObject);
+    const areCategoriesAndTypeEmpty = (formStateArray: FormState[]) => {
+      return formStateArray.every((formState) => {
+        // Check if both 'substane' and 'reactiontype' are empty
+        return (
+          formState.writtenBy.trim() === "" &&
+          formState.additionalNote.trim() === ""
+        );
+      });
+    };
+
+    // Example usage
+    const areEmpty = areCategoriesAndTypeEmpty(formField);
+
+    if (areEmpty) {
+      setIsLoading(false);
+
+      setIsOpen(false);
+      return Swal.fire({
+        icon: "info",
+        text: `You can not submit an empty form!`,
+        confirmButtonColor: "#099250",
+      });
+    }
 
     try {
       const res = await axiosInstance.post(
@@ -86,7 +153,7 @@ export default function Notes() {
       setFormField([]);
       setHide(false);
     } catch (error: any) {
-      console.error(error);
+      error;
       setIsLoading(false);
       Swal.fire({
         icon: "error",
@@ -126,131 +193,248 @@ export default function Notes() {
       return newForms;
     });
   };
+
+  const formattedValue = (value: string) => {
+    return value.replace(/-/g, "").replace(/(\d{4})(?=\d)/g, "$1-");
+  };
+
+  const NHRID = formattedValue(client?.id || "");
   return (
     <Box
       sx={{
-        position: "relative",
-        flexDirection: "column",
         display: "flex",
-        mb: 10,
-        background: "white",
-        px: 3,
-        pb: 3,
-        borderRadius: 2,
+        flexDirection: "row",
+        justifyContent: "space-between",
         gap: 3,
       }}
     >
-      <div style={{ marginBottom: "50px" }}>
-        <Stack
-          direction="row"
-          justifyContent="flex-end"
-          position={"absolute"}
-          p={1.5}
-          display={"flex"}
-          right={0}
-        >
-          <Button
-            variant="contained"
-            sx={{
-              color: "#FFF",
-              outline: "none",
-              textTransform: "capitalize",
-              fontWeight: 600,
-              background: "#099250",
-              "&:hover": { backgroundColor: "#099250" },
-            }}
-            onClick={addForm}
-            disabled={hide}
+      <Box
+        sx={{
+          position: "relative",
+          flexDirection: "column",
+          display: "flex",
+          background: "white",
+          px: 3,
+          pb: 3,
+          borderRadius: 2,
+          gap: 3,
+          width: "70%",
+        }}
+      >
+        <div style={{ marginBottom: "50px" }}>
+          <Stack
+            direction="row"
+            justifyContent="flex-end"
+            position={"absolute"}
+            p={1.5}
+            display={"flex"}
+            right={0}
           >
-            Add New
-          </Button>
-        </Stack>
-      </div>
-
-      {formField.map((form: any, index: any) => (
-        <form>
-          <Card sx={{ p: 2 }}>
-            <label
-              htmlFor="additional notes"
-              style={{ marginTop: "8px", marginBottom: 10 }}
+            <Button
+              variant="contained"
+              sx={{
+                color: "#FFF",
+                outline: "none",
+                textTransform: "capitalize",
+                fontWeight: 600,
+                background: "#099250",
+                "&:hover": { backgroundColor: "#099250" },
+              }}
+              onClick={addForm}
+              disabled={hide}
             >
-              Additional Notes
-              <textarea
-                className={Styles.area}
-                name={`additionalNote_${index}`}
-                rows={8}
-                cols={50}
-                value={form.additionalNote}
-                onChange={(e) =>
-                  handleFormChange(index, "additionalNote", e.target.value)
-                }
-              ></textarea>
-            </label>
+              Add New
+            </Button>
+          </Stack>
+        </div>
 
-            <div style={{ marginTop: 10 }}>
-              <InputField
-                type="text"
-                label="Notes by"
-                name={`writtenBy_${index}`}
-                value={form.writtenBy}
-                onChange={(e: any) =>
-                  handleFormChange(index, "writtenBy", e.target.value)
-                }
-              />
-            </div>
+        {formField.map((form: any, index: any) => (
+          <form>
+            <Card sx={{ p: 2 }}>
+              <label
+                htmlFor="additional notes"
+                style={{ marginTop: "8px", marginBottom: 10 }}
+              >
+                Additional Notes
+                <textarea
+                  className={Styles.area}
+                  name={`additionalNote_${index}`}
+                  rows={8}
+                  cols={50}
+                  value={form.additionalNote}
+                  onChange={(e) =>
+                    handleFormChange(index, "additionalNote", e.target.value)
+                  }
+                ></textarea>
+              </label>
 
-            <Stack
-              direction="row"
-              justifyContent="flex-end"
-              marginTop={2}
-              gap={5}
-            >
-              <Button
-                sx={{
-                  color: "#FFF",
-                  outline: "none",
-                  fontWeight: 600,
-                  background: "#099250",
-                  "&:hover": { backgroundColor: "#099250" },
-                  px: 3,
-                }}
-                variant="outlined"
-                onClick={() => setIsOpen(true)}
+              <div style={{ marginTop: 10 }}>
+                <InputField
+                  type="text"
+                  label="Notes by"
+                  name={`writtenBy_${index}`}
+                  value={form.writtenBy}
+                  onChange={(e: any) =>
+                    handleFormChange(index, "writtenBy", e.target.value)
+                  }
+                />
+              </div>
+
+              <Stack
+                direction="row"
+                justifyContent="flex-end"
+                marginTop={2}
+                gap={5}
               >
-                Continue
-              </Button>
-              <Button
-                variant="outlined"
-                color="error"
-                onClick={() => deleteForm(index)}
-              >
-                Delete Form
-              </Button>
-            </Stack>
+                <Button
+                  sx={{
+                    color: "#FFF",
+                    outline: "none",
+                    fontWeight: 600,
+                    background: "#099250",
+                    "&:hover": { backgroundColor: "#099250" },
+                    px: 3,
+                  }}
+                  variant="outlined"
+                  onClick={() => setIsOpen(true)}
+                >
+                  Continue
+                </Button>
+                <Button
+                  variant="outlined"
+                  color="error"
+                  onClick={() => deleteForm(index)}
+                >
+                  Delete Form
+                </Button>
+              </Stack>
+            </Card>
+          </form>
+        ))}
+
+        {!hide && record.length === 0 && <NoResultIllustration />}
+
+        {record.map((item, index) => (
+          <Card sx={{ p: 2 }} key={index}>
+            <TextLabel label="Note" text={item.additionalNote} />
+            <TextLabel label="Written By" text={item.writtenBy} />
           </Card>
-        </form>
-      ))}
+        ))}
 
-      {!hide && record.length === 0 && <NoResultIllustration />}
+        {formField.map((form, index) => (
+          <NotePreview
+            key={index}
+            isOpen={isOpen}
+            writtenBy={form.writtenBy}
+            additionalNote={form.additionalNote}
+            onClose={() => setIsOpen(false)}
+            handleSubmit={handleSubmit}
+            isLoading={isLoading}
+          />
+        ))}
+      </Box>
 
-      {record.map((item, index) => (
-        <Card sx={{ p: 2 }} key={index}>
-          <TextLabel label="Note" text={item.additionalNote} />
-          <TextLabel label="Written By" text={item.writtenBy} />
-        </Card>
-      ))}
+      <Box
+        sx={{
+          borderLeft: "1px #E4E7EC solid",
+          background: "white",
+          p: 3,
+          width: "30%",
+          borderRadius: 2,
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            pb: 4,
+          }}
+        >
+          <Avatar />
+          <div className="">
+            <Typography
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                fontWeight: 500,
+                fontSize: 18,
+                textTransform: "capitalize",
+                marginLeft: 2,
+              }}
+            >
+              {client?.firstName + " " + client?.lastName}
+            </Typography>
+            <span
+              style={{
+                fontWeight: 400,
+                fontSize: 14,
+                color: "#475467",
+                marginLeft: 16,
+              }}
+            >
+              Created: {moment(client?.date_created).format("LL")}
+            </span>
+          </div>
+        </Box>
 
-      {formField.map((form, index) => (
-        <NotePreview
-          key={index}
-          isOpen={isOpen}
-          writtenBy={form.writtenBy}
-          additionalNote={form.additionalNote}
-          onClose={() => setIsOpen(false)}
-          handleSubmit={handleSubmit}
-          isLoading={isLoading}
-        />
-      ))}
+        <Divider />
+
+        <Box>
+          <Typography
+            fontWeight={600}
+            fontSize={18}
+            color={"#101928"}
+            sx={{ py: 2 }}
+          >
+            Demographics
+          </Typography>
+          <Divider />
+
+          <TextLabel isLoading={isLoading} label="NHR ID" text={NHRID} />
+
+          <TextLabel
+            isLoading={isLoading}
+            label="Email Address"
+            text={client?.email || "None"}
+          />
+          <TextLabel
+            isLoading={isLoading}
+            label="Phone Number"
+            text={client?.phoneNumber}
+          ></TextLabel>
+          <TextLabel
+            isLoading={isLoading}
+            label="Address"
+            text={client?.address}
+          />
+          <TextLabel
+            isLoading={isLoading}
+            label="Age"
+            text={moment(new Date()).diff(client?.dateOfBirth, "years")}
+          />
+          <TextLabel
+            isLoading={isLoading}
+            label="Date of Birth"
+            text={moment(client?.dateOfBirth).format("DD/MM/YYYY")}
+          />
+          <TextLabel
+            isLoading={isLoading}
+            label="Height"
+            text={client?.height + "" + "cm"}
+          />
+          <TextLabel
+            isLoading={isLoading}
+            label="Weight"
+            text={client?.weight + "" + "kg"}
+          />
+          <TextLabel
+            isLoading={isLoading}
+            label="HMO Plan"
+            text={client?.HMOPlan || "None"}
+          />
+        </Box>
+        <Divider />
+      </Box>
     </Box>
   );
 }

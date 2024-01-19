@@ -35,7 +35,6 @@ export default function Personal() {
           display: "grid",
           columnGap: 1.5,
           rowGap: 1.5,
-          //   textTransform: "capitalize",
           gridTemplateColumns: {
             xs: "repeat(1, 1fr)",
             lg: "repeat(2, 1fr)",

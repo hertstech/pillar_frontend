@@ -29,7 +29,7 @@ export default function UserTable({ results }: any) {
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   useEffect(() => {
-    setPage(0); // Reset page when results change
+    setPage(0); 
   }, [results]);
 
   const handleChangePage = (_event: unknown, newPage: number) => {

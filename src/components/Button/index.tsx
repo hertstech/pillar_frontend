@@ -27,7 +27,6 @@ export default function Button({
         border: 0,
         outline: "none",
         borderRadius: 6,
-        // lineHeight: 24,
         fontSize:16,
         cursor: loading ? "not-allowed" : "pointer",
       }}

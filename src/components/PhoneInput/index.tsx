@@ -17,7 +17,6 @@ export default function PhoneField({ name, value, onChange }: PhoneProps) {
             name: name,
             required: true,
             maxLength: 19,
-            // autoFocus: true,
           }}
           country={"ng"}
           containerStyle={{

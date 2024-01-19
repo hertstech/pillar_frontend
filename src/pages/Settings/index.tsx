@@ -1,6 +1,5 @@
 import { Box, Typography } from "@mui/material";
 import HeaderTabs from "../../components/HeaderTabs";
-// import Grid from "/assets/grid.svg";
 import {
   HiOutlineBuildingOffice2,
   HiOutlineUser,
@@ -11,9 +10,23 @@ import Personal from "./Personal";
 
 export default function Settings() {
   return (
-    <Box sx={{ pt: 2 }}>
+    <Box sx={{ background: "white" }}>
+      <Typography
+        variant="h4"
+        gutterBottom
+        fontWeight={600}
+        fontSize={28}
+        sx={{
+          color: "#000",
+          textTransform: "capitalize",
+          px: "20px",
+          pt: "20px",
+        }}
+      >
+        Settings
+      </Typography>
       <HeaderTabs
-        heading="Settings"
+        // heading="Settings"
         links={[
           {
             label: "General",

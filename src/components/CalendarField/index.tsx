@@ -1,14 +1,14 @@
-import { useState } from "react";
-import { DayPicker } from "react-day-picker";
+// import { useState } from "react";
+// import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import dayjs from "dayjs";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import Style from "../../components/InputField/styles.module.css";
-import Styles from "./styles.module.css";
-import { MdOutlineCalendarToday } from "react-icons/md";
+// import Style from "../../components/InputField/styles.module.css";
+// import Styles from "./styles.module.css";
+// import { MdOutlineCalendarToday } from "react-icons/md";
 
 interface Props {
   value: string;
@@ -19,38 +19,38 @@ interface Props {
   minDate?: any;
 }
 
-export function CalendarField({ value, selected, onSelect }: any) {
-  const [showCalendar, setShowcalendar] = useState(false);
+// export function CalendarField({ value, selected, onSelect }: any) {
+//   const [showCalendar, setShowcalendar] = useState(false);
 
-  return (
-    <>
-      <label style={{ marginTop: 10 }} htmlFor="dateOfBirth">
-        Date of Birth
-        <div className={Styles.wrapper}>
-          <input type="text" value={value} disabled className={Style.input} />
-          <div
-            className={Styles.icon}
-            onClick={() => setShowcalendar(!showCalendar)}
-          >
-            <MdOutlineCalendarToday color="#667185" />
-          </div>
-        </div>
-      </label>
-      {showCalendar && (
-        <div className={Styles.calendar}>
-          <DayPicker
-            mode="single"
-            captionLayout="dropdown"
-            fromYear={1800}
-            toYear={3000}
-            selected={selected}
-            onSelect={onSelect}
-          />
-        </div>
-      )}
-    </>
-  );
-}
+//   return (
+//     <>
+//       <label style={{ marginTop: 10 }} htmlFor="dateOfBirth">
+//         Date of Birth
+//         <div className={Styles.wrapper}>
+//           <input type="text" value={value} disabled className={Style.input} />
+//           <div
+//             className={Styles.icon}
+//             onClick={() => setShowcalendar(!showCalendar)}
+//           >
+//             <MdOutlineCalendarToday color="#667185" />
+//           </div>
+//         </div>
+//       </label>
+//       {showCalendar && (
+//         <div className={Styles.calendar}>
+//           <DayPicker
+//             mode="single"
+//             captionLayout="dropdown"
+//             fromYear={1800}
+//             toYear={3000}
+//             selected={selected}
+//             onSelect={onSelect}
+//           />
+//         </div>
+//       )}
+//     </>
+//   );
+// }
 
 export function Calendar({
   value,
@@ -70,7 +70,7 @@ export function Calendar({
             views={["year", "month", "day"]}
             format="DD/MM/YYYY"
             minDate={minDate}
-            sx={{ marginTop: "5px", width: "100%" }}
+            sx={{ marginTop: "5px", width: "100%", fontFamily: "fontNormal" }}
             disableFuture={disableFuture}
             disablePast={disablePast}
             value={dayjs(value)}

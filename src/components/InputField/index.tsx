@@ -30,7 +30,7 @@ export default function InputField({
 
   return (
     <div className={Styles.wrapper}>
-      <label htmlFor={name}>
+      <label htmlFor={name} style={{ color: "black" }}>
         {label}
         <input
           type={
@@ -64,15 +64,19 @@ interface TextLabelProps {
   isLoading?: boolean;
   suffix?: string;
 }
-export const TextLabel = ({ text, label, isLoading }: TextLabelProps) => (
+export const TextLabel = ({
+  text,
+  label,
+  isLoading,
+  suffix,
+}: TextLabelProps) => (
   <label
     className={Styles.label}
     style={{
-      fontWeight: 600,
-      color: "#475467",
-      fontSize: 16,
+      fontWeight: 400,
+      color: "#667185",
+      fontSize: 14,
       margin: "10px 0px",
-      // textTransform: "capitalize",
     }}
   >
     {label}
@@ -89,12 +93,15 @@ export const TextLabel = ({ text, label, isLoading }: TextLabelProps) => (
           "&::first-letter": {
             textTransform: "uppercase",
           },
+          mt: "4px",
+          fontWeight: "fontBold ",
         }}
-        fontWeight={400}
+        fontWeight="fontBold"
         fontSize={16}
         color={"#101928"}
       >
         {text}
+        {suffix}
       </Typography>
     )}
   </label>

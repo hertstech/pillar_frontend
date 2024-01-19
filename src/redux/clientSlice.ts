@@ -5,7 +5,6 @@ interface Client {
   firstName: string;
   lastName: string;
   dateOfBirth: string;
-  // other fields...
 }
 
 interface ClientState {

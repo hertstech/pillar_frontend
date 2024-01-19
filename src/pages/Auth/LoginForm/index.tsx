@@ -5,7 +5,6 @@ import { Link, useNavigate } from "react-router-dom";
 import Styles from "../sytles.module.css";
 import InputField from "../../../components/InputField";
 import Button from "../../../components/Button";
-// import axios from "axios";
 import { dispatchUserLogin } from "../../../redux/userSlice";
 import { axiosInstance } from "../../../Utils/axios";
 import Swal from "sweetalert2";

@@ -97,10 +97,9 @@ export default function RegisterPage() {
         text: `${res.data.message}`,
         confirmButtonColor: "#099250",
       });
-      
+
       navigate("/auth/login");
     } catch (error: any) {
-      console.error(error, "error");
       setIsLoadingButton(false);
 
       Swal.fire({

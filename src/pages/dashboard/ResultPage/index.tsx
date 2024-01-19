@@ -3,18 +3,11 @@ import HeaderBreadCrumb from "../../../components/HeaderBreadCrumb/index.tsx";
 import Users from "/assets/users.svg";
 import Grids from "/assets/grid.svg";
 import UserCard from "../../../components/UserCard/index.tsx";
-// import { users } from "./_users.tsx";
 import { useEffect, useState } from "react";
 import UserTable from "../../../components/UserTable/index.tsx";
-import {
-  Link,
-  useLocation,
-  // , useNavigate, useParams
-} from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 export default function ResultPage() {
-  // const { id } = useParams();
-
   const location = useLocation();
 
   const [searchResults, setSearchResults] = useState([]);
