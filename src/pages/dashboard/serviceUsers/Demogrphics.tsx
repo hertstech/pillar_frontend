@@ -50,6 +50,7 @@ interface client {
   weight: number;
   HMOPlan: string;
   firstName: string;
+  middleName: string;
   lastName: string;
   state: string;
   gender: string;
@@ -239,7 +240,7 @@ export default function Demogrphics({ client }: PropType) {
             >
               <TextLabel label="First Name" text={client?.firstName} />
 
-              <TextLabel label="Middle Name" text={"Middle Name"} />
+              <TextLabel label="Middle Name" text={client?.middleName} />
 
               <TextLabel label="Last Name" text={client?.lastName} />
             </div>

@@ -495,7 +495,7 @@ export default function Allergies({ client }: PropType) {
         ))}
 
         {/* INITIAL STATE WHEN EMPTY */}
-        {!hide && record.length === 0 && <NoResultIllustration />}
+        {!hide && record.length < 0 && <NoResultIllustration />}
 
         {record.map((item, index) => (
           <Box key={index}>
