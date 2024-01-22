@@ -177,8 +177,10 @@ export default function Overview({ client }: PropType) {
 
   const pressureData = {
     labels: pressure
-      ?.reverse()
-      .map((x: any) => moment(x.date_created).format("MMM-YYYY")),
+      ? pressure
+          ?.reverse()
+          .map((x: any) => moment(x.date_created).format("MMM-YYYY"))
+      : [],
     datasets: [
       {
         label: "SYS",
@@ -522,8 +524,8 @@ export default function Overview({ client }: PropType) {
                   </Typography>
                   <Typography color={"#344054"} sx={{ my: 1.5 }}>
                     <span style={{ fontWeight: 600, fontSize: 20 }}>
-                      {temp.reading || "N/A"}
-                      {temp.degreeRating || <>&deg;</>}
+                      {temp.reading || "N/"}
+                      {temp.degreeRating || "A"}
                     </span>
                   </Typography>
                   <Typography
@@ -638,15 +640,9 @@ export default function Overview({ client }: PropType) {
             <Divider />
 
             <Box height={192} px={2}>
-              {activeProblems.length <= 0 ? (
-                <>
-                  <p style={{ fontWeight: 400, fontSize: 18, paddingTop: 10 }}>
-                    No Active problems Recorded.
-                  </p>
-                </>
-              ) : (
+              {activeProblems.length < 0 ? (
                 activeProblems
-                  .slice(0, 3)
+                  ?.slice(0, 3)
                   .filter(
                     (activeProblems) =>
                       activeProblems.treatmentStatus === "Pending" || "Active"
@@ -667,9 +663,6 @@ export default function Overview({ client }: PropType) {
                         padding: 5,
                       }}
                     >
-                      <span style={{ fontWeight: 600 }} color="#191919">
-                        {item.severity} {item.primaryDiagnosis}
-                      </span>
                       <Typography
                         sx={{
                           "&::first-letter": {
@@ -682,6 +675,16 @@ export default function Overview({ client }: PropType) {
                         display={"flex"}
                         justifyContent={"space-between"}
                       >
+                        <span style={{ fontWeight: 600 }} color="#191919">
+                          {item.severity} - {item.primaryDiagnosis}
+                        </span>
+                      </Typography>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
                         <span>
                           {moment(item.date_created).format("DD-MMM-YYYY")}
                         </span>
@@ -689,9 +692,15 @@ export default function Overview({ client }: PropType) {
                           By {item.title}
                           {item?.reading}
                         </span>
-                      </Typography>
+                      </div>
                     </label>
                   ))
+              ) : (
+                <>
+                  <p style={{ fontWeight: 400, fontSize: 18, paddingTop: 10 }}>
+                    No Active problems Recorded.
+                  </p>
+                </>
               )}
             </Box>
           </Box>
@@ -717,13 +726,7 @@ export default function Overview({ client }: PropType) {
             <Divider />
 
             <Box height={192} px={3}>
-              {recentIncident.length <= 0 ? (
-                <>
-                  <p style={{ fontWeight: 400, fontSize: 18, paddingTop: 10 }}>
-                    No Record created yet.
-                  </p>
-                </>
-              ) : (
+              {recentIncident.length > 0 ? (
                 recentIncident.slice(0, 3).map((item, index) => (
                   <label
                     key={index}
@@ -756,6 +759,12 @@ export default function Overview({ client }: PropType) {
                     </span>
                   </label>
                 ))
+              ) : (
+                <>
+                  <p style={{ fontWeight: 400, fontSize: 18, paddingTop: 10 }}>
+                    No Record created yet.
+                  </p>
+                </>
               )}
             </Box>
           </Box>
@@ -781,14 +790,8 @@ export default function Overview({ client }: PropType) {
             <Divider />
 
             <Box height={192} px={3}>
-              {repeatedPrescription.length <= 0 ? (
-                <>
-                  <p style={{ fontWeight: 400, fontSize: 18, paddingTop: 10 }}>
-                    No Recurring Prescription currently.
-                  </p>
-                </>
-              ) : (
-                repeatedPrescription.slice(0, 3).map((item, index) => (
+              {repeatedPrescription?.length > 0 ? (
+                repeatedPrescription?.slice(0, 3).map((item, index) => (
                   <label
                     key={index}
                     htmlFor="activity"
@@ -825,6 +828,12 @@ export default function Overview({ client }: PropType) {
                     </Typography>
                   </label>
                 ))
+              ) : (
+                <>
+                  <p style={{ fontWeight: 400, fontSize: 18, paddingTop: 10 }}>
+                    No Recurring Prescription currently.
+                  </p>
+                </>
               )}
             </Box>
           </Box>
@@ -850,13 +859,7 @@ export default function Overview({ client }: PropType) {
             <Divider />
 
             <Box height={192} px={3}>
-              {allergies.length <= 0 ? (
-                <>
-                  <p style={{ fontWeight: 400, fontSize: 18, paddingTop: 10 }}>
-                    No Allergy Record created yet.
-                  </p>
-                </>
-              ) : (
+              {allergies.length > 0 ? (
                 allergies.map((item, index) => (
                   <label
                     key={index}
@@ -887,6 +890,12 @@ export default function Overview({ client }: PropType) {
                     </Typography>
                   </label>
                 ))
+              ) : (
+                <>
+                  <p style={{ fontWeight: 400, fontSize: 18, paddingTop: 10 }}>
+                    No Allergy Record created yet.
+                  </p>
+                </>
               )}
             </Box>
           </Box>

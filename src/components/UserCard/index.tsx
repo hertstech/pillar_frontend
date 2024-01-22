@@ -40,7 +40,7 @@ export default function UserCard({ user }: { user: any }) {
                 alignItems: "center",
                 flexDirection: "column",
                 px: 3,
-                pt: 3,
+                pt: 3,width:'100%'
               }}
             >
               <Avatars height={"100px"} width={"100px"} />
@@ -76,7 +76,7 @@ export default function UserCard({ user }: { user: any }) {
               sx={{
                 background: "#FCFCFD",
                 p: 3,
-                borderTop: "1px #F2F4F7 solid",
+                borderTop: "1px #F2F4F7 solid",width:'100%'
               }}
             >
               <div

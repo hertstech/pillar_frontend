@@ -10,7 +10,7 @@ export default function ProfileGuard({
 }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  //   const token = useSelector((state: any) => state.user.access_token);
+  
   const refreshToken = useSelector(
     (state: any) => state.user.user.refresh_token
   );

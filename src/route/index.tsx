@@ -39,7 +39,11 @@ export const router = createBrowserRouter([
   // DASHBOARD
   {
     path: "/dashboard",
-    element:<ProfileGuard><DashboardLayout /></ProfileGuard> ,
+    element: (
+      <ProfileGuard>
+        <DashboardLayout />
+      </ProfileGuard>
+    ),
 
     children: [
       { element: <Navigate to="/dashboard/profile" replace />, index: true },
