@@ -112,7 +112,6 @@ export default function ProfileHome() {
       navigate(`/dashboard/search-result`, {
         state: { searchResults: res.data.result },
       });
-      console.log(res.data);
 
       setIsLoading(false);
     } catch (error: any) {

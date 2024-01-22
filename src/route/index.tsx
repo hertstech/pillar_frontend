@@ -8,6 +8,8 @@ import Page404 from "../pages/Page404";
 import ResultPage from "../pages/dashboard/ResultPage";
 import ProfileHome from "../pages/dashboard/Profile";
 import Singleuser from "../pages/dashboard/serviceUsers";
+import AuthGuard from "../Guard/AuthGuard";
+import ProfileGuard from "../Guard/ProfileGuard";
 // import Singleuser from "../pages/dashboard/ServiceUsers";
 
 export const router = createBrowserRouter([
@@ -15,16 +17,30 @@ export const router = createBrowserRouter([
   {
     path: "auth",
     children: [
-      { path: "login", element: <LoginPage /> },
-      { path: "register", element: <RegisterPage /> },
+      {
+        path: "login",
+        element: (
+          <AuthGuard>
+            <LoginPage />{" "}
+          </AuthGuard>
+        ),
+      },
+      {
+        path: "register",
+        element: (
+          <AuthGuard>
+            <RegisterPage />
+          </AuthGuard>
+        ),
+      },
     ],
   },
 
   // DASHBOARD
   {
     path: "/dashboard",
-    element: <DashboardLayout />,
-    
+    element:<ProfileGuard><DashboardLayout /></ProfileGuard> ,
+
     children: [
       { element: <Navigate to="/dashboard/profile" replace />, index: true },
 
@@ -46,7 +62,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "user/:id",
-        element: <Singleuser/>,
+        element: <Singleuser />,
       },
     ],
   },

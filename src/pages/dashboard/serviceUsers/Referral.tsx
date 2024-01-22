@@ -219,7 +219,6 @@ export default function Referral({ client }: PropType) {
 
         setRecord(res?.data);
 
-        console.log(res);
         setIsLoading(false);
       } catch (error) {
         console.error(error);

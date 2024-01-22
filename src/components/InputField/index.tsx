@@ -96,7 +96,6 @@ export const TextLabel = ({
           mt: "4px",
           fontWeight: "fontBold ",
         }}
-        fontWeight="fontBold"
         fontSize={16}
         color={"#101928"}
       >

@@ -15,24 +15,6 @@ import { axiosInstance } from "../../../Utils/axios";
 import { useParams } from "react-router-dom";
 import { ItemLabel } from "../../../components/InputField";
 
-const activity = [
-  {
-    title: "Lisinopril 10 MG Oral Tablet - 10MG",
-    prescription: "1 Tablet (10 mg) by mouth daily",
-    specialist: "Dr. Smith",
-  },
-  {
-    title: "Lisinopril 10 MG Oral Tablet - 10MG",
-    prescription: "1 Tablet (10 mg) by mouth daily",
-    specialist: "Dr. Smith",
-  },
-  {
-    title: "Lisinopril 10 MG Oral Tablet - 10MG",
-    prescription: "1 Tablet (10 mg) by mouth daily",
-    specialist: "Dr. Smith",
-  },
-];
-
 ChartJS.register(
   LineElement,
   LinearScale,
@@ -74,6 +56,37 @@ interface client {
   nokRelationship: string;
 }
 
+interface allergyResponse {
+  reaction: string;
+  reactionType: string;
+  substance: string;
+}
+
+interface activeProblemsResponse {
+  primaryDiagnosis: string;
+  severity: string;
+  date_created: string;
+  title: string;
+  reading: string;
+  treatmentStatus: string;
+}
+
+interface prescriptionResponse {
+  medicationName: string;
+  dosage: string;
+  startDate: string;
+  endDate: string;
+  prescriber: string;
+  frequencyType: string;
+  frequencyNumber: string;
+  dosagemeasurement: string;
+}
+
+interface incidentResponse {
+  message: string;
+  date_created: string;
+}
+
 interface PropType {
   client: client;
 }
@@ -93,13 +106,19 @@ export default function Overview({ client }: PropType) {
 
   const [pulse, setPulse] = React.useState([]);
 
-  // const [activeProblems, setActiveProblems] = React.useState([]);
+  const [activeProblems, setActiveProblems] = React.useState<
+    activeProblemsResponse[]
+  >([]);
 
-  // const [recentIncident, setRecentIncident] = React.useState([]);
+  const [recentIncident, setRecentIncident] = React.useState<
+    incidentResponse[]
+  >([]);
 
-  // const [repeatedPrescription, setRepeatedPrescription] = React.useState([]);
+  const [repeatedPrescription, setRepeatedPrescription] = React.useState<
+    prescriptionResponse[]
+  >([]);
 
-  // const [allergies, setAllergies] = React.useState([]);
+  const [allergies, setAllergies] = React.useState<allergyResponse[]>([]);
 
   const options = {
     maintainAspectRatio: false,
@@ -121,14 +140,19 @@ export default function Overview({ client }: PropType) {
       setIsLoading(true);
 
       try {
-        const [res1, res2, res3, res4, res5, res6] = await Promise.all([
-          axiosInstance.get(`serviceuser-bodytemperature/${id}`),
-          axiosInstance.get(`serviceuser-glucoselevel/${id}`),
-          axiosInstance.get(`serviceuser-bloodgroup/${id}`),
-          axiosInstance.get(`serviceuser-genotype/${id}`),
-          axiosInstance.get(`serviceuser-pulserate/${id}`),
-          axiosInstance.get(`serviceuser-bloodpressure/${id}`),
-        ]);
+        const [res1, res2, res3, res4, res5, res6, res7, res8, res9, res0] =
+          await Promise.all([
+            axiosInstance.get(`serviceuser-bodytemperature/${id}`),
+            axiosInstance.get(`serviceuser-glucoselevel/${id}`),
+            axiosInstance.get(`serviceuser-bloodgroup/${id}`),
+            axiosInstance.get(`serviceuser-genotype/${id}`),
+            axiosInstance.get(`serviceuser-pulserate/${id}`),
+            axiosInstance.get(`serviceuser-bloodpressure/${id}`),
+            axiosInstance.get(`serviceuser-active-problems/${id}`),
+            axiosInstance.get(`serviceuser-recent-incidents/${id}`),
+            axiosInstance.get(`get-serviceuser-repeated-prescription/${id}`),
+            axiosInstance.get(`get-serviceuser-allergies/${id}`),
+          ]);
 
         setTemp(res1?.data);
         setGlucose(res2?.data);
@@ -136,6 +160,10 @@ export default function Overview({ client }: PropType) {
         setGenotype(res4?.data);
         setPulse(res5?.data);
         setPressure(res6?.data);
+        setActiveProblems(res7?.data);
+        setRecentIncident(res8?.data);
+        setRepeatedPrescription(res9?.data.repeatedprescription);
+        setAllergies(res0?.data);
 
         setIsLoading(false);
       } catch (errors) {
@@ -146,46 +174,6 @@ export default function Overview({ client }: PropType) {
 
     getOverview();
   }, [id]);
-
-  // useEffect(() => {
-  //   const getOverview = async () => {
-  //     setIsLoading(true);
-
-  //     try {
-  //       const res1 = await axiosInstance.get(
-  //         `serviceuser-bodytemperature/${id}`
-  //       );
-  //       const res2 = await axiosInstance.get(`serviceuser-glucoselevel/${id}`);
-  //       const res3 = await axiosInstance.get(`serviceuser-bloodgroup/${id}`);
-  //       const res4 = await axiosInstance.get(`serviceuser-genotype/${id}`);
-  //       const res5 = await axiosInstance.get(`serviceuser-pulserate/${id}`);
-  //       const res6 = await axiosInstance.get(`serviceuser-bloodpressure/${id}`);
-  //       const res7 = await axiosInstance.get(
-  //         `serviceuser-active-problems/${id}`
-  //       );
-  //       const res8 = await axiosInstance.get(
-  //         `serviceuser-recent-incidents/${id}`
-  //       );
-  //       const res9 = await axiosInstance.get(
-  //         `get-serviceuser-repeated-prescription/${id}`
-  //       );
-  //       // const res10 = await axiosInstance.get(`get-serviceuser-allergies/${id}`);
-
-  //       setTemp(res1?.data);
-  //       setGlucose(res2?.data);
-  //       setBloodGroup(res3?.data);
-  //       setGenotype(res4?.data);
-  //       setPulse(res5?.data);
-  //       setPressure(res6?.data);
-
-  //       setIsLoading(false);
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-
-  //   getOverview();
-  // }, [id]);
 
   const pressureData = {
     labels: pressure
@@ -391,7 +379,6 @@ export default function Overview({ client }: PropType) {
                   </Typography>
                 </div>
                 <div className="flex justify-center items-center">
-                  {/* <BsDropletHalf color={"#F18264"} size={28} /> */}
                   <svg
                     width="25"
                     height="24"
@@ -461,71 +448,6 @@ export default function Overview({ client }: PropType) {
                       fill="#98A2B3"
                     />
                   </svg>
-
-                  {/* <svg
-                    width="28"
-                    height="28"
-                    viewBox="0 0 20 20"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <g id="DNA icon 1" clip-path="url(#clip0_1857_5408)">
-                      <path
-                        id="Vector"
-                        d="M9.8743 10.127L10.0398 10.184C12.7556 11.119 16.0264 10.2249 18.3346 7.91666M9.8743 10.127L9.4098 9.96716C6.87503 9.0945 3.82234 9.92891 1.66797 12.0833M9.8743 10.127L9.8173 9.9615C8.8823 7.24567 9.77638 3.97492 12.0846 1.66666M9.8743 10.127L10.0341 10.5915C10.9068 13.1262 10.0724 16.1789 7.91797 18.3333"
-                        stroke="#00C3FF"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                      />
-                      <path
-                        id="Vector_2"
-                        d="M8.33284 12.5L9.86876 14.1014M5.63672 9.86942L6.66618 10.8988"
-                        stroke="#00C3FF"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                      />
-                      <path
-                        id="Vector_3"
-                        d="M9.87109 5.63721L11.6679 7.5M13.3346 9.16666L14.1031 9.86925"
-                        stroke="#00C3FF"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                      />
-                      <path
-                        id="Vector_4"
-                        d="M3.33203 10.8333L6.2487 13.75"
-                        stroke="#00C3FF"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                      />
-                      <path
-                        id="Vector_5"
-                        d="M16.4831 9.0755L13.5664 6.15885"
-                        stroke="#00C3FF"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                      />
-                      <path
-                        id="Vector_6"
-                        d="M7.75391 15.1595L9.07641 16.482"
-                        stroke="#00C3FF"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                      />
-                      <path
-                        id="Vector_7"
-                        d="M12.1545 4.65576L10.832 3.33324"
-                        stroke="#00C3FF"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                      />
-                    </g>
-                    <defs>
-                      <clipPath id="clip0_1857_5408">
-                        <rect width="20" height="20" fill="white" />
-                      </clipPath>
-                    </defs>
-                  </svg> */}
                 </div>
               </Box>
 
@@ -600,7 +522,8 @@ export default function Overview({ client }: PropType) {
                   </Typography>
                   <Typography color={"#344054"} sx={{ my: 1.5 }}>
                     <span style={{ fontWeight: 600, fontSize: 20 }}>
-                      {temp.reading || "N/A"} {temp.degreeRating || <>&deg;</>}
+                      {temp.reading || "N/A"}
+                      {temp.degreeRating || <>&deg;</>}
                     </span>
                   </Typography>
                   <Typography
@@ -714,37 +637,62 @@ export default function Overview({ client }: PropType) {
 
             <Divider />
 
-            <Box px={3}>
-              {activity.map((item, index) => (
-                <label
-                  key={index}
-                  htmlFor="activity"
-                  style={{
-                    color: "#344054",
-                    fontSize: 14,
-                    fontWeight: 400,
-                    margin: "10px 0px",
-                  }}
-                >
-                  <span style={{ fontWeight: 500 }}>{item.title}</span>
-                  <Typography
-                    sx={{
-                      "&::first-letter": {
-                        textTransform: "uppercase",
-                      },
-                    }}
-                    marginTop={0.5}
-                    fontWeight={400}
-                    fontSize={14}
-                    color={"#667185"}
-                    display={"flex"}
-                    justifyContent={"space-between"}
-                  >
-                    <span>{item.prescription}</span>{" "}
-                    <span>By {item.specialist}</span>
-                  </Typography>
-                </label>
-              ))}
+            <Box height={192} px={2}>
+              {activeProblems.length <= 0 ? (
+                <>
+                  <p style={{ fontWeight: 400, fontSize: 18, paddingTop: 10 }}>
+                    No Active problems Recorded.
+                  </p>
+                </>
+              ) : (
+                activeProblems
+                  .slice(0, 3)
+                  .filter(
+                    (activeProblems) =>
+                      activeProblems.treatmentStatus === "Pending" || "Active"
+                  )
+                  .map((item, index) => (
+                    <label
+                      key={index}
+                      htmlFor="activity"
+                      style={{
+                        background:
+                          item.treatmentStatus === "Pending"
+                            ? "yellow"
+                            : "#EDFCF2",
+                        fontSize: 14,
+                        fontWeight: 400,
+                        margin: "10px 0px",
+                        borderRadius: 3,
+                        padding: 5,
+                      }}
+                    >
+                      <span style={{ fontWeight: 600 }} color="#191919">
+                        {item.severity} {item.primaryDiagnosis}
+                      </span>
+                      <Typography
+                        sx={{
+                          "&::first-letter": {
+                            textTransform: "uppercase",
+                          },
+                        }}
+                        marginTop={0.5}
+                        fontWeight={400}
+                        fontSize={14}
+                        display={"flex"}
+                        justifyContent={"space-between"}
+                      >
+                        <span>
+                          {moment(item.date_created).format("DD-MMM-YYYY")}
+                        </span>
+                        <span>
+                          By {item.title}
+                          {item?.reading}
+                        </span>
+                      </Typography>
+                    </label>
+                  ))
+              )}
             </Box>
           </Box>
         </Grid>
@@ -768,37 +716,47 @@ export default function Overview({ client }: PropType) {
 
             <Divider />
 
-            <Box px={3}>
-              {activity.map((item, index) => (
-                <label
-                  key={index}
-                  htmlFor="activity"
-                  style={{
-                    color: "#344054",
-                    fontSize: 14,
-                    fontWeight: 400,
-                    margin: "10px 0px",
-                  }}
-                >
-                  <span style={{ fontWeight: 500 }}>{item.title}</span>
-                  <Typography
-                    sx={{
-                      "&::first-letter": {
-                        textTransform: "uppercase",
-                      },
+            <Box height={192} px={3}>
+              {recentIncident.length <= 0 ? (
+                <>
+                  <p style={{ fontWeight: 400, fontSize: 18, paddingTop: 10 }}>
+                    No Record created yet.
+                  </p>
+                </>
+              ) : (
+                recentIncident.slice(0, 3).map((item, index) => (
+                  <label
+                    key={index}
+                    htmlFor="activity"
+                    style={{
+                      color: "#344054",
+                      fontSize: 14,
+                      fontWeight: 400,
+                      margin: "10px 0px",
                     }}
-                    marginTop={0.5}
-                    fontWeight={400}
-                    fontSize={14}
-                    color={"#667185"}
-                    display={"flex"}
-                    justifyContent={"space-between"}
                   >
-                    <span>{item.prescription}</span>{" "}
-                    <span>By {item.specialist}</span>
-                  </Typography>
-                </label>
-              ))}
+                    <Typography
+                      sx={{
+                        "&::first-letter": {
+                          textTransform: "uppercase",
+                        },
+                      }}
+                      marginTop={0.5}
+                      fontWeight={500}
+                      fontSize={14}
+                      color={"#667185"}
+                      display={"flex"}
+                      justifyContent={"space-between"}
+                    >
+                      {item.message}
+                      {/* <span>By {item.specialist}</span> */}
+                    </Typography>
+                    <span style={{ fontWeight: 500 }}>
+                      {moment(item.date_created).format("DD/MM/YYYY")}
+                    </span>
+                  </label>
+                ))
+              )}
             </Box>
           </Box>
         </Grid>
@@ -822,37 +780,52 @@ export default function Overview({ client }: PropType) {
 
             <Divider />
 
-            <Box px={3}>
-              {activity.map((item, index) => (
-                <label
-                  key={index}
-                  htmlFor="activity"
-                  style={{
-                    color: "#344054",
-                    fontSize: 14,
-                    fontWeight: 400,
-                    margin: "10px 0px",
-                  }}
-                >
-                  <span style={{ fontWeight: 500 }}>{item.title}</span>
-                  <Typography
-                    sx={{
-                      "&::first-letter": {
-                        textTransform: "uppercase",
-                      },
+            <Box height={192} px={3}>
+              {repeatedPrescription.length <= 0 ? (
+                <>
+                  <p style={{ fontWeight: 400, fontSize: 18, paddingTop: 10 }}>
+                    No Recurring Prescription currently.
+                  </p>
+                </>
+              ) : (
+                repeatedPrescription.slice(0, 3).map((item, index) => (
+                  <label
+                    key={index}
+                    htmlFor="activity"
+                    style={{
+                      color: "#344054",
+                      fontSize: 14,
+                      fontWeight: 400,
+                      margin: "10px 0px",
                     }}
-                    marginTop={0.5}
-                    fontWeight={400}
-                    fontSize={14}
-                    color={"#667185"}
-                    display={"flex"}
-                    justifyContent={"space-between"}
                   >
-                    <span>{item.prescription}</span>{" "}
-                    <span>By {item.specialist}</span>
-                  </Typography>
-                </label>
-              ))}
+                    <span style={{ fontWeight: 500 }}>
+                      {item.medicationName} (
+                      {`${item.dosage}${item.dosagemeasurement}, ${item.frequencyNumber} ${item.frequencyType}`}
+                      )
+                    </span>
+                    <Typography
+                      sx={{
+                        "&::first-letter": {
+                          textTransform: "uppercase",
+                        },
+                      }}
+                      marginTop={0.5}
+                      fontWeight={400}
+                      fontSize={14}
+                      color={"#667185"}
+                      display={"flex"}
+                      justifyContent={"space-between"}
+                    >
+                      <span>
+                        {moment(item.startDate).format("DD/MMM/YYYY")} -
+                        {moment(item.endDate).format("DD/MMM/YYYY")}
+                      </span>{" "}
+                      <span>By {item.prescriber}</span>
+                    </Typography>
+                  </label>
+                ))
+              )}
             </Box>
           </Box>
         </Grid>
@@ -876,37 +849,45 @@ export default function Overview({ client }: PropType) {
 
             <Divider />
 
-            <Box px={3}>
-              {activity.map((item, index) => (
-                <label
-                  key={index}
-                  htmlFor="activity"
-                  style={{
-                    color: "#344054",
-                    fontSize: 14,
-                    fontWeight: 400,
-                    margin: "10px 0px",
-                  }}
-                >
-                  <span style={{ fontWeight: 500 }}>{item.title}</span>
-                  <Typography
-                    sx={{
-                      "&::first-letter": {
-                        textTransform: "uppercase",
-                      },
+            <Box height={192} px={3}>
+              {allergies.length <= 0 ? (
+                <>
+                  <p style={{ fontWeight: 400, fontSize: 18, paddingTop: 10 }}>
+                    No Allergy Record created yet.
+                  </p>
+                </>
+              ) : (
+                allergies.map((item, index) => (
+                  <label
+                    key={index}
+                    htmlFor="activity"
+                    style={{
+                      color: "#344054",
+                      fontSize: 14,
+                      fontWeight: 400,
+                      margin: "10px 0px",
                     }}
-                    marginTop={0.5}
-                    fontWeight={400}
-                    fontSize={14}
-                    color={"#667185"}
-                    display={"flex"}
-                    justifyContent={"space-between"}
                   >
-                    <span>{item.prescription}</span>{" "}
-                    <span>By {item.specialist}</span>
-                  </Typography>
-                </label>
-              ))}
+                    <span style={{ fontWeight: 500 }}>{item.substance}</span>
+                    <Typography
+                      sx={{
+                        "&::first-letter": {
+                          textTransform: "uppercase",
+                        },
+                      }}
+                      marginTop={0.5}
+                      fontWeight={400}
+                      fontSize={14}
+                      color={"#667185"}
+                      display={"flex"}
+                      justifyContent={"space-between"}
+                    >
+                      <span>{item.reaction}</span>{" "}
+                      <span>{item.reactionType}</span>
+                    </Typography>
+                  </label>
+                ))
+              )}
             </Box>
           </Box>
         </Grid>
