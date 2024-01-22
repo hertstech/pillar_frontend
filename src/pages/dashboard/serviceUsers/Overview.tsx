@@ -327,7 +327,7 @@ export default function Overview({ client }: PropType) {
                     <ItemLabel
                       isLoading={isLoading}
                       label="Date of Birth"
-                      text={"15/01/2024"}
+                      text={moment(client?.dateOfBirth).format("DD/MM/YYYY")}
                     />
 
                     <ItemLabel
@@ -640,7 +640,7 @@ export default function Overview({ client }: PropType) {
             <Divider />
 
             <Box height={192} px={2}>
-              {activeProblems.length < 0 ? (
+              {activeProblems.length > 0 ? (
                 activeProblems
                   ?.slice(0, 3)
                   .filter(

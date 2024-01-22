@@ -212,6 +212,25 @@ export default function ResultPage() {
         </ButtonGroup>
       </Stack>
 
+      {/* {isGrid ? (
+        <Box
+          sx={{
+            display: "grid",
+            marginBottom: 10,
+            gap: 3,
+            gridTemplateColumns: {
+              xs: "repeat(1, 1fr)",
+              sm: "repeat(2, 1fr)",
+              md: "repeat(3, 1fr)",
+            },
+          }}
+        >
+          <UserCard user={searchResults} />
+        </Box>
+      ) : (
+        <UserTable results={searchResults} />
+      )} */}
+
       {searchResults.length > 0 ? (
         <>
           {isGrid ? (

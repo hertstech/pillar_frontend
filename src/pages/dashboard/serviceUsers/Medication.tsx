@@ -553,88 +553,92 @@ export default function Assessment({ client }: PropType) {
         ))}
 
         {/* INITIAL STATE WHEN EMPTY */}
-        {!hide && record.length === 0 && <NoResultIllustration />}
+        {!hide && <NoResultIllustration />}
 
-        {record.map((item, index) => (
-          <Box key={index}>
-            <Button
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                p: 2,
-                userSelect: "none",
-                fontSize: 18,
-                justifyContent: "space-between",
-                border: "1px #E4E7EC solid",
-                textTransform: "capitalize",
-                color: "#099250",
-              }}
-              fullWidth
-              onClick={() => handleToggle(`${item?.medicationType}${index}`)}
-            >
-              <span>{item?.medicationType}</span>
-              <span>
-                {show === `${item?.medicationType}${index}` ? (
-                  <FaAngleUp />
-                ) : (
-                  <FaAngleDown />
-                )}
-              </span>
-            </Button>
+        {record.length > 0 ? (
+          record?.map((item, index) => (
+            <Box key={index}>
+              <Button
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  p: 2,
+                  userSelect: "none",
+                  fontSize: 18,
+                  justifyContent: "space-between",
+                  border: "1px #E4E7EC solid",
+                  textTransform: "capitalize",
+                  color: "#099250",
+                }}
+                fullWidth
+                onClick={() => handleToggle(`${item?.medicationType}${index}`)}
+              >
+                <span>{item?.medicationType}</span>
+                <span>
+                  {show === `${item?.medicationType}${index}` ? (
+                    <FaAngleUp />
+                  ) : (
+                    <FaAngleDown />
+                  )}
+                </span>
+              </Button>
 
-            {show === `${item?.medicationType}${index}` && (
-              <div style={{ padding: 6 }}>
-                <Box
-                  sx={{
-                    display: "grid",
-                    columnGap: 1.5,
-                    rowGap: 1.5,
-                    gridTemplateColumns: {
-                      xs: "repeat(1, 1fr)",
-                      lg: "repeat(3, 1fr)",
-                    },
-                  }}
-                >
+              {show === `${item?.medicationType}${index}` && (
+                <div style={{ padding: 6 }}>
+                  <Box
+                    sx={{
+                      display: "grid",
+                      columnGap: 1.5,
+                      rowGap: 1.5,
+                      gridTemplateColumns: {
+                        xs: "repeat(1, 1fr)",
+                        lg: "repeat(3, 1fr)",
+                      },
+                    }}
+                  >
+                    <TextLabel
+                      label="Date Prescribed"
+                      text={
+                        moment(item.date_created).format("DD/MM/YYYY") || "None"
+                      }
+                    />
+                    <TextLabel
+                      label="Name of Medication"
+                      text={item.medicationName || "None"}
+                    />
+                    <TextLabel
+                      label="Type of Medication"
+                      text={item.medicationType || "None"}
+                    />
+                    <TextLabel
+                      label="Route"
+                      text={item.medicationRoute || "None"}
+                    />
+                    <TextLabel
+                      label="Dosage Form"
+                      text={item.medicationDosageForm || "None"}
+                    />
+                    <TextLabel label="Dosage" text={item.dosage || "None"} />
+                    <TextLabel
+                      label="Frequency"
+                      text={item.frequencyType || "None"}
+                    />
+                  </Box>
                   <TextLabel
-                    label="Date Prescribed"
-                    text={
-                      moment(item.date_created).format("DD/MM/YYYY") || "None"
-                    }
+                    label="Prescriber Information"
+                    text={item.prescriber || "None"}
                   />
                   <TextLabel
-                    label="Name of Medication"
-                    text={item.medicationName || "None"}
+                    label="Additional Notes"
+                    text={item.additionalNote || "None"}
                   />
-                  <TextLabel
-                    label="Type of Medication"
-                    text={item.medicationType || "None"}
-                  />
-                  <TextLabel
-                    label="Route"
-                    text={item.medicationRoute || "None"}
-                  />
-                  <TextLabel
-                    label="Dosage Form"
-                    text={item.medicationDosageForm || "None"}
-                  />
-                  <TextLabel label="Dosage" text={item.dosage || "None"} />
-                  <TextLabel
-                    label="Frequency"
-                    text={item.frequencyType || "None"}
-                  />
-                </Box>
-                <TextLabel
-                  label="Prescriber Information"
-                  text={item.prescriber || "None"}
-                />
-                <TextLabel
-                  label="Additional Notes"
-                  text={item.additionalNote || "None"}
-                />
-              </div>
-            )}
-          </Box>
-        ))}
+                </div>
+              )}
+            </Box>
+          ))
+        ) : (
+          <NoResultIllustration />
+        )}
 
         {formField.map((form, index) => (
           <Preview

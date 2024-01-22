@@ -108,8 +108,10 @@ export default function ProfileHome() {
         params: payload,
       });
 
+      // console.log(res.data);
+
       navigate(`/dashboard/search-result`, {
-        state: { searchResults: res.data.result },
+        state: { searchResults: res.data },
       });
 
       setIsLoading(false);

@@ -36,7 +36,6 @@ const initialFormState = {
   writtenBy: "",
   additionalNote: "",
 };
-
 interface client {
   id: string;
   email: string;
@@ -172,7 +171,7 @@ export default function Notes({ client }: PropType) {
           `/serviceuser-addtionalnotes/${id}`
         );
 
-        setRecord(res?.data.result);
+        setRecord(res?.data);
         setIsLoading(false);
       } catch (error) {
         console.error(error);

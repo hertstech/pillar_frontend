@@ -39,8 +39,9 @@ export default function UserCard({ user }: { user: any }) {
                 display: "flex",
                 alignItems: "center",
                 flexDirection: "column",
-                px: 3,
-                pt: 3,width:'100%'
+                px: 2,
+                pt: 3,
+                width: "100%",
               }}
             >
               <Avatars height={"100px"} width={"100px"} />
@@ -75,8 +76,9 @@ export default function UserCard({ user }: { user: any }) {
             <Box
               sx={{
                 background: "#FCFCFD",
-                p: 3,
-                borderTop: "1px #F2F4F7 solid",width:'100%'
+                px: 2,py:3,
+                borderTop: "1px #F2F4F7 solid",
+                width: "100%",
               }}
             >
               <div
