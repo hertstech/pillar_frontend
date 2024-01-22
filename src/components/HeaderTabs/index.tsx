@@ -47,7 +47,7 @@ export default function HeaderTabs({ heading, links, isLoaded }: TabProps) {
               <Tab
                 sx={{
                   textTransform: "capitalize",
-                  color: value === index ? "#099250" : "#667185",
+                  color: value === index ? "#099250" : "#333333",
                   borderBottom:
                     value === index ? "2px solid #099250" : "0px solid #099250",
                   fontWeight: value === index ? 500 : 400,

@@ -72,10 +72,9 @@ interface client {
 }
 interface PropType {
   client: client;
-  isLoading: boolean;
 }
 
-export default function Demogrphics({ client, isLoading }: PropType) {
+export default function Demogrphics({ client }: PropType) {
   const { id } = useParams();
 
   const [isLoad, setIsLoad] = useState(false);
@@ -238,30 +237,14 @@ export default function Demogrphics({ client, isLoading }: PropType) {
                 marginTop: "1rem",
               }}
             >
-              <TextLabel
-                label="First Name"
-                text={client?.firstName}
-                isLoading={isLoading}
-              />
+              <TextLabel label="First Name" text={client?.firstName} />
 
-              <TextLabel
-                label="Middle Name"
-                text={"Middle Name"}
-                isLoading={isLoading}
-              />
+              <TextLabel label="Middle Name" text={"Middle Name"} />
 
-              <TextLabel
-                label="Last Name"
-                text={client?.lastName}
-                isLoading={isLoading}
-              />
+              <TextLabel label="Last Name" text={client?.lastName} />
             </div>
 
-            <TextLabel
-              label="Gender"
-              text={client?.gender}
-              isLoading={isLoading}
-            />
+            <TextLabel label="Gender" text={client?.gender} />
 
             <div
               style={{
@@ -270,30 +253,14 @@ export default function Demogrphics({ client, isLoading }: PropType) {
                 marginTop: "1rem",
               }}
             >
-              <TextLabel isLoading={isLoading} label="NHR ID" text={NHRID} />
+              <TextLabel label="NHR ID" text={NHRID} />
 
-              <TextLabel
-                isLoading={isLoading}
-                label="Height"
-                text={client?.height + "" + "cm"}
-              />
-              <TextLabel
-                isLoading={isLoading}
-                label="Weight"
-                text={client?.weight + "" + "kg"}
-              />
+              <TextLabel label="Height" text={client?.height + "" + "cm"} />
+              <TextLabel label="Weight" text={client?.weight + "" + "kg"} />
             </div>
 
-            <TextLabel
-              label="Religion"
-              text={client?.religion}
-              isLoading={isLoading}
-            />
-            <TextLabel
-              label="Tribal Mark"
-              text={client?.tribalMarks}
-              isLoading={isLoading}
-            />
+            <TextLabel label="Religion" text={client?.religion} />
+            <TextLabel label="Tribal Mark" text={client?.tribalMarks} />
           </Box>
         </Stack>
 
@@ -317,31 +284,15 @@ export default function Demogrphics({ client, isLoading }: PropType) {
             </Typography>
 
             <div style={{ marginTop: "1rem" }}>
-              <TextLabel
-                label="Address"
-                text={client?.address}
-                isLoading={isLoading}
-              />
-              <TextLabel
-                label="Email Address"
-                text={client?.email || "None"}
-                isLoading={isLoading}
-              />
+              <TextLabel label="Address" text={client?.address} />
+              <TextLabel label="Email Address" text={client?.email || "None"} />
             </div>
 
             <div
               style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)" }}
             >
-              <TextLabel
-                label="State"
-                text={client?.state || "Nill"}
-                isLoading={isLoading}
-              />
-              <TextLabel
-                label="LGA"
-                text={client?.lga || "Nill"}
-                isLoading={isLoading}
-              />
+              <TextLabel label="State" text={client?.state || "Nill"} />
+              <TextLabel label="LGA" text={client?.lga || "Nill"} />
             </div>
 
             <div
@@ -353,19 +304,13 @@ export default function Demogrphics({ client, isLoading }: PropType) {
               <TextLabel
                 label="Date of Birth"
                 text={moment(client?.dateOfBirth).format("DD/MM/YYYY")}
-                isLoading={isLoading}
               />
               <TextLabel
                 label="Age"
                 text={moment(new Date()).diff(client?.dateOfBirth, "years")}
-                isLoading={isLoading}
               />
 
-              <TextLabel
-                label="Phone Number"
-                text={client?.phoneNumber}
-                isLoading={isLoading}
-              />
+              <TextLabel label="Phone Number" text={client?.phoneNumber} />
             </div>
           </Box>
         </Stack>
@@ -400,12 +345,10 @@ export default function Demogrphics({ client, isLoading }: PropType) {
                 <TextLabel
                   label="Full Name"
                   text={client?.parentOne || "Not Available"}
-                  isLoading={isLoading}
                 />
                 <TextLabel
                   label="Phone Number"
                   text={client?.parentOneNumber || "Not Available"}
-                  isLoading={isLoading}
                 />
               </div>
 
@@ -418,12 +361,10 @@ export default function Demogrphics({ client, isLoading }: PropType) {
                 <TextLabel
                   label="NHR ID"
                   text={client?.parentOneNHR_ID || "Not Available"}
-                  isLoading={isLoading}
                 />
                 <TextLabel
                   label="Relationship"
                   text={client?.parentOneRelationship || "Not Available"}
-                  isLoading={isLoading}
                 />
               </div>
             </Box>
@@ -460,12 +401,10 @@ export default function Demogrphics({ client, isLoading }: PropType) {
                 <TextLabel
                   label="Parent Two"
                   text={client?.parentTwo || "Not Available"}
-                  isLoading={isLoading}
                 />
                 <TextLabel
                   label="Phone Number"
                   text={client?.parentTwoNumber || "Not Available"}
-                  isLoading={isLoading}
                 />
               </div>
 
@@ -478,12 +417,10 @@ export default function Demogrphics({ client, isLoading }: PropType) {
                 <TextLabel
                   label="NHR ID"
                   text={client?.parentTwoNHR_ID || "Not Available"}
-                  isLoading={isLoading}
                 />
                 <TextLabel
                   label="Relationship"
                   text={client?.parentTwoRelationship || "Not Available"}
-                  isLoading={isLoading}
                 />
               </div>
             </Box>
@@ -520,12 +457,10 @@ export default function Demogrphics({ client, isLoading }: PropType) {
                 <TextLabel
                   label="Next of Kin"
                   text={client?.nokFullName || "Not Available"}
-                  isLoading={isLoading}
                 />
                 <TextLabel
                   label="Phone Number"
                   text={client?.nokPhoneNumber || "Not Available"}
-                  isLoading={isLoading}
                 />
               </div>
 
@@ -538,12 +473,10 @@ export default function Demogrphics({ client, isLoading }: PropType) {
                 <TextLabel
                   label="NHR ID"
                   text={client?.nokNHR_ID || "Not Available"}
-                  isLoading={isLoading}
                 />
                 <TextLabel
                   label="Relationship"
                   text={client?.nokRelationship || "Not Available"}
-                  isLoading={isLoading}
                 />
               </div>
             </Box>
@@ -574,23 +507,17 @@ export default function Demogrphics({ client, isLoading }: PropType) {
                 marginTop: "1rem",
               }}
             >
-              <TextLabel
-                label="HMO Plan"
-                text={client?.HMOPlan}
-                isLoading={isLoading}
-              />
+              <TextLabel label="HMO Plan" text={client?.HMOPlan} />
             </div>
 
             <div>
               <TextLabel
                 label="Nominated Pharmacy"
                 text={client?.nominatedPharmarcy || "None"}
-                isLoading={isLoading}
               />
               <TextLabel
                 label="Registered Doctor"
                 text={client?.registeredDoctor || "None"}
-                isLoading={isLoading}
               />
             </div>
           </Box>

@@ -31,7 +31,6 @@ import { axiosInstance } from "../../../Utils/axios";
 import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import moment from "moment";
-import { IoTimeOutline } from "react-icons/io5";
 import dayjs from "dayjs";
 
 const title = ["Dr.", "Mrs.", "Ms."];
@@ -298,7 +297,7 @@ export default function Health({ client }: PropType) {
           `/serviceuser-healthsummaryrecord/${id}`
         );
 
-        setRecord(res?.data.result);
+        setRecord(res?.data);
         setIsLoading(false);
       } catch (error) {
         console.error(error);
@@ -1101,8 +1100,7 @@ export default function Health({ client }: PropType) {
                     fontSize={14}
                     sx={{ display: "flex", gap: 1, alignItems: "center" }}
                   >
-                    <IoTimeOutline style={{ height: 15, width: 15 }} /> ID: #
-                    {item.pillar_user_id_fk}
+                    🕒 ID: #{item.pillar_user_id_fk}
                   </Typography>
                 </div>
               </div>

@@ -68,18 +68,19 @@ axiosInstance.interceptors.response.use(
 
         // Retry the original request with the new access token
         return axiosInstance(error.config);
-      } catch (error) {
+      } catch (error: any) {
         // Check if the maximum number of refresh attempts has been reached
         refreshAttempts++;
         if (refreshAttempts >= maxRefreshAttempts) {
           console.log("Exceeded maximum refresh attempts. Logging out...");
 
           // Perform the logout action (you need to implement your logout logic)
-          // Example: store.dispatch(logoutAction());
+          // Example:
           store.dispatch(dispatchLogout());
           // return navigate("/auth/login");
+        } else if (error?.response.data.detail === "expired-token") {
+          store.dispatch(dispatchLogout());
         }
-
         return Promise.reject(error);
       }
     }

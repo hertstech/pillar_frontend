@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { dispatchLogout } from "../redux/userSlice";
 
 export default function Dashboard() {
-  const token = useSelector((state: any) => state.user.access_token);
+  // const token = useSelector((state: any) => state.user.access_token);
   const refreshToken = useSelector(
     (state: any) => state.user.user.refresh_token
   );
@@ -15,7 +15,7 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  if (!token || !refreshToken) {
+  if (refreshToken === null) {
     dispatch(dispatchLogout());
     navigate("/");
   } else {

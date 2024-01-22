@@ -70,8 +70,9 @@ export default function ProfileHome() {
       const res = await axiosInstance.get(`/search-serviceuser/${apiData}`);
 
       navigate(`/dashboard/search-result`, {
-        state: { searchResults: res.data.result },
+        state: { searchResults: res.data },
       });
+      console.log(res.data);
       setIsLoading(false);
     } catch (error: any) {
       Swal.fire({
@@ -111,6 +112,7 @@ export default function ProfileHome() {
       navigate(`/dashboard/search-result`, {
         state: { searchResults: res.data.result },
       });
+      console.log(res.data);
 
       setIsLoading(false);
     } catch (error: any) {

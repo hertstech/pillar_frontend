@@ -237,7 +237,7 @@ export default function Assessment({ client }: PropType) {
           `/serviceuser-medicationrecord/${id}`
         );
 
-        setRecord(res?.data.result);
+        setRecord(res?.data);
         setIsLoading(false);
       } catch (error) {
         console.error(error);

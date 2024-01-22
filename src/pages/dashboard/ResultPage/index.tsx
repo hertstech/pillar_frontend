@@ -6,6 +6,7 @@ import UserCard from "../../../components/UserCard/index.tsx";
 import { useEffect, useState } from "react";
 import UserTable from "../../../components/UserTable/index.tsx";
 import { Link, useLocation } from "react-router-dom";
+import NoResultIllustration from "../../../components/NoResult/index.tsx";
 
 export default function ResultPage() {
   const location = useLocation();
@@ -211,23 +212,29 @@ export default function ResultPage() {
         </ButtonGroup>
       </Stack>
 
-      {isGrid ? (
-        <Box
-          sx={{
-            display: "grid",
-            marginBottom: 10,
-            gap: 3,
-            gridTemplateColumns: {
-              xs: "repeat(1, 1fr)",
-              sm: "repeat(2, 1fr)",
-              md: "repeat(3, 1fr)",
-            },
-          }}
-        >
-          <UserCard user={searchResults} />
-        </Box>
+      {searchResults.length > 0 ? (
+        <>
+          {isGrid ? (
+            <Box
+              sx={{
+                display: "grid",
+                marginBottom: 10,
+                gap: 3,
+                gridTemplateColumns: {
+                  xs: "repeat(1, 1fr)",
+                  sm: "repeat(2, 1fr)",
+                  md: "repeat(3, 1fr)",
+                },
+              }}
+            >
+              <UserCard user={searchResults} />
+            </Box>
+          ) : (
+            <UserTable results={searchResults} />
+          )}
+        </>
       ) : (
-        <UserTable results={searchResults} />
+        <NoResultIllustration />
       )}
     </Box>
   );

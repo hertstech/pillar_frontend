@@ -1,11 +1,9 @@
-import { useState, useEffect } from "react";
 import { Box, Stack, Button } from "@mui/material";
 import { useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import HeaderBreadCrumb from "../../../components/HeaderBreadCrumb";
 import Grids from "/assets/grid.svg";
 import HeaderTabs from "../../../components/HeaderTabs";
-import { axiosInstance } from "../../../Utils/axios";
 import Demogrphics from "./Demogrphics";
 import Health from "./Health";
 import Assessment from "./Medication";
@@ -15,10 +13,6 @@ import Notes from "./Notes";
 import Overview from "./Overview";
 
 export default function Singleuser() {
-  const { id } = useParams();
-
-  const [isLoading, setIsLoading] = useState(false);
-
   const token = useSelector((state: any) => state.user.access_token);
   const client = useSelector((state: any) => state.client.clients.tab1[0]);
 
@@ -31,7 +25,7 @@ export default function Singleuser() {
     },
     {
       label: "Demographics",
-      content: <Demogrphics client={client} isLoading={isLoading} />,
+      content: <Demogrphics client={client} />,
     },
     {
       label: "Health Information",
@@ -54,22 +48,6 @@ export default function Singleuser() {
       content: <Notes client={client} />,
     },
   ];
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      setIsLoading(true);
-      try {
-        await axiosInstance.get(`/search-serviceuser/${id}`);
-
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-        setIsLoading(false);
-      }
-    };
-
-    fetchUserData();
-  }, [id]);
 
   if (!token) {
     navigate("/");

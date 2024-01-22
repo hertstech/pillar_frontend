@@ -2,7 +2,6 @@ import moment from "moment";
 import { Box, Card, Typography } from "@mui/material";
 import Avatars from "../Avatar";
 import { Link } from "react-router-dom";
-import NoResultIllustration from "../NoResult";
 import { useDispatch } from "react-redux";
 import { dispatchClient } from "../../redux/clientSlice";
 
@@ -14,162 +13,105 @@ export default function UserCard({ user }: { user: any }) {
   };
   return (
     <>
-      {user.length > 0 ? (
-        user.map((item: any) => (
-          <Link
-            to={`/dashboard/user/${item.id}`}
-            style={{ textDecoration: "none" }}
-            onClick={handleClick}
-            key={item.id}
+      {user.map((item: any) => (
+        <Link
+          to={`/dashboard/user/${item.id}`}
+          style={{ textDecoration: "none" }}
+          onClick={handleClick}
+          key={item.id}
+        >
+          <Card
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              cursor: "pointer",
+              flexDirection: "column",
+              maxWidth: 320,
+              margin: "auto",
+              borderRadius: 1.5,
+              justifyContent: "space-between",
+              border: "1px #E7E9FB solid",
+            }}
           >
-            <Card
+            <Box
               sx={{
+                background: "white",
                 display: "flex",
                 alignItems: "center",
-                cursor: "pointer",
                 flexDirection: "column",
-                maxWidth: 320,
-                margin: "auto",
-                borderRadius: 1.5,
-                justifyContent: "space-between",
-                border: "1px #E7E9FB solid",
+                px: 3,
+                pt: 3,
               }}
             >
-              <Box
-                sx={{
-                  background: "white",
-                  display: "flex",
-                  alignItems: "center",
-                  flexDirection: "column",
-                  px: 3,
-                  pt: 3,
-                }}
-              >
-                <Avatars height={"100px"} width={"100px"} />
+              <Avatars height={"100px"} width={"100px"} />
 
-                <div style={{ margin: "8px 0px 20px" }}>
-                  <Typography
-                    variant="subtitle2"
-                    fontWeight={600}
-                    fontSize={16}
-                    sx={{ color: "#101828", textAlign: "center" }}
+              <div style={{ margin: "8px 0px 20px" }}>
+                <Typography
+                  variant="subtitle2"
+                  fontWeight={600}
+                  fontSize={16}
+                  sx={{ color: "#101828", textAlign: "center" }}
+                >
+                  {item.firstName + " " + item.lastName}
+                </Typography>
+
+                <Typography fontSize={14} sx={{ textAlign: "center" }}>
+                  <span style={{ color: "##475367", fontWeight: 400 }}>
+                    NHR ID:
+                  </span>
+                  <span
+                    style={{
+                      color: "##475367",
+                      fontWeight: 700,
+                      marginLeft: 4,
+                    }}
                   >
-                    {item.firstName + " " + item.lastName}
-                  </Typography>
+                    {item.id}
+                  </span>
+                </Typography>
+              </div>
+            </Box>
 
-                  <Typography fontSize={14} sx={{ textAlign: "center" }}>
-                    <span style={{ color: "##475367", fontWeight: 400 }}>
-                      NHR ID:
-                    </span>
-                    <span
-                      style={{
-                        color: "##475367",
-                        fontWeight: 700,
-                        marginLeft: 4,
-                      }}
-                    >
-                      {item.id}
-                    </span>
-                  </Typography>
-                </div>
-              </Box>
-
-              <Box
-                sx={{
-                  background: "#FCFCFD",
-                  p: 3,
-                  borderTop: "1px #F2F4F7 solid",
+            <Box
+              sx={{
+                background: "#FCFCFD",
+                p: 3,
+                borderTop: "1px #F2F4F7 solid",
+              }}
+            >
+              <div
+                style={{
+                  marginBottom: 20,
+                  display: "grid",
+                  gridTemplateColumns: "repeat(3, 1fr)",
                 }}
               >
                 <div
                   style={{
-                    marginBottom: 20,
-                    display: "grid",
-                    gridTemplateColumns: "repeat(3, 1fr)",
+                    textAlign: "center",
+                    display: "flex",
+                    flexDirection: "column",
                   }}
                 >
-                  <div
+                  <span
                     style={{
-                      textAlign: "center",
-                      display: "flex",
-                      flexDirection: "column",
+                      fontWeight: 400,
+                      fontSize: 14,
+                      color: "#475367",
                     }}
                   >
-                    <span
-                      style={{
-                        fontWeight: 400,
-                        fontSize: 14,
-                        color: "#475367",
-                      }}
-                    >
-                      Status
-                    </span>
-                    <Typography
-                      sx={{
-                        fontWeight: 700,
-                        fontSize: 16,
-                        color: item.status === "active" ? "#36A150" : "#036B26",
-                        textTransform: "capitalize",
-                      }}
-                    >
-                      active
-                    </Typography>
-                  </div>
-
-                  <div
-                    style={{
-                      textAlign: "center",
-                      display: "flex",
-                      flexDirection: "column",
+                    Status
+                  </span>
+                  <Typography
+                    sx={{
+                      fontWeight: 700,
+                      fontSize: 16,
+                      color: item.status === "active" ? "#36A150" : "#036B26",
+                      textTransform: "capitalize",
                     }}
                   >
-                    <span
-                      style={{
-                        fontWeight: 400,
-                        fontSize: 14,
-                        color: "#475367",
-                      }}
-                    >
-                      Age
-                    </span>
-                    <Typography
-                      sx={{
-                        fontWeight: 700,
-                        fontSize: 16,
-                        color: "#101928",
-                      }}
-                    >
-                      {moment(new Date()).diff(item.dateOfBirth, "years")}Yrs
-                    </Typography>
-                  </div>
-
-                  <div
-                    style={{
-                      textAlign: "center",
-                      display: "flex",
-                      flexDirection: "column",
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontWeight: 400,
-                        fontSize: 14,
-                        color: "#475367",
-                      }}
-                    >
-                      Gender
-                    </span>
-                    <Typography
-                      sx={{
-                        fontWeight: 700,
-                        fontSize: 16,
-                        color: "#101928",
-                        textTransform: "capitalize",
-                      }}
-                    >
-                      {item.gender}
-                    </Typography>
-                  </div>
+                    active
+                  </Typography>
                 </div>
 
                 <div
@@ -183,28 +125,81 @@ export default function UserCard({ user }: { user: any }) {
                     style={{
                       fontWeight: 400,
                       fontSize: 14,
-                      color: "#667185",
+                      color: "#475367",
                     }}
                   >
-                    Address
+                    Age
                   </span>
                   <Typography
                     sx={{
-                      fontWeight: 500,
-                      fontSize: 14,
+                      fontWeight: 700,
+                      fontSize: 16,
                       color: "#101928",
                     }}
                   >
-                    {item.address}
+                    {moment(new Date()).diff(item.dateOfBirth, "years")}Yrs
                   </Typography>
                 </div>
-              </Box>
-            </Card>
-          </Link>
-        ))
-      ) : (
-        <NoResultIllustration />
-      )}
+
+                <div
+                  style={{
+                    textAlign: "center",
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontWeight: 400,
+                      fontSize: 14,
+                      color: "#475367",
+                    }}
+                  >
+                    Gender
+                  </span>
+                  <Typography
+                    sx={{
+                      fontWeight: 700,
+                      fontSize: 16,
+                      color: "#101928",
+                      textTransform: "capitalize",
+                    }}
+                  >
+                    {item.gender}
+                  </Typography>
+                </div>
+              </div>
+
+              <div
+                style={{
+                  textAlign: "center",
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                <span
+                  style={{
+                    fontWeight: 400,
+                    fontSize: 14,
+                    color: "#667185",
+                  }}
+                >
+                  Address
+                </span>
+                <Typography
+                  sx={{
+                    fontWeight: 500,
+                    fontSize: 14,
+                    color: "#101928",
+                  }}
+                >
+                  {item.address}
+                </Typography>
+              </div>
+            </Box>
+          </Card>
+        </Link>
+      ))}
     </>
   );
 }

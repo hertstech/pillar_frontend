@@ -93,6 +93,14 @@ export default function Overview({ client }: PropType) {
 
   const [pulse, setPulse] = React.useState([]);
 
+  // const [activeProblems, setActiveProblems] = React.useState([]);
+
+  // const [recentIncident, setRecentIncident] = React.useState([]);
+
+  // const [repeatedPrescription, setRepeatedPrescription] = React.useState([]);
+
+  // const [allergies, setAllergies] = React.useState([]);
+
   const options = {
     maintainAspectRatio: false,
     responsive: true,
@@ -113,30 +121,71 @@ export default function Overview({ client }: PropType) {
       setIsLoading(true);
 
       try {
-        const res1 = await axiosInstance.get(
-          `serviceuser-bodytemperature/${id}`
-        );
-        const res2 = await axiosInstance.get(`serviceuser-glucoselevel/${id}`);
-        const res3 = await axiosInstance.get(`serviceuser-bloodgroup/${id}`);
-        const res4 = await axiosInstance.get(`serviceuser-genotype/${id}`);
-        const res5 = await axiosInstance.get(`serviceuser-pulserate/${id}`);
-        const res6 = await axiosInstance.get(`serviceuser-bloodpressure/${id}`);
+        const [res1, res2, res3, res4, res5, res6] = await Promise.all([
+          axiosInstance.get(`serviceuser-bodytemperature/${id}`),
+          axiosInstance.get(`serviceuser-glucoselevel/${id}`),
+          axiosInstance.get(`serviceuser-bloodgroup/${id}`),
+          axiosInstance.get(`serviceuser-genotype/${id}`),
+          axiosInstance.get(`serviceuser-pulserate/${id}`),
+          axiosInstance.get(`serviceuser-bloodpressure/${id}`),
+        ]);
 
         setTemp(res1?.data);
         setGlucose(res2?.data);
         setBloodGroup(res3?.data);
         setGenotype(res4?.data);
-        setPulse(res5?.data?.result);
-        setPressure(res6?.data?.result);
+        setPulse(res5?.data);
+        setPressure(res6?.data);
 
         setIsLoading(false);
-      } catch (error) {
-        console.error(error);
+      } catch (errors) {
+        // Handle errors individually if needed
+        console.error(errors);
       }
     };
 
     getOverview();
   }, [id]);
+
+  // useEffect(() => {
+  //   const getOverview = async () => {
+  //     setIsLoading(true);
+
+  //     try {
+  //       const res1 = await axiosInstance.get(
+  //         `serviceuser-bodytemperature/${id}`
+  //       );
+  //       const res2 = await axiosInstance.get(`serviceuser-glucoselevel/${id}`);
+  //       const res3 = await axiosInstance.get(`serviceuser-bloodgroup/${id}`);
+  //       const res4 = await axiosInstance.get(`serviceuser-genotype/${id}`);
+  //       const res5 = await axiosInstance.get(`serviceuser-pulserate/${id}`);
+  //       const res6 = await axiosInstance.get(`serviceuser-bloodpressure/${id}`);
+  //       const res7 = await axiosInstance.get(
+  //         `serviceuser-active-problems/${id}`
+  //       );
+  //       const res8 = await axiosInstance.get(
+  //         `serviceuser-recent-incidents/${id}`
+  //       );
+  //       const res9 = await axiosInstance.get(
+  //         `get-serviceuser-repeated-prescription/${id}`
+  //       );
+  //       // const res10 = await axiosInstance.get(`get-serviceuser-allergies/${id}`);
+
+  //       setTemp(res1?.data);
+  //       setGlucose(res2?.data);
+  //       setBloodGroup(res3?.data);
+  //       setGenotype(res4?.data);
+  //       setPulse(res5?.data);
+  //       setPressure(res6?.data);
+
+  //       setIsLoading(false);
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
+
+  //   getOverview();
+  // }, [id]);
 
   const pressureData = {
     labels: pressure
@@ -328,7 +377,7 @@ export default function Overview({ client }: PropType) {
                   </Typography>
                   <Typography color={"#344054"} sx={{ my: 1.5 }}>
                     <span style={{ fontWeight: 600, fontSize: 20 }}>
-                      {bloodGroup.bloodgroup || "N/A"}
+                      {bloodGroup.bloodType || "N/A"}
                     </span>
                   </Typography>
                   <Typography

@@ -14,7 +14,6 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import moment from "moment";
-import NoResultIllustration from "../NoResult";
 
 const TABLE_HEAD = [
   { id: "name", label: "Name", align: "left" },
@@ -29,7 +28,7 @@ export default function UserTable({ results }: any) {
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   useEffect(() => {
-    setPage(0); 
+    setPage(0);
   }, [results]);
 
   const handleChangePage = (_event: unknown, newPage: number) => {
@@ -55,59 +54,54 @@ export default function UserTable({ results }: any) {
           </TableHead>
 
           <TableBody sx={{ fontWeight: 500, fontSize: 14, color: "#101828" }}>
-            {results.length > 0 ? (
-              results
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row: any) => (
-                  <TableRow key={row.id}>
-                    <Link
-                      to={`/dashboard/user/${row.id}`}
-                      style={{ textDecoration: "none" }}
-                    >
-                      <TableCell sx={{ display: "flex", alignItems: "center" }}>
-                        <Avatar sx={{ mr: 2 }} />
-                        <Typography variant="subtitle2" noWrap>
-                          {row.firstName + " " + row.lastName}
-                        </Typography>
-                      </TableCell>
-                    </Link>
-
-                    <TableCell>{row.id}</TableCell>
-
-                    <TableCell>
-                      <Chip
-                        sx={{
-                          background:
-                            row.status === "active" ? "#FBEAE9" : "#E7F6EC",
-                          color:
-                            row.status === "active" ? "#9E0A05" : "#036B26",
-                          textTransform: "capitalize",
-                        }}
-                        label={"active"}
-                      />
+            {results
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((row: any) => (
+                <TableRow key={row.id}>
+                  <Link
+                    to={`/dashboard/user/${row.id}`}
+                    style={{ textDecoration: "none" }}
+                  >
+                    <TableCell sx={{ display: "flex", alignItems: "center" }}>
+                      <Avatar sx={{ mr: 2 }} />
+                      <Typography variant="subtitle2" noWrap>
+                        {row.firstName + " " + row.lastName}
+                      </Typography>
                     </TableCell>
+                  </Link>
 
-                    <TableCell>
-                      <Chip
-                        sx={{
-                          background: "#F7F9FC",
-                          textTransform: "capitalize",
-                          color: "#344054",
-                        }}
-                        label={row.gender}
-                      />
-                    </TableCell>
+                  <TableCell>{row.id}</TableCell>
 
-                    <TableCell>
-                      {moment(new Date()).diff(row.dateOfBirth, "years")} Years
-                    </TableCell>
+                  <TableCell>
+                    <Chip
+                      sx={{
+                        background:
+                          row.status === "active" ? "#FBEAE9" : "#E7F6EC",
+                        color: row.status === "active" ? "#9E0A05" : "#036B26",
+                        textTransform: "capitalize",
+                      }}
+                      label={"active"}
+                    />
+                  </TableCell>
 
-                    <TableCell>{row.address + " " + row.lga}</TableCell>
-                  </TableRow>
-                ))
-            ) : (
-              <NoResultIllustration />
-            )}
+                  <TableCell>
+                    <Chip
+                      sx={{
+                        background: "#F7F9FC",
+                        textTransform: "capitalize",
+                        color: "#344054",
+                      }}
+                      label={row.gender}
+                    />
+                  </TableCell>
+
+                  <TableCell>
+                    {moment(new Date()).diff(row.dateOfBirth, "years")} Years
+                  </TableCell>
+
+                  <TableCell>{row.address + " " + row.lga}</TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
 

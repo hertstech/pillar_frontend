@@ -20,7 +20,6 @@ import { useParams } from "react-router-dom";
 import { axiosInstance } from "../../../Utils/axios";
 import Swal from "sweetalert2";
 import moment from "moment";
-import { IoTimeOutline } from "react-icons/io5";
 
 interface FormState {
   dateInitiated: string;
@@ -218,7 +217,9 @@ export default function Referral({ client }: PropType) {
           `/serviceuser-allergiesreferrals/${id}`
         );
 
-        setRecord(res?.data.result);
+        setRecord(res?.data);
+
+        console.log(res);
         setIsLoading(false);
       } catch (error) {
         console.error(error);
@@ -496,7 +497,7 @@ export default function Referral({ client }: PropType) {
           </form>
         ))}
 
-        {!hide && record.length === 0 && <NoResultIllustration />}
+        {!hide && record?.length === 0 && <NoResultIllustration />}
 
         {record.map((item, index) => (
           <Box key={index}>
@@ -548,10 +549,7 @@ export default function Referral({ client }: PropType) {
                     label="Care Setting"
                     text={item.careSetting || "None"}
                   />
-                  {/* <TextLabel
-                  label="Referral Source"
-                  text={item.referralSource || "None"}
-                /> */}
+
                   <TextLabel
                     label="Referral Name"
                     text={item.referralName || "None"}
@@ -595,8 +593,7 @@ export default function Referral({ client }: PropType) {
                     fontSize={14}
                     sx={{ display: "flex", gap: 1, alignItems: "center" }}
                   >
-                    <IoTimeOutline style={{ height: 15, width: 15 }} /> ID: #
-                    {item.pillar_user_id_fk}
+                    🕒 ID: #{item.pillar_user_id_fk}
                   </Typography>
                 </div>
               </div>

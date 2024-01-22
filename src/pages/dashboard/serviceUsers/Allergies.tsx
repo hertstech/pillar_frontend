@@ -221,7 +221,7 @@ export default function Allergies({ client }: PropType) {
           `/serviceuser-allergiesrecord/${id}`
         );
 
-        setRecord(res?.data.result);
+        setRecord(res?.data);
         setIsLoading(false);
       } catch (error) {
         console.error(error);
