@@ -232,6 +232,22 @@ export default function Health({ client }: PropType) {
     setHide(false);
   };
 
+  const getHealthRecord = async () => {
+    setIsLoading(true);
+    try {
+      const res = await axiosInstance.get(
+        `/serviceuser-healthsummaryrecord/${id}`
+      );
+
+      console.log(res?.data);
+      setRecord(res?.data);
+      setIsLoading(false);
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+    }
+  };
+
   const handleSubmit = async () => {
     setIsLoading(true);
 
@@ -275,6 +291,8 @@ export default function Health({ client }: PropType) {
         confirmButtonColor: "#099250",
       });
 
+      getHealthRecord();
+
       setFormField([]);
       setHide(false);
     } catch (error: any) {
@@ -290,22 +308,6 @@ export default function Health({ client }: PropType) {
   };
 
   useEffect(() => {
-    const getHealthRecord = async () => {
-      setIsLoading(true);
-      try {
-        const res = await axiosInstance.get(
-          `/serviceuser-healthsummaryrecord/${id}`
-        );
-
-        console.log(res?.data);
-        setRecord(res?.data);
-        setIsLoading(false);
-      } catch (error) {
-        console.error(error);
-        setIsLoading(false);
-      }
-    };
-
     getHealthRecord();
   }, [id]);
 
@@ -910,7 +912,7 @@ export default function Health({ client }: PropType) {
         ))}
 
         {/* INITIAL STATE WHEN EMPTY */}
-        {!hide && record.length < 0 && <NoResultIllustration />}
+        {!hide && record.length <= 0 && <NoResultIllustration />}
 
         {record?.map((item, index) => (
           <Box key={index}>

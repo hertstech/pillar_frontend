@@ -106,6 +106,19 @@ export default function Notes({ client }: PropType) {
     setHide(false);
   };
 
+  const getNotes = async () => {
+    setIsLoading(true);
+    try {
+      const res = await axiosInstance.get(`/serviceuser-addtionalnotes/${id}`);
+
+      setRecord(res?.data);
+      setIsLoading(false);
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+    }
+  };
+
   const handleSubmit = async () => {
     setIsLoading(true);
     const dataObject = formField[0];
@@ -149,6 +162,8 @@ export default function Notes({ client }: PropType) {
         confirmButtonColor: "#099250",
       });
 
+      getNotes();
+
       setFormField([]);
       setHide(false);
     } catch (error: any) {
@@ -164,21 +179,6 @@ export default function Notes({ client }: PropType) {
   };
 
   useEffect(() => {
-    const getNotes = async () => {
-      setIsLoading(true);
-      try {
-        const res = await axiosInstance.get(
-          `/serviceuser-addtionalnotes/${id}`
-        );
-
-        setRecord(res?.data);
-        setIsLoading(false);
-      } catch (error) {
-        console.error(error);
-        setIsLoading(false);
-      }
-    };
-
     getNotes();
   }, [id]);
 
@@ -311,7 +311,7 @@ export default function Notes({ client }: PropType) {
           </form>
         ))}
 
-        {!hide && record.length === 0 && <NoResultIllustration />}
+        {!hide && record.length <= 0 && <NoResultIllustration />}
 
         {record.map((item, index) => (
           <Card sx={{ p: 2 }} key={index}>

@@ -172,6 +172,21 @@ export default function Assessment({ client }: PropType) {
     });
   };
 
+  const getMedication = async () => {
+    setIsLoading(true);
+    try {
+      const res = await axiosInstance.get(
+        `/serviceuser-medicationrecord/${id}`
+      );
+
+      setRecord(res?.data);
+      setIsLoading(false);
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+    }
+  };
+
   const createNewMedication = async () => {
     setIsLoading(true);
     const dataObject = formField[0];
@@ -216,7 +231,10 @@ export default function Assessment({ client }: PropType) {
         confirmButtonColor: "#099250",
       });
 
+      getMedication();
+
       setFormField([]);
+      setHide(false);
     } catch (error: any) {
       error;
       setIsLoading(false);
@@ -230,21 +248,6 @@ export default function Assessment({ client }: PropType) {
   };
 
   useEffect(() => {
-    const getMedication = async () => {
-      setIsLoading(true);
-      try {
-        const res = await axiosInstance.get(
-          `/serviceuser-medicationrecord/${id}`
-        );
-
-        setRecord(res?.data);
-        setIsLoading(false);
-      } catch (error) {
-        console.error(error);
-        setIsLoading(false);
-      }
-    };
-
     getMedication();
   }, [id]);
 
@@ -553,7 +556,7 @@ export default function Assessment({ client }: PropType) {
         ))}
 
         {/* INITIAL STATE WHEN EMPTY */}
-        {!hide && record.length < 0 && <NoResultIllustration />}
+        {!hide && record.length <= 0 && <NoResultIllustration />}
 
         {record?.map((item, index) => (
           <Box key={index}>

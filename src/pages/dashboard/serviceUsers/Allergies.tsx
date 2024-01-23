@@ -157,6 +157,19 @@ export default function Allergies({ client }: PropType) {
     });
   };
 
+  const getAllergy = async () => {
+    setIsLoading(true);
+    try {
+      const res = await axiosInstance.get(`/serviceuser-allergiesrecord/${id}`);
+
+      setRecord(res?.data);
+      setIsLoading(false);
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+    }
+  };
+
   const createNewRecord = async () => {
     setIsLoading(true);
     const dataObject = formField[0];
@@ -200,6 +213,9 @@ export default function Allergies({ client }: PropType) {
         text: `${res.data.message}`,
         confirmButtonColor: "#099250",
       });
+
+      getAllergy();
+
       setFormField([]);
     } catch (error: any) {
       error;
@@ -214,21 +230,6 @@ export default function Allergies({ client }: PropType) {
   };
 
   useEffect(() => {
-    const getAllergy = async () => {
-      setIsLoading(true);
-      try {
-        const res = await axiosInstance.get(
-          `/serviceuser-allergiesrecord/${id}`
-        );
-
-        setRecord(res?.data);
-        setIsLoading(false);
-      } catch (error) {
-        console.error(error);
-        setIsLoading(false);
-      }
-    };
-
     getAllergy();
   }, [id]);
 
@@ -495,7 +496,7 @@ export default function Allergies({ client }: PropType) {
         ))}
 
         {/* INITIAL STATE WHEN EMPTY */}
-        {!hide && record.length < 0 && <NoResultIllustration />}
+        {!hide && record.length <= 0 && <NoResultIllustration />}
 
         {record.map((item, index) => (
           <Box key={index}>

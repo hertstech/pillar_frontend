@@ -27,11 +27,12 @@ export default function Button({
         border: 0,
         outline: "none",
         borderRadius: 6,
-        fontSize:16,
+        fontSize: 16,
         cursor: loading ? "not-allowed" : "pointer",
       }}
       disabled={loading || disabled}
     >
+      {loading && <div className="animateSpin"></div>}
       {title}
     </button>
   );

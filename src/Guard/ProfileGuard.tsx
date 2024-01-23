@@ -10,14 +10,14 @@ export default function ProfileGuard({
 }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  
+  const token = useSelector((state: any) => state.user.access_token);
   const refreshToken = useSelector(
     (state: any) => state.user.user.refresh_token
   );
 
-  if (!refreshToken) {
+  console.log(refreshToken);
+  if (!token || !refreshToken) {
     dispatch(dispatchLogout());
-    // window.location.reload();
     navigate("/auth/login");
   }
   return <>{children}</>;

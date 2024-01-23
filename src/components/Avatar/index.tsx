@@ -7,5 +7,11 @@ interface Style {
 }
 
 export default function Avatars({ height, width, src }: Style) {
-  return <Avatar src={src} alt="User Image" style={{ height, width }} />;
+  return (
+    <Avatar
+      src={src}
+      alt="User Image"
+      style={{ height, width, margin: "auto" }}
+    />
+  );
 }

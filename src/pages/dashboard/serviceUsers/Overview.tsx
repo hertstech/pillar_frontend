@@ -1,4 +1,4 @@
-import { Avatar, Box, Divider, Grid, Stack, Typography } from "@mui/material";
+import { Box, Divider, Grid, Stack, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import {
   Chart as ChartJS,
@@ -14,6 +14,7 @@ import { Line } from "react-chartjs-2";
 import { axiosInstance } from "../../../Utils/axios";
 import { useParams } from "react-router-dom";
 import { ItemLabel } from "../../../components/InputField";
+import Avatars from "../../../components/Avatar";
 
 ChartJS.register(
   LineElement,
@@ -245,38 +246,39 @@ export default function Overview({ client }: PropType) {
                   background: "white",
                   borderRadius: 2,
                   border: "1px #E4E7EC solid",
+                  justifyContent: "space-between",
                 }}
               >
                 <div style={{ padding: 12, borderRight: "1px #F2F4F7 solid" }}>
-                  <Avatar />
-                  <Typography
-                    sx={{
-                      display: "flex",
-                      alignItems: "start",
-                      flexDirection: "column",
-                    }}
-                  >
-                    <span
-                      style={{
-                        color: "#101928",
-                        fontWeight: "600",
-                        fontSize: 18,
-                      }}
-                    >
-                      {client?.firstName} {client?.lastName}
-                    </span>
-                    <span
-                      style={{
-                        color: "#475367",
-                        fontWeight: "400",
-                        fontSize: 14,
-                      }}
-                    >
-                      NHR ID: {NHRID}
-                    </span>
-                  </Typography>
+                  <Avatars height={"150px"} width={"150px"} />
                 </div>
 
+                <Typography
+                  sx={{
+                    display: "grid",
+                    placeContent: "center",
+                  }}
+                >
+                  <span
+                    style={{
+                      color: "#101928",
+                      fontWeight: "600",
+                      fontSize: 18,
+                    }}
+                  >
+                    {client?.firstName} {client?.lastName}
+                  </span>
+
+                  <span
+                    style={{
+                      color: "#475367",
+                      fontWeight: "400",
+                      fontSize: 14,
+                    }}
+                  >
+                    NHR ID: {NHRID}
+                  </span>
+                </Typography>
                 <div
                   style={{
                     display: "flex",
@@ -613,7 +615,7 @@ export default function Overview({ client }: PropType) {
 
               <Divider />
 
-              <div style={{ height: 361, backgroundColor: "#FFF" }}>
+              <div style={{ height: 390, backgroundColor: "#FFF" }}>
                 <Line options={options} data={pressureData} />
               </div>
             </Box>
@@ -652,10 +654,6 @@ export default function Overview({ client }: PropType) {
                       key={index}
                       htmlFor="activity"
                       style={{
-                        background:
-                          item.treatmentStatus === "Pending"
-                            ? "yellow"
-                            : "#EDFCF2",
                         fontSize: 14,
                         fontWeight: 400,
                         margin: "10px 0px",
@@ -739,11 +737,12 @@ export default function Overview({ client }: PropType) {
                     }}
                   >
                     <Typography
-                      sx={{
-                        "&::first-letter": {
-                          textTransform: "uppercase",
-                        },
-                      }}
+                      className="incident"
+                      // sx={{
+                      //   "&::first-letter": {
+                      //     textTransform: "uppercase",
+                      //   },
+                      // }}
                       marginTop={0.5}
                       fontWeight={500}
                       fontSize={14}
