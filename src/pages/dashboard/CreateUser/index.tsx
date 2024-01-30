@@ -306,7 +306,7 @@ export default function CreateUser() {
       </Stack>
       <Box sx={{ pt: 3 }}>
         <Grid container spacing={3} sx={{ pb: 15, px: 2.5 }}>
-          <Grid item xs={12} md={5}>
+          <Grid item xs={12} md={4}>
             <Card
               sx={{
                 py: 2,
@@ -315,6 +315,9 @@ export default function CreateUser() {
                 justifyContent: "space-between",
                 flexDirection: "column",
                 height: "100%",
+                background: "#F7F9FC",
+                border: "none",
+                boxShadow: "none",
               }}
             >
               <Stepper
@@ -371,23 +374,26 @@ export default function CreateUser() {
                 >
                   Need Help?
                 </Typography>
-                <Typography
-                  fontWeight={400}
-                  fontSize={14}
-                  sx={{ color: "#98A2B3", width: 222 }}
+                <span
+                  style={{
+                    color: "#98A2B3",
+                    width: "250px",
+                    display: "block",
+                    fontWeight: 400,
+                  }}
                 >
                   Experiencing any difficulty? Let us know below.
-                </Typography>
+                </span>
                 <Stack alignItems="flex-start" sx={{ mt: 2 }}>
                   <Link
                     href="#"
-                    color="#667185"
                     underline="none"
                     sx={{
-                      borderRadius: 2,
+                      borderRadius: 2.5,
                       px: 2,
                       py: 1,
-                      border: "1px solid #667185",
+                      border: "1px solid #16B364",
+                      color: "#099250",
                     }}
                   >
                     Contact Us
@@ -396,8 +402,31 @@ export default function CreateUser() {
               </Box>
             </Card>
           </Grid>
-          <Grid item xs={12} md={7}>
-            <Card sx={{ p: 3 }}>
+
+          <Grid item xs={12} md={8}>
+            <Card
+              sx={{
+                p: 3,
+                width: "80%",
+                margin: "auto",
+                border: "none",
+                boxShadow: "none",
+              }}
+            >
+              <div style={{ textAlign: "center", marginBottom: 25 }}>
+                <Typography fontWeight={700} color={"#101928"} fontSize={32}>
+                  Create Service User
+                </Typography>
+                <span
+                  style={{
+                    color: "#101928",
+                    fontWeight: 400,
+                  }}
+                >
+                  Enter demographics information below
+                </span>
+              </div>
+
               {steps[activeStep].content}
 
               <Stack direction="row" gap={3} alignItems="center" sx={{ mt: 2 }}>

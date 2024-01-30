@@ -153,7 +153,7 @@ export default function Demogrphics({ client }: PropType) {
         position: "relative",
       }}
     >
-      <div style={{ marginBottom: "0px" }}>
+      {/* <div style={{ marginBottom: "0px" }}>
         <Stack
           direction="row"
           justifyContent="flex-end"
@@ -193,7 +193,7 @@ export default function Demogrphics({ client }: PropType) {
             Update Record
           </Button>
         </Stack>
-      </div>
+      </div> */}
 
       <Box
         sx={{

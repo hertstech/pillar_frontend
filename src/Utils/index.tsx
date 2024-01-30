@@ -49,7 +49,7 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   async (error) => {
-    console.log(error?.response);
+    // console.log(error?.response);
     if (
       error?.response.status === 401 &&
       error?.response.data.detail === "access-token expired"
@@ -114,7 +114,7 @@ axiosInstance.interceptors.response.use(
       });
 
       store.dispatch(dispatchLogout());
-      
+
       <Navigate to="/auth/login" />;
     }
     return Promise.reject(error);

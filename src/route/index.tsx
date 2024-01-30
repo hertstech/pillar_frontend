@@ -9,6 +9,7 @@ import ResultPage from "../pages/dashboard/ResultPage";
 import ProfileHome from "../pages/dashboard/Profile";
 import Singleuser from "../pages/dashboard/serviceUsers";
 import AuthGuard from "../Guard/AuthGuard";
+import CreateRecord from "../pages/dashboard/CreateRecord";
 // import Singleuser from "../pages/dashboard/ServiceUsers";
 
 export const router = createBrowserRouter([
@@ -62,6 +63,10 @@ export const router = createBrowserRouter([
       {
         path: "user/:id",
         element: <Singleuser />,
+      },
+      {
+        path: "user/:id/edit",
+        element: <CreateRecord />,
       },
     ],
   },

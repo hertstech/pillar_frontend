@@ -1,4 +1,12 @@
-import { Box, Chip, Divider, Grid, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Chip,
+  Divider,
+  Grid,
+  Stack,
+  Typography,
+  Avatar,
+} from "@mui/material";
 import React, { useEffect } from "react";
 import {
   Chart as ChartJS,
@@ -14,7 +22,7 @@ import { Line } from "react-chartjs-2";
 import { axiosInstance } from "../../../Utils";
 import { useParams } from "react-router-dom";
 import { ItemLabel } from "../../../components/InputField";
-import Avatars from "../../../components/Avatar";
+// import Avatars from "../../../components/Avatar";
 
 ChartJS.register(
   LineElement,
@@ -212,7 +220,7 @@ export default function Overview({ client }: PropType) {
       .map((x: any) => moment(x.date_created).format("MMM-YYYY")),
     datasets: [
       {
-        label: "SYS",
+        label: "Pulse",
         data: pulse?.map((x: any) => x.bpm),
         fill: false,
         borderColor: "#E31B54",
@@ -248,45 +256,56 @@ export default function Overview({ client }: PropType) {
                   background: "white",
                   borderRadius: 2,
                   border: "1px #E4E7EC solid",
-                  justifyContent: "space-between",
+                  // justifyContent: "space-between",
                 }}
               >
-                <div style={{ padding: 12, borderRight: "1px #F2F4F7 solid" }}>
-                  <Avatars height={"100px"} width={"100px"} />
-                </div>
-
-                <Typography
-                  sx={{
-                    display: "grid",
-                    placeContent: "center",
+                <div
+                  style={{
+                    padding: 12,
+                    borderRight: "1px #F2F4F7 solid",
+                    width: "40%",
                   }}
                 >
-                  <span
-                    style={{
-                      color: "#101928",
-                      fontWeight: "600",
-                      fontSize: 18,
-                    }}
-                  >
-                    {client?.firstName} {client?.lastName}
-                  </span>
+                  <Avatar sx={{ height: "100px", width: "100px" }} />
 
-                  <span
-                    style={{
-                      color: "#475367",
-                      fontWeight: "400",
-                      fontSize: 14,
+                  <Typography
+                    sx={{
+                      // display: "grid",
+                      // placeContent: "center",
+                      display: "flex",
+                      alignItems: "start",
+                      flexDirection: "column",
                     }}
                   >
-                    NHR ID: {NHRID}
-                  </span>
-                </Typography>
+                    <span
+                      style={{
+                        color: "#101928",
+                        fontWeight: "600",
+                        fontSize: 18,
+                      }}
+                    >
+                      {client?.firstName} {client?.lastName}
+                    </span>
+
+                    <span
+                      style={{
+                        color: "#475367",
+                        fontWeight: "400",
+                        fontSize: 14,
+                      }}
+                    >
+                      NHR ID: {NHRID}
+                    </span>
+                  </Typography>
+                </div>
+
                 <div
                   style={{
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "space-between",
                     padding: 12,
+                    width: "60%",
                   }}
                 >
                   <div
@@ -325,7 +344,7 @@ export default function Overview({ client }: PropType) {
                       display: "flex",
                       flexDirection: "row",
                       gap: 30,
-                      justifyContent: "space-between",
+                      // justifyContent: "space-between",
                     }}
                   >
                     <ItemLabel
@@ -594,7 +613,7 @@ export default function Overview({ client }: PropType) {
 
               <Divider />
 
-              <div style={{ height: 361, backgroundColor: "#FFF" }}>
+              <div style={{ height: 400, backgroundColor: "#FFF" }}>
                 <Line options={options} data={pulseData} />
               </div>
             </Box>
@@ -618,7 +637,7 @@ export default function Overview({ client }: PropType) {
 
               <Divider />
 
-              <div style={{ height: 390, backgroundColor: "#FFF" }}>
+              <div style={{ height: 400, backgroundColor: "#FFF" }}>
                 <Line options={options} data={pressureData} />
               </div>
             </Box>
@@ -737,7 +756,7 @@ export default function Overview({ client }: PropType) {
                   ))
               ) : (
                 <>
-                  <p style={{ fontWeight: 400, fontSize: 18, paddingTop: 10 }}>
+                  <p style={{ fontWeight: 400, fontSize: 18, padding: 10 }}>
                     No Active problems Recorded.
                   </p>
                 </>
@@ -803,7 +822,7 @@ export default function Overview({ client }: PropType) {
                 ))
               ) : (
                 <>
-                  <p style={{ fontWeight: 400, fontSize: 18, paddingTop: 10 }}>
+                  <p style={{ fontWeight: 400, fontSize: 18, padding: 10 }}>
                     No Record created yet.
                   </p>
                 </>
@@ -887,7 +906,7 @@ export default function Overview({ client }: PropType) {
                 ))
               ) : (
                 <>
-                  <p style={{ fontWeight: 400, fontSize: 18, paddingTop: 10 }}>
+                  <p style={{ fontWeight: 400, fontSize: 18, padding: 10 }}>
                     No Recurring Prescription currently.
                   </p>
                 </>
@@ -936,7 +955,7 @@ export default function Overview({ client }: PropType) {
                 ))
               ) : (
                 <>
-                  <p style={{ fontWeight: 400, fontSize: 18, paddingTop: 10 }}>
+                  <p style={{ fontWeight: 400, fontSize: 18, padding: 10 }}>
                     No Allergy Record created yet.
                   </p>
                 </>

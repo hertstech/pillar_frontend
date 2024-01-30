@@ -156,9 +156,9 @@ export const createServiceUserSlice = createSlice({
     updateYear: (state, action) => {
       state.year = action.payload;
     },
-    clearNewSlice: (state) => {
-      state = initialState;
-    },
+    // clearNewSlice: (state) => {
+    //   state = initialState;
+    // },
   },
 });
 
@@ -199,7 +199,7 @@ export const {
   updateDay,
   updateMonth,
   updateYear,
-  clearNewSlice,
+  // clearNewSlice,
 } = createServiceUserSlice.actions;
 
 export default createServiceUserSlice.reducer;

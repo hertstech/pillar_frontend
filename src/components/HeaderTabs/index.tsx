@@ -51,7 +51,6 @@ export default function HeaderTabs({ heading, links, isLoaded }: TabProps) {
                   borderBottom:
                     value === index ? "2px solid #087443" : "0px solid #099250",
                   fontWeight: value === index ? 600 : 400,
-                  minHeight: "44px",
                   fontFamily: "fontBold",
                 }}
                 // iconProps={style:{color:'inherit',fill:'inherit}'}
@@ -66,7 +65,7 @@ export default function HeaderTabs({ heading, links, isLoaded }: TabProps) {
           </Tabs>
 
           {/* Display the content of the selected tab */}
-          <Box sx={{ marginTop: 2, px: "20px", mb: 12 }}>
+          <Box sx={{ p: "20px", pb: 12, background: "#F9F9FB" }}>
             {isLoaded ? <Loader /> : links[value].content}
           </Box>
         </Box>
