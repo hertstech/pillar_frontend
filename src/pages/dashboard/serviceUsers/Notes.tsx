@@ -13,7 +13,7 @@ import InputField, { TextLabel } from "../../../components/InputField";
 import Styles from "./styles.module.css";
 import NotePreview from "./NotePreview";
 import Swal from "sweetalert2";
-import { axiosInstance } from "../../../Utils/axios";
+import { axiosInstance } from "../../../Utils";
 import { useParams } from "react-router-dom";
 import moment from "moment";
 
@@ -286,6 +286,13 @@ export default function Notes({ client }: PropType) {
                 gap={5}
               >
                 <Button
+                  variant="outlined"
+                  color="error"
+                  onClick={() => deleteForm(index)}
+                >
+                  Delete Form
+                </Button>
+                <Button
                   sx={{
                     color: "#FFF",
                     outline: "none",
@@ -299,19 +306,14 @@ export default function Notes({ client }: PropType) {
                 >
                   Continue
                 </Button>
-                <Button
-                  variant="outlined"
-                  color="error"
-                  onClick={() => deleteForm(index)}
-                >
-                  Delete Form
-                </Button>
               </Stack>
             </Card>
           </form>
         ))}
 
-        {!hide && record.length <= 0 && <NoResultIllustration />}
+        {!hide && record.length <= 0 && (
+          <NoResultIllustration text={"No record found"} />
+        )}
 
         {record.map((item, index) => (
           <Card sx={{ p: 2 }} key={index}>

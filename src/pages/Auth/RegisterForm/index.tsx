@@ -11,7 +11,7 @@ import Styles from "../sytles.module.css";
 import InputField from "../../../components/InputField";
 import Button from "../../../components/Button";
 import { Link, useNavigate } from "react-router-dom";
-import { axiosInstance } from "../../../Utils/axios";
+import { axiosInstance } from "../../../Utils";
 import Swal from "sweetalert2";
 
 const title = [

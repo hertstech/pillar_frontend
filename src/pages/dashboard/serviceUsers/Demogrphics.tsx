@@ -21,7 +21,7 @@ import StatesData from "../../../../states.json";
 import PhoneField from "../../../components/PhoneInput";
 import Style from "./styles.module.css";
 import { AiOutlineClose } from "react-icons/ai";
-import { axiosInstance } from "../../../Utils/axios";
+import { axiosInstance } from "../../../Utils";
 import Swal from "sweetalert2";
 
 const relations = [
@@ -91,11 +91,11 @@ export default function Demogrphics({ client }: PropType) {
     weight: client?.weight || "",
     parentOne: client?.parentOne || "",
     parentOneNumber: client?.parentOneNumber || "",
-    parentOneNHRID: client?.parentOneNHR_ID || "",
+    parentOneNHR_ID: client?.parentOneNHR_ID || "",
     parentOneRelationship: client?.parentOneRelationship || "",
     parentTwo: client?.parentTwo || "",
     parentTwoNumber: client?.parentTwoNumber || "",
-    parentTwoNHRID: client?.parentTwoNHR_ID || "",
+    parentTwoNHR_ID: client?.parentTwoNHR_ID || "",
     parentTwoRelationship: client?.parentTwoRelationship || "",
     nokFullName: client?.nokFullName || "",
     nokPhoneNumber: client?.nokPhoneNumber || "",
@@ -226,7 +226,7 @@ export default function Demogrphics({ client }: PropType) {
             >
               <Avatar
                 // alt="User image"
-                src="https://via.placeholder.com/43x43"
+                // src="https://via.placeholder.com/43x43"
               />
               Personal Information
             </Typography>
@@ -708,7 +708,7 @@ export default function Demogrphics({ client }: PropType) {
                           type="text"
                           label="NHR ID"
                           name="parentOneNHRID"
-                          value={editForm.parentOneNHRID}
+                          value={editForm.parentOneNHR_ID}
                           onChange={(e: any) =>
                             handleChange("parentOneNHRID", e.target.value)
                           }
@@ -786,7 +786,7 @@ export default function Demogrphics({ client }: PropType) {
                           type="text"
                           label="NHR ID"
                           name="parentTwoNHRID"
-                          value={editForm.parentTwoNHRID}
+                          value={editForm.parentTwoNHR_ID}
                           onChange={(e: any) =>
                             handleChange("parentTwoNHRID", e.target.value)
                           }

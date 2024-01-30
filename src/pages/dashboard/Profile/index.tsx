@@ -10,9 +10,8 @@ import InputField from "../../../components/InputField";
 import Buttons from "../../../components/Button";
 import Styles from "./profile.module.css";
 import { useSelector } from "react-redux";
-import { axiosInstance } from "../../../Utils/axios";
+import { axiosInstance } from "../../../Utils";
 import Swal from "sweetalert2";
-import { TiUserAddOutline } from "react-icons/ti";
 
 export default function ProfileHome() {
   const [searchOptions, setSearchOption] = useState(false);
@@ -74,10 +73,11 @@ export default function ProfileHome() {
       });
       setIsLoading(false);
     } catch (error: any) {
+      console.log(error.response);
       Swal.fire({
         icon: "info",
         title: "Not Found",
-        text: `${error.response.data}`,
+        text: `Incorrect NHR ID, please try again`,
         confirmButtonColor: "#099250",
       });
       setIsLoading(false);
@@ -88,17 +88,31 @@ export default function ProfileHome() {
     e.preventDefault();
     setIsLoading(true);
 
-    if ((firstName === "" && lastName === "") || dateOfBirth === "") {
+    if (firstName === "" && lastName === "") {
       setError("Please input a valid name and date of birth!!!");
       setIsLoading(false);
       return;
     }
 
-    const payload = {
-      firstName,
-      lastName,
-      dateOfBirth,
-    };
+    interface Payload {
+      firstName?: string | null;
+      lastName?: string | null;
+      dateOfBirth?: string | null;
+    }
+
+    const payload: Payload = {};
+
+    if (firstName) {
+      payload.firstName = firstName;
+    }
+
+    if (lastName) {
+      payload.lastName = lastName;
+    }
+
+    if (dateOfBirth) {
+      payload.dateOfBirth = dateOfBirth;
+    }
 
     try {
       const res = await axiosInstance.get("/search-serviceuser", {
@@ -108,7 +122,7 @@ export default function ProfileHome() {
         params: payload,
       });
 
-      // console.log(res.data);
+      console.log(payload);
 
       navigate(`/dashboard/search-result`, {
         state: { searchResults: res.data },
@@ -119,7 +133,7 @@ export default function ProfileHome() {
       Swal.fire({
         icon: "info",
         title: "Not Found",
-        text: `${error.response.data}`,
+        text: `Incorrect User data, please try again`,
         confirmButtonColor: "#099250",
       });
       setIsLoading(false);
@@ -158,7 +172,7 @@ export default function ProfileHome() {
             Search client’s health record here
           </span>
         </div>
-        <Stack alignItems="start">
+        <Stack alignItems="start" px={2}>
           <Link
             to="/dashboard/new"
             style={{
@@ -173,7 +187,28 @@ export default function ProfileHome() {
               alignItems: "center",
             }}
           >
-            <TiUserAddOutline size={30} />
+            <svg
+              width="25"
+              height="24"
+              viewBox="0 0 25 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M11.5 1.25C8.87665 1.25 6.75 3.37665 6.75 6C6.75 8.62335 8.87665 10.75 11.5 10.75C14.1234 10.75 16.25 8.62335 16.25 6C16.25 3.37665 14.1234 1.25 11.5 1.25ZM8.25 6C8.25 4.20507 9.70507 2.75 11.5 2.75C13.2949 2.75 14.75 4.20507 14.75 6C14.75 7.79493 13.2949 9.25 11.5 9.25C9.70507 9.25 8.25 7.79493 8.25 6Z"
+                fill="#099250"
+              />
+              <path
+                d="M8.5 12.25C5.87665 12.25 3.75 14.3766 3.75 17C3.75 19.6234 5.87665 21.75 8.5 21.75H14.5C14.9142 21.75 15.25 21.4142 15.25 21C15.25 20.5858 14.9142 20.25 14.5 20.25H8.5C6.70507 20.25 5.25 18.7949 5.25 17C5.25 15.2051 6.70507 13.75 8.5 13.75H14.5C14.9142 13.75 15.25 13.4142 15.25 13C15.25 12.5858 14.9142 12.25 14.5 12.25H8.5Z"
+                fill="#099250"
+              />
+              <path
+                d="M19.25 14C19.25 13.5858 18.9142 13.25 18.5 13.25C18.0858 13.25 17.75 13.5858 17.75 14V16.25H15.5C15.0858 16.25 14.75 16.5858 14.75 17C14.75 17.4142 15.0858 17.75 15.5 17.75H17.75V20C17.75 20.4142 18.0858 20.75 18.5 20.75C18.9142 20.75 19.25 20.4142 19.25 20V17.75H21.5C21.9142 17.75 22.25 17.4142 22.25 17C22.25 16.5858 21.9142 16.25 21.5 16.25H19.25V14Z"
+                fill="#099250"
+              />
+            </svg>
             <span>Add New Record</span>
           </Link>
         </Stack>
@@ -183,7 +218,11 @@ export default function ProfileHome() {
         <div className={Styles.boxWrapper}>
           <div
             className=""
-            style={{ background: "white", border: "1px #E7E9FB solid" }}
+            style={{
+              background: "white",
+              border: "1px #E7E9FB solid",
+              borderRadius: 12,
+            }}
           >
             <div className={Styles.bttnWrapper}>
               <Button
@@ -196,7 +235,7 @@ export default function ProfileHome() {
                   height: 48,
                   background: searchOptions ? "#FFF" : "#EDFCF2",
                   borderBottom: searchOptions ? "none" : "2px solid #3CCB7F",
-                  borderRadius: 0,
+                  borderTopLeftRadius: 12,
                   fontSize: 18,
                 }}
                 size="large"
@@ -215,7 +254,7 @@ export default function ProfileHome() {
                   height: 48,
                   background: searchOptions ? "#EDFCF2" : "#FFF",
                   borderBottom: searchOptions ? "2px solid #3CCB7F" : "none",
-                  borderRadius: 0,
+                  borderTopRightRadius: 12,
                   fontSize: 18,
                 }}
                 size="large"

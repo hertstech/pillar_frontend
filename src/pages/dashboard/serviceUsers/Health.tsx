@@ -27,7 +27,7 @@ import {
   treatmentType,
 } from "./shared";
 import HealthPreview from "./HealthPreview";
-import { axiosInstance } from "../../../Utils/axios";
+import { axiosInstance } from "../../../Utils";
 import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import moment from "moment";
@@ -886,6 +886,13 @@ export default function Health({ client }: PropType) {
                 gap={5}
               >
                 <Button
+                  variant="outlined"
+                  color="error"
+                  onClick={() => deleteForm(index)}
+                >
+                  Delete Form
+                </Button>
+                <Button
                   sx={{
                     color: "#FFF",
                     outline: "none",
@@ -899,20 +906,15 @@ export default function Health({ client }: PropType) {
                 >
                   Continue
                 </Button>
-                <Button
-                  variant="outlined"
-                  color="error"
-                  onClick={() => deleteForm(index)}
-                >
-                  Delete Form
-                </Button>
               </Stack>
             </Card>
           </form>
         ))}
 
         {/* INITIAL STATE WHEN EMPTY */}
-        {!hide && record.length <= 0 && <NoResultIllustration />}
+        {!hide && record.length <= 0 && (
+          <NoResultIllustration text={"No record found"} />
+        )}
 
         {record?.map((item, index) => (
           <Box key={index}>

@@ -17,7 +17,7 @@ import { Calendar } from "../../../components/CalendarField";
 import InputField, { TextLabel } from "../../../components/InputField";
 import ReferralPReview from "./ReferralPReview";
 import { useParams } from "react-router-dom";
-import { axiosInstance } from "../../../Utils/axios";
+import { axiosInstance } from "../../../Utils";
 import Swal from "sweetalert2";
 import moment from "moment";
 
@@ -473,6 +473,13 @@ export default function Referral({ client }: PropType) {
                 gap={5}
               >
                 <Button
+                  variant="outlined"
+                  color="error"
+                  onClick={() => deleteForm(index)}
+                >
+                  Delete Form
+                </Button>
+                <Button
                   sx={{
                     color: "#FFF",
                     outline: "none",
@@ -486,19 +493,14 @@ export default function Referral({ client }: PropType) {
                 >
                   Continue
                 </Button>
-                <Button
-                  variant="outlined"
-                  color="error"
-                  onClick={() => deleteForm(index)}
-                >
-                  Delete Form
-                </Button>
               </Stack>
             </Card>
           </form>
         ))}
 
-        {!hide && record?.length <= 0 && <NoResultIllustration />}
+        {!hide && record?.length <= 0 && (
+          <NoResultIllustration text={"No record found"} />
+        )}
 
         {record.map((item, index) => (
           <Box key={index}>

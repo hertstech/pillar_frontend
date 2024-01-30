@@ -47,13 +47,14 @@ export default function HeaderTabs({ heading, links, isLoaded }: TabProps) {
               <Tab
                 sx={{
                   textTransform: "capitalize",
-                  color: value === index ? "#099250" : "#344054",
+                  color: value === index ? "#087443" : "#344054",
                   borderBottom:
-                    value === index ? "2px solid #099250" : "0px solid #099250",
+                    value === index ? "2px solid #087443" : "0px solid #099250",
                   fontWeight: value === index ? 600 : 400,
                   minHeight: "44px",
                   fontFamily: "fontBold",
                 }}
+                // iconProps={style:{color:'inherit',fill:'inherit}'}
                 key={index}
                 label={tab.label}
                 icon={tab.icon}

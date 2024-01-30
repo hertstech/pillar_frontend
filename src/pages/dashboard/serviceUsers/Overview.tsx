@@ -1,4 +1,4 @@
-import { Box, Divider, Grid, Stack, Typography } from "@mui/material";
+import { Box, Chip, Divider, Grid, Stack, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import {
   Chart as ChartJS,
@@ -11,7 +11,7 @@ import {
 } from "chart.js";
 import moment from "moment";
 import { Line } from "react-chartjs-2";
-import { axiosInstance } from "../../../Utils/axios";
+import { axiosInstance } from "../../../Utils";
 import { useParams } from "react-router-dom";
 import { ItemLabel } from "../../../components/InputField";
 import Avatars from "../../../components/Avatar";
@@ -61,6 +61,7 @@ interface allergyResponse {
   reaction: string;
   reactionType: string;
   substance: string;
+  date_created: string;
 }
 
 interface activeProblemsResponse {
@@ -81,6 +82,7 @@ interface prescriptionResponse {
   frequencyType: string;
   frequencyNumber: string;
   dosagemeasurement: string;
+  medicationRoute: string;
 }
 
 interface incidentResponse {
@@ -250,7 +252,7 @@ export default function Overview({ client }: PropType) {
                 }}
               >
                 <div style={{ padding: 12, borderRight: "1px #F2F4F7 solid" }}>
-                  <Avatars height={"150px"} width={"150px"} />
+                  <Avatars height={"100px"} width={"100px"} />
                 </div>
 
                 <Typography
@@ -345,6 +347,7 @@ export default function Overview({ client }: PropType) {
             <Stack
               sx={{
                 display: "grid",
+                gap: 2,
                 gridTemplateColumns: {
                   xs: "repeat(1, 1fr)",
                   lg: "repeat(2, 1fr)",
@@ -360,7 +363,7 @@ export default function Overview({ client }: PropType) {
                   p: 2,
                   gap: 2,
                   background: "white",
-                  borderTopLeftRadius: 6,
+                  borderRadius: 2,
                 }}
               >
                 <div className="">
@@ -391,14 +394,14 @@ export default function Overview({ client }: PropType) {
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
+                      fillRule="evenodd"
+                      clipRule="evenodd"
                       d="M11.552 3.36039C12.128 2.75439 12.5 2.40039 12.5 2.40039C12.63 2.83639 12.78 3.25039 12.945 3.64639C13.919 5.98139 15.433 7.66639 16.781 9.16639C18.353 10.9164 19.7 12.4144 19.7 14.4004C19.7 16.3099 18.9415 18.1413 17.5912 19.4916C16.241 20.8418 14.4096 21.6004 12.5 21.6004C10.5905 21.6004 8.75914 20.8418 7.40888 19.4916C6.05862 18.1413 5.30005 16.3099 5.30005 14.4004C5.30005 10.4024 9.59605 5.42039 11.552 3.36039ZM12.047 4.58639C11.2767 5.42005 10.5446 6.28828 9.85305 7.18839C8.98005 8.32839 8.12905 9.59839 7.50005 10.8724C6.86505 12.1604 6.50005 13.3664 6.50005 14.4004C6.50005 14.4004 9.50005 16.2004 12.5 15.0004C15.5 13.8004 18.5 14.4004 18.5 14.4004C18.5 12.9604 17.545 11.8124 15.883 9.96039L15.847 9.92239C14.6 8.53239 13.1 6.86639 12.047 4.58639Z"
                       fill="#98A2B3"
                     />
                     <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
+                      fillRule="evenodd"
+                      clipRule="evenodd"
                       d="M8.36298 11.7316C9.34698 9.76159 10.423 8.42759 10.875 7.97559L11.725 8.82559C11.377 9.17259 10.371 10.3976 9.43598 12.2686L8.36298 11.7316Z"
                       fill="#98A2B3"
                     />
@@ -415,7 +418,7 @@ export default function Overview({ client }: PropType) {
                   p: 2,
                   gap: 2,
                   background: "white",
-                  borderTopRightRadius: 6,
+                  borderRadius: 2,
                 }}
               >
                 <div className="">
@@ -446,8 +449,8 @@ export default function Overview({ client }: PropType) {
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
+                      fillRule="evenodd"
+                      clipRule="evenodd"
                       d="M12.5 2.40039C12.5 2.40039 12.128 2.75439 11.552 3.36039C9.596 5.42039 5.3 10.4024 5.3 14.4004C5.3 16.3099 6.05857 18.1413 7.40883 19.4916C8.7591 20.8418 10.5904 21.6004 12.5 21.6004C14.4096 21.6004 16.2409 20.8418 17.5912 19.4916C18.9414 18.1413 19.7 16.3099 19.7 14.4004C19.7 12.4159 18.3551 10.9187 16.7846 9.17042L16.781 9.16639C15.433 7.66639 13.919 5.98139 12.945 3.64639C12.78 3.25039 12.63 2.83639 12.5 2.40039ZM11.5 8.81316H13.2052V10.8132H15.2901V12.5184H13.2052V14.8132H11.5V12.5184H9.49995V10.8132H11.5V8.81316ZM9.49995 15.8132H15.2901V17.4791H9.49995V15.8132Z"
                       fill="#98A2B3"
                     />
@@ -464,7 +467,7 @@ export default function Overview({ client }: PropType) {
                   p: 2,
                   gap: 2,
                   background: "white",
-                  borderBottomLeftRadius: 6,
+                  borderRadius: 2,
                 }}
               >
                 <div className="">
@@ -517,7 +520,7 @@ export default function Overview({ client }: PropType) {
                   p: 2,
                   gap: 2,
                   background: "white",
-                  borderBottomRightRadius: 6,
+                  borderRadius: 2,
                 }}
               >
                 <div className="">
@@ -551,8 +554,8 @@ export default function Overview({ client }: PropType) {
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
+                      fillRule="evenodd"
+                      clipRule="evenodd"
                       d="M9.99197 14.8683L9.99097 13.9783L9.98797 10.8733L9.98297 4.66926C9.98197 3.18926 11.1 1.98926 12.481 1.98926C13.861 1.98726 14.982 3.18526 14.983 4.66526L14.988 10.8683L14.991 13.9753V14.8643C15.6383 15.3817 16.109 16.0874 16.3379 16.8839C16.5668 17.6804 16.5426 18.5283 16.2688 19.3105C15.9949 20.0927 15.4849 20.7705 14.8092 21.2503C14.1335 21.73 13.3254 21.9881 12.4967 21.9888C11.6679 21.9894 10.8595 21.7327 10.183 21.254C9.50648 20.7753 8.99537 20.0983 8.72028 19.3165C8.44518 18.5348 8.41969 17.6869 8.64732 16.8901C8.87495 16.0932 9.34546 15.3867 9.99197 14.8683ZM11.979 10.6993C12.577 10.8543 13.259 11.0303 13.989 11.0183L13.988 9.97526H12.988C12.8554 9.97539 12.7281 9.92284 12.6343 9.82917C12.5404 9.73549 12.4876 9.60837 12.4875 9.47576C12.4873 9.34315 12.5399 9.21592 12.6336 9.12206C12.7272 9.0282 12.8544 8.97539 12.987 8.97526H13.987L13.986 7.97526H12.986C12.8534 7.97526 12.7262 7.92258 12.6324 7.82881C12.5387 7.73505 12.486 7.60787 12.486 7.47526C12.486 7.34265 12.5387 7.21548 12.6324 7.12171C12.7262 7.02794 12.8534 6.97526 12.986 6.97526H13.986L13.984 5.97526H12.984C12.8514 5.97526 12.7242 5.92258 12.6304 5.82881C12.5367 5.73505 12.484 5.60787 12.484 5.47526C12.484 5.34265 12.5367 5.21548 12.6304 5.12171C12.7242 5.02794 12.8514 4.97526 12.984 4.97526H13.984V4.66526C13.982 3.77826 13.31 3.05926 12.482 3.06026C11.653 3.06026 10.982 3.78026 10.983 4.66826L10.988 10.4883C11.281 10.5183 11.614 10.6053 11.979 10.6993Z"
                       fill="#98A2B3"
                     />
@@ -641,57 +644,96 @@ export default function Overview({ client }: PropType) {
 
             <Divider />
 
-            <Box height={192} px={2}>
+            <Box height={223}>
               {activeProblems.length > 0 ? (
                 activeProblems
-                  ?.slice(0, 3)
-                  .filter(
+                  ?.filter(
                     (activeProblems) =>
                       activeProblems.treatmentStatus === "Pending" || "Active"
                   )
                   .map((item, index) => (
-                    <label
+                    <div
                       key={index}
-                      htmlFor="activity"
                       style={{
                         fontSize: 14,
-                        fontWeight: 400,
-                        margin: "10px 0px",
                         borderRadius: 3,
-                        padding: 5,
+                        background: index % 2 === 0 ? "white" : "#FCFCFD",
+                        padding: 10,
                       }}
                     >
-                      <Typography
-                        sx={{
-                          "&::first-letter": {
-                            textTransform: "uppercase",
-                          },
-                        }}
-                        marginTop={0.5}
-                        fontWeight={400}
-                        fontSize={14}
-                        display={"flex"}
-                        justifyContent={"space-between"}
-                      >
-                        <span style={{ fontWeight: 600 }} color="#191919">
-                          {item.severity} - {item.primaryDiagnosis}
-                        </span>
-                      </Typography>
                       <div
                         style={{
                           display: "flex",
                           justifyContent: "space-between",
+                          flexDirection: "row",
+                          alignItems: "center",
                         }}
                       >
-                        <span>
-                          {moment(item.date_created).format("DD-MMM-YYYY")}
-                        </span>
-                        <span>
-                          By {item.title}
-                          {item?.reading}
-                        </span>
+                        <Typography
+                          sx={{
+                            "&::first-letter": {
+                              textTransform: "uppercase",
+                            },
+                          }}
+                          fontWeight={500}
+                          fontSize={14}
+                          display={"flex"}
+                          justifyContent={"space-between"}
+                        >
+                          {item.primaryDiagnosis}
+                        </Typography>
+
+                        <Chip
+                          sx={{
+                            background:
+                              item.treatmentStatus === "Active"
+                                ? "#36A1500A"
+                                : "#FEF6E7",
+                            color:
+                              item.treatmentStatus === "Active"
+                                ? "#36A150"
+                                : "#AD6F07",
+                            textTransform: "capitalize",
+                            fontWeight: 600,
+                          }}
+                          label={item.treatmentStatus}
+                        />
                       </div>
-                    </label>
+
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          flexDirection: "row",
+                        }}
+                      >
+                        <span>{item.severity}</span>
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                          }}
+                        >
+                          <span>
+                            By: {item.title}
+                            {item?.reading}
+                          </span>
+
+                          <span
+                            style={{
+                              height: 5,
+                              width: 5,
+                              borderRadius: "50%",
+                              background: "#065474",
+                              margin: "0px 5px",
+                            }}
+                          ></span>
+
+                          <span>{moment(item.date_created).format("l")}</span>
+                        </div>
+                      </div>
+                    </div>
                   ))
               ) : (
                 <>
@@ -723,26 +765,27 @@ export default function Overview({ client }: PropType) {
 
             <Divider />
 
-            <Box height={192} px={3}>
+            <Box height={223}>
               {recentIncident.length > 0 ? (
                 recentIncident.slice(0, 3).map((item, index) => (
-                  <label
+                  <div
                     key={index}
-                    htmlFor="activity"
                     style={{
                       color: "#344054",
                       fontSize: 14,
                       fontWeight: 400,
-                      margin: "10px 0px",
+                      background: index % 2 === 0 ? "white" : "#FCFCFD",
+                      padding: 10,
                     }}
                   >
                     <Typography
                       className="incident"
-                      // sx={{
-                      //   "&::first-letter": {
-                      //     textTransform: "uppercase",
-                      //   },
-                      // }}
+                      sx={{
+                        "&::first-letter": {
+                          textTransform: "uppercase",
+                        },
+                        textTransform: "capitalize",
+                      }}
                       marginTop={0.5}
                       fontWeight={500}
                       fontSize={14}
@@ -756,7 +799,7 @@ export default function Overview({ client }: PropType) {
                     <span style={{ fontWeight: 500 }}>
                       {moment(item.date_created).format("DD/MM/YYYY")}
                     </span>
-                  </label>
+                  </div>
                 ))
               ) : (
                 <>
@@ -788,44 +831,59 @@ export default function Overview({ client }: PropType) {
 
             <Divider />
 
-            <Box height={192} px={3}>
+            <Box height={223}>
               {repeatedPrescription?.length > 0 ? (
-                repeatedPrescription?.slice(0, 3).map((item, index) => (
-                  <label
+                repeatedPrescription?.map((item, index) => (
+                  <div
                     key={index}
-                    htmlFor="activity"
                     style={{
                       color: "#344054",
                       fontSize: 14,
-                      fontWeight: 400,
-                      margin: "10px 0px",
+                      borderRadius: 3,
+                      background: index % 2 === 0 ? "white" : "#FCFCFD",
+                      padding: 10,
                     }}
                   >
-                    <span style={{ fontWeight: 500 }}>
-                      {item.medicationName} (
-                      {`${item.dosage}${item.dosagemeasurement}, ${item.frequencyNumber} ${item.frequencyType}`}
-                      )
-                    </span>
-                    <Typography
-                      sx={{
-                        "&::first-letter": {
-                          textTransform: "uppercase",
-                        },
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        flexDirection: "row",
                       }}
-                      marginTop={0.5}
-                      fontWeight={400}
-                      fontSize={14}
-                      color={"#667185"}
-                      display={"flex"}
-                      justifyContent={"space-between"}
                     >
+                      <Typography
+                        sx={{
+                          "&::first-letter": {
+                            textTransform: "uppercase",
+                          },
+                        }}
+                        marginTop={0.5}
+                        fontWeight={400}
+                        fontSize={14}
+                        color={"#667185"}
+                      >
+                        {item.medicationName}{" "}
+                        {`${item.dosage} ${item.dosagemeasurement}`}
+                      </Typography>
                       <span>
-                        {moment(item.startDate).format("DD/MMM/YYYY")} -
-                        {moment(item.endDate).format("DD/MMM/YYYY")}
-                      </span>{" "}
-                      <span>By {item.prescriber}</span>
-                    </Typography>
-                  </label>
+                        {moment(item.startDate).format("l")} -
+                        {moment(item.endDate).format("l")}
+                      </span>
+                    </div>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        flexDirection: "row",
+                      }}
+                    >
+                      <span style={{ fontWeight: 500 }}>
+                        {`${item.dosage}${item.dosagemeasurement}, (${item.frequencyNumber} ${item.frequencyType}) - ${item.medicationRoute}`}
+                      </span>
+                      <span>By: {item.prescriber}</span>
+                    </div>
+                  </div>
                 ))
               ) : (
                 <>
@@ -857,37 +915,24 @@ export default function Overview({ client }: PropType) {
 
             <Divider />
 
-            <Box height={192} px={3}>
+            <Box height={223}>
               {allergies.length > 0 ? (
                 allergies.map((item, index) => (
-                  <label
+                  <div
                     key={index}
-                    htmlFor="activity"
                     style={{
                       color: "#344054",
                       fontSize: 14,
-                      fontWeight: 400,
-                      margin: "10px 0px",
+                      display: "grid",
+                      gridTemplateColumns: "repeat(3, 1fr)",
+                      background: index % 2 === 0 ? "white" : "#FCFCFD",
+                      padding: 10,
                     }}
                   >
-                    <span style={{ fontWeight: 500 }}>{item.substance}</span>
-                    <Typography
-                      sx={{
-                        "&::first-letter": {
-                          textTransform: "uppercase",
-                        },
-                      }}
-                      marginTop={0.5}
-                      fontWeight={400}
-                      fontSize={14}
-                      color={"#667185"}
-                      display={"flex"}
-                      justifyContent={"space-between"}
-                    >
-                      <span>{item.reaction}</span>{" "}
-                      <span>{item.reactionType}</span>
-                    </Typography>
-                  </label>
+                    <ItemLabel label="Substance" text={item.substance} />
+                    <ItemLabel label="Reaction" text={item.reaction} />
+                    <ItemLabel label="Reaction Type" text={item.reactionType} />
+                  </div>
                 ))
               ) : (
                 <>

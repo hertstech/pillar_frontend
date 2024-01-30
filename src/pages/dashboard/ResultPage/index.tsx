@@ -1,15 +1,13 @@
-import { Box, Button, ButtonGroup, Stack } from "@mui/material";
-import HeaderBreadCrumb from "../../../components/HeaderBreadCrumb/index.tsx";
-import Users from "/assets/users.svg";
-import Grids from "/assets/grid.svg";
+import { Box, MenuItem, Select, Stack } from "@mui/material";
 import UserCard from "../../../components/UserCard/index.tsx";
 import { useEffect, useState } from "react";
 import UserTable from "../../../components/UserTable/index.tsx";
-import { Link, useLocation } from "react-router-dom";
-import NoResultIllustration from "../../../components/NoResult/index.tsx";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 export default function ResultPage() {
   const location = useLocation();
+
+  const navigate = useNavigate();
 
   const [searchResults, setSearchResults] = useState([]);
 
@@ -28,232 +26,166 @@ export default function ResultPage() {
           alignItems: "center",
           flexDirection: "row",
           justifyContent: "space-between",
+          borderBottom: "1px #E7E9FB solid",
         }}
       >
-        <HeaderBreadCrumb
-          heading="Results"
-          links={[
-            { label: "Dashboard", href: "/dashboard", icon: Grids },
-            { label: "Clients", href: "", icon: Users },
-            { label: "Search results", href: "" },
-          ]}
-        />
-        <Stack alignItems="start">
+        <Stack p={2} sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+          <div
+            style={{ display: "flex", gap: 8, cursor: "pointer" }}
+            onClick={() => {
+              navigate(-1);
+            }}
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 18 18"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect width="18" height="18" fill="#1E1E1E" />
+              <g id="Home" clip-path="url(#clip0_1481_37234)">
+                <rect
+                  width="375"
+                  height="812"
+                  transform="translate(-25 -49)"
+                  fill="#FCFCFD"
+                />
+                <g id="top">
+                  <mask id="path-1-inside-1_1481_37234" fill="white">
+                    <path d="M-25 -9H350V31H-25V-9Z" />
+                  </mask>
+                  <path
+                    d="M350 30.5H-25V31.5H350V30.5Z"
+                    fill="#E7E9FB"
+                    mask="url(#path-1-inside-1_1481_37234)"
+                  />
+                  <g id="title">
+                    <g id="Frame 1000007521">
+                      <g id="Hicon / Linear / Left Circle 1">
+                        <rect
+                          width="20"
+                          height="20"
+                          transform="translate(-1 -1)"
+                          fill="white"
+                        />
+                        <g id="Left Circle 1">
+                          <path
+                            id="Vector"
+                            d="M12.3333 9.62484C12.6785 9.62484 12.9583 9.34502 12.9583 8.99984C12.9583 8.65466 12.6785 8.37484 12.3333 8.37484V9.62484ZM7.89333 12.7771C8.13849 13.0201 8.53422 13.0183 8.7772 12.7731C9.02019 12.528 9.01842 12.1322 8.77326 11.8893L7.89333 12.7771ZM7.15798 11.1683L7.59795 10.7244L7.59795 10.7244L7.15798 11.1683ZM7.15798 6.83138L6.71801 6.38747L6.71801 6.38747L7.15798 6.83138ZM8.77326 6.11041C9.01842 5.86743 9.02019 5.4717 8.7772 5.22654C8.53422 4.98137 8.13849 4.97961 7.89333 5.22259L8.77326 6.11041ZM5.67989 9.20873L5.0599 9.28775L5.0599 9.28775L5.67989 9.20873ZM5.67989 8.79095L5.0599 8.71192L5.0599 8.71192L5.67989 8.79095ZM16.7083 8.99984C16.7083 13.257 13.2572 16.7082 8.99996 16.7082V17.9582C13.9475 17.9582 17.9583 13.9474 17.9583 8.99984H16.7083ZM8.99996 16.7082C4.74276 16.7082 1.29163 13.257 1.29163 8.99984H0.041626C0.041626 13.9474 4.05241 17.9582 8.99996 17.9582V16.7082ZM1.29163 8.99984C1.29163 4.74264 4.74276 1.2915 8.99996 1.2915V0.0415039C4.05241 0.0415039 0.041626 4.05229 0.041626 8.99984H1.29163ZM8.99996 1.2915C13.2572 1.2915 16.7083 4.74264 16.7083 8.99984H17.9583C17.9583 4.05229 13.9475 0.0415039 8.99996 0.0415039V1.2915ZM12.3333 8.37484H6.33329V9.62484H12.3333V8.37484ZM8.77326 11.8893L7.59795 10.7244L6.71801 11.6122L7.89333 12.7771L8.77326 11.8893ZM7.59794 7.27529L8.77326 6.11041L7.89333 5.22259L6.71801 6.38747L7.59794 7.27529ZM7.59795 10.7244C7.11886 10.2496 6.79773 9.92995 6.58182 9.6611C6.37382 9.4021 6.31539 9.2515 6.29987 9.1297L5.0599 9.28775C5.11654 9.73208 5.32851 10.0968 5.6072 10.4438C5.87797 10.781 6.25981 11.1581 6.71801 11.6122L7.59795 10.7244ZM6.71801 6.38747C6.25981 6.8416 5.87797 7.21871 5.6072 7.55587C5.32851 7.90289 5.11654 8.2676 5.0599 8.71192L6.29987 8.86997C6.31539 8.74817 6.37382 8.59757 6.58182 8.33858C6.79773 8.06972 7.11886 7.75011 7.59795 7.27528L6.71801 6.38747ZM6.29987 9.1297C6.29437 9.08658 6.29163 9.04321 6.29163 8.99984L5.04163 8.99984C5.04163 9.096 5.04772 9.19216 5.0599 9.28775L6.29987 9.1297ZM6.29163 8.99984C6.29163 8.95647 6.29437 8.91309 6.29987 8.86997L5.0599 8.71192C5.04772 8.80751 5.04163 8.90367 5.04163 8.99984L6.29163 8.99984ZM6.33329 8.37484H5.66663V9.62484H6.33329V8.37484Z"
+                            fill="#344054"
+                          />
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                </g>
+              </g>
+              <defs>
+                <clipPath id="clip0_1481_37234">
+                  <rect
+                    width="375"
+                    height="812"
+                    fill="white"
+                    transform="translate(-25 -49)"
+                  />
+                </clipPath>
+              </defs>
+            </svg>
+            <span>Go Back</span>
+          </div>
+
+          <div
+            style={{
+              color: "#101928",
+              fontWeight: 700,
+              fontSize: 18,
+              fontFamily: "fontBold",
+            }}
+          >
+            Search Results
+          </div>
+        </Stack>
+
+        <Stack alignItems="start" px={2}>
           <Link
             style={{
-              fontWeight: 500,
-              color: "#FFF",
+              fontWeight: 600,
+              color: "#F6FEF9",
               textDecoration: "none",
               borderRadius: 10,
               display: "flex",
               background: "#099250",
               padding: 16,
               gap: 5,
+              alignItems: "center",
             }}
             to="/dashboard/new"
           >
             <svg
-              width="24"
+              width="25"
               height="24"
-              viewBox="0 0 24 24"
+              viewBox="0 0 25 24"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <g id="button-icon">
-                <g id="icon">
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M7 7C7 4.23858 9.23858 2 12 2C14.7614 2 17 4.23858 17 7C17 9.76142 14.7614 12 12 12C9.23858 12 7 9.76142 7 7ZM12 4C10.3431 4 9 5.34315 9 7C9 8.65685 10.3431 10 12 10C13.6569 10 15 8.65685 15 7C15 5.34315 13.6569 4 12 4Z"
-                    fill="white"
-                  />
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M6.55543 21.9174C8.22982 22.6502 10.4595 23 12 23C13.5405 23 15.7702 22.6502 17.4446 21.9174C18.2666 21.5576 19.1025 21.0427 19.5882 20.2974C19.8437 19.9054 20.0052 19.4437 19.9999 18.9282C19.9946 18.4174 19.8266 17.9281 19.5441 17.4728C18.1747 15.2656 15.3732 13 12 13C8.62679 13 5.82532 15.2656 4.45591 17.4728C4.17344 17.9281 4.00537 18.4174 4.00013 18.9282C3.99483 19.4437 4.15632 19.9054 4.41175 20.2974C4.89745 21.0427 5.73343 21.5576 6.55543 21.9174ZM6.00002 18.9487C6.00077 18.8757 6.02372 18.7394 6.15539 18.5272C7.27754 16.7185 9.51566 15 12 15C14.4843 15 16.7225 16.7185 17.8446 18.5272C17.9763 18.7394 17.9992 18.8757 18 18.9487C18.0007 19.017 17.9831 19.0973 17.9126 19.2055C17.7465 19.4605 17.3429 19.7787 16.6427 20.0852C15.2726 20.6848 13.3268 21 12 21C10.6732 21 8.72744 20.6848 7.35732 20.0852C6.65707 19.7787 6.25354 19.4605 6.08736 19.2055C6.01686 19.0973 5.99932 19.017 6.00002 18.9487Z"
-                    fill="white"
-                  />
-                  <path
-                    d="M21 3C21 2.44772 20.5523 2 20 2C19.4477 2 19 2.44772 19 3V4H18C17.4477 4 17 4.44772 17 5C17 5.55228 17.4477 6 18 6H19V7C19 7.55228 19.4477 8 20 8C20.5523 8 21 7.55228 21 7V6H22C22.5523 6 23 5.55228 23 5C23 4.44772 22.5523 4 22 4H21V3Z"
-                    fill="white"
-                  />
-                </g>
-              </g>
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M11.5 1.25C8.87665 1.25 6.75 3.37665 6.75 6C6.75 8.62335 8.87665 10.75 11.5 10.75C14.1234 10.75 16.25 8.62335 16.25 6C16.25 3.37665 14.1234 1.25 11.5 1.25ZM8.25 6C8.25 4.20507 9.70507 2.75 11.5 2.75C13.2949 2.75 14.75 4.20507 14.75 6C14.75 7.79493 13.2949 9.25 11.5 9.25C9.70507 9.25 8.25 7.79493 8.25 6Z"
+                fill="#F6FEF9"
+              />
+              <path
+                d="M8.5 12.25C5.87665 12.25 3.75 14.3766 3.75 17C3.75 19.6234 5.87665 21.75 8.5 21.75H14.5C14.9142 21.75 15.25 21.4142 15.25 21C15.25 20.5858 14.9142 20.25 14.5 20.25H8.5C6.70507 20.25 5.25 18.7949 5.25 17C5.25 15.2051 6.70507 13.75 8.5 13.75H14.5C14.9142 13.75 15.25 13.4142 15.25 13C15.25 12.5858 14.9142 12.25 14.5 12.25H8.5Z"
+                fill="#F6FEF9"
+              />
+              <path
+                d="M19.25 14C19.25 13.5858 18.9142 13.25 18.5 13.25C18.0858 13.25 17.75 13.5858 17.75 14V16.25H15.5C15.0858 16.25 14.75 16.5858 14.75 17C14.75 17.4142 15.0858 17.75 15.5 17.75H17.75V20C17.75 20.4142 18.0858 20.75 18.5 20.75C18.9142 20.75 19.25 20.4142 19.25 20V17.75H21.5C21.9142 17.75 22.25 17.4142 22.25 17C22.25 16.5858 21.9142 16.25 21.5 16.25H19.25V14Z"
+                fill="#F6FEF9"
+              />
             </svg>
             <span>Add New Record</span>
           </Link>
         </Stack>
       </Box>
 
-      <Stack direction="row" justifyContent="flex-end">
-        <ButtonGroup>
-          <Button
-            sx={{
-              border: 0,
-              outline: "none",
-              textTransform: "capitalize",
-              fontWeight: 600,
-              color: isGrid ? "#475367" : "#D0D5DD",
-            }}
-            onClick={() => setIsGrid(true)}
-            endIcon={
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill={isGrid ? "#475367" : "#D0D5DD"}
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M3.33333 9.58333C2.18274 9.58333 1.25 8.65059 1.25 7.5V3.33333C1.25 2.18274 2.18274 1.25 3.33333 1.25H7.5C8.65059 1.25 9.58333 2.18274 9.58333 3.33333V7.5C9.58333 8.65059 8.65059 9.58333 7.5 9.58333H3.33333ZM2.91667 7.5C2.91667 7.73012 3.10321 7.91667 3.33333 7.91667L7.5 7.91667C7.73012 7.91667 7.91667 7.73012 7.91667 7.5V3.33333C7.91667 3.10322 7.73012 2.91667 7.5 2.91667L3.33333 2.91667C3.10321 2.91667 2.91667 3.10322 2.91667 3.33333L2.91667 7.5Z"
-                  // fill="#D0D5DD"
-                />
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M1.25 16.6667C1.25 17.8173 2.18274 18.75 3.33333 18.75H7.5C8.65059 18.75 9.58333 17.8173 9.58333 16.6667V12.5C9.58333 11.3494 8.65059 10.4167 7.5 10.4167H3.33333C2.18274 10.4167 1.25 11.3494 1.25 12.5V16.6667ZM3.33333 17.0833C3.10321 17.0833 2.91667 16.8968 2.91667 16.6667L2.91667 12.5C2.91667 12.2699 3.10321 12.0833 3.33333 12.0833H7.5C7.73012 12.0833 7.91667 12.2699 7.91667 12.5V16.6667C7.91667 16.8968 7.73012 17.0833 7.5 17.0833H3.33333Z"
-                  // fill="#D0D5DD"
-                />
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M10.4167 16.6667C10.4167 17.8173 11.3494 18.75 12.5 18.75H16.6667C17.8173 18.75 18.75 17.8173 18.75 16.6667V12.5C18.75 11.3494 17.8173 10.4167 16.6667 10.4167H12.5C11.3494 10.4167 10.4167 11.3494 10.4167 12.5V16.6667ZM12.5 17.0833C12.2699 17.0833 12.0833 16.8968 12.0833 16.6667V12.5C12.0833 12.2699 12.2699 12.0833 12.5 12.0833H16.6667C16.8968 12.0833 17.0833 12.2699 17.0833 12.5V16.6667C17.0833 16.8968 16.8968 17.0833 16.6667 17.0833H12.5Z"
-                  // fill="#D0D5DD"
-                />
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M10.4167 7.5C10.4167 8.65059 11.3494 9.58333 12.5 9.58333H16.6667C17.8173 9.58333 18.75 8.65059 18.75 7.5V3.33333C18.75 2.18274 17.8173 1.25 16.6667 1.25H12.5C11.3494 1.25 10.4167 2.18274 10.4167 3.33333V7.5ZM12.5 7.91667C12.2699 7.91667 12.0833 7.73012 12.0833 7.5V3.33333C12.0833 3.10322 12.2699 2.91667 12.5 2.91667L16.6667 2.91667C16.8968 2.91667 17.0833 3.10322 17.0833 3.33333V7.5C17.0833 7.73012 16.8968 7.91667 16.6667 7.91667L12.5 7.91667Z"
-                  // fill="#D0D5DD"
-                />
-              </svg>
-            }
-          >
-            Grid View
-          </Button>
-          <Button
-            sx={{
-              border: 0,
-              outline: "none",
-              textTransform: "capitalize",
-              fontWeight: 600,
-              color: isGrid ? "#D0D5DD" : "#475367",
-            }}
-            color="inherit"
-            onClick={() => setIsGrid(false)}
-            endIcon={
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill={isGrid ? "#D0D5DD" : "#475367"}
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <g id="button-icon">
-                  <path
-                    id="Vector 739"
-                    d="M17.916 3.33333H6.24935"
-                    stroke={isGrid ? "#D0D5DD" : "#475367"}
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    id="Vector 740"
-                    d="M17.916 10H6.24935"
-                    stroke={isGrid ? "#D0D5DD" : "#475367"}
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    id="Vector 741"
-                    d="M17.916 16.6667H6.24935"
-                    stroke={isGrid ? "#D0D5DD" : "#475367"}
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <ellipse
-                    id="Ellipse 69"
-                    cx="1.04167"
-                    cy="1.04167"
-                    rx="1.04167"
-                    ry="1.04167"
-                    transform="matrix(-1 0 0 1 3.75 2.29167)"
-                    // fill="#475367"
-                  />
-                  <ellipse
-                    id="Ellipse 70"
-                    cx="1.04167"
-                    cy="1.04167"
-                    rx="1.04167"
-                    ry="1.04167"
-                    transform="matrix(-1 0 0 1 3.75 8.95833)"
-                    // fill="#475367"
-                  />
-                  <ellipse
-                    id="Ellipse 71"
-                    cx="1.04167"
-                    cy="1.04167"
-                    rx="1.04167"
-                    ry="1.04167"
-                    transform="matrix(-1 0 0 1 3.75 15.625)"
-                    // fill="#475367"
-                  />
-                </g>
-              </svg>
-            }
-          >
-            List View
-          </Button>
-        </ButtonGroup>
-      </Stack>
-
-      {/* {isGrid ? (
-        <Box
-          sx={{
-            display: "grid",
-            marginBottom: 10,
-            gap: 3,
-            gridTemplateColumns: {
-              xs: "repeat(1, 1fr)",
-              sm: "repeat(2, 1fr)",
-              md: "repeat(3, 1fr)",
-            },
+      <Stack
+        direction="row"
+        justifyContent="flex-end"
+        alignItems={"center"}
+        p={2}
+      >
+        <label
+          htmlFor=""
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            color: "#232426",
+            fontWeight: 500,
+            fontSize: 18,
+            fontFamily: "fontBold",
           }}
         >
-          <UserCard user={searchResults} />
-        </Box>
+          View as
+          <Select
+            defaultValue={"List"}
+            sx={{ minWidth: 120, color: "#2A2D32", fontWeight: 500 }}
+          >
+            <MenuItem value="List" onClick={() => setIsGrid(true)}>
+              List
+            </MenuItem>
+            <MenuItem value="Grid" onClick={() => setIsGrid(false)}>
+              Grid
+            </MenuItem>
+          </Select>
+        </label>
+      </Stack>
+
+      {!isGrid ? (
+        <UserCard user={searchResults} />
       ) : (
         <UserTable results={searchResults} />
-      )} */}
-
-      {searchResults.length > 0 ? (
-        <>
-          {isGrid ? (
-            <Box
-              sx={{
-                display: "grid",
-                marginBottom: 10,
-                gap: 3,
-                gridTemplateColumns: {
-                  xs: "repeat(1, 1fr)",
-                  sm: "repeat(2, 1fr)",
-                  md: "repeat(3, 1fr)",
-                },
-              }}
-            >
-              <UserCard user={searchResults} />
-            </Box>
-          ) : (
-            <UserTable results={searchResults} />
-          )}
-        </>
-      ) : (
-        <NoResultIllustration />
       )}
     </Box>
   );

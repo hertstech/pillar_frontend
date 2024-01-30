@@ -242,15 +242,7 @@ export default function HealthPreview({
         </>
       )}
       <Stack direction="row" justifyContent="flex-end" gap={5} p={3}>
-        <Button
-          variant="contained"
-          sx={{ px: 5 }}
-          color="success"
-          onClick={handleSubmit}
-          disabled={isLoading}
-        >
-          Submit
-        </Button>
+
         <Button
           variant="outlined"
           color="error"
@@ -258,6 +250,17 @@ export default function HealthPreview({
           sx={{ px: 5 }}
         >
           Cancel
+        </Button><Button
+          variant="contained"
+          sx={{
+            px: 5,
+            background: "#099250",
+            "&:hover": { backgroundColor: "#099250" },
+          }}
+          onClick={handleSubmit}
+          disabled={isLoading}
+        >
+          Submit
         </Button>
       </Stack>
     </Dialog>

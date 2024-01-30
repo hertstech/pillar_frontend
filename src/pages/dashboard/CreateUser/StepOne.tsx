@@ -42,29 +42,6 @@ export default function StepOne({
 }: any) {
   const [show, setShow] = useState(false);
 
-  // SUSPENDED DATE/AGE CHECK FUCTION
-  // const calculateAge = () => {
-  //   if (formData.dateOfBirth) {
-  //     const currentDate = new Date();
-  //     const birthDate = new Date(formData.dateOfBirth);
-
-  //     let age = currentDate.getFullYear() - birthDate.getFullYear();
-
-  //     // Check if the birthday has occurred this year
-  //     if (
-  //       currentDate.getMonth() < birthDate.getMonth() ||
-  //       (currentDate.getMonth() === birthDate.getMonth() &&
-  //         currentDate.getDate() < birthDate.getDate())
-  //     ) {
-  //       age--;
-  //     }
-
-  //     return age;
-  //   }
-
-  //   return 0; // Return null if no date is selected
-  // };
-
   const handleChange = (
     event: React.ChangeEvent<{ name?: any; value: any }>
   ) => {
@@ -100,40 +77,39 @@ export default function StepOne({
       {/* PERSONAL INFORMATION */}
       <Box
         sx={{
-          display: "grid",
-          columnGap: 1.5,
-          rowGap: 1.5,
-          gridTemplateColumns: {
-            xs: "repeat(1, 1fr)",
-            lg: "repeat(2, 1fr)",
-          },
+          display: "flex",
+          gap: 1,
+          flexDirection: "column",
           marginBottom: 2,
         }}
       >
-        <label htmlFor="title" style={{ marginTop: 9 }}>
-          Title
-          <TextField
-            select
-            sx={{ marginTop: "5px" }}
-            fullWidth
-            name="title"
-            value={formData.title}
+        <div style={{ display: "flex", gap: 10 }}>
+          <label htmlFor="title" style={{ marginTop: 9 }}>
+            Title
+            <TextField
+              select
+              sx={{ marginTop: "5px", width: "110px" }}
+              fullWidth
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+            >
+              {title.map((item, index) => (
+                <MenuItem key={index} value={item}>
+                  {item}
+                </MenuItem>
+              ))}
+            </TextField>
+          </label>
+
+          <InputField
+            type="text"
+            label="First Name"
+            name="firstName"
+            value={formData.firstName}
             onChange={handleChange}
-          >
-            {title.map((item, index) => (
-              <MenuItem key={index} value={item}>
-                {item}
-              </MenuItem>
-            ))}
-          </TextField>
-        </label>
-        <InputField
-          type="text"
-          label="First Name"
-          name="firstName"
-          value={formData.firstName}
-          onChange={handleChange}
-        />
+          />
+        </div>
 
         <InputField
           type="text"
@@ -159,7 +135,7 @@ export default function StepOne({
           onChange={handleChange}
         />
 
-        <label htmlFor="gender" style={{ marginTop: 8 }}>
+        <label htmlFor="gender">
           Gender
           <TextField
             select
@@ -283,14 +259,10 @@ export default function StepOne({
 
         <Box
           sx={{
-            display: "grid",
-            columnGap: 1.5,
-            rowGap: 1.5,
-            gridTemplateColumns: {
-              xs: "repeat(1, 1fr)",
-              lg: "repeat(2, 1fr)",
-            },
-            marginTop: 2,
+            display: "flex",
+            gap: 1,
+            flexDirection: "column",
+            marginTop: 1,
           }}
         >
           <label htmlFor="state">
@@ -388,13 +360,9 @@ export default function StepOne({
           />
           <Box
             sx={{
-              display: "grid",
-              columnGap: 2,
-              rowGap: 2,
-              gridTemplateColumns: {
-                xs: "repeat(1, 1fr)",
-                lg: "repeat(3, 1fr)",
-              },
+              display: "flex",
+              gap: 1,
+              flexDirection: "column",
               marginBottom: 2,
             }}
           >
@@ -450,13 +418,9 @@ export default function StepOne({
                 />
                 <Box
                   sx={{
-                    display: "grid",
-                    columnGap: 2,
-                    rowGap: 2,
-                    gridTemplateColumns: {
-                      xs: "repeat(1, 1fr)",
-                      lg: "repeat(3, 1fr)",
-                    },
+                    display: "flex",
+                    gap: 1,
+                    flexDirection: "column",
                     marginBottom: 2,
                   }}
                 >
@@ -517,13 +481,9 @@ export default function StepOne({
 
           <Box
             sx={{
-              display: "grid",
-              columnGap: 2,
-              rowGap: 2,
-              gridTemplateColumns: {
-                xs: "repeat(1, 1fr)",
-                lg: "repeat(3, 1fr)",
-              },
+              display: "flex",
+              gap: 1,
+              flexDirection: "column",
               marginBottom: 2,
             }}
           >

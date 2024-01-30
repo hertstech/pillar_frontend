@@ -91,7 +91,7 @@ export default function General() {
               onChange={(e: any) => setNewName(e.target.value)}
             />
 
-            <div style={{ width: "20%", marginTop: 20 }}>
+            <div style={{ width: "30%", marginTop: 20 }}>
               <Buttons title="Save changes" onClick={() => {}} />
             </div>
           </form>

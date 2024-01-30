@@ -6,7 +6,7 @@ import Styles from "../sytles.module.css";
 import InputField from "../../../components/InputField";
 import Button from "../../../components/Button";
 import { dispatchUserLogin } from "../../../redux/userSlice";
-import { axiosInstance } from "../../../Utils/axios";
+import { axiosInstance } from "../../../Utils";
 import Swal from "sweetalert2";
 
 export default function LoginPage() {
@@ -50,9 +50,7 @@ export default function LoginPage() {
     }
 
     if (!isStrongPassword(formData.password) || formData.password.length < 8) {
-      setError(
-        "Authentication failed!!!"
-      );
+      setError("Authentication failed!!!");
       return;
     }
 

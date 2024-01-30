@@ -9,7 +9,6 @@ import ResultPage from "../pages/dashboard/ResultPage";
 import ProfileHome from "../pages/dashboard/Profile";
 import Singleuser from "../pages/dashboard/serviceUsers";
 import AuthGuard from "../Guard/AuthGuard";
-import ProfileGuard from "../Guard/ProfileGuard";
 // import Singleuser from "../pages/dashboard/ServiceUsers";
 
 export const router = createBrowserRouter([
@@ -39,11 +38,7 @@ export const router = createBrowserRouter([
   // DASHBOARD
   {
     path: "/dashboard",
-    element: (
-      <ProfileGuard>
-        <DashboardLayout />
-      </ProfileGuard>
-    ),
+    element: <DashboardLayout />,
 
     children: [
       { element: <Navigate to="/dashboard/profile" replace />, index: true },
