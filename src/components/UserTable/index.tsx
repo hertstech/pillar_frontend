@@ -54,10 +54,10 @@ export default function UserTable({ results }: any) {
     dispatch(dispatchClient({ tabId: "tab1", client: results }));
   };
   return (
-    <Box sx={{ marginBottom: 10 }}>
+    <Box sx={{ px: 2 }}>
       <TableContainer sx={{ borderRadius: 2.5, background: "#FFF" }}>
         <Table size="medium">
-          <TableHead sx={{ background: "#F9FAFB", fontSize: 12 }}>
+          <TableHead sx={{ background: "#FCFCFD", fontSize: 12 }}>
             <TableRow>
               {TABLE_HEAD.map((item) => (
                 <TableCell sx={{ color: "#344054" }} key={item.id}>
@@ -72,19 +72,40 @@ export default function UserTable({ results }: any) {
               results
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row: any) => (
-                  <TableRow key={row.id}>
-                    <Link
-                      to={`/dashboard/user/${row.id}`}
-                      style={{ textDecoration: "none" }}
-                      onClick={handleClick}
-                    >
-                      <TableCell sx={{ display: "flex", alignItems: "center" }}>
+                  <TableRow
+                    hover
+                    key={row.id}
+                    sx={{
+                      "&:nth-of-type(odd)": {
+                        background: "white",
+                      },
+                      "&:nth-of-type(even)": {
+                        background: "#FCFCFD",
+                      },
+                      clear: "both",
+                    }}
+                  >
+                    <TableCell>
+                      <Link
+                        to={`/dashboard/user/${row.id}`}
+                        style={{
+                          textDecoration: "none",
+                          display: "flex",
+                          alignItems: "center",
+                          fontWeight: "inherit",
+                          fontSize: "inherit",
+                          gap: 3,
+                          color: "inherit",
+                        }}
+                        className="tabLink"
+                        onClick={handleClick}
+                      >
                         <Avatar sx={{ mr: 2 }} />
                         <Typography variant="subtitle2" noWrap>
                           {row.firstName + " " + row.lastName}
                         </Typography>
-                      </TableCell>
-                    </Link>
+                      </Link>
+                    </TableCell>
 
                     <TableCell>{formattedValue(row?.id || "")}</TableCell>
 
@@ -117,7 +138,7 @@ export default function UserTable({ results }: any) {
                     </TableCell>
 
                     <TableCell>
-                    {moment(row?.dateOfBirth).format("DD/MM/YYYY")}
+                      {moment(row?.dateOfBirth).format("DD/MM/YYYY")}
                     </TableCell>
 
                     <TableCell>{row.address + " " + row.lga}</TableCell>

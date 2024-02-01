@@ -37,7 +37,8 @@ input::-webkit-inner-spin-button {
 }
 
 .MuiTableCell-root {
-  border-bottom: none !important;
+  /* border-bottom: none !important; */
+  border:' 0.50px #E7E9FB solid'
 }
 
 .MuiTabs-flexContainer {

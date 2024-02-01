@@ -65,7 +65,7 @@ export default function Singleuser() {
             alignItems: "center",
             flexDirection: "row",
             justifyContent: "space-between",
-            background: "white",
+            borderBottom: "1px #E7E9FB solid",
           }}
         >
           <Stack
@@ -153,7 +153,7 @@ export default function Singleuser() {
 
           <Stack alignItems="start" sx={{ mr: 2.5 }}>
             <Link
-              to={`/dashboard/user/${id}/edit`}
+              to={`/dashboard/user/${id}/update`}
               style={{
                 fontWeight: 500,
                 color: "#FFF",

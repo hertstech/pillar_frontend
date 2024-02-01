@@ -156,26 +156,26 @@ export default function CreateUser() {
     }
   };
 
-  // const verify = async () => {
-  //   try {
-  //     const res = await fetch("../../../nationalIdentificationNumber.json");
-  //     const data = await res.json();
+  const verify = async () => {
+    try {
+      const res = await fetch("../../../nationalIdentificationNumber.json");
+      const data = await res.json();
 
-  //     const matchingRecord = data.find(
-  //       (record: any) => record.nationalNumber === formData.NIN
-  //     );
+      const matchingRecord = data.find(
+        (record: any) => record.nationalNumber === formData.NIN
+      );
 
-  //     if (matchingRecord) {
-  //       // NIN is found in the JSON data
-  //       setResult("Verification Successful");
-  //     } else {
-  //       // NIN is not found in the JSON data
-  //       setResult("Verification Failed!");
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
+      if (matchingRecord) {
+        // NIN is found in the JSON data
+        setResult("Verification Successful");
+      } else {
+        // NIN is not found in the JSON data
+        setResult("Verification Failed!");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleNext = () => {
     if (activeStep < steps.length - 1) {
@@ -304,6 +304,7 @@ export default function CreateUser() {
           Add New Record
         </div>
       </Stack>
+
       <Box sx={{ pt: 3 }}>
         <Grid container spacing={3} sx={{ pb: 15, px: 2.5 }}>
           <Grid item xs={12} md={4}>
@@ -454,15 +455,15 @@ export default function CreateUser() {
                   <Buttons onClick={handleNext} title={"Next"} />
                 )}
 
-                {activeStep > 0 && activeStep <= 1 && (
+                {/* {activeStep > 0 && activeStep <= 1 && (
                   <Buttons
                     onClick={createUser}
                     loading={isLoading}
                     title={"Continue"}
                   />
-                )}
+                )} */}
 
-                {/* {activeStep > 0 && activeStep <= 1 && (
+                {activeStep > 0 && activeStep <= 1 && (
                   <>
                     {result === "Verification Successful" ? (
                       <Buttons
@@ -474,7 +475,7 @@ export default function CreateUser() {
                       <Buttons onClick={verify} title={"Verify"} />
                     )}
                   </>
-                )} */}
+                )}
               </Stack>
             </Card>
           </Grid>
