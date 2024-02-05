@@ -141,7 +141,7 @@ export default function UserTable({ results }: any) {
                       {moment(row?.dateOfBirth).format("DD/MM/YYYY")}
                     </TableCell>
 
-                    <TableCell>{row.address + " " + row.lga}</TableCell>
+                    <TableCell>{row.address}</TableCell>
                   </TableRow>
                 ))
             ) : (

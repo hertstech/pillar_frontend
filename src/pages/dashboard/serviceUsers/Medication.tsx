@@ -47,21 +47,21 @@ interface FormState {
   additionalNote: string;
 }
 
-const initialFormState = {
-  medicationName: "",
-  medicationType: "",
-  medicationRoute: "",
-  medicationDosageForm: "",
-  dosage: "",
-  dosagemeasurement: "",
-  frequencyNumber: "",
-  frequencyType: "",
-  datePrescribed: "",
-  startDate: "",
-  endDate: "",
-  prescriber: "",
-  additionalNote: "",
-};
+// const initialFormState = {
+//   medicationName: "",
+//   medicationType: "",
+//   medicationRoute: "",
+//   medicationDosageForm: "",
+//   dosage: "",
+//   dosagemeasurement: "",
+//   frequencyNumber: "",
+//   frequencyType: "",
+//   datePrescribed: "",
+//   startDate: "",
+//   endDate: "",
+//   prescriber: "",
+//   additionalNote: "",
+// };
 
 interface apiResponse {
   additionalNote: string;
@@ -135,18 +135,18 @@ export default function Assessment({ client }: PropType) {
 
   const [record, setRecord] = useState<apiResponse[]>([]);
 
-  const addForm = () => {
-    // Check if any of the form fields have a value
-    const isFormEmpty = Object.values(formField).every((value) => !value);
+  // const addForm = () => {
+  //   // Check if any of the form fields have a value
+  //   const isFormEmpty = Object.values(formField).every((value) => !value);
 
-    if (!isFormEmpty) {
-      // If any form field has a value, disable the "Add New" button
-      return;
-    }
+  //   if (!isFormEmpty) {
+  //     // If any form field has a value, disable the "Add New" button
+  //     return;
+  //   }
 
-    setHide(true);
-    setFormField((prevForms) => [...prevForms, { ...initialFormState }]);
-  };
+  //   setHide(true);
+  //   setFormField((prevForms) => [...prevForms, { ...initialFormState }]);
+  // };
 
   const deleteForm = (index: number) => {
     setFormField((prevForms) => {
@@ -279,7 +279,7 @@ export default function Assessment({ client }: PropType) {
           gap: 3,
         }}
       >
-        <div style={{ marginBottom: "50px" }}>
+        {/* <div style={{ marginBottom: "50px" }}>
           <Stack
             direction="row"
             justifyContent="flex-end"
@@ -304,7 +304,7 @@ export default function Assessment({ client }: PropType) {
               Add New
             </Button>
           </Stack>
-        </div>
+        </div> */}
 
         {formField.map((form: any, index: any) => (
           <form>

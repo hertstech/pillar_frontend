@@ -1,5 +1,12 @@
-import { Box, Stack } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Stack,
+} from "@mui/material";
+import { useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import HeaderTabs from "../../../components/HeaderTabs";
 import Demogrphics from "./Demogrphics";
@@ -7,19 +14,33 @@ import Health from "./Health";
 import Assessment from "./Medication";
 import Allergies from "./Allergies";
 import Referral from "./Referral";
+import Styles from "../serviceUsers/styles.module.css";
 import Notes from "./Notes";
 import Overview from "./Overview";
-import { resetClientState } from "../../../redux/clientSlice";
+// import { resetClientState } from "../../../redux/clientSlice";
 import Message from "./Message";
+import { useState } from "react";
+import { axiosInstance } from "../../../Utils";
+import Swal from "sweetalert2";
 
 export default function Singleuser() {
   const client = useSelector((state: any) => state.client.clients.tab1[0]);
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const [message, setMessage] = useState("");
 
   const { id } = useParams();
 
   const navigate = useNavigate();
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
+
+  const isInputEmpty = () => message.trim() === "";
+
+  const isSubmitButtonDisabled = () => isInputEmpty() || isLoading;
 
   const tabs = [
     {
@@ -56,6 +77,33 @@ export default function Singleuser() {
     },
   ];
 
+  const handleSubmit = async () => {
+    setIsLoading(true);
+
+    const payload = { message };
+
+    if (message === "") {
+      return;
+    }
+    try {
+      const res = await axiosInstance.post(
+        `send-serviceuser-messages/${id}`,
+        payload
+      );
+      setMessage("");
+      setIsOpen(false);
+      setIsLoading(false);
+
+      Swal.fire({
+        icon: "success",
+        text: `${res.data}`,
+        confirmButtonColor: "#099250",
+      });
+    } catch (error) {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <Stack sx={{}}>
       <Box>
@@ -76,7 +124,7 @@ export default function Singleuser() {
               style={{ display: "flex", gap: 8, cursor: "pointer" }}
               onClick={() => {
                 navigate(-1);
-                dispatch(resetClientState("tab1"));
+                // dispatch(resetClientState("tab1"));
               }}
             >
               <svg
@@ -151,7 +199,56 @@ export default function Singleuser() {
             </div>
           </Stack>
 
-          <Stack alignItems="start" sx={{ mr: 2.5 }}>
+          <Stack
+            alignItems="center"
+            sx={{ mr: 2.5, display: "flex", flexDirection: "row", gap: 3 }}
+          >
+            <Button
+              startIcon={
+                <svg
+                  width="21"
+                  height="18"
+                  viewBox="0 0 21 18"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g id="Message 36">
+                    <g id="Vector">
+                      <path
+                        d="M1.96231 4.77004C1.77432 5.53557 1.63702 6.52416 1.44601 7.89945C1.00983 11.0399 0.791745 12.6101 1.27127 13.8297C1.69225 14.9003 2.46954 15.793 3.47208 16.3573C4.61405 17 6.19934 17 9.36992 17H10.9941C14.1647 17 15.75 17 16.892 16.3573C17.8945 15.793 18.6718 14.9003 19.0928 13.8297C19.5723 12.6101 19.3542 11.0399 18.9181 7.89945C18.7106 6.40583 18.5665 5.36829 18.352 4.57727L17.6216 5.30771C15.9893 6.93999 14.7102 8.21918 13.5779 9.08306C12.419 9.96729 11.3263 10.4868 10.0608 10.4868C8.79535 10.4868 7.70261 9.96729 6.54368 9.08306C5.41142 8.21918 4.13225 6.93999 2.49998 5.30771L1.96231 4.77004Z"
+                        fill="#099250"
+                      />
+                      <path
+                        d="M2.5747 3.2611L3.52006 4.20646C5.20172 5.88812 6.41074 7.09489 7.45355 7.89053C8.47905 8.67296 9.25518 8.98679 10.0608 8.98679C10.8664 8.98679 11.6425 8.67296 12.668 7.89053C13.7109 7.09489 14.9199 5.88812 16.6015 4.20646L17.6912 3.11676C17.1833 2.39704 16.4932 1.82309 15.6899 1.45483C14.6977 1 13.4632 1 10.9941 1H9.36995C6.90089 1 5.66636 1 4.6742 1.45483C3.81789 1.84739 3.09026 2.47367 2.5747 3.2611Z"
+                        fill="#099250"
+                      />
+                      <path
+                        d="M1.96231 4.77004C1.77432 5.53557 1.63702 6.52416 1.44601 7.89945C1.00983 11.0399 0.791745 12.6101 1.27127 13.8297C1.69225 14.9003 2.46954 15.793 3.47208 16.3573C4.61405 17 6.19934 17 9.36992 17H10.9941C14.1647 17 15.75 17 16.892 16.3573C17.8945 15.793 18.6718 14.9003 19.0928 13.8297C19.5723 12.6101 19.3542 11.0399 18.9181 7.89945C18.7106 6.40583 18.5665 5.36829 18.352 4.57727L17.6216 5.30771C15.9893 6.93999 14.7102 8.21918 13.5779 9.08306C12.419 9.96729 11.3263 10.4868 10.0608 10.4868C8.79535 10.4868 7.70261 9.96729 6.54368 9.08306C5.41142 8.21918 4.13225 6.93999 2.49998 5.30771L1.96231 4.77004Z"
+                        stroke="#F6FEF9"
+                        stroke-width="1.5"
+                      />
+                      <path
+                        d="M2.5747 3.2611L3.52006 4.20646C5.20172 5.88812 6.41074 7.09489 7.45355 7.89053C8.47905 8.67296 9.25518 8.98679 10.0608 8.98679C10.8664 8.98679 11.6425 8.67296 12.668 7.89053C13.7109 7.09489 14.9199 5.88812 16.6015 4.20646L17.6912 3.11676C17.1833 2.39704 16.4932 1.82309 15.6899 1.45483C14.6977 1 13.4632 1 10.9941 1H9.36995C6.90089 1 5.66636 1 4.6742 1.45483C3.81789 1.84739 3.09026 2.47367 2.5747 3.2611Z"
+                        stroke="#F6FEF9"
+                        stroke-width="1.5"
+                      />
+                    </g>
+                  </g>
+                </svg>
+              }
+              sx={{
+                textTransform: "none",
+                background: "#EDFCF2",
+                p: 1.5,
+                alignItems: "center",
+                color: "#099250",
+                "&:hover": { backgroundColor: "#EDFCF2" },
+              }}
+              onClick={() => setIsOpen(true)}
+            >
+              Send New Message
+            </Button>
+
             <Link
               to={`/dashboard/user/${id}/update`}
               style={{
@@ -189,6 +286,76 @@ export default function Singleuser() {
 
         <HeaderTabs links={tabs} />
       </Box>
+
+      <>
+        <Dialog maxWidth="sm" fullWidth open={isOpen}>
+          <DialogTitle>New Message</DialogTitle>
+
+          <Button
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+              padding: "16px 8px",
+            }}
+            onClick={() => setIsOpen(false)}
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g id="Teeny icon / x-small">
+                <path
+                  id="Vector"
+                  d="M4.19922 4.2002L9.79922 9.8002M4.19922 9.8002L9.79922 4.2002"
+                  stroke="#099250"
+                />
+              </g>
+            </svg>
+          </Button>
+
+          <DialogContent>
+            <form action="">
+              <textarea
+                className={Styles.area}
+                name={`additionalNote`}
+                rows={8}
+                cols={50}
+                placeholder="Enter message here"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+              ></textarea>
+
+              <Stack marginTop={3}>
+                <Button
+                  size="large"
+                  sx={{
+                    color: "#F6FEF9",
+                    outline: "none",
+                    fontWeight: 600,
+                    background: "#099250",
+                    "&:hover": { backgroundColor: "#099250" },
+                    px: 3,
+                    width: "40%",
+                    "&.Mui-disabled": {
+                      opacity: 0.3,
+                      color: "white",
+                    },
+                  }}
+                  disabled={isSubmitButtonDisabled()}
+                  variant="outlined"
+                  onClick={handleSubmit}
+                >
+                  Send Message
+                </Button>
+              </Stack>
+            </form>
+          </DialogContent>
+        </Dialog>
+      </>
     </Stack>
   );
 }

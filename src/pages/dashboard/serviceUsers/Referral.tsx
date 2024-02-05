@@ -54,19 +54,19 @@ interface apiResponse {
   waitingStatus: string;
 }
 
-const initialFormState = {
-  dateInitiated: "",
-  careSetting: "",
-  referralSource: "",
-  referralName: "",
-  referralReason: "",
-  urgencyStatus: "",
-  waitingStatus: "",
-  teamReferredTo: "",
-  referralDateReceived: "",
-  referralAcceptedDate: "",
-  additionalNote: "",
-};
+// const initialFormState = {
+//   dateInitiated: "",
+//   careSetting: "",
+//   referralSource: "",
+//   referralName: "",
+//   referralReason: "",
+//   urgencyStatus: "",
+//   waitingStatus: "",
+//   teamReferredTo: "",
+//   referralDateReceived: "",
+//   referralAcceptedDate: "",
+//   additionalNote: "",
+// };
 
 interface client {
   id: string;
@@ -118,18 +118,18 @@ export default function Referral({ client }: PropType) {
 
   const { id } = useParams();
 
-  const addForm = () => {
-    // Check if any of the form fields have a value
-    const isFormEmpty = Object.values(formField).every((value) => !value);
+  // const addForm = () => {
+  //   // Check if any of the form fields have a value
+  //   const isFormEmpty = Object.values(formField).every((value) => !value);
 
-    if (!isFormEmpty) {
-      // If any form field has a value, disable the "Add New" button
-      return;
-    }
+  //   if (!isFormEmpty) {
+  //     // If any form field has a value, disable the "Add New" button
+  //     return;
+  //   }
 
-    setHide(true);
-    setFormField((prevForms) => [...prevForms, { ...initialFormState }]);
-  };
+  //   setHide(true);
+  //   setFormField((prevForms) => [...prevForms, { ...initialFormState }]);
+  // };
 
   const deleteForm = (index: number) => {
     setFormField((prevForms) => {
@@ -260,7 +260,7 @@ export default function Referral({ client }: PropType) {
           width: "70%",
         }}
       >
-        <div style={{ marginBottom: "50px" }}>
+        {/* <div style={{ marginBottom: "50px" }}>
           <Stack
             direction="row"
             justifyContent="flex-end"
@@ -285,7 +285,7 @@ export default function Referral({ client }: PropType) {
               Add New
             </Button>
           </Stack>
-        </div>
+        </div> */}
 
         {formField.map((form: any, index: any) => (
           <form>

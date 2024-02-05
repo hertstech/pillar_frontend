@@ -20,3 +20,11 @@ export const Loader = () => {
     </div>
   );
 };
+
+export const SpinLoader = () => {
+  return (
+    <div style={{ minHeight: "75vh", display: "grid", placeItems: "center" }}>
+      <span className="spinLoader"></span>
+    </div>
+  );
+};

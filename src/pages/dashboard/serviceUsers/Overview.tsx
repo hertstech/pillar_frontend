@@ -400,7 +400,7 @@ export default function Overview({ client }: PropType) {
                     fontSize={12}
                     color={"#101928"}
                   >
-                    last: {moment(bloodGroup.date_created).format("l")}{" "}
+                    last: {moment(bloodGroup.date_created).format("DD/MM/YYYY")}{" "}
                     {moment(bloodGroup.date_created).format("LT")}
                   </Typography>
                 </div>
@@ -455,7 +455,7 @@ export default function Overview({ client }: PropType) {
                     fontSize={12}
                     color={"#101928"}
                   >
-                    last: {moment(genotype.date_created).format("l")}{" "}
+                    last: {moment(genotype.date_created).format("DD/MM/YYYY")}{" "}
                     {moment(genotype.date_created).format("LT")}
                   </Typography>
                 </div>
@@ -505,7 +505,7 @@ export default function Overview({ client }: PropType) {
                     fontSize={12}
                     color={"#101928"}
                   >
-                    last: {moment(glucose.date_created).format("l")}{" "}
+                    last: {moment(glucose.date_created).format("DD/MM/YYYY")}{" "}
                     {moment(glucose.date_created).format("LT")}
                   </Typography>
                 </div>
@@ -558,7 +558,7 @@ export default function Overview({ client }: PropType) {
                     fontSize={12}
                     color={"#101928"}
                   >
-                    last: {moment(temp.date_created).format("l")}{" "}
+                    last: {moment(temp.date_created).format("DD/MM/YYYY")}{" "}
                     {moment(temp.date_created).format("LT")}
                   </Typography>
                 </div>
@@ -749,7 +749,9 @@ export default function Overview({ client }: PropType) {
                             }}
                           ></span>
 
-                          <span>{moment(item.date_created).format("l")}</span>
+                          <span>
+                            {moment(item.date_created).format("DD/MM/YYYY")}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -885,8 +887,8 @@ export default function Overview({ client }: PropType) {
                         {`${item.dosage} ${item.dosagemeasurement}`}
                       </Typography>
                       <span>
-                        {moment(item.startDate).format("l")} -
-                        {moment(item.endDate).format("l")}
+                        {moment(item.startDate).format("DD/MM/YYYY")} -
+                        {moment(item.endDate).format("DD/MM/YYYY")}
                       </span>
                     </div>
 
