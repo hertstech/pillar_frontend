@@ -16,7 +16,7 @@ import HealthRecord from "./HealthRecord";
 import MedicationRecord from "./MedicationRecord";
 import AllergyRecord from "./AllergyRecord";
 import AdditionalInformationRecord from "./AdditionalInformationRecord";
-import MessageNew from "./MessageNew";
+// import MessageNew from "./MessageNew";
 
 // interface LinkItem {
 //   label: string;
