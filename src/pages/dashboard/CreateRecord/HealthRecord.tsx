@@ -5,6 +5,7 @@ import {
   DialogActions,
   DialogContent,
   MenuItem,
+  Skeleton,
   Stack,
   TextField,
   Typography,
@@ -13,7 +14,7 @@ import dayjs from "dayjs";
 import React from "react";
 import categories from "../../../../categories.json";
 import { Calendar } from "../../../components/CalendarField";
-import InputField, { TextLabel } from "../../../components/InputField";
+import InputField from "../../../components/InputField";
 import {
   bloodTypes,
   primaryDiagnosis,
@@ -25,10 +26,60 @@ import {
 } from "../serviceUsers/shared";
 import Styles from "../serviceUsers/styles.module.css";
 import moment from "moment";
+import Swal from "sweetalert2";
+import { axiosInstance } from "../../../Utils";
+import { useParams } from "react-router-dom";
+
+interface TextLabelProps {
+  text: any;
+  label: string;
+  isLoading?: boolean;
+}
+
+const TextLabel = ({ text, label, isLoading }: TextLabelProps) => (
+  <label
+    style={{
+      fontWeight: 400,
+      color: "#475467",
+      fontSize: 12,
+      margin: "20px 0px",
+    }}
+  >
+    {label}
+    {isLoading ? (
+      <Skeleton
+        variant="text"
+        animation="wave"
+        width={300}
+        sx={{ fontSize: "18px" }}
+      />
+    ) : (
+      <Typography
+        sx={{
+          "&::first-letter": {
+            textTransform: "uppercase",
+          },
+          mt: "4px",
+          fontWeight: "fontBold ",
+        }}
+        fontSize={16}
+        color={"#101928"}
+      >
+        {text}
+      </Typography>
+    )}
+  </label>
+);
 
 const title = ["Dr.", "Mrs.", "Ms."];
 
 export default function HealthRecord() {
+  const { id } = useParams();
+
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  const [isOpen, setIsOpen] = React.useState<boolean>(false);
+
   const [formField, setFormField] = React.useState({
     categories: "",
     type: "",
@@ -55,8 +106,6 @@ export default function HealthRecord() {
     notes: "",
   });
 
-  const [isOpen, setIsOpen] = React.useState<boolean>(false);
-
   const handleChange = (name: string, value: any) => {
     setFormField({
       ...formField,
@@ -69,6 +118,54 @@ export default function HealthRecord() {
     formField.type ||
     formField.reading ||
     formField.notes;
+
+  const handleSubmit = async () => {
+    setIsLoading(true);
+
+    const isCategoriesAndTypeEmpty =
+      formField.categories === "" && formField.type === "";
+
+    if (isCategoriesAndTypeEmpty) {
+      setIsLoading(false);
+
+      setIsOpen(false);
+      return Swal.fire({
+        icon: "info",
+        text: `You can not submit an empty form!`,
+        confirmButtonColor: "#099250",
+      });
+    }
+
+    try {
+      const res = await axiosInstance.post(
+        `/create-serviceuser-healthsummary/${id}`,
+        formField
+      );
+
+      setIsOpen(false);
+      setIsLoading(false);
+      Swal.fire({
+        icon: "success",
+        title: `Successful`,
+        text: `${res.data.message}`,
+        confirmButtonColor: "#099250",
+      });
+
+      // getHealthRecord();
+
+      setFormField(formField);
+      // setHide(false);
+    } catch (error: any) {
+      error;
+      setIsLoading(false);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: `${error.response.data.message}`,
+        confirmButtonColor: "#099250",
+      });
+    }
+  };
 
   return (
     <Box>
@@ -524,7 +621,7 @@ export default function HealthRecord() {
                   },
                 }}
               >
-                <TextLabel label="Category" text={categories} />
+                <TextLabel label="Category" text={formField.categories} />
                 <TextLabel label="Type" text={formField.type} />
 
                 {/* VITALS DATA VIEW*/}
@@ -677,6 +774,7 @@ export default function HealthRecord() {
               </div>
             </>
           )}
+
           <Stack direction="row" justifyContent="flex-end" gap={5} p={3}>
             <Button
               variant="outlined"
@@ -693,8 +791,8 @@ export default function HealthRecord() {
                 background: "#099250",
                 "&:hover": { backgroundColor: "#099250" },
               }}
-              // onClick={handleSubmit}
-              // disabled={isLoading}
+              onClick={handleSubmit}
+              disabled={isLoading}
             >
               Submit
             </Button>

@@ -66,7 +66,7 @@ export default function HeaderTabs({ heading, links, isLoaded }: TabProps) {
 
           {/* Display the content of the selected tab */}
           <Box
-            sx={{ p: "20px", pb: 12, background: "#F9F9FB", height: "75vh" }}
+            sx={{ p: "20px", pb: 12, background: "#F9F9FB" }}
           >
             {isLoaded ? <Loader /> : links[value].content}
           </Box>

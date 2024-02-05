@@ -242,7 +242,6 @@ export default function HealthPreview({
         </>
       )}
       <Stack direction="row" justifyContent="flex-end" gap={5} p={3}>
-
         <Button
           variant="outlined"
           color="error"
@@ -250,7 +249,8 @@ export default function HealthPreview({
           sx={{ px: 5 }}
         >
           Cancel
-        </Button><Button
+        </Button>
+        <Button
           variant="contained"
           sx={{
             px: 5,

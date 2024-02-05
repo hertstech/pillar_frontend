@@ -1,6 +1,9 @@
 import {
   Box,
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
   MenuItem,
   Stack,
   TextField,
@@ -8,7 +11,7 @@ import {
 } from "@mui/material";
 import React from "react";
 import Styles from "../serviceUsers/styles.module.css";
-import InputField from "../../../components/InputField";
+import InputField, { TextLabel } from "../../../components/InputField";
 import {
   substance,
   reactionType,
@@ -17,8 +20,17 @@ import {
   certainty,
   reportedBy,
 } from "../serviceUsers/shared";
+import { useParams } from "react-router-dom";
+import Swal from "sweetalert2";
+import { axiosInstance } from "../../../Utils";
 
 export default function AllergyRecord() {
+  const { id } = useParams();
+
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  const [isOpen, setIsOpen] = React.useState<boolean>(false);
+
   const [formField, setFormField] = React.useState({
     substance: "",
     reactionType: "",
@@ -37,6 +49,61 @@ export default function AllergyRecord() {
       [name || ""]: value,
     });
   };
+
+  const createNewRecord = async () => {
+    setIsLoading(true);
+
+    const isCategoriesAndTypeEmpty =
+      formField.substance === "" && formField.reactionType === "";
+
+    if (isCategoriesAndTypeEmpty) {
+      setIsLoading(false);
+
+      setIsOpen(false);
+      return Swal.fire({
+        icon: "info",
+        text: `You can not submit an empty form!`,
+        confirmButtonColor: "#099250",
+      });
+    }
+
+    try {
+      const res = await axiosInstance.post(
+        `/create-serviceuser-allergiesrecord/${id}`,
+        formField
+      );
+
+      setIsOpen(false);
+      setIsLoading(false);
+
+      Swal.fire({
+        icon: "success",
+        title: `Successful`,
+        text: `${res.data.message}`,
+        confirmButtonColor: "#099250",
+      });
+    } catch (error: any) {
+      error;
+      setIsLoading(false);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: `${error.response.data.message}`,
+        confirmButtonColor: "#099250",
+      });
+    }
+  };
+
+  const hasContent =
+    formField.substance ||
+    formField.reactionType ||
+    formField.reaction ||
+    formField.severity ||
+    formField.certainty ||
+    formField.evidence ||
+    formField.reportedBy ||
+    formField.relativeName ||
+    formField.notes;
   return (
     <Box>
       <div style={{ textAlign: "center", marginBottom: 25 }}>
@@ -197,12 +264,92 @@ export default function AllergyRecord() {
               width: "100%",
             }}
             variant="outlined"
-            // onClick={() => setIsOpen(true)}
+            onClick={() => setIsOpen(true)}
           >
             Continue
           </Button>
         </Stack>
       </form>
+
+      <>
+        <Dialog maxWidth="md" fullWidth open={isOpen}>
+          <DialogActions sx={{ py: 2, px: 3 }}>
+            <Typography
+              textAlign={"center"}
+              variant="h4"
+              fontWeight={500}
+              sx={{ flexGrow: 1 }}
+            >
+              Preview Allergies Record
+            </Typography>
+          </DialogActions>
+          {hasContent ? (
+            <DialogContent>
+              <Box
+                sx={{
+                  mb: 10,
+                  display: "grid",
+                  columnGap: 1.5,
+                  rowGap: 1.5,
+                  gridTemplateColumns: {
+                    xs: "repeat(1, 1fr)",
+                    lg: "repeat(3, 1fr)",
+                  },
+                }}
+              >
+                <TextLabel label="Substance" text={formField.substance} />
+                <TextLabel
+                  label="Reaction Type"
+                  text={formField.reactionType}
+                />
+                <TextLabel label="Reaction" text={formField.reaction} />
+                <TextLabel label="Severity" text={formField.severity} />
+                <TextLabel label="Certainty" text={formField.certainty} />
+                <TextLabel label="Evidence" text={formField.evidence} />
+                <TextLabel label="Reported By" text={formField.reportedBy} />
+                <TextLabel label="Name" text={formField.relativeName} />
+                <TextLabel label="Notes" text={formField.notes} />
+              </Box>
+            </DialogContent>
+          ) : (
+            <>
+              <div
+                style={{
+                  height: "90vh",
+                  display: "grid",
+                  placeItems: "center",
+                  fontSize: "20px",
+                }}
+              >
+                No data was entered or something went wrong, please cancel and
+                try again...
+              </div>
+            </>
+          )}
+          <Stack direction="row" justifyContent="flex-end" gap={5} p={3}>
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={() => setIsOpen(false)}
+              sx={{ px: 5 }}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              sx={{
+                px: 5,
+                background: "#099250",
+                "&:hover": { backgroundColor: "#099250" },
+              }}
+              onClick={createNewRecord}
+              disabled={isLoading}
+            >
+              Submit
+            </Button>
+          </Stack>
+        </Dialog>
+      </>
     </Box>
   );
 }
