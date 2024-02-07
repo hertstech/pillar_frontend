@@ -23,7 +23,7 @@ import {
   severity,
   substance,
 } from "./shared";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { axiosInstance } from "../../../Utils";
 import Swal from "sweetalert2";
 import moment from "moment";
@@ -118,7 +118,13 @@ export default function Allergies({ client }: PropType) {
 
   const [record, setRecord] = useState<apiResponse[]>([]);
 
+  const navigate = useNavigate();
+
   const [isLoading, setIsLoading] = useState(false);
+
+  const navToUpdateAllergy = () => {
+    navigate(`/dashboard/user/${id}/update/3`);
+  };
 
   // const addForm = () => {
   //   // Check if any of the form fields have a value
@@ -261,7 +267,7 @@ export default function Allergies({ client }: PropType) {
           width: "70%",
         }}
       >
-        {/* <div style={{ marginBottom: "50px" }}>
+        <div style={{ marginBottom: "50px" }}>
           <Stack
             direction="row"
             justifyContent="flex-end"
@@ -280,13 +286,13 @@ export default function Allergies({ client }: PropType) {
                 background: "#099250",
                 "&:hover": { backgroundColor: "#099250" },
               }}
-              onClick={addForm}
+              onClick={navToUpdateAllergy}
               disabled={hide}
             >
               Add New
             </Button>
           </Stack>
-        </div> */}
+        </div>
 
         {formField.map((form: any, index: any) => (
           <form>

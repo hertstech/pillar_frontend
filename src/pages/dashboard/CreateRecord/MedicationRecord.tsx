@@ -23,7 +23,7 @@ import {
   medFrequency,
 } from "../serviceUsers/shared";
 import moment from "moment";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { axiosInstance } from "../../../Utils";
 
@@ -50,6 +50,8 @@ const TextLabel = ({ text, label }: TextLabelProps) => (
 
 export default function MedicationRecord() {
   const { id } = useParams();
+
+  const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -110,6 +112,8 @@ export default function MedicationRecord() {
         text: `${res.data.message}`,
         confirmButtonColor: "#099250",
       });
+
+      navigate(`/dashboard/user/${id}/3`);
     } catch (error: any) {
       error;
       setIsLoading(false);

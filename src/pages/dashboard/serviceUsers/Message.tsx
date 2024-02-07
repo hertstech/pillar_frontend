@@ -28,7 +28,7 @@ export default function Message() {
     setIsLoading(true);
     try {
       const res = await axiosInstance.get(`/get-serviceuser-messages/${id}`);
-      console.log(res.data);
+    
       setRecord(res?.data);
       setIsLoading(false);
     } catch (error) {
@@ -56,7 +56,7 @@ export default function Message() {
                   flexDirection: "column",
                   gap: 2,
                   p: 2,
-                  width: "60%",
+                  // width: "60%",
                   margin: "16px auto",
                 }}
               >

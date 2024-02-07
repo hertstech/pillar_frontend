@@ -68,10 +68,12 @@ export default function ProfileHome() {
     try {
       const res = await axiosInstance.get(`/search-serviceuser/${apiData}`);
 
-      navigate(`/dashboard/search-result`, {
-        state: { searchResults: res.data },
-      });
-      setIsLoading(false);
+      if (res.status === 200) {
+        navigate(`/dashboard/search-result`, {
+          state: { searchResults: res.data },
+        });
+        setIsLoading(false);
+      }
     } catch (error: any) {
       console.log(error.response);
       Swal.fire({
@@ -122,13 +124,12 @@ export default function ProfileHome() {
         params: payload,
       });
 
-      console.log(payload);
-
-      navigate(`/dashboard/search-result`, {
-        state: { searchResults: res.data },
-      });
-
-      setIsLoading(false);
+      if (res.status === 200) {
+        navigate(`/dashboard/search-result`, {
+          state: { searchResults: res.data },
+        });
+        setIsLoading(false);
+      }
     } catch (error: any) {
       Swal.fire({
         icon: "info",
@@ -195,8 +196,8 @@ export default function ProfileHome() {
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
+                fillRule="evenodd"
+                clipRule="evenodd"
                 d="M11.5 1.25C8.87665 1.25 6.75 3.37665 6.75 6C6.75 8.62335 8.87665 10.75 11.5 10.75C14.1234 10.75 16.25 8.62335 16.25 6C16.25 3.37665 14.1234 1.25 11.5 1.25ZM8.25 6C8.25 4.20507 9.70507 2.75 11.5 2.75C13.2949 2.75 14.75 4.20507 14.75 6C14.75 7.79493 13.2949 9.25 11.5 9.25C9.70507 9.25 8.25 7.79493 8.25 6Z"
                 fill="#099250"
               />

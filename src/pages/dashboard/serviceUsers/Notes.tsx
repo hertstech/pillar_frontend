@@ -14,7 +14,7 @@ import Styles from "./styles.module.css";
 import NotePreview from "./NotePreview";
 import Swal from "sweetalert2";
 import { axiosInstance } from "../../../Utils";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
 
 interface FormState {
@@ -75,6 +75,7 @@ interface PropType {
 
 export default function Notes({ client }: PropType) {
   const [hide, setHide] = useState(false);
+
   const [formField, setFormField] = useState<FormState[]>([]);
 
   const [record, setRecord] = useState<apiResponse[]>([]);
@@ -84,6 +85,12 @@ export default function Notes({ client }: PropType) {
   const [isLoading, setIsLoading] = useState(false);
 
   const { id } = useParams();
+
+  const navigate = useNavigate();
+
+  const navToUpdateNotes = () => {
+    navigate(`/dashboard/user/${id}/update/4`);
+  };
 
   // const addForm = () => {
   //   // Check if any of the form fields have a value
@@ -221,7 +228,7 @@ export default function Notes({ client }: PropType) {
           width: "70%",
         }}
       >
-        {/* <div style={{ marginBottom: "50px" }}>
+        <div style={{ marginBottom: "50px" }}>
           <Stack
             direction="row"
             justifyContent="flex-end"
@@ -240,13 +247,13 @@ export default function Notes({ client }: PropType) {
                 background: "#099250",
                 "&:hover": { backgroundColor: "#099250" },
               }}
-              onClick={addForm}
+              onClick={navToUpdateNotes}
               disabled={hide}
             >
               Add New
             </Button>
           </Stack>
-        </div> */}
+        </div>
 
         {formField.map((form: any, index: any) => (
           <form>

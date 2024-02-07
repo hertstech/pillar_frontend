@@ -16,7 +16,7 @@ import {
 import moment from "moment";
 import InputField, { TextLabel } from "../../../components/InputField";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import StatesData from "../../../../states.json";
 import PhoneField from "../../../components/PhoneInput";
 import Style from "./styles.module.css";
@@ -78,6 +78,8 @@ interface PropType {
 export default function Demogrphics({ client }: PropType) {
   const { id } = useParams();
 
+  const navigate = useNavigate();
+
   const [isLoad, setIsLoad] = useState(false);
 
   const [showEdit, setShowEdit] = useState(false);
@@ -105,6 +107,10 @@ export default function Demogrphics({ client }: PropType) {
     nominatedPharmarcy: client?.nominatedPharmarcy || "",
     registeredDoctor: client?.registeredDoctor || "",
   });
+
+  const navToUpdateDemographics = () => {
+    navigate(`/dashboard/user/${id}/update/0`);
+  };
 
   const handleChange = (name: string, value: any) => {
     setEditForm({
@@ -174,7 +180,7 @@ export default function Demogrphics({ client }: PropType) {
                 "&:hover": { backgroundColor: "#FFF" },
                 gap: 1,
               }}
-              onClick={() => setShowEdit(true)}
+              onClick={navToUpdateDemographics}
             >
               <svg
                 width="18"

@@ -16,7 +16,7 @@ import { FaAngleUp, FaAngleDown } from "react-icons/fa";
 import { Calendar } from "../../../components/CalendarField";
 import InputField, { TextLabel } from "../../../components/InputField";
 import ReferralPReview from "./ReferralPReview";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { axiosInstance } from "../../../Utils";
 import Swal from "sweetalert2";
 import moment from "moment";
@@ -117,6 +117,12 @@ export default function Referral({ client }: PropType) {
   const [isLoading, setIsLoading] = useState(false);
 
   const { id } = useParams();
+
+  const navigate = useNavigate();
+
+  const navToUpdateReferral = () => {
+    navigate(`/dashboard/user/${id}/update/5`);
+  };
 
   // const addForm = () => {
   //   // Check if any of the form fields have a value
@@ -260,7 +266,7 @@ export default function Referral({ client }: PropType) {
           width: "70%",
         }}
       >
-        {/* <div style={{ marginBottom: "50px" }}>
+        <div style={{ marginBottom: "50px" }}>
           <Stack
             direction="row"
             justifyContent="flex-end"
@@ -279,13 +285,13 @@ export default function Referral({ client }: PropType) {
                 background: "#099250",
                 "&:hover": { backgroundColor: "#099250" },
               }}
-              onClick={addForm}
+              onClick={navToUpdateReferral}
               disabled={hide}
             >
               Add New
             </Button>
           </Stack>
-        </div> */}
+        </div>
 
         {formField.map((form: any, index: any) => (
           <form>

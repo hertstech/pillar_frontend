@@ -14,7 +14,7 @@ import moment from "moment";
 import InputField from "../../../components/InputField";
 import PhoneField from "../../../components/PhoneInput";
 import StatesData from "../../../../states.json";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { axiosInstance } from "../../../Utils";
 
@@ -37,6 +37,8 @@ export default function Demographics() {
   const client = useSelector((state: any) => state.client.clients.tab1[0]);
 
   const { id } = useParams();
+
+  const navigate = useNavigate();
 
   const [editForm, setEditForm] = React.useState({
     phoneNumber: client?.phoneNumber || "",
@@ -87,6 +89,8 @@ export default function Demographics() {
         text: `${res.data.message}`,
         confirmButtonColor: "#099250",
       });
+
+      navigate(`/dashboard/user/${id}/1`);
     } catch (error: any) {
       error.response;
       setIsLoad(false);

@@ -65,7 +65,15 @@ export const router = createBrowserRouter([
         element: <Singleuser />,
       },
       {
+        path: "user/:id/:tabID",
+        element: <Singleuser />,
+      },
+      {
         path: "user/:id/update",
+        element: <CreateRecord />,
+      },
+      {
+        path: "user/:id/update/:tabId",
         element: <CreateRecord />,
       },
     ],

@@ -26,7 +26,7 @@ import {
   medFrequency,
 } from "./shared";
 import { axiosInstance } from "../../../Utils";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import moment from "moment";
 
@@ -133,7 +133,13 @@ export default function Assessment({ client }: PropType) {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const navigate = useNavigate();
+
   const [record, setRecord] = useState<apiResponse[]>([]);
+
+  const navToUpdateMed = () => {
+    navigate(`/dashboard/user/${id}/update/2`);
+  };
 
   // const addForm = () => {
   //   // Check if any of the form fields have a value
@@ -279,7 +285,7 @@ export default function Assessment({ client }: PropType) {
           gap: 3,
         }}
       >
-        {/* <div style={{ marginBottom: "50px" }}>
+        <div style={{ marginBottom: "50px" }}>
           <Stack
             direction="row"
             justifyContent="flex-end"
@@ -298,13 +304,13 @@ export default function Assessment({ client }: PropType) {
                 background: "#099250",
                 "&:hover": { backgroundColor: "#099250" },
               }}
-              onClick={addForm}
+              onClick={navToUpdateMed}
               disabled={hide}
             >
               Add New
             </Button>
           </Stack>
-        </div> */}
+        </div>
 
         {formField.map((form: any, index: any) => (
           <form>

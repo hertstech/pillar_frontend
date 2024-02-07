@@ -28,7 +28,7 @@ import {
 } from "./shared";
 import HealthPreview from "./HealthPreview";
 import { axiosInstance } from "../../../Utils";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import moment from "moment";
 import dayjs from "dayjs";
@@ -204,10 +204,16 @@ export default function Health({ client }: PropType) {
 
   const { id } = useParams();
 
+  const navigate = useNavigate();
+
   const [isLoading, setIsLoading] = useState(false);
 
   const handleToggle = (index: any) => {
     setShow((prevIndex) => (prevIndex === index ? null : index));
+  };
+
+  const navToUpdateHealth = () => {
+    navigate(`/dashboard/user/${id}/update/1`);
   };
 
   // const addForm = () => {
@@ -239,7 +245,6 @@ export default function Health({ client }: PropType) {
         `/serviceuser-healthsummaryrecord/${id}`
       );
 
-      console.log(res?.data);
       setRecord(res?.data);
       setIsLoading(false);
     } catch (error) {
@@ -350,7 +355,7 @@ export default function Health({ client }: PropType) {
           width: "70%",
         }}
       >
-        {/* <div style={{ marginBottom: "50px" }}>
+        <div style={{ marginBottom: "50px" }}>
           <Stack
             direction="row"
             justifyContent="flex-end"
@@ -369,13 +374,13 @@ export default function Health({ client }: PropType) {
                 background: "#099250",
                 "&:hover": { backgroundColor: "#099250" },
               }}
-              onClick={addForm}
+              onClick={navToUpdateHealth}
               disabled={hide}
             >
               Add New
             </Button>
           </Stack>
-        </div> */}
+        </div>
 
         {formField.map((form: any, index: any) => (
           <form>

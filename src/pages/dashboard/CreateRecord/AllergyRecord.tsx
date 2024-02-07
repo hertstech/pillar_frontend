@@ -20,12 +20,14 @@ import {
   certainty,
   reportedBy,
 } from "../serviceUsers/shared";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { axiosInstance } from "../../../Utils";
 
 export default function AllergyRecord() {
   const { id } = useParams();
+
+  const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -82,6 +84,8 @@ export default function AllergyRecord() {
         text: `${res.data.message}`,
         confirmButtonColor: "#099250",
       });
+
+      navigate(`/dashboard/user/${id}/4`);
     } catch (error: any) {
       error;
       setIsLoading(false);
