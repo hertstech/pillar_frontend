@@ -63,14 +63,9 @@ export default function StepThree({ data }: any) {
           >
             Record successfully created
           </Typography>
-          <Typography
-            fontWeight={400}
-            fontSize={16}
-            sx={{ color: "#8C94A6" }}
-            variant="body1"
-          >
+          <span style={{ fontWeight: 400, fontSize: 16, color: "#8C94A6" }}>
             Your client would also receive an email with their new NHR ID
-          </Typography>
+          </span>
         </div>
 
         <Typography
@@ -99,7 +94,7 @@ export default function StepThree({ data }: any) {
             onClick={onCopy}
           >
             {copied ? (
-              <p>
+              <p style={{ background: "#099250" }}>
                 Copied{" "}
                 <svg
                   width="17"
@@ -120,7 +115,7 @@ export default function StepThree({ data }: any) {
                 </svg>
               </p>
             ) : (
-              <p>
+              <p style={{ background: "#4A5BC3" }}>
                 Copy ID{" "}
                 <svg
                   width="17"

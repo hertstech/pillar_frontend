@@ -190,7 +190,7 @@ export default function Overview({ client }: PropType) {
     labels: pressure
       ? pressure
           ?.reverse()
-          .map((x: any) => moment(x.date_created).format("MMM-YYYY"))
+          .map((x: any) => moment(x.date_created || "").format("MMM-YYYY"))
       : [],
     datasets: [
       {
@@ -217,7 +217,7 @@ export default function Overview({ client }: PropType) {
   const pulseData = {
     labels: pulse
       ?.reverse()
-      .map((x: any) => moment(x.date_created).format("MMM-YYYY")),
+      .map((x: any) => moment(x.date_created || "").format("MMM-YYYY")),
     datasets: [
       {
         label: "Pulse",
@@ -400,8 +400,9 @@ export default function Overview({ client }: PropType) {
                     fontSize={12}
                     color={"#101928"}
                   >
-                    last: {moment(bloodGroup.date_created).format("DD/MM/YYYY")}{" "}
-                    {moment(bloodGroup.date_created).format("LT")}
+                    last:{" "}
+                    {moment(bloodGroup.date_created || "").format("DD/MM/YYYY")}{" "}
+                    {moment(bloodGroup.date_created || "").format("LT")}
                   </Typography>
                 </div>
                 <div className="flex justify-center items-center">
@@ -455,8 +456,9 @@ export default function Overview({ client }: PropType) {
                     fontSize={12}
                     color={"#101928"}
                   >
-                    last: {moment(genotype.date_created).format("DD/MM/YYYY")}{" "}
-                    {moment(genotype.date_created).format("LT")}
+                    last:{" "}
+                    {moment(genotype.date_created || "").format("DD/MM/YYYY")}{" "}
+                    {moment(genotype.date_created || "").format("LT")}
                   </Typography>
                 </div>
                 <div className="flex justify-center items-center">
@@ -505,8 +507,9 @@ export default function Overview({ client }: PropType) {
                     fontSize={12}
                     color={"#101928"}
                   >
-                    last: {moment(glucose.date_created).format("DD/MM/YYYY")}{" "}
-                    {moment(glucose.date_created).format("LT")}
+                    last:{" "}
+                    {moment(glucose.date_created || "").format("DD/MM/YYYY")}{" "}
+                    {moment(glucose.date_created || "").format("LT")}
                   </Typography>
                 </div>
                 <div className="flex justify-center items-center">
@@ -558,8 +561,8 @@ export default function Overview({ client }: PropType) {
                     fontSize={12}
                     color={"#101928"}
                   >
-                    last: {moment(temp.date_created).format("DD/MM/YYYY")}{" "}
-                    {moment(temp.date_created).format("LT")}
+                    last: {moment(temp.date_created || "").format("DD/MM/YYYY")}{" "}
+                    {moment(temp.date_created || "").format("LT")}
                   </Typography>
                 </div>
                 <div className="flex justify-center items-center">
@@ -750,7 +753,9 @@ export default function Overview({ client }: PropType) {
                           ></span>
 
                           <span>
-                            {moment(item.date_created).format("DD/MM/YYYY")}
+                            {moment(item.date_created || "").format(
+                              "DD/MM/YYYY"
+                            )}
                           </span>
                         </div>
                       </div>
@@ -818,7 +823,7 @@ export default function Overview({ client }: PropType) {
                       {/* <span>By {item.specialist}</span> */}
                     </Typography>
                     <span style={{ fontWeight: 500 }}>
-                      {moment(item.date_created).format("DD/MM/YYYY")}
+                      {moment(item.date_created || "").format("DD/MM/YYYY")}
                     </span>
                   </div>
                 ))

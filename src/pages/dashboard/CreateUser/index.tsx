@@ -44,9 +44,7 @@ export default function CreateUser() {
 
   const token = useSelector((state: any) => state.user.access_token);
 
-  const createData = useSelector((state: any) => state.createNewUser);
-
-  console.log(createData);
+  // const createData = useSelector((state: any) => state.createNewUser);
 
   const navigate = useNavigate();
 

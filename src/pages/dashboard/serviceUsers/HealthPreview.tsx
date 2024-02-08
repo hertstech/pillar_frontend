@@ -260,7 +260,7 @@ export default function HealthPreview({
           onClick={handleSubmit}
           disabled={isLoading}
         >
-          Submit
+          Save
         </Button>
       </Stack>
     </Dialog>

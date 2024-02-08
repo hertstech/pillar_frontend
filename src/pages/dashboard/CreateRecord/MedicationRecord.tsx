@@ -336,7 +336,7 @@ export default function MedicationRecord() {
               width: "100%",
             }}
             variant="outlined"
-            // onClick={() => setIsOpen(true)}
+            onClick={() => setIsOpen(true)}
           >
             Continue
           </Button>
@@ -446,7 +446,7 @@ export default function MedicationRecord() {
               onClick={createNewMedication}
               disabled={isLoading}
             >
-              Submit
+              Save
             </Button>
           </Stack>
         </Dialog>

@@ -142,7 +142,7 @@ export default function AllergiesPreview({
           onClick={createNewRecord}
           disabled={isLoading}
         >
-          Submit
+          Save
         </Button>
       </Stack>
     </Dialog>

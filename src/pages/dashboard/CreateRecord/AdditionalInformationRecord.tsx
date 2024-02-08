@@ -61,7 +61,6 @@ export default function AdditionalInformationRecord() {
   const handleSubmit = async () => {
     setIsLoading(true);
 
-
     const isCategoriesAndTypeEmpty =
       formField.writtenBy === "" && formField.additionalNote === "";
 
@@ -213,7 +212,7 @@ export default function AdditionalInformationRecord() {
               onClick={handleSubmit}
               disabled={isLoading}
             >
-              Submit
+              Save
             </Button>
           </Stack>
         </Dialog>

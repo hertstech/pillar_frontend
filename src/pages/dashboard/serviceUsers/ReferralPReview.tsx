@@ -161,7 +161,7 @@ export default function ReferralPReview({
           onClick={handleSubmit}
           disabled={isLoading}
         >
-          Submit
+          Save
         </Button>
       </Stack>
     </Dialog>

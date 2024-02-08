@@ -101,7 +101,7 @@ export default function NotePreview({
           onClick={handleSubmit}
           disabled={isLoading}
         >
-          Submit
+          Save
         </Button>
       </Stack>
     </Dialog>

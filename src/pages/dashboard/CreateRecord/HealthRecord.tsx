@@ -793,7 +793,7 @@ export default function HealthRecord() {
               onClick={handleSubmit}
               disabled={isLoading}
             >
-              Submit
+              Save
             </Button>
           </Stack>
         </Dialog>

@@ -349,7 +349,7 @@ export default function AllergyRecord() {
               onClick={createNewRecord}
               disabled={isLoading}
             >
-              Submit
+              Save
             </Button>
           </Stack>
         </Dialog>

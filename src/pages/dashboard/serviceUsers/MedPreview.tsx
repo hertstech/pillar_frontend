@@ -172,7 +172,7 @@ export default function Preview({
           onClick={createNewMedication}
           disabled={isLoading}
         >
-          Submit
+          Save
         </Button>
       </Stack>
     </Dialog>
