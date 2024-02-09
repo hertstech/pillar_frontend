@@ -7,6 +7,8 @@ import { IoLogOutOutline } from "react-icons/io5";
 import { FiGrid } from "react-icons/fi";
 import { resetClientState } from "../../redux/clientSlice";
 
+// HOME, dashboard, Monitoring, Form, Files, Settings, Support
+
 const navLinks = [
   {
     id: 0,
