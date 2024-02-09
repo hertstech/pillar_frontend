@@ -18,8 +18,8 @@ const navLinks = [
   },
   {
     id: 1,
-    name: "HCPs (DO NOT TAP!)",
-    to: "/dashboard/practitioners",
+    name: "Team Member",
+    to: "/",
     icon: (
       <svg
         width="20"
