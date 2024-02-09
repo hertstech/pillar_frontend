@@ -9,7 +9,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import NoResultIllustration from "../../../components/NoResult";
+import NoResultIllustration, { SpinLoader } from "../../../components/NoResult";
 import Styles from "./styles.module.css";
 import { useEffect, useState } from "react";
 import { FaAngleUp, FaAngleDown } from "react-icons/fa";
@@ -504,111 +504,125 @@ export default function Referral({ client }: PropType) {
           </form>
         ))}
 
-        {!hide && record?.length <= 0 && (
+        {/* {!hide && record?.length <= 0 && (
           <NoResultIllustration text={"No record found"} />
-        )}
+        )} */}
 
-        {record.map((item, index) => (
-          <Box key={index}>
-            <Button
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                p: 2,
-                userSelect: "none",
-                fontSize: 18,
-                justifyContent: "space-between",
-                border: "1px #E4E7EC solid",
-                textTransform: "capitalize",
-                color: "#099250",
-              }}
-              fullWidth
-              onClick={() => handleToggle(`${item?.urgencyStatus}${index}`)}
-            >
-              <span>{item?.urgencyStatus}</span>
-              <span>
-                {show === `${item?.urgencyStatus}${index}` ? (
-                  <FaAngleUp />
-                ) : (
-                  <FaAngleDown />
-                )}
-              </span>
-            </Button>
-
-            {show === `${item?.urgencyStatus}${index}` && (
-              <div style={{ padding: 6 }}>
-                <Box
-                  sx={{
-                    display: "grid",
-                    columnGap: 1.5,
-                    rowGap: 1.5,
-                    gridTemplateColumns: {
-                      xs: "repeat(1, 1fr)",
-                      lg: "repeat(3, 1fr)",
-                    },
-                  }}
-                >
-                  <TextLabel
-                    label="Date Created"
-                    text={
-                      moment(item.date_created).format("DD/MM/YYYY") || "None"
+        {isLoading ? (
+          <SpinLoader />
+        ) : (
+          <>
+            {record.length > 0 ? (
+              record.map((item, index) => (
+                <Box key={index}>
+                  <Button
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      p: 2,
+                      userSelect: "none",
+                      fontSize: 18,
+                      justifyContent: "space-between",
+                      border: "1px #E4E7EC solid",
+                      textTransform: "capitalize",
+                      color: "#099250",
+                    }}
+                    fullWidth
+                    onClick={() =>
+                      handleToggle(`${item?.urgencyStatus}${index}`)
                     }
-                  />
-                  <TextLabel
-                    label="Care Setting"
-                    text={item.careSetting || "None"}
-                  />
-
-                  <TextLabel
-                    label="Referral Name"
-                    text={item.referralName || "None"}
-                  />
-                  <TextLabel
-                    label="Referral reason"
-                    text={item.referralReason || "None"}
-                  />
-                  <TextLabel
-                    label="Waiting Status"
-                    text={item.waitingStatus || "None"}
-                  />
-                  <TextLabel
-                    label="Team referred to"
-                    text={item.teamReferredTo || "None"}
-                  />
-                  <TextLabel
-                    label="Date referral was received"
-                    text={
-                      moment(item.referralDateReceived).format("DD/MM/YYYY") ||
-                      "None"
-                    }
-                  />
-                </Box>
-                <TextLabel
-                  label="Additional Notes"
-                  text={item.additionalNote || "None"}
-                />
-
-                <div
-                  style={{
-                    padding: "16px 0px",
-                    color: "#101928",
-                  }}
-                >
-                  <Typography fontWeight={400} fontSize={12}>
-                    Administered by
-                  </Typography>
-                  <Typography
-                    fontWeight={400}
-                    fontSize={14}
-                    sx={{ display: "flex", gap: 1, alignItems: "center" }}
                   >
-                    🕒 ID: #{item.pillar_user_id_fk}
-                  </Typography>
-                </div>
-              </div>
+                    <span>{item?.urgencyStatus}</span>
+                    <span>
+                      {show === `${item?.urgencyStatus}${index}` ? (
+                        <FaAngleUp />
+                      ) : (
+                        <FaAngleDown />
+                      )}
+                    </span>
+                  </Button>
+
+                  {show === `${item?.urgencyStatus}${index}` && (
+                    <div style={{ padding: 6 }}>
+                      <Box
+                        sx={{
+                          display: "grid",
+                          columnGap: 1.5,
+                          rowGap: 1.5,
+                          gridTemplateColumns: {
+                            xs: "repeat(1, 1fr)",
+                            lg: "repeat(3, 1fr)",
+                          },
+                        }}
+                      >
+                        <TextLabel
+                          label="Date Created"
+                          text={
+                            moment(item.date_created).format("DD/MM/YYYY") ||
+                            "None"
+                          }
+                        />
+                        <TextLabel
+                          label="Care Setting"
+                          text={item.careSetting || "None"}
+                        />
+
+                        <TextLabel
+                          label="Referral Name"
+                          text={item.referralName || "None"}
+                        />
+                        <TextLabel
+                          label="Referral reason"
+                          text={item.referralReason || "None"}
+                        />
+                        <TextLabel
+                          label="Waiting Status"
+                          text={item.waitingStatus || "None"}
+                        />
+                        <TextLabel
+                          label="Team referred to"
+                          text={item.teamReferredTo || "None"}
+                        />
+                        <TextLabel
+                          label="Date referral was received"
+                          text={
+                            moment(item.referralDateReceived).format(
+                              "DD/MM/YYYY"
+                            ) || "None"
+                          }
+                        />
+                      </Box>
+                      <TextLabel
+                        label="Additional Notes"
+                        text={item.additionalNote || "None"}
+                      />
+
+                      <div
+                        style={{
+                          padding: "16px 0px",
+                          color: "#101928",
+                        }}
+                      >
+                        <Typography fontWeight={400} fontSize={12}>
+                          Administered by
+                        </Typography>
+                        <Typography
+                          fontWeight={400}
+                          fontSize={14}
+                          sx={{ display: "flex", gap: 1, alignItems: "center" }}
+                        >
+                          🕒 ID: #{item.pillar_user_id_fk}
+                        </Typography>
+                      </div>
+                    </div>
+                  )}
+                </Box>
+              ))
+            ) : (
+              <NoResultIllustration text={"No record found"} />
             )}
-          </Box>
-        ))}
+          </>
+        )}
 
         {formField.map((form, index) => (
           <ReferralPReview

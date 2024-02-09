@@ -7,7 +7,7 @@ import {
   Divider,
   Typography,
 } from "@mui/material";
-import NoResultIllustration from "../../../components/NoResult";
+import NoResultIllustration, { SpinLoader } from "../../../components/NoResult";
 import { useEffect, useState } from "react";
 import InputField, { TextLabel } from "../../../components/InputField";
 import Styles from "./styles.module.css";
@@ -319,16 +319,26 @@ export default function Notes({ client }: PropType) {
           </form>
         ))}
 
-        {!hide && record.length <= 0 && (
+        {/* {!hide && record.length <= 0 && (
           <NoResultIllustration text={"No record found"} />
-        )}
+        )} */}
 
-        {record.map((item, index) => (
-          <Card sx={{ p: 2 }} key={index}>
-            <TextLabel label="Note" text={item.additionalNote} />
-            <TextLabel label="Written By" text={item.writtenBy} />
-          </Card>
-        ))}
+        {isLoading ? (
+          <SpinLoader />
+        ) : (
+          <>
+            {record.length > 0 ? (
+              record.map((item, index) => (
+                <Card sx={{ p: 2 }} key={index}>
+                  <TextLabel label="Note" text={item.additionalNote} />
+                  <TextLabel label="Written By" text={item.writtenBy} />
+                </Card>
+              ))
+            ) : (
+              <NoResultIllustration text={"No record found"} />
+            )}
+          </>
+        )}
 
         {formField.map((form, index) => (
           <NotePreview

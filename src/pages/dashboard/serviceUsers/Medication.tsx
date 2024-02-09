@@ -10,7 +10,7 @@ import {
   Divider,
   Typography,
 } from "@mui/material";
-import NoResultIllustration from "../../../components/NoResult";
+import NoResultIllustration, { SpinLoader } from "../../../components/NoResult";
 import { useEffect, useState } from "react";
 import Styles from "./styles.module.css";
 import { Calendar } from "../../../components/CalendarField";
@@ -562,90 +562,106 @@ export default function Assessment({ client }: PropType) {
         ))}
 
         {/* INITIAL STATE WHEN EMPTY */}
-        {!hide && record.length <= 0 && (
+        {/* {!hide && record.length <= 0 && (
           <NoResultIllustration text={"No record found"} />
-        )}
+        )} */}
 
-        {record?.map((item, index) => (
-          <Box key={index}>
-            <Button
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                p: 2,
-                userSelect: "none",
-                fontSize: 18,
-                justifyContent: "space-between",
-                border: "1px #E4E7EC solid",
-                textTransform: "capitalize",
-                color: "#099250",
-              }}
-              fullWidth
-              onClick={() => handleToggle(`${item?.medicationType}${index}`)}
-            >
-              <span>{item?.medicationType}</span>
-              <span>
-                {show === `${item?.medicationType}${index}` ? (
-                  <FaAngleUp />
-                ) : (
-                  <FaAngleDown />
-                )}
-              </span>
-            </Button>
-
-            {show === `${item?.medicationType}${index}` && (
-              <div style={{ padding: 6 }}>
-                <Box
-                  sx={{
-                    display: "grid",
-                    columnGap: 1.5,
-                    rowGap: 1.5,
-                    gridTemplateColumns: {
-                      xs: "repeat(1, 1fr)",
-                      lg: "repeat(3, 1fr)",
-                    },
-                  }}
-                >
-                  <TextLabel
-                    label="Date Prescribed"
-                    text={
-                      moment(item.date_created).format("DD/MM/YYYY") || "None"
+        {isLoading ? (
+          <SpinLoader />
+        ) : (
+          <>
+            {record.length > 0 ? (
+              record?.map((item, index) => (
+                <Box key={index}>
+                  <Button
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      p: 2,
+                      userSelect: "none",
+                      fontSize: 18,
+                      justifyContent: "space-between",
+                      border: "1px #E4E7EC solid",
+                      textTransform: "capitalize",
+                      color: "#099250",
+                    }}
+                    fullWidth
+                    onClick={() =>
+                      handleToggle(`${item?.medicationType}${index}`)
                     }
-                  />
-                  <TextLabel
-                    label="Name of Medication"
-                    text={item.medicationName || "None"}
-                  />
-                  <TextLabel
-                    label="Type of Medication"
-                    text={item.medicationType || "None"}
-                  />
-                  <TextLabel
-                    label="Route"
-                    text={item.medicationRoute || "None"}
-                  />
-                  <TextLabel
-                    label="Dosage Form"
-                    text={item.medicationDosageForm || "None"}
-                  />
-                  <TextLabel label="Dosage" text={item.dosage || "None"} />
-                  <TextLabel
-                    label="Frequency"
-                    text={item.frequencyType || "None"}
-                  />
+                  >
+                    <span>{item?.medicationType}</span>
+                    <span>
+                      {show === `${item?.medicationType}${index}` ? (
+                        <FaAngleUp />
+                      ) : (
+                        <FaAngleDown />
+                      )}
+                    </span>
+                  </Button>
+
+                  {show === `${item?.medicationType}${index}` && (
+                    <div style={{ padding: 6 }}>
+                      <Box
+                        sx={{
+                          display: "grid",
+                          columnGap: 1.5,
+                          rowGap: 1.5,
+                          gridTemplateColumns: {
+                            xs: "repeat(1, 1fr)",
+                            lg: "repeat(3, 1fr)",
+                          },
+                        }}
+                      >
+                        <TextLabel
+                          label="Date Prescribed"
+                          text={
+                            moment(item.date_created).format("DD/MM/YYYY") ||
+                            "None"
+                          }
+                        />
+                        <TextLabel
+                          label="Name of Medication"
+                          text={item.medicationName || "None"}
+                        />
+                        <TextLabel
+                          label="Type of Medication"
+                          text={item.medicationType || "None"}
+                        />
+                        <TextLabel
+                          label="Route"
+                          text={item.medicationRoute || "None"}
+                        />
+                        <TextLabel
+                          label="Dosage Form"
+                          text={item.medicationDosageForm || "None"}
+                        />
+                        <TextLabel
+                          label="Dosage"
+                          text={item.dosage || "None"}
+                        />
+                        <TextLabel
+                          label="Frequency"
+                          text={item.frequencyType || "None"}
+                        />
+                      </Box>
+                      <TextLabel
+                        label="Prescriber Information"
+                        text={item.prescriber || "None"}
+                      />
+                      <TextLabel
+                        label="Additional Notes"
+                        text={item.additionalNote || "None"}
+                      />
+                    </div>
+                  )}
                 </Box>
-                <TextLabel
-                  label="Prescriber Information"
-                  text={item.prescriber || "None"}
-                />
-                <TextLabel
-                  label="Additional Notes"
-                  text={item.additionalNote || "None"}
-                />
-              </div>
+              ))
+            ) : (
+              <NoResultIllustration text={"No record found"} />
             )}
-          </Box>
-        ))}
+          </>
+        )}
 
         {formField.map((form, index) => (
           <Preview

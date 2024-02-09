@@ -28,7 +28,7 @@ export default function Message() {
     setIsLoading(true);
     try {
       const res = await axiosInstance.get(`/get-serviceuser-messages/${id}`);
-    
+
       setRecord(res?.data);
       setIsLoading(false);
     } catch (error) {

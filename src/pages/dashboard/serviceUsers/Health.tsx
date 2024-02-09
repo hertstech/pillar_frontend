@@ -14,7 +14,7 @@ import Styles from "./styles.module.css";
 import InputField from "../../../components/InputField";
 import categories from "../../../../categories.json";
 import { useEffect, useState } from "react";
-import NoResultIllustration from "../../../components/NoResult";
+import NoResultIllustration, { SpinLoader } from "../../../components/NoResult";
 import { FaAngleUp, FaAngleDown } from "react-icons/fa";
 import { Calendar } from "../../../components/CalendarField";
 import {
@@ -917,206 +917,233 @@ export default function Health({ client }: PropType) {
         ))}
 
         {/* INITIAL STATE WHEN EMPTY */}
-        {!hide && record.length <= 0 && (
+        {/* {!hide && record.length <= 0 && (
           <NoResultIllustration text={"No record found"} />
-        )}
+        )} */}
 
-        {record?.map((item, index) => (
-          <Box key={index}>
-            <Button
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                p: 2,
-                userSelect: "none",
-                fontSize: 18,
-                justifyContent: "space-between",
-                border: "1px #E4E7EC solid",
-                textTransform: "capitalize",
-                color: "#099250",
-              }}
-              fullWidth
-              onClick={() => handleToggle(`${item?.type}${index}`)}
-            >
-              <span>{item?.type}</span>
-              <span>
-                {show === `${item?.type}${index}` ? (
-                  <FaAngleUp />
-                ) : (
-                  <FaAngleDown />
-                )}
-              </span>
-            </Button>
-
-            {show === `${item?.type}${index}` && (
-              <div style={{ padding: 6 }}>
-                <Box
-                  sx={{
-                    display: "grid",
-                    columnGap: 1.5,
-                    rowGap: 1.5,
-                    gridTemplateColumns: {
-                      xs: "repeat(1, 1fr)",
-                      lg: "repeat(3, 1fr)",
-                    },
-                  }}
-                >
-                  <TextLabel
-                    label="Date Created"
-                    text={
-                      moment(item.date_created).format("DD/MM/YYYY") || "None"
-                    }
-                  />
-                  <TextLabel label="Type" text={item.categories || "None"} />
-
-                  {/* VITALS DATA VIEW*/}
-                  {item.type === "blood pressure" && (
-                    <TextLabel label="Systolic Reading" text={item.systolic} />
-                  )}
-
-                  {item.type === "blood pressure" && (
-                    <TextLabel
-                      label="Diastolic Reading"
-                      text={item.diasttolic}
-                    />
-                  )}
-
-                  {item.type === "body temperature" && (
-                    <TextLabel
-                      label="Reading"
-                      text={`${item.reading} ${item.degreeRating}` || "N/A"}
-                    />
-                  )}
-
-                  {item.type === "pulse rate" && (
-                    <TextLabel label="Beat Per Minute" text={item.bpm} />
-                  )}
-
-                  {item.type === "glucose level" && (
-                    <TextLabel label="Glucose level" text={item.mgDl} />
-                  )}
-
-                  {/* GENETIC INFORMATION */}
-                  {item.type === "blood type" && (
-                    <TextLabel label="Blood Type" text={item.bloodType} />
-                  )}
-
-                  {item.type === "genotype" && (
-                    <TextLabel label="Genotype" text={item.genotype || "N/A"} />
-                  )}
-
-                  {/* IMMUNIZATION DATA */}
-                  {item.categories === "immunization" && (
-                    <TextLabel
-                      label="Manufacturer"
-                      text={item.manufacturer || "N/A"}
-                    />
-                  )}
-
-                  {item.categories === "immunization" && (
-                    <TextLabel
-                      label="Batch Number"
-                      text={item.batchNumber || "N/A"}
-                    />
-                  )}
-
-                  {item.categories === "immunization" && (
-                    <TextLabel
-                      label="Administration Date"
-                      text={moment(item.administrationDate).format(
-                        "DD/MM/YYYY"
+        {isLoading ? (
+          <SpinLoader />
+        ) : (
+          <>
+            {record.length > 0 ? (
+              record?.map((item, index) => (
+                <Box key={index}>
+                  <Button
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      p: 2,
+                      userSelect: "none",
+                      fontSize: 18,
+                      justifyContent: "space-between",
+                      border: "1px #E4E7EC solid",
+                      textTransform: "capitalize",
+                      color: "#099250",
+                    }}
+                    fullWidth
+                    onClick={() => handleToggle(`${item?.type}${index}`)}
+                  >
+                    <span>{item?.type}</span>
+                    <span>
+                      {show === `${item?.type}${index}` ? (
+                        <FaAngleUp />
+                      ) : (
+                        <FaAngleDown />
                       )}
-                    />
-                  )}
+                    </span>
+                  </Button>
 
-                  {item.categories === "immunization" && (
-                    <TextLabel
-                      label="Expiration Date"
-                      text={moment(item.expirationDate).format("DD/MM/YYYY")}
-                    />
-                  )}
+                  {show === `${item?.type}${index}` && (
+                    <div style={{ padding: 6 }}>
+                      <Box
+                        sx={{
+                          display: "grid",
+                          columnGap: 1.5,
+                          rowGap: 1.5,
+                          gridTemplateColumns: {
+                            xs: "repeat(1, 1fr)",
+                            lg: "repeat(3, 1fr)",
+                          },
+                        }}
+                      >
+                        <TextLabel
+                          label="Date Created"
+                          text={
+                            moment(item.date_created).format("DD/MM/YYYY") ||
+                            "None"
+                          }
+                        />
+                        <TextLabel
+                          label="Type"
+                          text={item.categories || "None"}
+                        />
 
-                  {/* DIAGNOSIS DATA VIEW*/}
-                  {item.type === "primary diagnosis" && (
-                    <TextLabel
-                      label="Primary Diagnosis"
-                      text={item.primaryDiagnosis || "N/A"}
-                    />
-                  )}
+                        {/* VITALS DATA VIEW*/}
+                        {item.type === "blood pressure" && (
+                          <TextLabel
+                            label="Systolic Reading"
+                            text={item.systolic}
+                          />
+                        )}
 
-                  {item.type === "secondary diagnosis" && (
-                    <TextLabel
-                      label="Secondary Diagnosis"
-                      text={item.secondaryDiagnosis || "N/A"}
-                    />
-                  )}
+                        {item.type === "blood pressure" && (
+                          <TextLabel
+                            label="Diastolic Reading"
+                            text={item.diasttolic}
+                          />
+                        )}
 
-                  {item.categories === "diagnosis" && (
-                    <TextLabel label="Severity" text={item.severity || "N/A"} />
-                  )}
+                        {item.type === "body temperature" && (
+                          <TextLabel
+                            label="Reading"
+                            text={
+                              `${item.reading} ${item.degreeRating}` || "N/A"
+                            }
+                          />
+                        )}
 
-                  {item.categories === "diagnosis" && (
-                    <TextLabel
-                      label="Treatment Status"
-                      text={item.treatmentStatus || "N/A"}
-                    />
-                  )}
+                        {item.type === "pulse rate" && (
+                          <TextLabel label="Beat Per Minute" text={item.bpm} />
+                        )}
 
-                  {item.categories === "diagnosis" && (
-                    <TextLabel
-                      label="Treatment type"
-                      text={item.treatmentType || "N/A"}
-                    />
-                  )}
+                        {item.type === "glucose level" && (
+                          <TextLabel label="Glucose level" text={item.mgDl} />
+                        )}
 
-                  {item.categories === "diagnosis" && (
-                    <TextLabel
-                      label="Follow up Plans"
-                      text={item.followUpPlans || "N/A"}
-                    />
-                  )}
+                        {/* GENETIC INFORMATION */}
+                        {item.type === "blood type" && (
+                          <TextLabel label="Blood Type" text={item.bloodType} />
+                        )}
 
-                  {item.categories === "diagnosis" && (
-                    <TextLabel
-                      label="Prescribed by"
-                      text={`${item.title} ${item.reading}` || "N/A"}
-                    />
-                  )}
+                        {item.type === "genotype" && (
+                          <TextLabel
+                            label="Genotype"
+                            text={item.genotype || "N/A"}
+                          />
+                        )}
 
-                  {item.categories === "diagnosis" && (
-                    <TextLabel
-                      label="Progress notes"
-                      text={item.progressNote}
-                    />
+                        {/* IMMUNIZATION DATA */}
+                        {item.categories === "immunization" && (
+                          <TextLabel
+                            label="Manufacturer"
+                            text={item.manufacturer || "N/A"}
+                          />
+                        )}
+
+                        {item.categories === "immunization" && (
+                          <TextLabel
+                            label="Batch Number"
+                            text={item.batchNumber || "N/A"}
+                          />
+                        )}
+
+                        {item.categories === "immunization" && (
+                          <TextLabel
+                            label="Administration Date"
+                            text={moment(item.administrationDate).format(
+                              "DD/MM/YYYY"
+                            )}
+                          />
+                        )}
+
+                        {item.categories === "immunization" && (
+                          <TextLabel
+                            label="Expiration Date"
+                            text={moment(item.expirationDate).format(
+                              "DD/MM/YYYY"
+                            )}
+                          />
+                        )}
+
+                        {/* DIAGNOSIS DATA VIEW*/}
+                        {item.type === "primary diagnosis" && (
+                          <TextLabel
+                            label="Primary Diagnosis"
+                            text={item.primaryDiagnosis || "N/A"}
+                          />
+                        )}
+
+                        {item.type === "secondary diagnosis" && (
+                          <TextLabel
+                            label="Secondary Diagnosis"
+                            text={item.secondaryDiagnosis || "N/A"}
+                          />
+                        )}
+
+                        {item.categories === "diagnosis" && (
+                          <TextLabel
+                            label="Severity"
+                            text={item.severity || "N/A"}
+                          />
+                        )}
+
+                        {item.categories === "diagnosis" && (
+                          <TextLabel
+                            label="Treatment Status"
+                            text={item.treatmentStatus || "N/A"}
+                          />
+                        )}
+
+                        {item.categories === "diagnosis" && (
+                          <TextLabel
+                            label="Treatment type"
+                            text={item.treatmentType || "N/A"}
+                          />
+                        )}
+
+                        {item.categories === "diagnosis" && (
+                          <TextLabel
+                            label="Follow up Plans"
+                            text={item.followUpPlans || "N/A"}
+                          />
+                        )}
+
+                        {item.categories === "diagnosis" && (
+                          <TextLabel
+                            label="Prescribed by"
+                            text={`${item.title} ${item.reading}` || "N/A"}
+                          />
+                        )}
+
+                        {item.categories === "diagnosis" && (
+                          <TextLabel
+                            label="Progress notes"
+                            text={item.progressNote}
+                          />
+                        )}
+                      </Box>
+
+                      <TextLabel
+                        label="Additional Notes"
+                        text={item.notes || "None"}
+                      />
+
+                      <div
+                        style={{
+                          padding: "16px 0px",
+                          color: "#101928",
+                        }}
+                      >
+                        <Typography fontWeight={400} fontSize={12}>
+                          Administered by
+                        </Typography>
+                        <Typography
+                          fontWeight={400}
+                          fontSize={14}
+                          sx={{ display: "flex", gap: 1, alignItems: "center" }}
+                        >
+                          🕒 ID: #{item.pillar_user_id_fk}
+                        </Typography>
+                      </div>
+                    </div>
                   )}
                 </Box>
-
-                <TextLabel
-                  label="Additional Notes"
-                  text={item.notes || "None"}
-                />
-
-                <div
-                  style={{
-                    padding: "16px 0px",
-                    color: "#101928",
-                  }}
-                >
-                  <Typography fontWeight={400} fontSize={12}>
-                    Administered by
-                  </Typography>
-                  <Typography
-                    fontWeight={400}
-                    fontSize={14}
-                    sx={{ display: "flex", gap: 1, alignItems: "center" }}
-                  >
-                    🕒 ID: #{item.pillar_user_id_fk}
-                  </Typography>
-                </div>
-              </div>
+              ))
+            ) : (
+              <NoResultIllustration text={"No record found"} />
             )}
-          </Box>
-        ))}
+          </>
+        )}
 
         {formField.map((form, index) => (
           <HealthPreview

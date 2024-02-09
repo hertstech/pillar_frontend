@@ -13,7 +13,7 @@ export default function NoResultIllustration({ text }: any) {
 
 export const Loader = () => {
   return (
-    <div style={{ minHeight: "inherit" }} className="wrapped">
+    <div style={{ minHeight: "1vh" }} className="wrapped">
       <div className="wrapp">
         <div className="pulseLoad" />
       </div>

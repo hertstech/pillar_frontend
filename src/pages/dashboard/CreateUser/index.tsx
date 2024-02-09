@@ -155,6 +155,7 @@ export default function CreateUser() {
   };
 
   const verify = async () => {
+    setIsLoading(true);
     try {
       const res = await fetch("../../../nationalIdentificationNumber.json");
       const data = await res.json();
@@ -162,6 +163,10 @@ export default function CreateUser() {
       const matchingRecord = data.find(
         (record: any) => record.nationalNumber === formData.NIN
       );
+
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 4000);
 
       if (matchingRecord) {
         // NIN is found in the JSON data

@@ -72,7 +72,6 @@ input::-webkit-inner-spin-button {
   display: grid;
   place-items: center;
   position: absolute;
-  /* background: #00000080; */
   width: 52%;
 }
 .wrapp {

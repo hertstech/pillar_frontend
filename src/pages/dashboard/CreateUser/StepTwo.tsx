@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Box, Button, MenuItem, TextField, Typography } from "@mui/material";
 import InputField from "../../../components/InputField";
-import { Loader } from "../../../components/NoResult";
+import { SpinLoader } from "../../../components/NoResult";
 import { FaCloudUploadAlt } from "react-icons/fa";
 
 let months = [
@@ -55,8 +55,9 @@ export default function StepTwo({
           minHeight: 469,
         }}
       >
+        {/* <Loader /> */}
         {isLoading ? (
-          <Loader />
+          <SpinLoader />
         ) : (
           <Box>
             <label htmlFor="IDType">
@@ -84,7 +85,8 @@ export default function StepTwo({
                 name="NIN"
                 value={formData.NIN}
                 onChange={handleChange}
-                placeholder="1234-567-8901 enter NIN without the dash"
+                placeholder="Enter your NIN"
+                disabled={result === "Verification Successful"}
               />
             )}
 

@@ -10,11 +10,11 @@ import {
   Divider,
 } from "@mui/material";
 import Styles from "./styles.module.css";
-import NoResultIllustration from "../../../components/NoResult";
+import NoResultIllustration, { SpinLoader } from "../../../components/NoResult";
 import { FaAngleUp, FaAngleDown } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import InputField, { TextLabel } from "../../../components/InputField";
-import AllergiesPreview from "./AllergiesPreview";
+// import AllergiesPreview from "./AllergiesPreview";
 import {
   certainty,
   reaction,
@@ -25,7 +25,7 @@ import {
 } from "./shared";
 import { useNavigate, useParams } from "react-router-dom";
 import { axiosInstance } from "../../../Utils";
-import Swal from "sweetalert2";
+// import Swal from "sweetalert2";
 import moment from "moment";
 
 interface FormState {
@@ -112,7 +112,7 @@ export default function Allergies({ client }: PropType) {
 
   const [formField, setFormField] = useState<FormState[]>([]);
 
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  // const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const { id } = useParams();
 
@@ -176,64 +176,64 @@ export default function Allergies({ client }: PropType) {
     }
   };
 
-  const createNewRecord = async () => {
-    setIsLoading(true);
-    const dataObject = formField[0];
+  // const createNewRecord = async () => {
+  //   setIsLoading(true);
+  //   const dataObject = formField[0];
 
-    const areCategoriesAndTypeEmpty = (formStateArray: FormState[]) => {
-      return formStateArray.every((formState) => {
-        // Check if both 'substane' and 'reactiontype' are empty
-        return (
-          formState.substance.trim() === "" &&
-          formState.reactionType.trim() === ""
-        );
-      });
-    };
+  //   const areCategoriesAndTypeEmpty = (formStateArray: FormState[]) => {
+  //     return formStateArray.every((formState) => {
+  //       // Check if both 'substane' and 'reactiontype' are empty
+  //       return (
+  //         formState.substance.trim() === "" &&
+  //         formState.reactionType.trim() === ""
+  //       );
+  //     });
+  //   };
 
-    // Example usage
-    const areEmpty = areCategoriesAndTypeEmpty(formField);
+  //   // Example usage
+  //   const areEmpty = areCategoriesAndTypeEmpty(formField);
 
-    if (areEmpty) {
-      setIsLoading(false);
+  //   if (areEmpty) {
+  //     setIsLoading(false);
 
-      setIsOpen(false);
-      return Swal.fire({
-        icon: "info",
-        text: `You can not submit an empty form!`,
-        confirmButtonColor: "#099250",
-      });
-    }
+  //     setIsOpen(false);
+  //     return Swal.fire({
+  //       icon: "info",
+  //       text: `You can not submit an empty form!`,
+  //       confirmButtonColor: "#099250",
+  //     });
+  //   }
 
-    try {
-      const res = await axiosInstance.post(
-        `/create-serviceuser-allergiesrecord/${id}`,
-        dataObject
-      );
+  //   try {
+  //     const res = await axiosInstance.post(
+  //       `/create-serviceuser-allergiesrecord/${id}`,
+  //       dataObject
+  //     );
 
-      setIsOpen(false);
-      setIsLoading(false);
+  //     setIsOpen(false);
+  //     setIsLoading(false);
 
-      Swal.fire({
-        icon: "success",
-        title: `Successful`,
-        text: `${res.data.message}`,
-        confirmButtonColor: "#099250",
-      });
+  //     Swal.fire({
+  //       icon: "success",
+  //       title: `Successful`,
+  //       text: `${res.data.message}`,
+  //       confirmButtonColor: "#099250",
+  //     });
 
-      getAllergy();
+  //     getAllergy();
 
-      setFormField([]);
-    } catch (error: any) {
-      error;
-      setIsLoading(false);
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: `${error.response.data.message}`,
-        confirmButtonColor: "#099250",
-      });
-    }
-  };
+  //     setFormField([]);
+  //   } catch (error: any) {
+  //     error;
+  //     setIsLoading(false);
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Error",
+  //       text: `${error.response.data.message}`,
+  //       confirmButtonColor: "#099250",
+  //     });
+  //   }
+  // };
 
   useEffect(() => {
     getAllergy();
@@ -492,7 +492,7 @@ export default function Allergies({ client }: PropType) {
                     px: 3,
                   }}
                   variant="outlined"
-                  onClick={() => setIsOpen(true)}
+                  // onClick={() => setIsOpen(true)}
                 >
                   Continue
                 </Button>
@@ -502,94 +502,113 @@ export default function Allergies({ client }: PropType) {
         ))}
 
         {/* INITIAL STATE WHEN EMPTY */}
-        {!hide && record.length <= 0 && (
+        {/* {!hide && record.length <= 0 && (
           <NoResultIllustration text={"No record found"} />
+        )} */}
+
+        {isLoading ? (
+          <SpinLoader />
+        ) : (
+          <>
+            {record.length > 0 ? (
+              record.map((item, index) => (
+                <Box key={index}>
+                  <Button
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      p: 2,
+                      userSelect: "none",
+                      fontSize: 18,
+                      justifyContent: "space-between",
+                      border: "1px #E4E7EC solid",
+                      textTransform: "capitalize",
+                      color: "#099250",
+                    }}
+                    fullWidth
+                    onClick={() => handleToggle(`${item?.substance}${index}`)}
+                  >
+                    <span>{item?.substance}</span>
+                    <span>
+                      {show === `${item?.substance}${index}` ? (
+                        <FaAngleUp />
+                      ) : (
+                        <FaAngleDown />
+                      )}
+                    </span>
+                  </Button>
+
+                  {show === `${item?.substance}${index}` && (
+                    <div style={{ padding: 6 }}>
+                      <Box
+                        sx={{
+                          display: "grid",
+                          columnGap: 1.5,
+                          rowGap: 1.5,
+                          gridTemplateColumns: {
+                            xs: "repeat(1, 1fr)",
+                            lg: "repeat(3, 1fr)",
+                          },
+                        }}
+                      >
+                        <TextLabel
+                          label="Reaction Type"
+                          text={item.reactionType || "None"}
+                        />
+                        <TextLabel
+                          label="Reaction"
+                          text={item.reaction || "None"}
+                        />
+                        <TextLabel
+                          label="Severity"
+                          text={item.severity || "None"}
+                        />
+                        <TextLabel
+                          label="Certainty"
+                          text={item.certainty || "None"}
+                        />
+                        <TextLabel
+                          label="EVidence"
+                          text={item.evidence || "None"}
+                        />
+                        <TextLabel
+                          label="Reported by"
+                          text={item.reportedBy || "None"}
+                        />
+
+                        <TextLabel
+                          label="Name of reporter"
+                          text={item.relativeName || "None"}
+                        />
+                      </Box>
+                      <TextLabel
+                        label="Additional Notes"
+                        text={item.notes || "None"}
+                      />
+
+                      <div
+                        style={{
+                          padding: "16px 0px",
+                          color: "#101928",
+                        }}
+                      >
+                        <Typography fontWeight={400} fontSize={16}>
+                          Report created on{" "}
+                          {moment(item.date_created).format("DD/MM/YYYY")} by
+                          ID: #{item.pillar_user_id_fk}
+                        </Typography>
+                      </div>
+                    </div>
+                  )}
+                </Box>
+              ))
+            ) : (
+              <NoResultIllustration text={"No record found"} />
+            )}
+          </>
         )}
 
-        {record.map((item, index) => (
-          <Box key={index}>
-            <Button
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                p: 2,
-                userSelect: "none",
-                fontSize: 18,
-                justifyContent: "space-between",
-                border: "1px #E4E7EC solid",
-                textTransform: "capitalize",
-                color: "#099250",
-              }}
-              fullWidth
-              onClick={() => handleToggle(`${item?.substance}${index}`)}
-            >
-              <span>{item?.substance}</span>
-              <span>
-                {show === `${item?.substance}${index}` ? (
-                  <FaAngleUp />
-                ) : (
-                  <FaAngleDown />
-                )}
-              </span>
-            </Button>
-
-            {show === `${item?.substance}${index}` && (
-              <div style={{ padding: 6 }}>
-                <Box
-                  sx={{
-                    display: "grid",
-                    columnGap: 1.5,
-                    rowGap: 1.5,
-                    gridTemplateColumns: {
-                      xs: "repeat(1, 1fr)",
-                      lg: "repeat(3, 1fr)",
-                    },
-                  }}
-                >
-                  <TextLabel
-                    label="Reaction Type"
-                    text={item.reactionType || "None"}
-                  />
-                  <TextLabel label="Reaction" text={item.reaction || "None"} />
-                  <TextLabel label="Severity" text={item.severity || "None"} />
-                  <TextLabel
-                    label="Certainty"
-                    text={item.certainty || "None"}
-                  />
-                  <TextLabel label="EVidence" text={item.evidence || "None"} />
-                  <TextLabel
-                    label="Reported by"
-                    text={item.reportedBy || "None"}
-                  />
-
-                  <TextLabel
-                    label="Name of reporter"
-                    text={item.relativeName || "None"}
-                  />
-                </Box>
-                <TextLabel
-                  label="Additional Notes"
-                  text={item.notes || "None"}
-                />
-
-                <div
-                  style={{
-                    padding: "16px 0px",
-                    color: "#101928",
-                  }}
-                >
-                  <Typography fontWeight={400} fontSize={16}>
-                    Report created on{" "}
-                    {moment(item.date_created).format("DD/MM/YYYY")} by ID: #
-                    {item.pillar_user_id_fk}
-                  </Typography>
-                </div>
-              </div>
-            )}
-          </Box>
-        ))}
-
-        {formField.map((form, index) => (
+        {/* {formField.map((form, index) => (
           <AllergiesPreview
             key={index}
             isOpen={isOpen}
@@ -606,7 +625,7 @@ export default function Allergies({ client }: PropType) {
             createNewRecord={createNewRecord}
             isLoading={isLoading}
           />
-        ))}
+        ))} */}
       </Box>
 
       <Box
