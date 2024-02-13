@@ -1,28 +1,114 @@
-import { Box, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  MenuItem,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import HeaderTabs from "../../components/HeaderTabs";
+import Buttons from "../../components/Button";
 import General from "./General";
 import Personal from "./Personal";
+import { useState } from "react";
+import InputField from "../../components/InputField";
+import Management from "./Management";
+
+const roles = [
+  { label: "Tenant Admin", value: "super admin" },
+  { label: "HCP", value: "admin" },
+  { label: "Coordinator", value: "staff" },
+];
 
 export default function Settings() {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const [formField, setFormField] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    role: "",
+    position: "",
+  });
+
+  const handleChange = (name: string, value: any) => {
+    setFormField({
+      ...formField,
+      [name || ""]: value,
+    });
+  };
+
   return (
     <Box sx={{ background: "white" }}>
-      <Typography
-        variant="h4"
-        gutterBottom
-        fontWeight={600}
-        fontSize={28}
+      <Box
         sx={{
-          color: "#000",
-          textTransform: "capitalize",
+          display: "flex",
+          alignItems: "center",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          borderBottom: "1px #E7E9FB solid",
           px: "20px",
-          pt: "20px",
         }}
       >
-        Settings
-      </Typography>
+        <Typography
+          variant="h4"
+          gutterBottom
+          fontWeight={600}
+          fontSize={28}
+          sx={{
+            color: "#000",
+            textTransform: "capitalize",
+            pt: "20px",
+          }}
+        >
+          Settings
+        </Typography>
+
+        <Button
+          sx={{
+            textTransform: "none",
+            background: "#099250",
+            px: 2,
+            alignItems: "center",
+            color: "#F6FEF9",
+            "&:hover": { backgroundColor: "#099250" },
+            gap: 1,
+            fontSize: "16px",
+          }}
+          startIcon={
+            <svg
+              width="25"
+              height="24"
+              viewBox="0 0 25 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M11.5 1.25C8.87665 1.25 6.75 3.37665 6.75 6C6.75 8.62335 8.87665 10.75 11.5 10.75C14.1234 10.75 16.25 8.62335 16.25 6C16.25 3.37665 14.1234 1.25 11.5 1.25ZM8.25 6C8.25 4.20507 9.70507 2.75 11.5 2.75C13.2949 2.75 14.75 4.20507 14.75 6C14.75 7.79493 13.2949 9.25 11.5 9.25C9.70507 9.25 8.25 7.79493 8.25 6Z"
+                fill="#F6FEF9"
+              />
+              <path
+                d="M8.5 12.25C5.87665 12.25 3.75 14.3766 3.75 17C3.75 19.6234 5.87665 21.75 8.5 21.75H14.5C14.9142 21.75 15.25 21.4142 15.25 21C15.25 20.5858 14.9142 20.25 14.5 20.25H8.5C6.70507 20.25 5.25 18.7949 5.25 17C5.25 15.2051 6.70507 13.75 8.5 13.75H14.5C14.9142 13.75 15.25 13.4142 15.25 13C15.25 12.5858 14.9142 12.25 14.5 12.25H8.5Z"
+                fill="#F6FEF9"
+              />
+              <path
+                d="M19.25 14C19.25 13.5858 18.9142 13.25 18.5 13.25C18.0858 13.25 17.75 13.5858 17.75 14V16.25H15.5C15.0858 16.25 14.75 16.5858 14.75 17C14.75 17.4142 15.0858 17.75 15.5 17.75H17.75V20C17.75 20.4142 18.0858 20.75 18.5 20.75C18.9142 20.75 19.25 20.4142 19.25 20V17.75H21.5C21.9142 17.75 22.25 17.4142 22.25 17C22.25 16.5858 21.9142 16.25 21.5 16.25H19.25V14Z"
+                fill="#F6FEF9"
+              />
+            </svg>
+          }
+          onClick={() => setIsOpen(true)}
+        >
+          Create HCP
+        </Button>
+      </Box>
 
       <HeaderTabs
-        // heading="Settings"
         links={[
           {
             label: "General",
@@ -115,7 +201,7 @@ export default function Settings() {
             content: <Personal />,
           },
           {
-            label: "User Permission",
+            label: "Staff Management",
             icon: (
               <svg
                 width="20"
@@ -164,15 +250,101 @@ export default function Settings() {
                 </g>
               </svg>
             ),
-            content: (
-              <Box>
-                <Typography>Content for Tab 3</Typography>
-                <Typography>Additional content specific to Tab 3.</Typography>
-              </Box>
-            ),
+            content: <Management />,
           },
         ]}
       />
+
+      <>
+        <Dialog maxWidth="sm" fullWidth open={isOpen}>
+          <DialogTitle>Create HCP</DialogTitle>
+
+          <Button
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+              padding: "16px 8px",
+            }}
+            onClick={() => setIsOpen(false)}
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g id="Teeny icon / x-small">
+                <path
+                  id="Vector"
+                  d="M4.19922 4.2002L9.79922 9.8002M4.19922 9.8002L9.79922 4.2002"
+                  stroke="#099250"
+                />
+              </g>
+            </svg>
+          </Button>
+
+          <DialogContent>
+            <form action="">
+              <InputField
+                type="text"
+                label="Full Name"
+                name="firstName"
+                value={formField.firstName}
+                onChange={(e: any) => {
+                  handleChange("firstName", e.target.value);
+                }}
+              />
+
+              <InputField
+                type="text"
+                label="Full Name"
+                name="lastName"
+                value={formField.lastName}
+                onChange={(e: any) => {
+                  handleChange("lastName", e.target.value);
+                }}
+              />
+
+              <InputField
+                type="text"
+                label="Email Address"
+                name="email"
+                value={formField.email}
+                onChange={(e: any) => {
+                  handleChange("email", e.target.value);
+                }}
+              />
+
+              <label htmlFor="role" style={{ marginTop: "8px" }}>
+                <span> Role</span>
+                <TextField select fullWidth sx={{ mt: "5px" }}>
+                  {roles.map((item, index) => (
+                    <MenuItem key={index} value={item.value}>
+                      {item.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </label>
+
+              <InputField
+                type="text"
+                label="Job Title"
+                name="position"
+                value={formField.role}
+                onChange={(e: any) => {
+                  handleChange("position", e.target.value);
+                }}
+              />
+
+              <Stack marginTop={3}>
+                <Buttons title="Create HCP" onClick={() => {}} />
+              </Stack>
+            </form>
+          </DialogContent>
+        </Dialog>
+      </>
     </Box>
   );
 }

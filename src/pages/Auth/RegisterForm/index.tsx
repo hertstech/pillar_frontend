@@ -134,8 +134,8 @@ export default function RegisterPage() {
               </Box>
 
               <form className={Styles.form}>
-                <div style={{ display: "flex", gap: 10 }}>
-                  <label htmlFor="title" style={{ marginTop: 9 }}>
+                <div style={{ display: "flex", gap: 10, alignItems: "flex-end" }}>
+                  <label htmlFor="title" >
                     Title
                     <TextField
                       select
