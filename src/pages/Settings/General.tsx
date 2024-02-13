@@ -2,8 +2,6 @@ import { Box, Button, Grid, Stack, Typography } from "@mui/material";
 import React from "react";
 import Avatar from "../../assets/avatar.svg";
 import InputField from "../../components/InputField";
-// import { useSelector } from "react-redux";
-// import Buttons from "../../components/Button";
 import Styles from "./styles.module.css";
 import { FiCamera } from "react-icons/fi";
 
