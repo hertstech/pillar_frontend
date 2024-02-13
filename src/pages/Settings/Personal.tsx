@@ -1,9 +1,13 @@
-import { Box, Button, Stack } from "@mui/material";
+import {
+  Box,
+  // , Button, Stack
+} from "@mui/material";
 import React from "react";
 import InputField from "../../components/InputField";
 import { useSelector } from "react-redux";
 import PhoneField from "../../components/PhoneInput";
-import { Calendar } from "../../components/CalendarField";
+// import { Calendar } from "../../components/CalendarField";
+// import moment from "moment";
 
 export default function Personal() {
   const user = useSelector((state: any) => state.user.user);
@@ -30,54 +34,36 @@ export default function Personal() {
         borderRadius: 2,
       }}
     >
-      <Box
-        sx={{
-          display: "grid",
-          columnGap: 1.5,
-          rowGap: 1.5,
-          gridTemplateColumns: {
-            xs: "repeat(1, 1fr)",
-            lg: "repeat(2, 1fr)",
-          },
-        }}
-      >
+      <Box flexDirection={"column"} sx={{ display: "flex", gap: 2 }}>
         <InputField
           type="text"
           label="First Name"
           name="firstName"
-          value={formField.firstName}
+          value={user.firstName}
           onChange={(e: any) => handleChange("firstName", e.target.value)}
         />
         <InputField
           type="text"
           label="Last Name"
           name="lastName"
-          value={formField.lastName}
+          value={user.lastName}
           onChange={(e: any) => handleChange("lastName", e.target.value)}
         />
         <InputField
           type="text"
           label="Email Address"
           name="email"
-          value={formField.email}
+          value={user.email}
           onChange={(e: any) => handleChange("email", e.target.value)}
         />
         <PhoneField
           name="phoneNumber"
-          value={formField.phoneNumber}
+          value={user.phoneNumber}
           onChange={(value: any) => handleChange("phoneNumber", value)}
-        />
-        <Calendar
-          label="Date Prescribed"
-          value={formField.dateOfBirth}
-          disableFuture={false}
-          onChange={(newValue: any) =>
-            handleChange("dateOfBirth", newValue.format())
-          }
         />
       </Box>
 
-      <Stack direction="row" justifyContent="flex-end" gap={5} p={3}>
+      {/* <Stack direction="row" justifyContent="flex-end" gap={5} p={3}>
         <Button
           variant="outlined"
           color="error"
@@ -95,7 +81,7 @@ export default function Personal() {
         >
           Update Profile
         </Button>
-      </Stack>
+      </Stack> */}
     </Box>
   );
 }

@@ -2,14 +2,12 @@ import { Box, Button, Grid, Stack, Typography } from "@mui/material";
 import React from "react";
 import Avatar from "../../assets/avatar.svg";
 import InputField from "../../components/InputField";
-import { useSelector } from "react-redux";
-import Buttons from "../../components/Button";
+// import { useSelector } from "react-redux";
+// import Buttons from "../../components/Button";
 import Styles from "./styles.module.css";
 import { FiCamera } from "react-icons/fi";
 
-export default function General() {
-  const user = useSelector((state: any) => state.user.user);
-  const [newName, setNewName] = React.useState(user.firstName);
+export default function General({ organization }: any) {
   const [profilePicture, setProfilePicture] = React.useState(Avatar);
   const [previewImage, setPreviewImage] = React.useState("");
 
@@ -82,19 +80,32 @@ export default function General() {
         </Grid>
 
         <Grid item xs={12} md={8}>
-          <form action="">
+          <Box display={"flex"} flexDirection={"column"} gap={2}>
             <InputField
               type="text"
               label="Hospital Name"
               name="newName"
-              value={newName}
-              onChange={(e: any) => setNewName(e.target.value)}
+              value={organization?.name}
+              onChange={() => {}}
+              disabled
             />
-
-            <div style={{ width: "30%", marginTop: 20 }}>
-              <Buttons title="Save changes" onClick={() => {}} />
-            </div>
-          </form>
+            <InputField
+              type="text"
+              label="Address"
+              name="newName"
+              value={organization?.address}
+              onChange={() => {}}
+              disabled
+            />
+            <InputField
+              type="text"
+              label="Hospital ID"
+              name="newName"
+              value={organization?.facility_id}
+              onChange={() => {}}
+              disabled
+            />
+          </Box>
         </Grid>
       </Grid>
     </Box>

@@ -12,33 +12,115 @@ import {
   TableCell,
   TableContainer,
   TableHead,
+  TablePagination,
   TableRow,
   Typography,
 } from "@mui/material";
-import React from "react";
+import { useState, useEffect } from "react";
 import InputField from "../../components/InputField";
 import Buttons from "../../components/Button";
+import moment from "moment";
+import { SpinLoader } from "../../components/NoResult";
+import Swal from "sweetalert2";
 
 const TABLE_HEAD = [
   { id: "name", label: "Name", align: "left" },
   { id: "email", label: "Email Address", align: "left" },
   { id: "phone", label: "Phone Number", align: "left" },
-  { id: "title", label: "Title", align: "left" },
+  { id: "role", label: "Designation", align: "left" },
   { id: "status", label: "Status", align: "center" },
-  { id: "date", label: "Date Employed", align: "center" },
+  { id: "date", label: "Date Created", align: "center" },
   { id: "" },
 ];
 
-export default function Management() {
-  const [search, setSearch] = React.useState("");
+export default function Management({ isLoading, staffList }: any) {
+  const [search, setSearch] = useState("");
 
-  const [show, setShow] = React.useState(false);
+  const [show, setShow] = useState(false);
 
-  const [openSuspend, setOpenSuspend] = React.useState(false);
+  const [openSuspend, setOpenSuspend] = useState(false);
 
-  const [openArchive, setOpenArchive] = React.useState(false);
+  const [openArchive, setOpenArchive] = useState(false);
 
-  const [openDelete, setOpenDelete] = React.useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+
+  const [page, setPage] = useState(0);
+
+  const [selectedUserId, setSelectedUserId] = useState(null);
+
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener("mouseenter", Swal.stopTimer);
+      toast.addEventListener("mouseleave", Swal.resumeTimer);
+    },
+  });
+
+  const handleChangePage = (_event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event: any) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+
+  const dataFiltered = applySortFilter({ staffList, search });
+
+  useEffect(() => {
+    setPage(0);
+  }, [staffList]);
+
+  const handleToggle = (id: any) => {
+    setShow((prevIndex) => (prevIndex === id ? null : id));
+    setSelectedUserId(id);
+  };
+
+  const handleSuspend = async () => {
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      setOpenSuspend(false);
+      Toast.fire({
+        icon: "success",
+        title: "This User account is now suspended!",
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleArchive = async () => {
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      setOpenArchive(false);
+      Toast.fire({
+        icon: "success",
+        title: "This User account is now archived!",
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      setOpenDelete(false);
+      Toast.fire({
+        icon: "success",
+        title: "This User account is now deleted!",
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -54,7 +136,7 @@ export default function Management() {
             name="search"
             value={search}
             onChange={(e: any) => setSearch(e.target.value)}
-            placeholder="Search by staff name or ID"
+            placeholder="Search by staff name or email address"
           />
           <Button
             sx={{
@@ -97,563 +179,173 @@ export default function Management() {
             </TableHead>
 
             <TableBody sx={{ fontWeight: 500, fontSize: 14, color: "#101828" }}>
-              <TableRow
-                hover
-                sx={{
-                  "&:nth-of-type(odd)": {
-                    background: "white",
-                  },
-                  "&:nth-of-type(even)": {
-                    background: "#FCFCFD",
-                  },
-                }}
-              >
-                <TableCell>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      gap: 8,
-                      alignItems: "center",
-                    }}
-                  >
-                    <Avatar sx={{ mr: 1 }} />
-                    <Typography
-                      sx={{ display: "flex", flexDirection: "column" }}
-                      variant="subtitle2"
-                      noWrap
-                    >
-                      Olumide Chukwudife
-                      <span>HRT-132422</span>
-                    </Typography>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <span>aa.subciro@olu-medics.com</span>
-                </TableCell>
-                <TableCell>
-                  <span>+234 7088 726 290</span>
-                </TableCell>
-                <TableCell>
-                  <span>Receptionist</span>
-                </TableCell>
-                <TableCell>
-                  <Chip
-                    sx={{
-                      background: "#36A1500A",
-                      textTransform: "capitalize",
-                      fontWeight: "fontBold",
-                      color: "#36A150",
-                    }}
-                    label="Active"
-                  />
-                </TableCell>
-                <TableCell>
-                  <span>3rd Jan, 2023</span>
-                </TableCell>
-
-                <TableCell align="right">
-                  <svg
-                    style={{ cursor: "pointer" }}
-                    onClick={() => setShow(!show)}
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <g id="Teeny icon / more-vertical">
-                      <g id="Vector">
-                        <path
-                          d="M9.99969 4.00029C9.63149 4.00029 9.33301 3.7018 9.33301 3.33361C9.33301 2.96541 9.63149 2.66693 9.99969 2.66693C10.3679 2.66693 10.6664 2.96541 10.6664 3.33361C10.6664 3.7018 10.3679 4.00029 9.99969 4.00029Z"
-                          stroke="#545C68"
-                          stroke-width="1.33336"
-                        />
-                        <path
-                          d="M9.99969 10.6671C9.63149 10.6671 9.33301 10.3686 9.33301 10.0004C9.33301 9.63221 9.63149 9.33373 9.99969 9.33373C10.3679 9.33373 10.6664 9.63221 10.6664 10.0004C10.6664 10.3686 10.3679 10.6671 9.99969 10.6671Z"
-                          stroke="#545C68"
-                          stroke-width="1.33336"
-                        />
-                        <path
-                          d="M9.99969 17.3339C9.63149 17.3339 9.33301 17.0354 9.33301 16.6672C9.33301 16.299 9.63149 16.0005 9.99969 16.0005C10.3679 16.0005 10.6664 16.299 10.6664 16.6672C10.6664 17.0354 10.3679 17.3339 9.99969 17.3339Z"
-                          stroke="#545C68"
-                          stroke-width="1.33336"
-                        />
-                      </g>
-                    </g>
-                  </svg>
-
-                  {show && (
-                    <Box
-                      sx={{
-                        position: "absolute",
-                        zIndex: 1,
-                        background: "white",
-                        border: "1px #F2F4F7 solid",
-                        borderRadius: 1,
-                        marginTop: 3.25,
-                        right: "43px",
-                        width: "150px",
-                        py: 1,
-                      }}
-                    >
-                      <MenuItem>View</MenuItem>
-                      <MenuItem
-                        onClick={() => {
-                          setOpenSuspend(true);
-                          setShow(false);
+              {isLoading ? (
+                <SpinLoader />
+              ) : (
+                <>
+                  {dataFiltered
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((item: any) => (
+                      <TableRow
+                        hover
+                        key={item.id}
+                        sx={{
+                          "&:nth-of-type(odd)": {
+                            background: "white",
+                          },
+                          "&:nth-of-type(even)": {
+                            background: "#FCFCFD",
+                          },
                         }}
                       >
-                        Suspend
-                      </MenuItem>
-                      <MenuItem
-                        onClick={() => {
-                          setOpenArchive(true);
-                          setShow(false);
-                        }}
-                      >
-                        Archive
-                      </MenuItem>
-                      <MenuItem
-                        onClick={() => {
-                          setOpenDelete(true);
-                          setShow(false);
-                        }}
-                        sx={{ color: "#F04438" }}
-                      >
-                        Delete
-                      </MenuItem>
-                    </Box>
-                  )}
-                </TableCell>
-              </TableRow>
+                        <TableCell>
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "row",
+                              gap: 8,
+                              alignItems: "center",
+                            }}
+                          >
+                            <Avatar sx={{ mr: 1 }} />
+                            <Typography
+                              sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                textTransform: "capitalize",
+                              }}
+                              variant="subtitle2"
+                              noWrap
+                            >
+                              {item.title} {item.firstName} {item.lastName}
+                              <span>HRT-132422</span>
+                            </Typography>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <span>{item.email}</span>
+                        </TableCell>
+                        <TableCell>
+                          <span>+234 7088 726 290</span>
+                        </TableCell>
+                        <TableCell>
+                          <span style={{ textTransform: "capitalize" }}>
+                            {item.position || "IT Support"}
+                          </span>
+                        </TableCell>
+                        <TableCell>
+                          <Chip
+                            sx={{
+                              background:
+                                item.is_active === true
+                                  ? "#36A1500A"
+                                  : "#FEF6E7",
+                              textTransform: "capitalize",
+                              fontWeight: "fontBold",
+                              color:
+                                item.is_active === true ? "#36A150" : "#DD900D",
+                            }}
+                            label={
+                              item.is_active === false ? "in active" : "active"
+                            }
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <span>
+                            {moment(item.date_created).format("DD/MM/YYYY")}
+                          </span>
+                        </TableCell>
 
-              <TableRow
-                hover
-                sx={{
-                  "&:nth-of-type(odd)": {
-                    background: "white",
-                  },
-                  "&:nth-of-type(even)": {
-                    background: "#FCFCFD",
-                  },
-                }}
-              >
-                <TableCell>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      gap: 8,
-                      alignItems: "center",
-                    }}
-                  >
-                    <Avatar sx={{ mr: 1 }} />
-                    <Typography
-                      sx={{ display: "flex", flexDirection: "column" }}
-                      variant="subtitle2"
-                      noWrap
-                    >
-                      Olumide Chukwudife
-                      <span>HRT-132422</span>
-                    </Typography>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <span>aa.subciro@olu-medics.com</span>
-                </TableCell>
-                <TableCell>
-                  <span>+234 7088 726 290</span>
-                </TableCell>
-                <TableCell>
-                  <span>Receptionist</span>
-                </TableCell>
-                <TableCell>
-                  <Chip
-                    sx={{
-                      background: "#36A1500A",
-                      textTransform: "capitalize",
-                      fontWeight: "fontBold",
-                      color: "#36A150",
-                    }}
-                    label="Active"
-                  />
-                </TableCell>
-                <TableCell>
-                  <span>3rd Jan, 2023</span>
-                </TableCell>
-                <TableCell align="right">
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <g id="Teeny icon / more-vertical">
-                      <g id="Vector">
-                        <path
-                          d="M9.99969 4.00029C9.63149 4.00029 9.33301 3.7018 9.33301 3.33361C9.33301 2.96541 9.63149 2.66693 9.99969 2.66693C10.3679 2.66693 10.6664 2.96541 10.6664 3.33361C10.6664 3.7018 10.3679 4.00029 9.99969 4.00029Z"
-                          stroke="#545C68"
-                          stroke-width="1.33336"
-                        />
-                        <path
-                          d="M9.99969 10.6671C9.63149 10.6671 9.33301 10.3686 9.33301 10.0004C9.33301 9.63221 9.63149 9.33373 9.99969 9.33373C10.3679 9.33373 10.6664 9.63221 10.6664 10.0004C10.6664 10.3686 10.3679 10.6671 9.99969 10.6671Z"
-                          stroke="#545C68"
-                          stroke-width="1.33336"
-                        />
-                        <path
-                          d="M9.99969 17.3339C9.63149 17.3339 9.33301 17.0354 9.33301 16.6672C9.33301 16.299 9.63149 16.0005 9.99969 16.0005C10.3679 16.0005 10.6664 16.299 10.6664 16.6672C10.6664 17.0354 10.3679 17.3339 9.99969 17.3339Z"
-                          stroke="#545C68"
-                          stroke-width="1.33336"
-                        />
-                      </g>
-                    </g>
-                  </svg>
-                </TableCell>
-              </TableRow>
+                        <TableCell align="right">
+                          <svg
+                            style={{ cursor: "pointer" }}
+                            onClick={() => handleToggle(`${item.id}`)}
+                            width="20"
+                            height="20"
+                            viewBox="0 0 20 20"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <g id="Teeny icon / more-vertical">
+                              <g id="Vector">
+                                <path
+                                  d="M9.99969 4.00029C9.63149 4.00029 9.33301 3.7018 9.33301 3.33361C9.33301 2.96541 9.63149 2.66693 9.99969 2.66693C10.3679 2.66693 10.6664 2.96541 10.6664 3.33361C10.6664 3.7018 10.3679 4.00029 9.99969 4.00029Z"
+                                  stroke="#545C68"
+                                  stroke-width="1.33336"
+                                />
+                                <path
+                                  d="M9.99969 10.6671C9.63149 10.6671 9.33301 10.3686 9.33301 10.0004C9.33301 9.63221 9.63149 9.33373 9.99969 9.33373C10.3679 9.33373 10.6664 9.63221 10.6664 10.0004C10.6664 10.3686 10.3679 10.6671 9.99969 10.6671Z"
+                                  stroke="#545C68"
+                                  stroke-width="1.33336"
+                                />
+                                <path
+                                  d="M9.99969 17.3339C9.63149 17.3339 9.33301 17.0354 9.33301 16.6672C9.33301 16.299 9.63149 16.0005 9.99969 16.0005C10.3679 16.0005 10.6664 16.299 10.6664 16.6672C10.6664 17.0354 10.3679 17.3339 9.99969 17.3339Z"
+                                  stroke="#545C68"
+                                  stroke-width="1.33336"
+                                />
+                              </g>
+                            </g>
+                          </svg>
 
-              <TableRow
-                hover
-                sx={{
-                  "&:nth-of-type(odd)": {
-                    background: "white",
-                  },
-                  "&:nth-of-type(even)": {
-                    background: "#FCFCFD",
-                  },
-                }}
-              >
-                <TableCell>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      gap: 8,
-                      alignItems: "center",
-                    }}
-                  >
-                    <Avatar sx={{ mr: 1 }} />
-                    <Typography
-                      sx={{ display: "flex", flexDirection: "column" }}
-                      variant="subtitle2"
-                      noWrap
-                    >
-                      Olumide Chukwudife
-                      <span>HRT-132422</span>
-                    </Typography>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <span>aa.subciro@olu-medics.com</span>
-                </TableCell>
-                <TableCell>
-                  <span>+234 7088 726 290</span>
-                </TableCell>
-                <TableCell>
-                  <span>Receptionist</span>
-                </TableCell>
-                <TableCell>
-                  <Chip
-                    sx={{
-                      background: "#FEF6E7",
-                      textTransform: "capitalize",
-                      fontWeight: "fontBold",
-                      color: "#DD900D",
-                    }}
-                    label="Pending"
-                  />
-                </TableCell>
-                <TableCell>
-                  <span>3rd Jan, 2023</span>
-                </TableCell>
-                <TableCell align="right">
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <g id="Teeny icon / more-vertical">
-                      <g id="Vector">
-                        <path
-                          d="M9.99969 4.00029C9.63149 4.00029 9.33301 3.7018 9.33301 3.33361C9.33301 2.96541 9.63149 2.66693 9.99969 2.66693C10.3679 2.66693 10.6664 2.96541 10.6664 3.33361C10.6664 3.7018 10.3679 4.00029 9.99969 4.00029Z"
-                          stroke="#545C68"
-                          stroke-width="1.33336"
-                        />
-                        <path
-                          d="M9.99969 10.6671C9.63149 10.6671 9.33301 10.3686 9.33301 10.0004C9.33301 9.63221 9.63149 9.33373 9.99969 9.33373C10.3679 9.33373 10.6664 9.63221 10.6664 10.0004C10.6664 10.3686 10.3679 10.6671 9.99969 10.6671Z"
-                          stroke="#545C68"
-                          stroke-width="1.33336"
-                        />
-                        <path
-                          d="M9.99969 17.3339C9.63149 17.3339 9.33301 17.0354 9.33301 16.6672C9.33301 16.299 9.63149 16.0005 9.99969 16.0005C10.3679 16.0005 10.6664 16.299 10.6664 16.6672C10.6664 17.0354 10.3679 17.3339 9.99969 17.3339Z"
-                          stroke="#545C68"
-                          stroke-width="1.33336"
-                        />
-                      </g>
-                    </g>
-                  </svg>
-                </TableCell>
-              </TableRow>
-
-              <TableRow
-                hover
-                sx={{
-                  "&:nth-of-type(odd)": {
-                    background: "white",
-                  },
-                  "&:nth-of-type(even)": {
-                    background: "#FCFCFD",
-                  },
-                }}
-              >
-                <TableCell>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      gap: 8,
-                      alignItems: "center",
-                    }}
-                  >
-                    <Avatar sx={{ mr: 1 }} />
-                    <Typography
-                      sx={{ display: "flex", flexDirection: "column" }}
-                      variant="subtitle2"
-                      noWrap
-                    >
-                      Olumide Chukwudife
-                      <span>HRT-132422</span>
-                    </Typography>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <span>aa.subciro@olu-medics.com</span>
-                </TableCell>
-                <TableCell>
-                  <span>+234 7088 726 290</span>
-                </TableCell>
-                <TableCell>
-                  <span>Receptionist</span>
-                </TableCell>
-                <TableCell>
-                  <Chip
-                    sx={{
-                      background: "#FBEAE9",
-                      textTransform: "capitalize",
-                      fontWeight: "fontBold",
-                      color: "#D42620",
-                    }}
-                    label="Suspended"
-                  />
-                </TableCell>
-                <TableCell>
-                  <span>3rd Jan, 2023</span>
-                </TableCell>
-                <TableCell align="right">
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <g id="Teeny icon / more-vertical">
-                      <g id="Vector">
-                        <path
-                          d="M9.99969 4.00029C9.63149 4.00029 9.33301 3.7018 9.33301 3.33361C9.33301 2.96541 9.63149 2.66693 9.99969 2.66693C10.3679 2.66693 10.6664 2.96541 10.6664 3.33361C10.6664 3.7018 10.3679 4.00029 9.99969 4.00029Z"
-                          stroke="#545C68"
-                          stroke-width="1.33336"
-                        />
-                        <path
-                          d="M9.99969 10.6671C9.63149 10.6671 9.33301 10.3686 9.33301 10.0004C9.33301 9.63221 9.63149 9.33373 9.99969 9.33373C10.3679 9.33373 10.6664 9.63221 10.6664 10.0004C10.6664 10.3686 10.3679 10.6671 9.99969 10.6671Z"
-                          stroke="#545C68"
-                          stroke-width="1.33336"
-                        />
-                        <path
-                          d="M9.99969 17.3339C9.63149 17.3339 9.33301 17.0354 9.33301 16.6672C9.33301 16.299 9.63149 16.0005 9.99969 16.0005C10.3679 16.0005 10.6664 16.299 10.6664 16.6672C10.6664 17.0354 10.3679 17.3339 9.99969 17.3339Z"
-                          stroke="#545C68"
-                          stroke-width="1.33336"
-                        />
-                      </g>
-                    </g>
-                  </svg>
-                </TableCell>
-              </TableRow>
-
-              <TableRow
-                hover
-                sx={{
-                  "&:nth-of-type(odd)": {
-                    background: "white",
-                  },
-                  "&:nth-of-type(even)": {
-                    background: "#FCFCFD",
-                  },
-                }}
-              >
-                <TableCell>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      gap: 8,
-                      alignItems: "center",
-                    }}
-                  >
-                    <Avatar sx={{ mr: 1 }} />
-                    <Typography
-                      sx={{ display: "flex", flexDirection: "column" }}
-                      variant="subtitle2"
-                      noWrap
-                    >
-                      Olumide Chukwudife
-                      <span>HRT-132422</span>
-                    </Typography>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <span>aa.subciro@olu-medics.com</span>
-                </TableCell>
-                <TableCell>
-                  <span>+234 7088 726 290</span>
-                </TableCell>
-                <TableCell>
-                  <span>Receptionist</span>
-                </TableCell>
-                <TableCell>
-                  <Chip
-                    sx={{
-                      background: "#36A1500A",
-                      textTransform: "capitalize",
-                      fontWeight: "fontBold",
-                      color: "#36A150",
-                    }}
-                    label="Active"
-                  />
-                </TableCell>
-                <TableCell>
-                  <span>3rd Jan, 2023</span>
-                </TableCell>
-                <TableCell align="right">
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <g id="Teeny icon / more-vertical">
-                      <g id="Vector">
-                        <path
-                          d="M9.99969 4.00029C9.63149 4.00029 9.33301 3.7018 9.33301 3.33361C9.33301 2.96541 9.63149 2.66693 9.99969 2.66693C10.3679 2.66693 10.6664 2.96541 10.6664 3.33361C10.6664 3.7018 10.3679 4.00029 9.99969 4.00029Z"
-                          stroke="#545C68"
-                          stroke-width="1.33336"
-                        />
-                        <path
-                          d="M9.99969 10.6671C9.63149 10.6671 9.33301 10.3686 9.33301 10.0004C9.33301 9.63221 9.63149 9.33373 9.99969 9.33373C10.3679 9.33373 10.6664 9.63221 10.6664 10.0004C10.6664 10.3686 10.3679 10.6671 9.99969 10.6671Z"
-                          stroke="#545C68"
-                          stroke-width="1.33336"
-                        />
-                        <path
-                          d="M9.99969 17.3339C9.63149 17.3339 9.33301 17.0354 9.33301 16.6672C9.33301 16.299 9.63149 16.0005 9.99969 16.0005C10.3679 16.0005 10.6664 16.299 10.6664 16.6672C10.6664 17.0354 10.3679 17.3339 9.99969 17.3339Z"
-                          stroke="#545C68"
-                          stroke-width="1.33336"
-                        />
-                      </g>
-                    </g>
-                  </svg>
-                </TableCell>
-              </TableRow>
-
-              <TableRow
-                hover
-                sx={{
-                  "&:nth-of-type(odd)": {
-                    background: "white",
-                  },
-                  "&:nth-of-type(even)": {
-                    background: "#FCFCFD",
-                  },
-                }}
-              >
-                <TableCell>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      gap: 8,
-                      alignItems: "center",
-                    }}
-                  >
-                    <Avatar sx={{ mr: 1 }} />
-                    <Typography
-                      sx={{ display: "flex", flexDirection: "column" }}
-                      variant="subtitle2"
-                      noWrap
-                    >
-                      Olumide Chukwudife
-                      <span>HRT-132422</span>
-                    </Typography>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <span>aa.subciro@olu-medics.com</span>
-                </TableCell>
-                <TableCell>
-                  <span>+234 7088 726 290</span>
-                </TableCell>
-                <TableCell>
-                  <span>Receptionist</span>
-                </TableCell>
-                <TableCell>
-                  <Chip
-                    sx={{
-                      background: "#36A1500A",
-                      textTransform: "capitalize",
-                      fontWeight: "fontBold",
-                      color: "#36A150",
-                    }}
-                    label="Active"
-                  />
-                </TableCell>
-                <TableCell>
-                  <span>3rd Jan, 2023</span>
-                </TableCell>
-                <TableCell align="right">
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <g id="Teeny icon / more-vertical">
-                      <g id="Vector">
-                        <path
-                          d="M9.99969 4.00029C9.63149 4.00029 9.33301 3.7018 9.33301 3.33361C9.33301 2.96541 9.63149 2.66693 9.99969 2.66693C10.3679 2.66693 10.6664 2.96541 10.6664 3.33361C10.6664 3.7018 10.3679 4.00029 9.99969 4.00029Z"
-                          stroke="#545C68"
-                          stroke-width="1.33336"
-                        />
-                        <path
-                          d="M9.99969 10.6671C9.63149 10.6671 9.33301 10.3686 9.33301 10.0004C9.33301 9.63221 9.63149 9.33373 9.99969 9.33373C10.3679 9.33373 10.6664 9.63221 10.6664 10.0004C10.6664 10.3686 10.3679 10.6671 9.99969 10.6671Z"
-                          stroke="#545C68"
-                          stroke-width="1.33336"
-                        />
-                        <path
-                          d="M9.99969 17.3339C9.63149 17.3339 9.33301 17.0354 9.33301 16.6672C9.33301 16.299 9.63149 16.0005 9.99969 16.0005C10.3679 16.0005 10.6664 16.299 10.6664 16.6672C10.6664 17.0354 10.3679 17.3339 9.99969 17.3339Z"
-                          stroke="#545C68"
-                          stroke-width="1.33336"
-                        />
-                      </g>
-                    </g>
-                  </svg>
-                </TableCell>
-              </TableRow>
+                          {show === item.id && (
+                            <Box
+                              sx={{
+                                position: "absolute",
+                                zIndex: 1,
+                                background: "white",
+                                border: "1px #F2F4F7 solid",
+                                borderRadius: 1,
+                                marginTop: 3.25,
+                                right: "43px",
+                                width: "150px",
+                                py: 1,
+                              }}
+                            >
+                              <MenuItem>View</MenuItem>
+                              <MenuItem
+                                onClick={() => {
+                                  setOpenSuspend(true);
+                                  setShow(false);
+                                }}
+                              >
+                                Suspend
+                              </MenuItem>
+                              <MenuItem
+                                onClick={() => {
+                                  setOpenArchive(true);
+                                  setShow(false);
+                                }}
+                              >
+                                Archive
+                              </MenuItem>
+                              <MenuItem
+                                onClick={() => {
+                                  setOpenDelete(true);
+                                  setShow(false);
+                                }}
+                                sx={{ color: "#F04438" }}
+                              >
+                                Delete
+                              </MenuItem>
+                            </Box>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                </>
+              )}
             </TableBody>
           </Table>
+
+          <TablePagination
+            rowsPerPageOptions={[10, 25, 75]}
+            count={dataFiltered.length}
+            component="div"
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
         </TableContainer>
       </Box>
 
@@ -716,9 +408,14 @@ export default function Management() {
             Suspend HCP
           </Typography>
           <span style={{ padding: 8, textAlign: "center" }}>
-            Please be aware that <strong>Olu Medics</strong> will lose access to
-            Pillar and all associated data will be temporarily unavailable. Are
-            you sure you want to continue?
+            Please be aware that{" "}
+            <strong style={{ textTransform: "capitalize" }}>
+              {selectedUserId &&
+                dataFiltered.find((user: any) => user.id === selectedUserId)
+                  ?.firstName}
+            </strong>{" "}
+            will lose access to Pillar and all associated data will be
+            temporarily unavailable. Are you sure you want to continue?
           </span>
           <Stack
             direction="row"
@@ -744,7 +441,7 @@ export default function Management() {
               Cancel
             </Button>
             <div style={{ width: "50%" }}>
-              <Buttons title="Suspend HCP" onClick={() => {}} />
+              <Buttons title="Suspend HCP" onClick={handleSuspend} />
             </div>
           </Stack>
         </Dialog>
@@ -807,9 +504,14 @@ export default function Management() {
             Archive HCP
           </Typography>
           <span style={{ padding: 8, textAlign: "center" }}>
-            Please be aware that access to <strong>Olu Medics</strong> will be
-            restricted and all associated data will be temporarily unavailable.
-            Are you sure you want to continue?
+            Please be aware that access to{" "}
+            <strong style={{ textTransform: "capitalize" }}>
+              {selectedUserId &&
+                dataFiltered.find((user: any) => user.id === selectedUserId)
+                  ?.firstName}
+            </strong>{" "}
+            will be restricted and all associated data will be temporarily
+            unavailable. Are you sure you want to continue?
           </span>
           <Stack
             direction="row"
@@ -835,7 +537,7 @@ export default function Management() {
               Cancel
             </Button>
             <div style={{ width: "50%" }}>
-              <Buttons title="Archive HCP" onClick={() => {}} />
+              <Buttons title="Archive HCP" onClick={handleArchive} />
             </div>
           </Stack>
         </Dialog>
@@ -898,9 +600,14 @@ export default function Management() {
             Delete HCP
           </Typography>
           <span style={{ padding: 8, textAlign: "center" }}>
-            Please be aware that <strong>Olu Medics</strong> will lose access to
-            Pillar and all associated data will be permanently unavailable. Are
-            you sure you want to continue?
+            Please be aware that{" "}
+            <strong style={{ textTransform: "capitalize" }}>
+              {selectedUserId &&
+                dataFiltered.find((user: any) => user.id === selectedUserId)
+                  ?.firstName}
+            </strong>{" "}
+            will lose access to Pillar and all associated data will be
+            permanently unavailable. Are you sure you want to continue?
           </span>
           <Stack
             direction="row"
@@ -926,11 +633,23 @@ export default function Management() {
               Cancel
             </Button>
             <div style={{ width: "50%" }}>
-              <Buttons title="Delete HCP" onClick={() => {}} />
+              <Buttons title="Delete HCP" onClick={handleDelete} />
             </div>
           </Stack>
         </Dialog>
       </>
     </Box>
   );
+}
+
+function applySortFilter({ staffList, search }: any) {
+  if (search) {
+    staffList = staffList.filter(
+      (item: any) =>
+        item.firstName.toLowerCase().indexOf(search.toLowerCase()) !== -1 ||
+        item.lastName.toLowerCase().indexOf(search.toLowerCase()) !== -1 ||
+        item.email.toLowerCase().indexOf(search.toLowerCase()) !== -1
+    );
+  }
+  return staffList;
 }

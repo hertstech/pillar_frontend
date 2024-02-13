@@ -13,9 +13,11 @@ import HeaderTabs from "../../components/HeaderTabs";
 import Buttons from "../../components/Button";
 import General from "./General";
 import Personal from "./Personal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import InputField from "../../components/InputField";
 import Management from "./Management";
+import { axiosInstance } from "../../Utils";
+import Swal from "sweetalert2";
 
 const roles = [
   { label: "Tenant Admin", value: "super admin" },
@@ -23,22 +25,93 @@ const roles = [
   { label: "Coordinator", value: "staff" },
 ];
 
+const title = [
+  "Mr.",
+  "Mrs.",
+  "Miss",
+  "Ms.",
+  "Dr.",
+  "Prof.",
+  "Rev.",
+  "Hon.",
+  "Capt.",
+  "Sir.",
+  "Dame",
+];
+
 export default function Settings() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const [formField, setFormField] = useState({
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [staffList, setStaffList] = useState<any[]>([]);
+
+  const [organization, setOrganization] = useState({});
+
+  const initialFormState = {
     firstName: "",
     lastName: "",
     email: "",
     role: "",
     position: "",
-  });
+    title: "",
+  };
+
+  const [formField, setFormField] = useState(initialFormState);
 
   const handleChange = (name: string, value: any) => {
     setFormField({
       ...formField,
       [name || ""]: value,
     });
+  };
+
+  const getAllStaff = async () => {
+    setIsLoading(true);
+    try {
+      const res = await axiosInstance.get(`/hcp/profile`);
+
+      setOrganization(res.data);
+      setStaffList(res.data.management);
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getAllStaff();
+  }, []);
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      await axiosInstance.post("hcp/create-tenet-account", formField);
+
+      Swal.fire({
+        icon: "success",
+        title: `Success`,
+        text: `You’ve created a new HCP`,
+        confirmButtonColor: "#099250",
+      });
+
+      setIsLoading(false);
+      setIsOpen(false);
+      setFormField(initialFormState);
+      getAllStaff();
+    } catch (error: any) {
+      setIsOpen(false);
+      setFormField(initialFormState);
+      Swal.fire({
+        icon: "info",
+        title: `Error`,
+        text: `${error.response.data.detail}`,
+        confirmButtonColor: "#099250",
+      });
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -166,7 +239,7 @@ export default function Settings() {
                 </g>
               </svg>
             ),
-            content: <General />,
+            content: <General organization={organization} />,
           },
           {
             label: "Personal",
@@ -250,7 +323,7 @@ export default function Settings() {
                 </g>
               </svg>
             ),
-            content: <Management />,
+            content: <Management isLoading={isLoading} staffList={staffList} />,
           },
         ]}
       />
@@ -287,19 +360,39 @@ export default function Settings() {
 
           <DialogContent>
             <form action="">
-              <InputField
-                type="text"
-                label="Full Name"
-                name="firstName"
-                value={formField.firstName}
-                onChange={(e: any) => {
-                  handleChange("firstName", e.target.value);
-                }}
-              />
+              <div style={{ display: "flex", gap: 10, alignItems: "flex-end" }}>
+                <label htmlFor="title">
+                  Title
+                  <TextField
+                    select
+                    sx={{ marginTop: "5px" }}
+                    fullWidth
+                    name="title"
+                    value={formField.title}
+                    onChange={(e) => handleChange("title", e.target.value)}
+                  >
+                    {title.map((item, index) => (
+                      <MenuItem key={index} value={item}>
+                        {item}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </label>
+
+                <InputField
+                  type="text"
+                  label="First Name"
+                  name="firstName"
+                  value={formField.firstName}
+                  onChange={(e: any) => {
+                    handleChange("firstName", e.target.value);
+                  }}
+                />
+              </div>
 
               <InputField
                 type="text"
-                label="Full Name"
+                label="Last Name"
                 name="lastName"
                 value={formField.lastName}
                 onChange={(e: any) => {
@@ -318,8 +411,15 @@ export default function Settings() {
               />
 
               <label htmlFor="role" style={{ marginTop: "8px" }}>
-                <span> Role</span>
-                <TextField select fullWidth sx={{ mt: "5px" }}>
+                <span>Role</span>
+                <TextField
+                  select
+                  fullWidth
+                  sx={{ mt: "5px" }}
+                  name="role"
+                  value={formField.role}
+                  onChange={(e) => handleChange("role", e.target.value)}
+                >
                   {roles.map((item, index) => (
                     <MenuItem key={index} value={item.value}>
                       {item.label}
@@ -332,14 +432,18 @@ export default function Settings() {
                 type="text"
                 label="Job Title"
                 name="position"
-                value={formField.role}
+                value={formField.position}
                 onChange={(e: any) => {
                   handleChange("position", e.target.value);
                 }}
               />
 
               <Stack marginTop={3}>
-                <Buttons title="Create HCP" onClick={() => {}} />
+                <Buttons
+                  title="Create HCP"
+                  loading={isLoading}
+                  onClick={handleSubmit}
+                />
               </Stack>
             </form>
           </DialogContent>

@@ -41,6 +41,7 @@ export default function RegisterPage() {
     facilityName: "",
     title: "",
     confirmPassword: "",
+    address: "",
   });
 
   const isValidEmail = (email: string) => {
@@ -134,8 +135,10 @@ export default function RegisterPage() {
               </Box>
 
               <form className={Styles.form}>
-                <div style={{ display: "flex", gap: 10, alignItems: "flex-end" }}>
-                  <label htmlFor="title" >
+                <div
+                  style={{ display: "flex", gap: 10, alignItems: "flex-end" }}
+                >
+                  <label htmlFor="title">
                     Title
                     <TextField
                       select
@@ -204,6 +207,14 @@ export default function RegisterPage() {
                   value={formData.facilityName}
                   onChange={handleChange}
                   placeholder="Enter Hospital name"
+                />
+                <InputField
+                  type="text"
+                  label="Facility Location"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  placeholder="Enter Hospital Address"
                 />
                 <div style={{ marginTop: 20 }}>
                   <Button

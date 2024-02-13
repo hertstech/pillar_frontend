@@ -106,6 +106,7 @@ axiosInstance.interceptors.response.use(
     if (
       (error?.response.status === 401 &&
         error?.response.data.detail === "refresh-token expired") ||
+      error?.response.data.detail === "Not authenticated" ||
       error?.response.status === 500
     ) {
       Toast.fire({
