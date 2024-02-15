@@ -431,7 +431,9 @@ export default function Settings() {
                   {user.role === "superadmin" && (
                     <MenuItem value="superadmin">Tenant Admin</MenuItem>
                   )}
-                  <MenuItem value="admin">HCP</MenuItem>
+                  {user.role === "superadmin" && (
+                    <MenuItem value="admin">HCP</MenuItem>
+                  )}
                   <MenuItem value="staff">Coordinator</MenuItem>
                 </TextField>
               </label>

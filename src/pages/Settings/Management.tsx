@@ -14,6 +14,7 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  TextField,
   Typography,
 } from "@mui/material";
 import { useState, useEffect } from "react";
@@ -23,6 +24,7 @@ import moment from "moment";
 import { SpinLoader } from "../../components/NoResult";
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
+import { axiosInstance } from "../../Utils";
 
 const TABLE_HEAD = [
   { id: "name", label: "Name", align: "left" },
@@ -34,6 +36,20 @@ const TABLE_HEAD = [
   { id: "" },
 ];
 
+const title = [
+  "Mr.",
+  "Mrs.",
+  "Miss",
+  "Ms.",
+  "Dr.",
+  "Prof.",
+  "Rev.",
+  "Hon.",
+  "Capt.",
+  "Sir.",
+  "Dame",
+];
+
 export default function Management({ isLoading, staffList }: any) {
   const user = useSelector((state: any) => state.user.user);
 
@@ -41,9 +57,13 @@ export default function Management({ isLoading, staffList }: any) {
 
   const [show, setShow] = useState(false);
 
+  const [openView, setOpenView] = useState(false);
+
   const [openSuspend, setOpenSuspend] = useState(false);
 
   const [openArchive, setOpenArchive] = useState(false);
+
+  const [loading, setLoading] = useState(false);
 
   const [openDelete, setOpenDelete] = useState(false);
 
@@ -52,6 +72,23 @@ export default function Management({ isLoading, staffList }: any) {
   const [selectedUserId, setSelectedUserId] = useState(null);
 
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const [formField, setFormField] = useState({
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email || "None",
+    phoneNumber: user.phoneNumber || "None",
+    title: user.title || "",
+    role: user.role || "",
+    position: user.position || "",
+  });
+
+  const handleChange = (name: string, value: any) => {
+    setFormField({
+      ...formField,
+      [name || ""]: value,
+    });
+  };
 
   const Toast = Swal.mixin({
     toast: true,
@@ -121,6 +158,31 @@ export default function Management({ isLoading, staffList }: any) {
       });
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  // const disableField = user.role === "staff" || user.role === "admin";
+
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      await axiosInstance.put(`/hcp/tenet-update/${user.id}`, formField);
+
+      Swal.fire({
+        icon: "success",
+        title: `Success`,
+        text: `You’ve updated your record`,
+        confirmButtonColor: "#099250",
+      });
+      setLoading(false);
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: `error`,
+        text: `Please try again`,
+        confirmButtonColor: "#099250",
+      });
+      setLoading(false);
     }
   };
 
@@ -199,6 +261,7 @@ export default function Management({ isLoading, staffList }: any) {
                           "&:nth-of-type(even)": {
                             background: "#FCFCFD",
                           },
+                          position: "relative",
                         }}
                       >
                         <TableCell>
@@ -298,13 +361,20 @@ export default function Management({ isLoading, staffList }: any) {
                                 background: "white",
                                 border: "1px #F2F4F7 solid",
                                 borderRadius: 1,
-                                marginTop: 3.25,
-                                right: "43px",
+                                marginTop: "-39px",
+                                right: "45px",
                                 width: "150px",
                                 py: 1,
                               }}
                             >
-                              <MenuItem>View</MenuItem>
+                              <MenuItem
+                                onClick={() => {
+                                  // setOpenView(true);
+                                  setShow(false);
+                                }}
+                              >
+                                View
+                              </MenuItem>
                               {user.role === "admin" ||
                                 (user.role === "superadmin" && (
                                   <MenuItem
@@ -327,7 +397,7 @@ export default function Management({ isLoading, staffList }: any) {
                                     Archive
                                   </MenuItem>
                                 ))}
-                              {user.role === "admin" ||
+                              {/* {user.role === "admin" ||
                                 (user.role === "superadmin" && (
                                   <MenuItem
                                     onClick={() => {
@@ -338,7 +408,7 @@ export default function Management({ isLoading, staffList }: any) {
                                   >
                                     Delete
                                   </MenuItem>
-                                ))}
+                                ))} */}
                             </Box>
                           )}
                         </TableCell>
@@ -362,6 +432,151 @@ export default function Management({ isLoading, staffList }: any) {
       </Box>
 
       <>
+        {/* VIEW AND UPDATE STAFF DETAILS */}
+        <Dialog
+          maxWidth="xs"
+          fullWidth
+          open={openView}
+          aria-labelledby="alert-view-user"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle sx={{ marginBottom: 2 }}>
+            {user.role === "superadmin" ? "Edit HCP" : "View HCP"}
+            {user.role === "superadmin" && (
+              <p style={{ fontSize: "16px", fontWeight: 400 }}>
+                Update HCP details
+              </p>
+            )}
+          </DialogTitle>
+          <Button
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+              padding: "16px 8px",
+            }}
+            onClick={() => setOpenView(false)}
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g id="Teeny icon / x-small">
+                <path
+                  id="Vector"
+                  d="M4.19922 4.2002L9.79922 9.8002M4.19922 9.8002L9.79922 4.2002"
+                  stroke="#099250"
+                />
+              </g>
+            </svg>
+          </Button>
+
+          <span style={{ padding: 8, textAlign: "center" }}>
+            Please be aware that{" "}
+            <strong style={{ textTransform: "capitalize" }}>
+              {selectedUserId &&
+                dataFiltered.find((user: any) => user.id === selectedUserId)
+                  ?.firstName}
+            </strong>{" "}
+            will lose access to Pillar and all associated data will be
+            temporarily unavailable. Are you sure you want to continue?
+          </span>
+          <Box flexDirection={"column"} sx={{ display: "flex", gap: 2 }}>
+            <form>
+              <label htmlFor="title">
+                Title
+                <TextField
+                  select
+                  sx={{
+                    marginTop: "5px",
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      WebkitTextFillColor: "black",
+                    },
+                  }}
+                  fullWidth
+                  name="title"
+                  value={formField.title}
+                  disabled
+                  onChange={(e) => handleChange("title", e.target.value)}
+                >
+                  {title.map((item, index) => (
+                    <MenuItem key={index} value={item}>
+                      {item}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </label>
+              <InputField
+                type="text"
+                label="First Name"
+                name="firstName"
+                value={formField.firstName}
+                disabled
+                onChange={(e: any) => handleChange("firstName", e.target.value)}
+              />
+              <InputField
+                type="text"
+                label="Last Name"
+                name="lastName"
+                value={formField.lastName}
+                disabled
+                onChange={(e: any) => handleChange("lastName", e.target.value)}
+              />
+              <InputField
+                type="text"
+                label="Email Address"
+                name="email"
+                value={formField.email}
+                disabled
+                onChange={(e: any) => handleChange("email", e.target.value)}
+              />
+
+              <InputField
+                type="text"
+                label="Position"
+                name="Position"
+                value={formField.position || "IT Support"}
+                disabled
+                onChange={(e: any) => handleChange("position", e.target.value)}
+              />
+              <label htmlFor="role" style={{ marginTop: "8px" }}>
+                <span>Role</span>
+                <TextField
+                  select
+                  fullWidth
+                  sx={{
+                    mt: "5px",
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      WebkitTextFillColor: "black",
+                    },
+                  }}
+                  name="role"
+                  value={formField.role}
+                  disabled
+                  onChange={(e) => handleChange("role", e.target.value)}
+                >
+                  {user.role === "superadmin" && (
+                    <MenuItem value="superadmin">Tenant Admin</MenuItem>
+                  )}
+                  <MenuItem value="admin">HCP</MenuItem>
+                  <MenuItem value="staff">Coordinator</MenuItem>
+                </TextField>
+              </label>
+
+              <Stack sx={{ mt: 3 }}>
+                <Buttons
+                  title="Update Profile"
+                  loading={loading}
+                  onClick={handleSubmit}
+                />
+              </Stack>
+            </form>
+          </Box>
+        </Dialog>
+
         {/* OPEN SUSPEND STAFF */}
         <Dialog
           maxWidth="xs"
