@@ -400,9 +400,11 @@ export default function Overview({ client }: PropType) {
                     fontSize={12}
                     color={"#101928"}
                   >
-                    last:{" "}
-                    {moment(bloodGroup.date_created || "").format("DD/MM/YYYY")}{" "}
-                    {moment(bloodGroup.date_created || "").format("LT")}
+                    {bloodGroup.date_created
+                      ? `last: ${moment(bloodGroup.date_created).format(
+                          "DD/MM/YYYY"
+                        )} ${moment(bloodGroup.date_created).format("LT")}`
+                      : ""}
                   </Typography>
                 </div>
                 <div className="flex justify-center items-center">
@@ -456,9 +458,11 @@ export default function Overview({ client }: PropType) {
                     fontSize={12}
                     color={"#101928"}
                   >
-                    last:{" "}
-                    {moment(genotype.date_created || "").format("DD/MM/YYYY")}{" "}
-                    {moment(genotype.date_created || "").format("LT")}
+                    {genotype.date_created
+                      ? `last: ${moment(genotype.date_created).format(
+                          "DD/MM/YYYY"
+                        )} ${moment(genotype.date_created).format("LT")}`
+                      : ""}
                   </Typography>
                 </div>
                 <div className="flex justify-center items-center">
@@ -507,9 +511,11 @@ export default function Overview({ client }: PropType) {
                     fontSize={12}
                     color={"#101928"}
                   >
-                    last:{" "}
-                    {moment(glucose.date_created || "").format("DD/MM/YYYY")}{" "}
-                    {moment(glucose.date_created || "").format("LT")}
+                    {glucose.date_created
+                      ? `last: ${moment(glucose.date_created).format(
+                          "DD/MM/YYYY"
+                        )} ${moment(glucose.date_created).format("LT")}`
+                      : ""}
                   </Typography>
                 </div>
                 <div className="flex justify-center items-center">
@@ -561,8 +567,11 @@ export default function Overview({ client }: PropType) {
                     fontSize={12}
                     color={"#101928"}
                   >
-                    last: {moment(temp.date_created || "").format("DD/MM/YYYY")}{" "}
-                    {moment(temp.date_created || "").format("LT")}
+                    {temp.date_created
+                      ? `last: ${moment(temp.date_created).format(
+                          "DD/MM/YYYY"
+                        )} ${moment(temp.date_created).format("LT")}`
+                      : ""}
                   </Typography>
                 </div>
                 <div className="flex justify-center items-center">

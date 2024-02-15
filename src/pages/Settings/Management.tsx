@@ -22,6 +22,7 @@ import Buttons from "../../components/Button";
 import moment from "moment";
 import { SpinLoader } from "../../components/NoResult";
 import Swal from "sweetalert2";
+import { useSelector } from "react-redux";
 
 const TABLE_HEAD = [
   { id: "name", label: "Name", align: "left" },
@@ -34,6 +35,8 @@ const TABLE_HEAD = [
 ];
 
 export default function Management({ isLoading, staffList }: any) {
+  const user = useSelector((state: any) => state.user.user);
+
   const [search, setSearch] = useState("");
 
   const [show, setShow] = useState(false);
@@ -302,31 +305,40 @@ export default function Management({ isLoading, staffList }: any) {
                               }}
                             >
                               <MenuItem>View</MenuItem>
-                              <MenuItem
-                                onClick={() => {
-                                  setOpenSuspend(true);
-                                  setShow(false);
-                                }}
-                              >
-                                Suspend
-                              </MenuItem>
-                              <MenuItem
-                                onClick={() => {
-                                  setOpenArchive(true);
-                                  setShow(false);
-                                }}
-                              >
-                                Archive
-                              </MenuItem>
-                              <MenuItem
-                                onClick={() => {
-                                  setOpenDelete(true);
-                                  setShow(false);
-                                }}
-                                sx={{ color: "#F04438" }}
-                              >
-                                Delete
-                              </MenuItem>
+                              {user.role === "admin" ||
+                                (user.role === "superadmin" && (
+                                  <MenuItem
+                                    onClick={() => {
+                                      setOpenSuspend(true);
+                                      setShow(false);
+                                    }}
+                                  >
+                                    Suspend
+                                  </MenuItem>
+                                ))}
+                              {user.role === "admin" ||
+                                (user.role === "superadmin" && (
+                                  <MenuItem
+                                    onClick={() => {
+                                      setOpenArchive(true);
+                                      setShow(false);
+                                    }}
+                                  >
+                                    Archive
+                                  </MenuItem>
+                                ))}
+                              {user.role === "admin" ||
+                                (user.role === "superadmin" && (
+                                  <MenuItem
+                                    onClick={() => {
+                                      setOpenDelete(true);
+                                      setShow(false);
+                                    }}
+                                    sx={{ color: "#F04438" }}
+                                  >
+                                    Delete
+                                  </MenuItem>
+                                ))}
                             </Box>
                           )}
                         </TableCell>

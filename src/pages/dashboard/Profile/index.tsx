@@ -173,6 +173,7 @@ export default function ProfileHome() {
             Search client’s health record here
           </span>
         </div>
+
         <Stack alignItems="start" px={2}>
           <Link
             to="/dashboard/new"

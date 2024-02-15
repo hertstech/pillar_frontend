@@ -26,6 +26,8 @@ import Swal from "sweetalert2";
 export default function Singleuser() {
   const client = useSelector((state: any) => state.client.clients.tab1[0]);
 
+  const user = useSelector((state: any) => state.user.user);
+
   const [isLoading, setIsLoading] = useState(false);
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -35,8 +37,6 @@ export default function Singleuser() {
   const { id } = useParams();
 
   const navigate = useNavigate();
-
-  // const dispatch = useDispatch();
 
   const isInputEmpty = () => message.trim() === "";
 
@@ -76,6 +76,15 @@ export default function Singleuser() {
       content: <Message />,
     },
   ];
+
+  // Filter tabs based on user's role
+  const filteredTabs = tabs.filter((tab) => {
+    if (user.role === "admin" || user.role === "superadmin") {
+      return true;
+    } else {
+      return tab.label === "Demographics" || tab.label === "Messages";
+    }
+  });
 
   const handleSubmit = async () => {
     setIsLoading(true);
@@ -284,7 +293,7 @@ export default function Singleuser() {
           </Stack>
         </Box>
 
-        <HeaderTabs links={tabs} />
+        <HeaderTabs links={filteredTabs} />
       </Box>
 
       <>
