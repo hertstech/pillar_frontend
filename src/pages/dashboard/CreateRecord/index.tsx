@@ -33,6 +33,8 @@ import ReferralRecord from "./ReferralRecord";
 export default function CreateRecord() {
   const client = useSelector((state: any) => state.client.clients.tab1[0]);
 
+  const user = useSelector((state: any) => state.user.user);
+
   const [value, setValue] = React.useState(0);
 
   const { tabId } = useParams();
@@ -232,6 +234,16 @@ export default function CreateRecord() {
       content: <ReferralRecord />,
     },
   ];
+
+    // Filter tabs based on user's role
+    const filteredTabs = tabs.filter((tab) => {
+      if (user.role === "admin" || user.role === "superadmin") {
+        return true;
+      } else {
+        return tab.label ===  "Demographics";
+      }
+    });
+
   return (
     <Box>
       <Box
@@ -352,7 +364,7 @@ export default function CreateRecord() {
                   },
                 }}
               >
-                {tabs.map((tab, index) => (
+                {filteredTabs.map((tab, index) => (
                   <Tab
                     sx={{
                       textTransform: "capitalize",
@@ -424,7 +436,7 @@ export default function CreateRecord() {
                 boxShadow: "none",
               }}
             >
-              {tabs[value].content}
+              {filteredTabs[value].content}
             </Card>
           </Grid>
         </Grid>
