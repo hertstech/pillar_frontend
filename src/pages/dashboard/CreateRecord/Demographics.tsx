@@ -9,7 +9,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import InputField from "../../../components/InputField";
 import PhoneField from "../../../components/PhoneInput";
@@ -17,6 +17,7 @@ import StatesData from "../../../../states.json";
 import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { axiosInstance } from "../../../Utils";
+import { dispatchClient } from "../../../redux/clientSlice";
 
 const relations = [
   { value: "father", label: "Father" },
@@ -39,6 +40,8 @@ export default function Demographics() {
   const { id } = useParams();
 
   const navigate = useNavigate();
+
+  const dispatch = useDispatch();
 
   const [editForm, setEditForm] = React.useState({
     phoneNumber: client?.phoneNumber || "",
@@ -82,6 +85,8 @@ export default function Demographics() {
         editForm
       );
 
+      dispatch(dispatchClient({ tabId: "tab1", client: client }));
+
       setIsLoad(false);
       Swal.fire({
         icon: "success",
@@ -106,7 +111,7 @@ export default function Demographics() {
     <Box>
       <div style={{ textAlign: "center", marginBottom: 25 }}>
         <Typography fontWeight={700} color={"#101928"} fontSize={32}>
-          Create Service User
+          Update Demographics
         </Typography>
       </div>
 

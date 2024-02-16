@@ -63,7 +63,7 @@ export default function Settings() {
     });
   };
 
-  const getAllStaff = async () => {
+  const getOrganizationData = async () => {
     setIsLoading(true);
     try {
       const res = await axiosInstance.get(`/hcp/profile`);
@@ -77,7 +77,7 @@ export default function Settings() {
   };
 
   useEffect(() => {
-    getAllStaff();
+    getOrganizationData();
   }, []);
 
   const handleSubmit = async (e: any) => {
@@ -97,7 +97,7 @@ export default function Settings() {
       setIsLoading(false);
       setIsOpen(false);
       setFormField(initialFormState);
-      getAllStaff();
+      getOrganizationData();
     } catch (error: any) {
       setIsOpen(false);
       setFormField(initialFormState);

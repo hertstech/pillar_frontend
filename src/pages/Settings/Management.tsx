@@ -50,6 +50,16 @@ const title = [
   "Dame",
 ];
 
+const initialFormState = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  phoneNumber: "",
+  title: "",
+  role: "",
+  position: "",
+};
+
 export default function Management({ isLoading, staffList }: any) {
   const user = useSelector((state: any) => state.user.user);
 
@@ -61,11 +71,11 @@ export default function Management({ isLoading, staffList }: any) {
 
   const [openSuspend, setOpenSuspend] = useState(false);
 
+  const [openActive, setOpenActive] = useState(false);
+
   const [openArchive, setOpenArchive] = useState(false);
 
   const [loading, setLoading] = useState(false);
-
-  const [openDelete, setOpenDelete] = useState(false);
 
   const [page, setPage] = useState(0);
 
@@ -73,15 +83,7 @@ export default function Management({ isLoading, staffList }: any) {
 
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const [formField, setFormField] = useState({
-    firstName: user.firstName,
-    lastName: user.lastName,
-    email: user.email || "None",
-    phoneNumber: user.phoneNumber || "None",
-    title: user.title || "",
-    role: user.role || "",
-    position: user.position || "",
-  });
+  const [formField, setFormField] = useState(initialFormState);
 
   const handleChange = (name: string, value: any) => {
     setFormField({
@@ -122,59 +124,100 @@ export default function Management({ isLoading, staffList }: any) {
     setSelectedUserId(id);
   };
 
-  const handleSuspend = async () => {
+  const handleActivate = async () => {
+    setLoading(true);
+
+    const payload = { status: "active" };
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await axiosInstance.put(
+        `/hcp/update-tenet-status/${selectedUserId}`,
+        payload
+      );
+      setOpenActive(false);
+      Toast.fire({
+        icon: "success",
+        title: "This User account is now suspended!",
+      });
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+
+  const handleSuspend = async () => {
+    setLoading(true);
+
+    const payload = { status: "suspend" };
+    try {
+      await axiosInstance.put(
+        `/hcp/update-tenet-status/${selectedUserId}`,
+        payload
+      );
       setOpenSuspend(false);
       Toast.fire({
         icon: "success",
         title: "This User account is now suspended!",
       });
+      setLoading(false);
     } catch (error) {
-      console.error(error);
+      setLoading(false);
     }
   };
 
   const handleArchive = async () => {
+    setLoading(true);
+
+    const payload = { status: "archive" };
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await axiosInstance.put(
+        `/hcp/update-tenet-status/${selectedUserId}`,
+        payload
+      );
       setOpenArchive(false);
       Toast.fire({
         icon: "success",
         title: "This User account is now archived!",
       });
+      setLoading(false);
     } catch (error) {
-      console.error(error);
+      setLoading(false);
     }
   };
 
-  const handleDelete = async () => {
+  const disableField = user.role === "staff" || user.role === "admin";
+
+  const getUser = async () => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      setOpenDelete(false);
-      Toast.fire({
-        icon: "success",
-        title: "This User account is now deleted!",
-      });
+      const res = await axiosInstance.get(
+        `/hcp/tenet-profile/${selectedUserId}`
+      );
+      setFormField(res.data);
+      console.log(res.data);
     } catch (error) {
-      console.error(error);
+      setLoading(false);
     }
   };
 
-  // const disableField = user.role === "staff" || user.role === "admin";
+  const handleView = () => {
+    getUser();
+
+    setOpenView(true);
+    setShow(false);
+  };
 
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      await axiosInstance.put(`/hcp/tenet-update/${user.id}`, formField);
+      await axiosInstance.put(`/hcp/tenet-update/${selectedUserId}`, formField);
 
+      setLoading(false);
+      setOpenView(false);
       Swal.fire({
         icon: "success",
         title: `Success`,
         text: `You’ve updated your record`,
         confirmButtonColor: "#099250",
       });
-      setLoading(false);
     } catch (error) {
       Swal.fire({
         icon: "error",
@@ -231,7 +274,9 @@ export default function Management({ isLoading, staffList }: any) {
       </Box>
 
       <Box marginTop={2}>
-        <TableContainer sx={{ borderRadius: 2.5, background: "#FFF" }}>
+        <TableContainer
+          sx={{ borderRadius: 2.5, background: "#FFF", position: "relative" }}
+        >
           <Table size="medium">
             <TableHead sx={{ background: "#FCFCFD", fontSize: 12 }}>
               <TableRow>
@@ -303,17 +348,21 @@ export default function Management({ isLoading, staffList }: any) {
                           <Chip
                             sx={{
                               background:
-                                item.is_active === true
+                                item.status === "active"
                                   ? "#36A1500A"
-                                  : "#FEF6E7",
+                                  : item.status === "suspend"
+                                  ? "#FEF6E7"
+                                  : "#FBEAE9",
                               textTransform: "capitalize",
                               fontWeight: "fontBold",
                               color:
-                                item.is_active === true ? "#36A150" : "#DD900D",
+                                item.status === "active"
+                                  ? "#36A150"
+                                  : item.status === "suspend"
+                                  ? "#DD900D"
+                                  : "#D42620",
                             }}
-                            label={
-                              item.is_active === false ? "in active" : "active"
-                            }
+                            label={item.status}
                           />
                         </TableCell>
                         <TableCell>
@@ -323,92 +372,101 @@ export default function Management({ isLoading, staffList }: any) {
                         </TableCell>
 
                         <TableCell align="right">
-                          <svg
-                            style={{ cursor: "pointer" }}
+                          <Button
+                            sx={{
+                              borderRadius: "50%",
+                              height: "36px",
+                              minWidth: "36px",
+                            }}
                             onClick={() => handleToggle(`${item.id}`)}
-                            width="20"
-                            height="20"
-                            viewBox="0 0 20 20"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
                           >
-                            <g id="Teeny icon / more-vertical">
-                              <g id="Vector">
-                                <path
-                                  d="M9.99969 4.00029C9.63149 4.00029 9.33301 3.7018 9.33301 3.33361C9.33301 2.96541 9.63149 2.66693 9.99969 2.66693C10.3679 2.66693 10.6664 2.96541 10.6664 3.33361C10.6664 3.7018 10.3679 4.00029 9.99969 4.00029Z"
-                                  stroke="#545C68"
-                                  stroke-width="1.33336"
-                                />
-                                <path
-                                  d="M9.99969 10.6671C9.63149 10.6671 9.33301 10.3686 9.33301 10.0004C9.33301 9.63221 9.63149 9.33373 9.99969 9.33373C10.3679 9.33373 10.6664 9.63221 10.6664 10.0004C10.6664 10.3686 10.3679 10.6671 9.99969 10.6671Z"
-                                  stroke="#545C68"
-                                  stroke-width="1.33336"
-                                />
-                                <path
-                                  d="M9.99969 17.3339C9.63149 17.3339 9.33301 17.0354 9.33301 16.6672C9.33301 16.299 9.63149 16.0005 9.99969 16.0005C10.3679 16.0005 10.6664 16.299 10.6664 16.6672C10.6664 17.0354 10.3679 17.3339 9.99969 17.3339Z"
-                                  stroke="#545C68"
-                                  stroke-width="1.33336"
-                                />
+                            <svg
+                              width="20"
+                              height="20"
+                              viewBox="0 0 20 20"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <g id="Teeny icon / more-vertical">
+                                <g id="Vector">
+                                  <path
+                                    d="M9.99969 4.00029C9.63149 4.00029 9.33301 3.7018 9.33301 3.33361C9.33301 2.96541 9.63149 2.66693 9.99969 2.66693C10.3679 2.66693 10.6664 2.96541 10.6664 3.33361C10.6664 3.7018 10.3679 4.00029 9.99969 4.00029Z"
+                                    stroke="#545C68"
+                                    stroke-width="1.33336"
+                                  />
+                                  <path
+                                    d="M9.99969 10.6671C9.63149 10.6671 9.33301 10.3686 9.33301 10.0004C9.33301 9.63221 9.63149 9.33373 9.99969 9.33373C10.3679 9.33373 10.6664 9.63221 10.6664 10.0004C10.6664 10.3686 10.3679 10.6671 9.99969 10.6671Z"
+                                    stroke="#545C68"
+                                    stroke-width="1.33336"
+                                  />
+                                  <path
+                                    d="M9.99969 17.3339C9.63149 17.3339 9.33301 17.0354 9.33301 16.6672C9.33301 16.299 9.63149 16.0005 9.99969 16.0005C10.3679 16.0005 10.6664 16.299 10.6664 16.6672C10.6664 17.0354 10.3679 17.3339 9.99969 17.3339Z"
+                                    stroke="#545C68"
+                                    stroke-width="1.33336"
+                                  />
+                                </g>
                               </g>
-                            </g>
-                          </svg>
+                            </svg>
+                          </Button>
 
                           {show === item.id && (
                             <Box
                               sx={{
-                                position: "absolute",
+                                position: "fixed",
                                 zIndex: 1,
                                 background: "white",
                                 border: "1px #F2F4F7 solid",
-                                borderRadius: 1,
-                                marginTop: "-39px",
-                                right: "45px",
-                                width: "150px",
-                                py: 1,
+                                borderRadius: 2,
+                                marginTop: "-34px",
+                                right: "100px",
+                                width: "160px",
+                                p: 1,
                               }}
                             >
                               <MenuItem
-                                onClick={() => {
-                                  // setOpenView(true);
-                                  setShow(false);
-                                }}
+                                sx={{ padding: "6px 8px" }}
+                                onClick={handleView}
                               >
                                 View
                               </MenuItem>
-                              {user.role === "admin" ||
-                                (user.role === "superadmin" && (
-                                  <MenuItem
-                                    onClick={() => {
-                                      setOpenSuspend(true);
-                                      setShow(false);
-                                    }}
-                                  >
-                                    Suspend
-                                  </MenuItem>
-                                ))}
-                              {user.role === "admin" ||
-                                (user.role === "superadmin" && (
-                                  <MenuItem
-                                    onClick={() => {
-                                      setOpenArchive(true);
-                                      setShow(false);
-                                    }}
-                                  >
-                                    Archive
-                                  </MenuItem>
-                                ))}
-                              {/* {user.role === "admin" ||
-                                (user.role === "superadmin" && (
-                                  <MenuItem
-                                    onClick={() => {
-                                      setOpenDelete(true);
-                                      setShow(false);
-                                    }}
-                                    sx={{ color: "#F04438" }}
-                                  >
-                                    Delete
-                                  </MenuItem>
-                                ))} */}
+                              {item.status === "suspend" ||
+                              item.status === "archive" ? (
+                                <MenuItem
+                                  sx={{ padding: "6px 8px" }}
+                                  onClick={() => {
+                                    setOpenActive(true);
+                                    setShow(false);
+                                  }}
+                                >
+                                  Activate
+                                </MenuItem>
+                              ) : (
+                                <>
+                                  {user.role === "superadmin" && (
+                                    <MenuItem
+                                      sx={{ padding: "6px 8px" }}
+                                      onClick={() => {
+                                        setOpenSuspend(true);
+                                        setShow(false);
+                                      }}
+                                    >
+                                      Suspend
+                                    </MenuItem>
+                                  )}
+
+                                  {user.role === "superadmin" && (
+                                    <MenuItem
+                                      sx={{ padding: "6px 8px" }}
+                                      onClick={() => {
+                                        setOpenArchive(true);
+                                        setShow(false);
+                                      }}
+                                    >
+                                      Archive
+                                    </MenuItem>
+                                  )}
+                                </>
+                              )}
                             </Box>
                           )}
                         </TableCell>
@@ -440,7 +498,7 @@ export default function Management({ isLoading, staffList }: any) {
           aria-labelledby="alert-view-user"
           aria-describedby="alert-dialog-description"
         >
-          <DialogTitle sx={{ marginBottom: 2 }}>
+          <DialogTitle>
             {user.role === "superadmin" ? "Edit HCP" : "View HCP"}
             {user.role === "superadmin" && (
               <p style={{ fontSize: "16px", fontWeight: 400 }}>
@@ -455,7 +513,10 @@ export default function Management({ isLoading, staffList }: any) {
               top: 8,
               padding: "16px 8px",
             }}
-            onClick={() => setOpenView(false)}
+            onClick={() => {
+              setOpenView(false);
+              setFormField(initialFormState);
+            }}
           >
             <svg
               width="14"
@@ -474,17 +535,7 @@ export default function Management({ isLoading, staffList }: any) {
             </svg>
           </Button>
 
-          <span style={{ padding: 8, textAlign: "center" }}>
-            Please be aware that{" "}
-            <strong style={{ textTransform: "capitalize" }}>
-              {selectedUserId &&
-                dataFiltered.find((user: any) => user.id === selectedUserId)
-                  ?.firstName}
-            </strong>{" "}
-            will lose access to Pillar and all associated data will be
-            temporarily unavailable. Are you sure you want to continue?
-          </span>
-          <Box flexDirection={"column"} sx={{ display: "flex", gap: 2 }}>
+          <Box flexDirection={"column"} sx={{ p: 3 }}>
             <form>
               <label htmlFor="title">
                 Title
@@ -499,7 +550,7 @@ export default function Management({ isLoading, staffList }: any) {
                   fullWidth
                   name="title"
                   value={formField.title}
-                  disabled
+                  disabled={disableField}
                   onChange={(e) => handleChange("title", e.target.value)}
                 >
                   {title.map((item, index) => (
@@ -514,7 +565,7 @@ export default function Management({ isLoading, staffList }: any) {
                 label="First Name"
                 name="firstName"
                 value={formField.firstName}
-                disabled
+                disabled={disableField}
                 onChange={(e: any) => handleChange("firstName", e.target.value)}
               />
               <InputField
@@ -522,7 +573,7 @@ export default function Management({ isLoading, staffList }: any) {
                 label="Last Name"
                 name="lastName"
                 value={formField.lastName}
-                disabled
+                disabled={disableField}
                 onChange={(e: any) => handleChange("lastName", e.target.value)}
               />
               <InputField
@@ -530,7 +581,7 @@ export default function Management({ isLoading, staffList }: any) {
                 label="Email Address"
                 name="email"
                 value={formField.email}
-                disabled
+                disabled={disableField}
                 onChange={(e: any) => handleChange("email", e.target.value)}
               />
 
@@ -539,9 +590,10 @@ export default function Management({ isLoading, staffList }: any) {
                 label="Position"
                 name="Position"
                 value={formField.position || "IT Support"}
-                disabled
+                disabled={disableField}
                 onChange={(e: any) => handleChange("position", e.target.value)}
               />
+
               <label htmlFor="role" style={{ marginTop: "8px" }}>
                 <span>Role</span>
                 <TextField
@@ -555,7 +607,7 @@ export default function Management({ isLoading, staffList }: any) {
                   }}
                   name="role"
                   value={formField.role}
-                  disabled
+                  disabled={disableField}
                   onChange={(e) => handleChange("role", e.target.value)}
                 >
                   {user.role === "superadmin" && (
@@ -566,13 +618,15 @@ export default function Management({ isLoading, staffList }: any) {
                 </TextField>
               </label>
 
-              <Stack sx={{ mt: 3 }}>
-                <Buttons
-                  title="Update Profile"
-                  loading={loading}
-                  onClick={handleSubmit}
-                />
-              </Stack>
+              {user.role === "superadmin" && (
+                <Stack sx={{ mt: 3 }}>
+                  <Buttons
+                    title="Update Profile"
+                    loading={loading}
+                    onClick={handleSubmit}
+                  />
+                </Stack>
+              )}
             </form>
           </Box>
         </Dialog>
@@ -673,6 +727,102 @@ export default function Management({ isLoading, staffList }: any) {
           </Stack>
         </Dialog>
 
+        {/* OPEN ACTIVATE STAFF */}
+        <Dialog
+          maxWidth="xs"
+          fullWidth
+          open={openActive}
+          aria-labelledby="alert-suspend-user"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle sx={{ marginBottom: 2 }}>
+            <Button
+              sx={{
+                position: "absolute",
+                right: 8,
+                top: 8,
+                padding: "16px 8px",
+              }}
+              onClick={() => setOpenActive(false)}
+            >
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 14 14"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g id="Teeny icon / x-small">
+                  <path
+                    id="Vector"
+                    d="M4.19922 4.2002L9.79922 9.8002M4.19922 9.8002L9.79922 4.2002"
+                    stroke="#099250"
+                  />
+                </g>
+              </svg>
+            </Button>
+          </DialogTitle>
+
+          <div style={{ display: "grid", placeContent: "center" }}>
+            <svg
+              width="48"
+              height="48"
+              viewBox="0 0 48 48"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect width="48" height="48" rx="24" fill="#FEF6E7" />
+              <path
+                d="M24.0001 22.5C24.1658 22.5 24.3001 22.6343 24.3001 22.8V30C24.3001 30.1657 24.1658 30.3 24.0001 30.3C23.8344 30.3 23.7001 30.1657 23.7001 30V22.8C23.7001 22.6343 23.8344 22.5 24.0001 22.5ZM11.7001 24C11.7001 17.2069 17.207 11.7 24.0001 11.7C30.7932 11.7 36.3001 17.2069 36.3001 24C36.3001 30.7931 30.7932 36.3 24.0001 36.3C17.207 36.3 11.7001 30.7931 11.7001 24ZM24.0001 12.3C17.5384 12.3 12.3001 17.5383 12.3001 24C12.3001 30.4617 17.5384 35.7 24.0001 35.7C30.4618 35.7 35.7001 30.4617 35.7001 24C35.7001 17.5383 30.4618 12.3 24.0001 12.3ZM24.6001 19.2C24.6001 19.5314 24.3315 19.8 24.0001 19.8C23.6687 19.8 23.4001 19.5314 23.4001 19.2C23.4001 18.8686 23.6687 18.6 24.0001 18.6C24.3315 18.6 24.6001 18.8686 24.6001 19.2Z"
+                fill="#2D264B"
+                stroke="#DD900D"
+                stroke-width="1.2"
+              />
+            </svg>
+          </div>
+
+          <Typography variant="h5" align="center" sx={{ p: 2, mb: 0 }}>
+            Activate HCP
+          </Typography>
+          <span style={{ padding: 8, textAlign: "center" }}>
+            Please be aware that{" "}
+            <strong style={{ textTransform: "capitalize" }}>
+              {selectedUserId &&
+                dataFiltered.find((user: any) => user.id === selectedUserId)
+                  ?.firstName}
+            </strong>{" "}
+            will now have access to Pillar and all associated data will be
+            available. <br /> Are you sure you want to continue?
+          </span>
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent={"center"}
+            gap={5}
+            p={2}
+          >
+            <Button
+              sx={{
+                textTransform: "none",
+                background: "#EDFCF2",
+                py: 1.5,
+                px: 2,
+                alignItems: "center",
+                color: "#099250",
+                "&:hover": { backgroundColor: "#EDFCF2" },
+                width: "50%",
+                borderRadius: "6px",
+              }}
+              onClick={() => setOpenActive(false)}
+            >
+              Cancel
+            </Button>
+            <div style={{ width: "50%" }}>
+              <Buttons title="Submit" onClick={handleActivate} />
+            </div>
+          </Stack>
+        </Dialog>
+
         {/* OPEN ARCHIVE STAFF */}
         <Dialog
           maxWidth="xs"
@@ -765,102 +915,6 @@ export default function Management({ isLoading, staffList }: any) {
             </Button>
             <div style={{ width: "50%" }}>
               <Buttons title="Archive HCP" onClick={handleArchive} />
-            </div>
-          </Stack>
-        </Dialog>
-
-        {/* OPEN DELETE STAFF  */}
-        <Dialog
-          maxWidth="xs"
-          fullWidth
-          open={openDelete}
-          aria-labelledby="alert-suspend-user"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle sx={{ marginBottom: 2 }}>
-            <Button
-              sx={{
-                position: "absolute",
-                right: 8,
-                top: 8,
-                padding: "16px 8px",
-              }}
-              onClick={() => setOpenDelete(false)}
-            >
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 14 14"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <g id="Teeny icon / x-small">
-                  <path
-                    id="Vector"
-                    d="M4.19922 4.2002L9.79922 9.8002M4.19922 9.8002L9.79922 4.2002"
-                    stroke="#099250"
-                  />
-                </g>
-              </svg>
-            </Button>
-          </DialogTitle>
-
-          <div style={{ display: "grid", placeContent: "center" }}>
-            <svg
-              width="48"
-              height="48"
-              viewBox="0 0 48 48"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <rect width="48" height="48" rx="24" fill="#FBEAE9" />
-              <path
-                d="M24.0006 22.5C24.1663 22.5 24.3006 22.6343 24.3006 22.8V30C24.3006 30.1657 24.1663 30.3 24.0006 30.3C23.8349 30.3 23.7006 30.1657 23.7006 30V22.8C23.7006 22.6343 23.8349 22.5 24.0006 22.5ZM11.7006 24C11.7006 17.2069 17.2075 11.7 24.0006 11.7C30.7937 11.7 36.3006 17.2069 36.3006 24C36.3006 30.7931 30.7937 36.3 24.0006 36.3C17.2075 36.3 11.7006 30.7931 11.7006 24ZM24.0006 12.3C17.5389 12.3 12.3006 17.5383 12.3006 24C12.3006 30.4617 17.5389 35.7 24.0006 35.7C30.4623 35.7 35.7006 30.4617 35.7006 24C35.7006 17.5383 30.4623 12.3 24.0006 12.3ZM24.6006 19.2C24.6006 19.5314 24.332 19.8 24.0006 19.8C23.6692 19.8 23.4006 19.5314 23.4006 19.2C23.4006 18.8686 23.6692 18.6 24.0006 18.6C24.332 18.6 24.6006 18.8686 24.6006 19.2Z"
-                fill="#2D264B"
-                stroke="#CB1A14"
-                stroke-width="1.2"
-              />
-            </svg>
-          </div>
-
-          <Typography variant="h5" align="center" sx={{ p: 2, mb: 0 }}>
-            Delete HCP
-          </Typography>
-          <span style={{ padding: 8, textAlign: "center" }}>
-            Please be aware that{" "}
-            <strong style={{ textTransform: "capitalize" }}>
-              {selectedUserId &&
-                dataFiltered.find((user: any) => user.id === selectedUserId)
-                  ?.firstName}
-            </strong>{" "}
-            will lose access to Pillar and all associated data will be
-            permanently unavailable. Are you sure you want to continue?
-          </span>
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent={"center"}
-            gap={5}
-            p={2}
-          >
-            <Button
-              sx={{
-                textTransform: "none",
-                background: "#EDFCF2",
-                py: 1.5,
-                px: 2,
-                alignItems: "center",
-                color: "#099250",
-                "&:hover": { backgroundColor: "#EDFCF2" },
-                width: "50%",
-                borderRadius: "6px",
-              }}
-              onClick={() => setOpenDelete(false)}
-            >
-              Cancel
-            </Button>
-            <div style={{ width: "50%" }}>
-              <Buttons title="Delete HCP" onClick={handleDelete} />
             </div>
           </Stack>
         </Dialog>
