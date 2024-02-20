@@ -50,11 +50,11 @@ export default function Demographics() {
     middleName: client?.middleName,
     lastName: client?.lastName,
     gender: client?.gender,
-    religon: client?.religion,
+    religion: client?.religion,
     dateOfBirth: client?.dateOfBirth,
     tribalMarks: client?.tribalMarks,
     email: client?.email,
-    id: client?.id,
+    id: id,
     phoneNumber: client?.phoneNumber || "",
     address: client?.address || "",
     state: client?.state || "",
@@ -77,6 +77,8 @@ export default function Demographics() {
     nominatedPharmarcy: client?.nominatedPharmarcy || "",
     registeredDoctor: client?.registeredDoctor || "",
   });
+
+  console.log(editForm);
 
   const handleChange = (name: string, value: any) => {
     setEditForm({

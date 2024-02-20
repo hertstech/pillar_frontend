@@ -121,6 +121,9 @@ export default function HealthRecord() {
     formField.reading ||
     formField.notes;
 
+  const disableButton =
+    formField.type === "Body Temperature" && formField.degreeRating === "";
+
   const handleSubmit = async () => {
     setIsLoading(true);
 
@@ -293,6 +296,11 @@ export default function HealthRecord() {
                 </label>
               </div>
             )}
+          {disableButton && (
+            <Typography color={"error"} variant="body2" fontSize={12}>
+              Please enter a reading degree
+            </Typography>
+          )}
 
           {formField.categories === "Genetic Information" &&
             formField.type === "Blood Type" && (
@@ -588,6 +596,7 @@ export default function HealthRecord() {
             }}
             variant="outlined"
             onClick={() => setIsOpen(true)}
+            disabled={disableButton}
           >
             Continue
           </Button>
