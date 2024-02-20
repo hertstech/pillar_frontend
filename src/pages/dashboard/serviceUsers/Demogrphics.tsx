@@ -3,41 +3,41 @@ import {
   Typography,
   Stack,
   Button,
-  Dialog,
-  TextField,
-  OutlinedInput,
-  InputAdornment,
-  MenuItem,
-  DialogContent,
-  DialogTitle,
-  DialogActions,
+  // Dialog,
+  // TextField,
+  // OutlinedInput,
+  // InputAdornment,
+  // MenuItem,
+  // DialogContent,
+  // DialogTitle,
+  // DialogActions,
   Avatar,
 } from "@mui/material";
 import moment from "moment";
-import InputField, { TextLabel } from "../../../components/InputField";
-import { useState } from "react";
+import { TextLabel } from "../../../components/InputField";
+// import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import StatesData from "../../../../states.json";
-import PhoneField from "../../../components/PhoneInput";
-import Style from "./styles.module.css";
-import { AiOutlineClose } from "react-icons/ai";
-import { axiosInstance } from "../../../Utils";
-import Swal from "sweetalert2";
+// import StatesData from "../../../../states.json";
+// import PhoneField from "../../../components/PhoneInput";
+// import Style from "./styles.module.css";
+// import { AiOutlineClose } from "react-icons/ai";
+// import { axiosInstance } from "../../../Utils";
+// import Swal from "sweetalert2";
 
-const relations = [
-  { value: "father", label: "Father" },
-  { value: "mother", label: "Mother" },
-  { value: "son", label: "Son" },
-  { value: "daughter", label: "Daughter" },
-  { value: "grand mother", label: "Grand Mother" },
-  { value: "grand father", label: "Grand Father" },
-  { value: "brother", label: "Brother" },
-  { value: "sister", label: "Sister" },
-  { value: "aunty", label: "Aunty" },
-  { value: "uncle", label: "Uncle" },
-  { value: "guardian", label: "Guardian" },
-  { value: "other", label: "Other" },
-];
+// const relations = [
+//   { value: "father", label: "Father" },
+//   { value: "mother", label: "Mother" },
+//   { value: "son", label: "Son" },
+//   { value: "daughter", label: "Daughter" },
+//   { value: "grand mother", label: "Grand Mother" },
+//   { value: "grand father", label: "Grand Father" },
+//   { value: "brother", label: "Brother" },
+//   { value: "sister", label: "Sister" },
+//   { value: "aunty", label: "Aunty" },
+//   { value: "uncle", label: "Uncle" },
+//   { value: "guardian", label: "Guardian" },
+//   { value: "other", label: "Other" },
+// ];
 
 interface client {
   id: string;
@@ -80,72 +80,72 @@ export default function Demogrphics({ client }: PropType) {
 
   const navigate = useNavigate();
 
-  const [isLoad, setIsLoad] = useState(false);
+  // const [isLoad, setIsLoad] = useState(false);
 
-  const [showEdit, setShowEdit] = useState(false);
+  // const [showEdit, setShowEdit] = useState(false);
 
-  const [editForm, setEditForm] = useState({
-    phoneNumber: client?.phoneNumber || "",
-    address: client?.address || "",
-    state: client?.state || "",
-    lga: client?.lga || "",
-    height: client?.height || "",
-    weight: client?.weight || "",
-    parentOne: client?.parentOne || "",
-    parentOneNumber: client?.parentOneNumber || "",
-    parentOneNHR_ID: client?.parentOneNHR_ID || "",
-    parentOneRelationship: client?.parentOneRelationship || "",
-    parentTwo: client?.parentTwo || "",
-    parentTwoNumber: client?.parentTwoNumber || "",
-    parentTwoNHR_ID: client?.parentTwoNHR_ID || "",
-    parentTwoRelationship: client?.parentTwoRelationship || "",
-    nokFullName: client?.nokFullName || "",
-    nokPhoneNumber: client?.nokPhoneNumber || "",
-    nokNHR_ID: client?.nokNHR_ID || "",
-    nokRelationship: client?.nokRelationship || "",
-    HMOPlan: client?.HMOPlan || "",
-    nominatedPharmarcy: client?.nominatedPharmarcy || "",
-    registeredDoctor: client?.registeredDoctor || "",
-  });
+  // const [editForm, setEditForm] = useState({
+  //   phoneNumber: client?.phoneNumber || "",
+  //   address: client?.address || "",
+  //   state: client?.state || "",
+  //   lga: client?.lga || "",
+  //   height: client?.height || "",
+  //   weight: client?.weight || "",
+  //   parentOne: client?.parentOne || "",
+  //   parentOneNumber: client?.parentOneNumber || "",
+  //   parentOneNHR_ID: client?.parentOneNHR_ID || "",
+  //   parentOneRelationship: client?.parentOneRelationship || "",
+  //   parentTwo: client?.parentTwo || "",
+  //   parentTwoNumber: client?.parentTwoNumber || "",
+  //   parentTwoNHR_ID: client?.parentTwoNHR_ID || "",
+  //   parentTwoRelationship: client?.parentTwoRelationship || "",
+  //   nokFullName: client?.nokFullName || "",
+  //   nokPhoneNumber: client?.nokPhoneNumber || "",
+  //   nokNHR_ID: client?.nokNHR_ID || "",
+  //   nokRelationship: client?.nokRelationship || "",
+  //   HMOPlan: client?.HMOPlan || "",
+  //   nominatedPharmarcy: client?.nominatedPharmarcy || "",
+  //   registeredDoctor: client?.registeredDoctor || "",
+  // });
 
   const navToUpdateDemographics = () => {
     navigate(`/dashboard/user/${id}/update/0`);
   };
 
-  const handleChange = (name: string, value: any) => {
-    setEditForm({
-      ...editForm,
-      [name || ""]: value,
-    });
-  };
+  // const handleChange = (name: string, value: any) => {
+  //   setEditForm({
+  //     ...editForm,
+  //     [name || ""]: value,
+  //   });
+  // };
 
-  const updateUser = async () => {
-    setIsLoad(true);
+  // const updateUser = async () => {
+  //   setIsLoad(true);
 
-    try {
-      const res = await axiosInstance.put(
-        `/update-serviceiuser-profile/${id}`,
-        editForm
-      );
+  //   try {
+  //     const res = await axiosInstance.put(
+  //       `/update-serviceiuser-profile/${id}`,
+  //       editForm
+  //     );
 
-      setShowEdit(false);
-      setIsLoad(false);
-      Swal.fire({
-        icon: "success",
-        title: `Successful`,
-        text: `${res.data.message}`,
-        confirmButtonColor: "#099250",
-      });
-    } catch (error: any) {
-      error.response;
-      setIsLoad(false);
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        confirmButtonColor: "#099250",
-      });
-    }
-  };
+  //     setShowEdit(false);
+  //     setIsLoad(false);
+  //     Swal.fire({
+  //       icon: "success",
+  //       title: `Successful`,
+  //       text: `${res.data.message}`,
+  //       confirmButtonColor: "#099250",
+  //     });
+  //   } catch (error: any) {
+  //     error.response;
+  //     setIsLoad(false);
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Error",
+  //       confirmButtonColor: "#099250",
+  //     });
+  //   }
+  // };
 
   const formattedValue = (value: string) => {
     return value.replace(/-/g, "").replace(/(\d{4})(?=\d)/g, "$1-");
@@ -264,8 +264,8 @@ export default function Demogrphics({ client }: PropType) {
             >
               <TextLabel label="NHR ID" text={NHRID} />
 
-              <TextLabel label="Height" text={client?.height + "" + "cm"} />
-              <TextLabel label="Weight" text={client?.weight + "" + "kg"} />
+              <TextLabel label="Height" text={client?.height} suffix="cm" />
+              <TextLabel label="Weight" text={client?.weight} suffix="kg" />
             </div>
 
             <TextLabel label="Religion" text={client?.religion} />
@@ -533,7 +533,7 @@ export default function Demogrphics({ client }: PropType) {
         </Stack>
       </Box>
 
-      {showEdit && (
+      {/* {showEdit && (
         <>
           <Dialog maxWidth={"xl"} open={showEdit}>
             <DialogTitle textAlign={"center"} p={2}>
@@ -676,7 +676,7 @@ export default function Demogrphics({ client }: PropType) {
 
               <div style={{ marginTop: 10 }}>
                 <Box>
-                  {/* PARENT ONE EDIT SECTION */}
+                  {/* PARENT ONE EDIT SECTION
                   {moment(new Date()).diff(client?.dateOfBirth, "years") <
                     18 && (
                     <>
@@ -755,7 +755,7 @@ export default function Demogrphics({ client }: PropType) {
                     </>
                   )}
 
-                  {/* PARENT TWO EDIT SECTION */}
+                  {/* PARENT TWO EDIT SECTION
                   {moment(new Date()).diff(client?.dateOfBirth, "years") <
                     18 && (
                     <>
@@ -833,7 +833,7 @@ export default function Demogrphics({ client }: PropType) {
                     </>
                   )}
 
-                  {/* NEXT OF KIN EDIT SECTION */}
+                  {/* NEXT OF KIN EDIT SECTION
                   {moment(new Date()).diff(client?.dateOfBirth, "years") >=
                     18 && (
                     <>
@@ -958,7 +958,7 @@ export default function Demogrphics({ client }: PropType) {
             </DialogActions>
           </Dialog>
         </>
-      )}
+      )} */}
     </Box>
   );
 }

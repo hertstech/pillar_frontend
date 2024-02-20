@@ -21,7 +21,7 @@ import { useState, useEffect } from "react";
 import InputField from "../../components/InputField";
 import Buttons from "../../components/Button";
 import moment from "moment";
-import { SpinLoader } from "../../components/NoResult";
+import { TableLoader } from "../../components/NoResult";
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
 import { axiosInstance } from "../../Utils";
@@ -60,7 +60,11 @@ const initialFormState = {
   position: "",
 };
 
-export default function Management({ isLoading, staffList }: any) {
+export default function Management({
+  isLoading,
+  staffList,
+  triggerRefresh,
+}: any) {
   const user = useSelector((state: any) => state.user.user);
 
   const [search, setSearch] = useState("");
@@ -134,9 +138,10 @@ export default function Management({ isLoading, staffList }: any) {
         payload
       );
       setOpenActive(false);
+      triggerRefresh();
       Toast.fire({
         icon: "success",
-        title: "This User account is now suspended!",
+        title: "This User account is now Activated!",
       });
       setLoading(false);
     } catch (error) {
@@ -154,6 +159,7 @@ export default function Management({ isLoading, staffList }: any) {
         payload
       );
       setOpenSuspend(false);
+      triggerRefresh();
       Toast.fire({
         icon: "success",
         title: "This User account is now suspended!",
@@ -174,6 +180,7 @@ export default function Management({ isLoading, staffList }: any) {
         payload
       );
       setOpenArchive(false);
+      triggerRefresh();
       Toast.fire({
         icon: "success",
         title: "This User account is now archived!",
@@ -290,7 +297,7 @@ export default function Management({ isLoading, staffList }: any) {
 
             <TableBody sx={{ fontWeight: 500, fontSize: 14, color: "#101828" }}>
               {isLoading ? (
-                <SpinLoader />
+                <TableLoader />
               ) : (
                 <>
                   {dataFiltered
@@ -581,7 +588,7 @@ export default function Management({ isLoading, staffList }: any) {
                 label="Email Address"
                 name="email"
                 value={formField.email}
-                disabled={disableField}
+                disabled
                 onChange={(e: any) => handleChange("email", e.target.value)}
               />
 

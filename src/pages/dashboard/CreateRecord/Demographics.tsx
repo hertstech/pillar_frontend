@@ -37,6 +37,8 @@ const relations = [
 export default function Demographics() {
   const client = useSelector((state: any) => state.client.clients.tab1[0]);
 
+  const user = useSelector((state: any) => state.user.user);
+
   const { id } = useParams();
 
   const navigate = useNavigate();
@@ -44,6 +46,15 @@ export default function Demographics() {
   const dispatch = useDispatch();
 
   const [editForm, setEditForm] = React.useState({
+    firstName: client?.firstName,
+    middleName: client?.middleName,
+    lastName: client?.lastName,
+    gender: client?.gender,
+    religon: client?.religion,
+    dateOfBirth: client?.dateOfBirth,
+    tribalMarks: client?.tribalMarks,
+    email: client?.email,
+    id: client?.id,
     phoneNumber: client?.phoneNumber || "",
     address: client?.address || "",
     state: client?.state || "",
@@ -85,19 +96,25 @@ export default function Demographics() {
         editForm
       );
 
-      dispatch(dispatchClient({ tabId: "tab1", client: client }));
+      const responseArray = [res.data];
+
+      dispatch(dispatchClient({ tabId: "tab1", client: responseArray }));
 
       setIsLoad(false);
       Swal.fire({
         icon: "success",
         title: `Successful`,
-        text: `${res.data.message}`,
+        text: "Record Successfully Updated",
         confirmButtonColor: "#099250",
       });
 
-      navigate(`/dashboard/user/${id}/1`);
-    } catch (error: any) {
-      error.response;
+      console.log(res.data);
+      if (user.role === "superadmin" || user.role === "admin") {
+        navigate(`/dashboard/user/${id}/1`);
+      } else {
+        navigate(`/dashboard/user/${id}/0`);
+      }
+    } catch (error) {
       setIsLoad(false);
       Swal.fire({
         icon: "error",
@@ -202,6 +219,7 @@ export default function Demographics() {
                   max: 999,
                   type: "number",
                   min: 0,
+                  step: 0,
                 }}
                 onChange={(e: any) => handleChange("height", e.target.value)}
               />
@@ -209,18 +227,22 @@ export default function Demographics() {
 
             <label style={{ marginTop: 10 }}>
               Weight
-              <OutlinedInput
+              <TextField
+                type="number"
                 sx={{ marginTop: "5px", fontFamily: "fontNormal" }}
                 fullWidth
                 name="weight"
                 value={editForm.weight}
-                endAdornment={
-                  <InputAdornment position="end">kg</InputAdornment>
-                }
                 inputProps={{
                   max: 999,
                   type: "number",
                   min: 0,
+                  step: 0,
+                }}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">kg</InputAdornment>
+                  ),
                 }}
                 onChange={(e: any) => handleChange("weight", e.target.value)}
               />
@@ -467,7 +489,7 @@ export default function Demographics() {
                 label="HMO Name"
                 name="HMOPlan"
                 value={editForm.HMOPlan}
-                onChange={(value: any) => handleChange("HMOPlan", value)}
+                onChange={(e: any) => handleChange("HMOPlan", e.target.value)}
               />
 
               <InputField

@@ -125,7 +125,7 @@ export default function HealthRecord() {
     setIsLoading(true);
 
     const isCategoriesAndTypeEmpty =
-      formField.categories === "" && formField.type === "";
+      formField.categories === "" || formField.type === "";
 
     if (isCategoriesAndTypeEmpty) {
       setIsLoading(false);

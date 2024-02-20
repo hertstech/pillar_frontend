@@ -252,7 +252,13 @@ export default function Settings() {
           </g>
         </svg>
       ),
-      content: <Management isLoading={isLoading} staffList={staffList} />,
+      content: (
+        <Management
+          isLoading={isLoading}
+          staffList={staffList}
+          triggerRefresh={getOrganizationData}
+        />
+      ),
     },
   ];
 

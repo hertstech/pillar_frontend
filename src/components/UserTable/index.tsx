@@ -38,7 +38,6 @@ export default function UserTable({ results }: any) {
   const handleChangePage = (_event: unknown, newPage: number) => {
     setPage(newPage);
   };
-
   const handleChangeRowsPerPage = (event: any) => {
     setRowsPerPage(+event.target.value);
     setPage(0);

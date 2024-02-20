@@ -75,7 +75,6 @@ export default function ProfileHome() {
         setIsLoading(false);
       }
     } catch (error: any) {
-      console.log(error.response);
       Swal.fire({
         icon: "info",
         title: "Not Found",

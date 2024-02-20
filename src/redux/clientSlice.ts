@@ -1,36 +1,37 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface Client {
-  id: string;
-  email: string;
-  phoneNumber: string;
-  address: string;
-  lga: string;
-  dateOfBirth: Date;
-  height: number;
-  weight: number;
-  HMOPlan: string;
-  firstName: string;
-  middleName: string;
-  lastName: string;
-  state: string;
-  gender: string;
-  religion: string;
-  tribalMarks: string;
-  parentOne: string;
-  parentOneNumber: string;
-  parentOneNHR_ID: string;
-  parentOneRelationship: string;
-  parentTwo: string;
-  parentTwoNumber: string;
-  parentTwoNHR_ID: string;
-  parentTwoRelationship: string;
-  nominatedPharmarcy: string;
-  registeredDoctor: string;
-  nokFullName: string;
-  nokNHR_ID: string;
-  nokPhoneNumber: string;
-  nokRelationship: string;
+  [x: string]: any;
+  //   id: string;
+  //   email: string;
+  //   phoneNumber: string;
+  //   address: string;
+  //   lga: string;
+  //   dateOfBirth: Date;
+  //   height: number;
+  //   weight: number;
+  //   HMOPlan: string;
+  //   firstName: string;
+  //   middleName: string;
+  //   lastName: string;
+  //   state: string;
+  //   gender: string;
+  //   religion: string;
+  //   tribalMarks: string;
+  //   parentOne: string;
+  //   parentOneNumber: string;
+  //   parentOneNHR_ID: string;
+  //   parentOneRelationship: string;
+  //   parentTwo: string;
+  //   parentTwoNumber: string;
+  //   parentTwoNHR_ID: string;
+  //   parentTwoRelationship: string;
+  //   nominatedPharmarcy: string;
+  //   registeredDoctor: string;
+  //   nokFullName: string;
+  //   nokNHR_ID: string;
+  //   nokPhoneNumber: string;
+  //   nokRelationship: string;
 }
 
 interface ClientState {
@@ -52,13 +53,13 @@ export const clientSlice = createSlice({
         ...state.clients,
         [tabId]: client,
       };
-      // state.client = { ...state.client, ...action.payload };
     },
     dispatchEditClient: (
       state,
       action: PayloadAction<{ tabId: string; updatedClient: Client }>
     ) => {
       const { tabId, updatedClient } = action.payload;
+
       state.clients = {
         ...state.clients,
         [tabId]: updatedClient,
