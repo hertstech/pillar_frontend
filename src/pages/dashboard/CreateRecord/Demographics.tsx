@@ -78,8 +78,6 @@ export default function Demographics() {
     registeredDoctor: client?.registeredDoctor || "",
   });
 
-  console.log(editForm);
-
   const handleChange = (name: string, value: any) => {
     setEditForm({
       ...editForm,

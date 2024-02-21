@@ -298,7 +298,7 @@ export default function HealthRecord() {
             )}
           {disableButton && (
             <Typography color={"error"} variant="body2" fontSize={12}>
-              Please enter a reading degree
+              Please select a metric for temperature
             </Typography>
           )}
 
