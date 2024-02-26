@@ -1,16 +1,17 @@
-import { Navigate, createBrowserRouter } from "react-router-dom";
+import { Navigate, Outlet, createBrowserRouter } from "react-router-dom";
 import LoginPage from "../pages/Auth/LoginForm";
 import DashboardLayout from "../Layouts/Dashboard";
-import Dashboard from "../pages/dashboard/CreateUser";
+import CreateUser from "../pages/dashboard/CreateUser";
 import Settings from "../pages/Settings";
 import RegisterPage from "../pages/Auth/RegisterForm";
 import Page404 from "../pages/Page404";
-import ResultPage from "../pages/dashboard/ResultPage";
-import ProfileHome from "../pages/dashboard/Profile";
 import Singleuser from "../pages/dashboard/serviceUsers";
 import AuthGuard from "../Guard/AuthGuard";
 import CreateRecord from "../pages/dashboard/CreateRecord";
-// import Singleuser from "../pages/dashboard/ServiceUsers";
+import Home from "../pages/dashboard/home";
+import Result from "../pages/dashboard/home/Result";
+import Monitor from "../pages/dashboard/monitor";
+import File from "../pages/dashboard/files";
 
 export const router = createBrowserRouter([
   // AUTH
@@ -42,39 +43,40 @@ export const router = createBrowserRouter([
     element: <DashboardLayout />,
 
     children: [
-      { element: <Navigate to="/dashboard/profile" replace />, index: true },
+      { element: <Navigate to="/dashboard/app" replace />, index: true },
 
       {
-        path: "profile",
-        element: <ProfileHome />,
+        path: "app",
+        element: <Outlet />,
+        children: [
+          { index: true, element: <Home /> },
+          { path: "search", element: <Result /> },
+        ],
       },
+
       {
-        path: "new",
-        element: <Dashboard />,
+        path: "create-new",
+        element: <CreateUser />,
       },
+
       {
         path: "setting",
         element: <Settings />,
       },
-      {
-        path: "search-result",
-        element: <ResultPage />,
-      },
+
+      { path: "monitoring", element: <Monitor /> },
+
+      { path: "files", element: <File /> },
+
       {
         path: "user/:id",
-        element: <Singleuser />,
-      },
-      {
-        path: "user/:id/:tabID",
-        element: <Singleuser />,
-      },
-      {
-        path: "user/:id/update",
-        element: <CreateRecord />,
-      },
-      {
-        path: "user/:id/update/:tabId",
-        element: <CreateRecord />,
+        element: <Outlet />,
+        children: [
+          { index: true, element: <Singleuser /> },
+          { path: ":tabID", element: <Singleuser /> },
+          { path: "update", element: <CreateRecord /> },
+          { path: "update/:tabID", element: <CreateRecord /> },
+        ],
       },
     ],
   },

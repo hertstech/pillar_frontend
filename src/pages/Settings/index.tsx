@@ -344,7 +344,7 @@ export default function Settings() {
 
       <>
         <Dialog maxWidth="sm" fullWidth open={isOpen}>
-          <DialogTitle>Create HCP</DialogTitle>
+          <DialogTitle>Enter User information</DialogTitle>
 
           <Button
             sx={{

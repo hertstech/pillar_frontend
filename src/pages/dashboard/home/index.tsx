@@ -8,13 +8,14 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import InputField from "../../../components/InputField";
 import Buttons from "../../../components/Button";
-import Styles from "./profile.module.css";
+import Styles from "./home.module.css";
 import { useSelector } from "react-redux";
 import { axiosInstance } from "../../../Utils";
 import Swal from "sweetalert2";
 
-export default function ProfileHome() {
+export default function Home() {
   const [searchOptions, setSearchOption] = useState(false);
+
   const user = useSelector((state: any) => state.user.user);
 
   const token = useSelector((state: any) => state.user.access_token);
@@ -69,7 +70,7 @@ export default function ProfileHome() {
       const res = await axiosInstance.get(`/search-serviceuser/${apiData}`);
 
       if (res.status === 200) {
-        navigate(`/dashboard/search-result`, {
+        navigate(`/dashboard/app/search`, {
           state: { searchResults: res.data },
         });
         setIsLoading(false);
@@ -124,7 +125,7 @@ export default function ProfileHome() {
       });
 
       if (res.status === 200) {
-        navigate(`/dashboard/search-result`, {
+        navigate(`/dashboard/app/search`, {
           state: { searchResults: res.data },
         });
         setIsLoading(false);
@@ -146,7 +147,6 @@ export default function ProfileHome() {
     const dateString = dateObj ? dateObj.format() : "";
     setDateOfBirth(dateString);
   };
-
   return (
     <Box>
       <Box
@@ -175,7 +175,7 @@ export default function ProfileHome() {
 
         <Stack alignItems="start" px={2}>
           <Link
-            to="/dashboard/new"
+            to="/dashboard/create-new"
             style={{
               fontWeight: 500,
               color: "#099250",

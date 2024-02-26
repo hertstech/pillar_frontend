@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import UserTable from "../../../components/UserTable/index.tsx";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
-export default function ResultPage() {
+export default function Result() {
   const location = useLocation();
 
   const navigate = useNavigate();
@@ -19,7 +19,7 @@ export default function ResultPage() {
     }
   }, [location]);
   return (
-    <Box sx={{}}>
+    <Box>
       <Box
         sx={{
           display: "flex",
@@ -120,7 +120,7 @@ export default function ResultPage() {
               gap: 5,
               alignItems: "center",
             }}
-            to="/dashboard/new"
+            to="/dashboard/create-new"
           >
             <svg
               width="25"

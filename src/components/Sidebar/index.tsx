@@ -20,7 +20,7 @@ const navLinks = [
   {
     id: 0,
     name: "Home",
-    to: "/dashboard/profile",
+    to: "/dashboard/app",
     icon: <FiHome size={24} />,
   },
   {
@@ -29,9 +29,19 @@ const navLinks = [
     to: "/",
     icon: <FiGrid size={24} />,
   },
-  { id: 2, name: "Monitoring", to: "/", icon: <MdDisplaySettings size={24} /> },
+  {
+    id: 2,
+    name: "Monitoring",
+    to: "/dashboard/monitoring",
+    icon: <MdDisplaySettings size={24} />,
+  },
   { id: 3, name: "Form", to: "/", icon: <FaWpforms size={24} /> },
-  { id: 4, name: "Files", to: "/", icon: <FaRegFile size={24} /> },
+  {
+    id: 4,
+    name: "Files",
+    to: "/dashboard/files",
+    icon: <FaRegFile size={24} />,
+  },
   {
     id: 5,
     name: "Settings",
