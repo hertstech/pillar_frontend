@@ -4,8 +4,11 @@ import Report from "./Report";
 import Activity from "./Activity";
 import { axiosInstance } from "../../../Utils";
 import { SpinLoader } from "../../../components/NoResult";
+import { useSelector } from "react-redux";
 
 export default function Monitor() {
+  const user = useSelector((state: any) => state.user.user);
+
   const [currentTab, setCurrentTab] = useState("Report");
 
   const [isLoading, setIsLoading] = useState(false);
@@ -20,6 +23,16 @@ export default function Monitor() {
     { label: "Report", content: <Report /> },
     { label: "Activity Log", content: <Activity data={data} /> },
   ];
+
+  // Filter tabs based on user's role
+  const filteredTabs = tabs.filter((tab) => {
+    if (user.role === "superadmin") {
+      return true;
+    } else {
+      return tab.label !== "Activity Log";
+    }
+  });
+
 
   const getActivity = async () => {
     setIsLoading(true);
@@ -71,7 +84,7 @@ export default function Monitor() {
         value={currentTab}
         onChange={handleChange}
       >
-        {tabs.map((tab) => (
+        {filteredTabs.map((tab) => (
           <Tab
             sx={{
               textTransform: "capitalize",
@@ -95,7 +108,7 @@ export default function Monitor() {
         {isLoading ? (
           <SpinLoader />
         ) : (
-          tabs.find((tab) => tab.label === currentTab)?.content
+          filteredTabs.find((tab) => tab.label === currentTab)?.content
         )}
       </Box>
     </Box>

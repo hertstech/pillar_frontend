@@ -13,7 +13,6 @@ import { BiSupport } from "react-icons/bi";
 import { FaWpforms } from "react-icons/fa";
 import { MdOutlineSettings } from "react-icons/md";
 import { useState } from "react";
-import { axiosInstance } from "../../Utils";
 
 // HOME, dashboard, Monitoring, Form, Files, Settings, Support
 
@@ -58,12 +57,16 @@ export default function Sidebar() {
 
   const [show, setShow] = useState(false);
 
-  const logOut = async () => {
-    await axiosInstance.delete("/auth/logout").then(() => {
-      dispatch(dispatchLogout());
-      dispatch(resetClientState("tab1"));
-      return navigate("/");
-    });
+  // await axiosInstance.delete("/auth/logout").then(() => {
+  //   dispatch(dispatchLogout());
+  //   dispatch(resetClientState("tab1"));
+  //   return navigate("/");
+  // });
+
+  const logOut = () => {
+    dispatch(dispatchLogout());
+    dispatch(resetClientState("tab1"));
+    return navigate("/");
   };
   return (
     <aside className={Styles.container}>
