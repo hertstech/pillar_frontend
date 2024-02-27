@@ -1,10 +1,16 @@
 import { Box, Tab, Tabs, Typography } from "@mui/material";
-import React from "react";
+import { useEffect, useState } from "react";
 import Report from "./Report";
 import Activity from "./Activity";
+import { axiosInstance } from "../../../Utils";
+import { SpinLoader } from "../../../components/NoResult";
 
 export default function Monitor() {
-  const [currentTab, setCurrentTab] = React.useState("Report");
+  const [currentTab, setCurrentTab] = useState("Report");
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [data, setData] = useState([]);
 
   const handleChange = (_event: any, newValue: string) => {
     setCurrentTab(newValue);
@@ -12,8 +18,24 @@ export default function Monitor() {
 
   const tabs = [
     { label: "Report", content: <Report /> },
-    { label: "Activity Log", content: <Activity /> },
+    { label: "Activity Log", content: <Activity data={data} /> },
   ];
+
+  const getActivity = async () => {
+    setIsLoading(true);
+    try {
+      const res = await axiosInstance.get("/hcp/tenet/activity");
+
+      setData(res.data);
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getActivity();
+  }, []);
   return (
     <Box sx={{ background: "white" }}>
       <Box
@@ -70,7 +92,11 @@ export default function Monitor() {
 
       {/* Display the content of the selected tab */}
       <Box sx={{ p: "20px", pb: 12, background: "#F9F9FB" }}>
-        {tabs.find((tab) => tab.label === currentTab)?.content}
+        {isLoading ? (
+          <SpinLoader />
+        ) : (
+          tabs.find((tab) => tab.label === currentTab)?.content
+        )}
       </Box>
     </Box>
   );

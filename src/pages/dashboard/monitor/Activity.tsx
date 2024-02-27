@@ -15,8 +15,8 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
+import moment from "moment";
 import InputField from "../../../components/InputField";
-// import { Calendar } from "../../../components/CalendarField";
 
 const TABLE_HEAD = [
   { id: "user", label: "User", align: "left" },
@@ -24,18 +24,16 @@ const TABLE_HEAD = [
   { id: "status", label: "Status", align: "center" },
   { id: "ip-address", label: "IP Address", align: "left" },
   { id: "startDate", label: "Start Date", align: "left" },
-  { id: "endDate", label: "End Date", align: "left" },
+  // { id: "endDate", label: "End Date", align: "left" },
   { id: "location", label: "Location", align: "left" },
 ];
 
-export default function Activity() {
+export default function Activity({ data }: any) {
   const [search, setSearch] = React.useState("");
 
   const [page, setPage] = React.useState(0);
 
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
-  const [data, setData] = React.useState<any[]>([]);
 
   const handleChangePage = (_event: unknown, newPage: number) => {
     setPage(newPage);
@@ -45,10 +43,6 @@ export default function Activity() {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
-
-  React.useEffect(() => {
-    setData([...Array(50)]);
-  }, []);
 
   React.useEffect(() => {
     setPage(0);
@@ -100,7 +94,7 @@ export default function Activity() {
 
         <Stack
           direction="row"
-          justifyContent="space-between"
+          // justifyContent="space-between"
           alignItems="baseline"
           width={"60%"}
         >
@@ -184,10 +178,10 @@ export default function Activity() {
             <TableBody>
               {data
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((_, index) => (
+                .map((item: any) => (
                   <TableRow
                     hover
-                    key={index}
+                    key={item.id}
                     sx={{
                       "&:nth-of-type(odd)": {
                         background: "white",
@@ -208,41 +202,50 @@ export default function Activity() {
                         variant="subtitle2"
                         noWrap
                       >
-                        Ciroma Adekunle
-                        <span>Super Admin</span>
+                        {item.tenet_name}
+                        <span>IT Support</span>
                       </Typography>
                     </TableCell>
 
                     <TableCell>
-                      <span>Signed in via DNS</span>
+                      <span>{item.activity_info}</span>
                     </TableCell>
 
                     <TableCell>
                       <Chip
                         sx={{
-                          background: "#E7F6EC",
+                          background:
+                            item.status === "Successful"
+                              ? "#E7F6EC"
+                              : "#FBEAE9",
                           textTransform: "capitalize",
                           fontWeight: "fontBold",
-                          color: "#099137",
+                          color:
+                            item.status === "Successful"
+                              ? "#099137"
+                              : "#D42620",
                         }}
-                        label="successful"
+                        label={item.status}
                       />
                     </TableCell>
 
                     <TableCell>
-                      <span>190.2831.3839</span>
+                      <span>{item.ip_address}</span>
                     </TableCell>
 
                     <TableCell>
+                      <span>
+                        {moment(item.start_date).format("DD-MM-YY")}{" "}
+                        {moment(item.start_date).format("LT")}
+                      </span>
+                    </TableCell>
+
+                    {/* <TableCell>
                       <span>11-04-23 • 5:30PM</span>
-                    </TableCell>
+                    </TableCell> */}
 
                     <TableCell>
-                      <span>11-04-23 • 5:30PM</span>
-                    </TableCell>
-
-                    <TableCell>
-                      <span>Ikeja, Lagos</span>
+                      <span>{item.location}</span>
                     </TableCell>
                   </TableRow>
                 ))}
