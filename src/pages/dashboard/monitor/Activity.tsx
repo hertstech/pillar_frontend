@@ -24,7 +24,7 @@ const TABLE_HEAD = [
   { id: "status", label: "Status", align: "center" },
   { id: "ip-address", label: "IP Address", align: "left" },
   { id: "startDate", label: "Start Date", align: "left" },
-  // { id: "endDate", label: "End Date", align: "left" },
+  { id: "endDate", label: "End Date", align: "left" },
   { id: "location", label: "Location", align: "left" },
 ];
 
@@ -240,9 +240,12 @@ export default function Activity({ data }: any) {
                       </span>
                     </TableCell>
 
-                    {/* <TableCell>
-                      <span>11-04-23 • 5:30PM</span>
-                    </TableCell> */}
+                    <TableCell>
+                      <span>
+                        {moment(item.end_date).format("DD-MM-YY")}{" "}
+                        {moment(item.end_date).format("LT")}
+                      </span>
+                    </TableCell>
 
                     <TableCell>
                       <span>{item.location}</span>
