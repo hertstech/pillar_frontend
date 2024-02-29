@@ -75,7 +75,7 @@ export const router = createBrowserRouter([
           { index: true, element: <Singleuser /> },
           { path: ":tabID", element: <Singleuser /> },
           { path: "update", element: <CreateRecord /> },
-          { path: "update/:tabID", element: <CreateRecord /> },
+          { path: "update/:tabId", element: <CreateRecord /> },
         ],
       },
     ],

@@ -55,7 +55,6 @@ export default function StepTwo({
           minHeight: 469,
         }}
       >
-        {/* <Loader /> */}
         {isLoading ? (
           <SpinLoader />
         ) : (

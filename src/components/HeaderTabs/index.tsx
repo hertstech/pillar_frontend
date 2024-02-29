@@ -1,6 +1,6 @@
 import { Box, Tab, Tabs, Typography } from "@mui/material";
 import React, { ReactNode } from "react";
-import { Loader } from "../NoResult";
+import { SpinLoader } from "../NoResult";
 import { useParams } from "react-router-dom";
 
 interface LinkItem {
@@ -73,7 +73,7 @@ export default function HeaderTabs({ heading, links, isLoaded }: TabProps) {
 
           {/* Display the content of the selected tab */}
           <Box sx={{ p: "20px", pb: 12, background: "#F9F9FB" }}>
-            {isLoaded ? <Loader /> : links[value].content}
+            {isLoaded ? <SpinLoader /> : links[value].content}
           </Box>
         </Box>
       </Box>

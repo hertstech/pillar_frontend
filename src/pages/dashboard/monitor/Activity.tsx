@@ -94,7 +94,8 @@ export default function Activity({ data }: any) {
 
         <Stack
           direction="row"
-          // justifyContent="space-between"
+          justifyContent="flex-end"
+          spacing={2}
           alignItems="baseline"
           width={"60%"}
         >
@@ -203,7 +204,7 @@ export default function Activity({ data }: any) {
                         noWrap
                       >
                         {item.tenet_name}
-                        <span>IT Support</span>
+                        {/* <span>IT Support</span> */}
                       </Typography>
                     </TableCell>
 

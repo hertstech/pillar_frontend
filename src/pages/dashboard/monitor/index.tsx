@@ -33,7 +33,6 @@ export default function Monitor() {
     }
   });
 
-
   const getActivity = async () => {
     setIsLoading(true);
     try {
@@ -48,7 +47,12 @@ export default function Monitor() {
 
   useEffect(() => {
     getActivity();
+
+    setInterval(() => {
+      getActivity();
+    }, 60000);
   }, []);
+
   return (
     <Box sx={{ background: "white" }}>
       <Box

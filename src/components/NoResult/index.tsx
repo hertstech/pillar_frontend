@@ -11,16 +11,6 @@ export default function NoResultIllustration({ text }: any) {
   );
 }
 
-export const Loader = () => {
-  return (
-    <div style={{ minHeight: "1vh" }} className="wrapped">
-      <div className="wrapp">
-        <div className="pulseLoad" />
-      </div>
-    </div>
-  );
-};
-
 export const SpinLoader = () => {
   return (
     <div
@@ -31,7 +21,12 @@ export const SpinLoader = () => {
         width: "inherit",
       }}
     >
-      <span className="spinLoader"></span>
+      <span className="loader"></span>
+      <span
+        style={{ color: "#475367", position: "absolute", marginTop: "100px" }}
+      >
+        Collating data...
+      </span>
     </div>
   );
 };
@@ -50,7 +45,13 @@ export const TableLoader = () => (
         placeItems: "center",
       }}
     >
-      <span className="spinLoader"></span>
+      <span className="loader"></span>
+
+      <span
+        style={{ color: "#475367", position: "absolute", marginTop: "100px" }}
+      >
+        Collating data...
+      </span>
     </div>
   </TableCell>
 );
