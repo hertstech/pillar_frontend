@@ -419,13 +419,13 @@ export default function Management({
                           {show === item.id && (
                             <Box
                               sx={{
-                                position: "fixed",
+                                position: "absolute",
                                 zIndex: 1,
                                 background: "white",
                                 border: "1px #F2F4F7 solid",
                                 borderRadius: 2,
                                 marginTop: "-34px",
-                                right: "100px",
+                                right: "50px",
                                 width: "160px",
                                 p: 1,
                               }}

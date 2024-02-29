@@ -340,7 +340,7 @@ export default function Settings() {
         )}
       </Box>
 
-      <HeaderTabs links={filteredTabs} />
+      <HeaderTabs links={filteredTabs} isLoaded={isLoading} />
 
       <>
         <Dialog maxWidth="sm" fullWidth open={isOpen}>
