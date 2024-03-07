@@ -50,7 +50,7 @@ export default function LoginPage() {
     }
 
     if (!isStrongPassword(formData.password) || formData.password.length < 8) {
-      setError("Authentication failed!!!");
+      // setError("Authentication failed!!!");
       return;
     }
 
