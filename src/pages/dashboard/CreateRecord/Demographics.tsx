@@ -222,6 +222,7 @@ export default function Demographics() {
                   step: 0,
                 }}
                 onChange={(e: any) => handleChange("height", e.target.value)}
+                onWheel={(e: any) => e.target.blur()}
               />
             </label>
 
@@ -245,6 +246,7 @@ export default function Demographics() {
                   ),
                 }}
                 onChange={(e: any) => handleChange("weight", e.target.value)}
+                onWheel={(e: any) => e.target.blur()}
               />
             </label>
           </Box>
