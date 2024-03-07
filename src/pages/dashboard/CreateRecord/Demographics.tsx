@@ -18,21 +18,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { axiosInstance } from "../../../Utils";
 import { dispatchClient } from "../../../redux/clientSlice";
-
-const relations = [
-  { value: "father", label: "Father" },
-  { value: "mother", label: "Mother" },
-  { value: "son", label: "Son" },
-  { value: "daughter", label: "Daughter" },
-  { value: "grand mother", label: "Grand Mother" },
-  { value: "grand father", label: "Grand Father" },
-  { value: "brother", label: "Brother" },
-  { value: "sister", label: "Sister" },
-  { value: "aunty", label: "Aunty" },
-  { value: "uncle", label: "Uncle" },
-  { value: "guardian", label: "Guardian" },
-  { value: "other", label: "Other" },
-];
+import { relations } from "../serviceUsers/shared";
 
 export default function Demographics() {
   const client = useSelector((state: any) => state.client.clients.tab1[0]);

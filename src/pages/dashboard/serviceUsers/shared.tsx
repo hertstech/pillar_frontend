@@ -196,3 +196,23 @@ export const followUpPlans = [
   "Monitoring symptoms",
   "Advance Directive Review",
 ];
+
+export const relations = [
+  { value: "husband", label: "Husband" },
+  { value: "wife", label: "Wife" },
+  { value: "partner", label: "Partner" },
+  { value: "father", label: "Father" },
+  { value: "mother", label: "Mother" },
+  { value: "son", label: "Son" },
+  { value: "daughter", label: "Daughter" },
+  { value: "grand mother", label: "Grand Mother" },
+  { value: "grand father", label: "Grand Father" },
+  { value: "brother", label: "Brother" },
+  { value: "sister", label: "Sister" },
+  { value: "aunty", label: "Aunty" },
+  { value: "uncle", label: "Uncle" },
+  { value: "guardian", label: "Guardian" },
+  { value: "other", label: "Other" },
+];
+
+export const titles = ["Mr", "Mrs", "Miss", "Ms", "Chief", "Dr", "Prof"];

@@ -17,24 +17,8 @@ import InputField from "../../../components/InputField";
 import StatesData from "../../../../states.json";
 import PhoneField from "../../../components/PhoneInput";
 import moment from "moment";
+import { relations, titles } from "../serviceUsers/shared";
 // import { countries } from "../../../components/_mock/_countries";
-
-const relations = [
-  { value: "father", label: "Father" },
-  { value: "mother", label: "Mother" },
-  { value: "son", label: "Son" },
-  { value: "daughter", label: "Daughter" },
-  { value: "grand mother", label: "Grand Mother" },
-  { value: "grand father", label: "Grand Father" },
-  { value: "brother", label: "Brother" },
-  { value: "sister", label: "Sister" },
-  { value: "aunty", label: "Aunty" },
-  { value: "uncle", label: "Uncle" },
-  { value: "guardian", label: "Guardian" },
-  { value: "other", label: "Other" },
-];
-
-const title = ["Mr", "Mrs", "Miss", "Ms", "Chief", "Dr", "Prof"];
 
 export default function StepOne({
   formData,
@@ -94,7 +78,7 @@ export default function StepOne({
               value={formData.title}
               onChange={handleChange}
             >
-              {title.map((item, index) => (
+              {titles.map((item, index) => (
                 <MenuItem key={index} value={item}>
                   {item}
                 </MenuItem>
