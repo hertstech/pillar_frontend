@@ -53,6 +53,21 @@ export default function InputField({
             {showPassword ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
           </div>
         )}
+
+        {name === "bpm" && (
+          <div className={Styles.adorn}>
+            <span
+              style={{
+                fontWeight: "fontBold ",
+                fontSize: 18,
+                alignItems: "center",
+                display: "flex",
+              }}
+            >
+              bpm
+            </span>
+          </div>
+        )}
       </label>
     </div>
   );

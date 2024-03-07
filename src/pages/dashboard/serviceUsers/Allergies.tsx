@@ -14,7 +14,6 @@ import NoResultIllustration, { SpinLoader } from "../../../components/NoResult";
 import { FaAngleUp, FaAngleDown } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import InputField, { TextLabel } from "../../../components/InputField";
-// import AllergiesPreview from "./AllergiesPreview";
 import {
   certainty,
   reaction,
@@ -39,18 +38,6 @@ interface FormState {
   relativeName: string;
   notes: string;
 }
-
-// const initialState = {
-//   substance: "",
-//   reactionType: "",
-//   reaction: "",
-//   severity: "",
-//   certainty: "",
-//   evidence: "",
-//   reportedBy: "",
-//   relativeName: "",
-//   notes: "",
-// };
 
 interface apiResponse {
   certainty: string;
@@ -126,19 +113,6 @@ export default function Allergies({ client }: PropType) {
     navigate(`/dashboard/user/${id}/update/3`);
   };
 
-  // const addForm = () => {
-  //   // Check if any of the form fields have a value
-  //   const isFormEmpty = Object.values(formField).every((value) => !value);
-
-  //   if (!isFormEmpty) {
-  //     // If any form field has a value, disable the "Add New" button
-  //     return;
-  //   }
-
-  //   setHide(true);
-  //   setFormField((prevForms) => [...prevForms, { ...initialState }]);
-  // };
-
   const deleteForm = (index: number) => {
     setFormField((prevForms) => {
       const newForms = [...prevForms];
@@ -175,65 +149,6 @@ export default function Allergies({ client }: PropType) {
       setIsLoading(false);
     }
   };
-
-  // const createNewRecord = async () => {
-  //   setIsLoading(true);
-  //   const dataObject = formField[0];
-
-  //   const areCategoriesAndTypeEmpty = (formStateArray: FormState[]) => {
-  //     return formStateArray.every((formState) => {
-  //       // Check if both 'substane' and 'reactiontype' are empty
-  //       return (
-  //         formState.substance.trim() === "" &&
-  //         formState.reactionType.trim() === ""
-  //       );
-  //     });
-  //   };
-
-  //   // Example usage
-  //   const areEmpty = areCategoriesAndTypeEmpty(formField);
-
-  //   if (areEmpty) {
-  //     setIsLoading(false);
-
-  //     setIsOpen(false);
-  //     return Swal.fire({
-  //       icon: "info",
-  //       text: `You can not submit an empty form!`,
-  //       confirmButtonColor: "#099250",
-  //     });
-  //   }
-
-  //   try {
-  //     const res = await axiosInstance.post(
-  //       `/create-serviceuser-allergiesrecord/${id}`,
-  //       dataObject
-  //     );
-
-  //     setIsOpen(false);
-  //     setIsLoading(false);
-
-  //     Swal.fire({
-  //       icon: "success",
-  //       title: `Successful`,
-  //       text: `${res.data.message}`,
-  //       confirmButtonColor: "#099250",
-  //     });
-
-  //     getAllergy();
-
-  //     setFormField([]);
-  //   } catch (error: any) {
-  //     error;
-  //     setIsLoading(false);
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Error",
-  //       text: `${error.response.data.message}`,
-  //       confirmButtonColor: "#099250",
-  //     });
-  //   }
-  // };
 
   useEffect(() => {
     getAllergy();
@@ -608,24 +523,6 @@ export default function Allergies({ client }: PropType) {
           </>
         )}
 
-        {/* {formField.map((form, index) => (
-          <AllergiesPreview
-            key={index}
-            isOpen={isOpen}
-            substance={form.substance}
-            reactionType={form.reactionType}
-            reaction={form.reaction}
-            severity={form.severity}
-            certainty={form.certainty}
-            evidence={form.evidence}
-            reportedBy={form.reportedBy}
-            relativeName={form.relativeName}
-            notes={form.notes}
-            onClose={() => setIsOpen(false)}
-            createNewRecord={createNewRecord}
-            isLoading={isLoading}
-          />
-        ))} */}
       </Box>
 
       <Box

@@ -58,14 +58,15 @@ export default function Personal() {
           disabled
           onChange={() => {}}
         />
-        <InputField
+
+        {/* <InputField
           type="text"
           label="Role"
           name="Position"
           value={user.role}
           disabled
           onChange={() => {}}
-        />
+        /> */}
       </Box>
     </Box>
   );

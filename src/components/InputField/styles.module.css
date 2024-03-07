@@ -32,3 +32,9 @@
   color: #808080;
   top: 38px;
 }
+
+.adorn {
+  position: absolute;
+  top: 38px;
+  right: 0.8rem;
+}

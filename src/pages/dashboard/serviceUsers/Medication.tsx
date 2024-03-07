@@ -16,7 +16,6 @@ import Styles from "./styles.module.css";
 import { Calendar } from "../../../components/CalendarField";
 import { FaAngleUp, FaAngleDown } from "react-icons/fa";
 import InputField, { TextLabel } from "../../../components/InputField";
-import Preview from "./MedPreview";
 import {
   medName,
   medType,
@@ -27,7 +26,6 @@ import {
 } from "./shared";
 import { axiosInstance } from "../../../Utils";
 import { useNavigate, useParams } from "react-router-dom";
-import Swal from "sweetalert2";
 import moment from "moment";
 
 // Define the type for your form state
@@ -46,22 +44,6 @@ interface FormState {
   prescriber: string;
   additionalNote: string;
 }
-
-// const initialFormState = {
-//   medicationName: "",
-//   medicationType: "",
-//   medicationRoute: "",
-//   medicationDosageForm: "",
-//   dosage: "",
-//   dosagemeasurement: "",
-//   frequencyNumber: "",
-//   frequencyType: "",
-//   datePrescribed: "",
-//   startDate: "",
-//   endDate: "",
-//   prescriber: "",
-//   additionalNote: "",
-// };
 
 interface apiResponse {
   additionalNote: string;
@@ -127,8 +109,6 @@ export default function Assessment({ client }: PropType) {
 
   const [formField, setFormField] = useState<FormState[]>([]);
 
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-
   const { id } = useParams();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -140,19 +120,6 @@ export default function Assessment({ client }: PropType) {
   const navToUpdateMed = () => {
     navigate(`/dashboard/user/${id}/update/2`);
   };
-
-  // const addForm = () => {
-  //   // Check if any of the form fields have a value
-  //   const isFormEmpty = Object.values(formField).every((value) => !value);
-
-  //   if (!isFormEmpty) {
-  //     // If any form field has a value, disable the "Add New" button
-  //     return;
-  //   }
-
-  //   setHide(true);
-  //   setFormField((prevForms) => [...prevForms, { ...initialFormState }]);
-  // };
 
   const deleteForm = (index: number) => {
     setFormField((prevForms) => {
@@ -190,66 +157,6 @@ export default function Assessment({ client }: PropType) {
     } catch (error) {
       console.error(error);
       setIsLoading(false);
-    }
-  };
-
-  const createNewMedication = async () => {
-    setIsLoading(true);
-    const dataObject = formField[0];
-
-    const isEmpty = (formStateArray: FormState[]) => {
-      return formStateArray.every((formState) => {
-        // Check if both 'categories' and 'type' are empty
-        return (
-          formState.medicationName.trim() === "" &&
-          formState.medicationType.trim() === ""
-        );
-      });
-    };
-
-    // Example usage
-    const areEmpty = isEmpty(formField);
-
-    if (areEmpty === true) {
-      setIsLoading(false);
-
-      setIsOpen(false);
-      return Swal.fire({
-        icon: "info",
-        text: `You can not submit an empty form!`,
-        confirmButtonColor: "#099250",
-      });
-    }
-
-    try {
-      const res = await axiosInstance.post(
-        `/create-serviceuser-medicationrecord/${id}`,
-        dataObject
-      );
-
-      setIsOpen(false);
-      setIsLoading(false);
-
-      Swal.fire({
-        icon: "success",
-        title: `Successful`,
-        text: `${res.data.message}`,
-        confirmButtonColor: "#099250",
-      });
-
-      getMedication();
-
-      setFormField([]);
-      setHide(false);
-    } catch (error: any) {
-      error;
-      setIsLoading(false);
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: `${error.response.data.message}`,
-        confirmButtonColor: "#099250",
-      });
     }
   };
 
@@ -552,7 +459,7 @@ export default function Assessment({ client }: PropType) {
                     px: 3,
                   }}
                   variant="outlined"
-                  onClick={() => setIsOpen(true)}
+                  // onClick={() => setIsOpen(true)}
                 >
                   Continue
                 </Button>
@@ -662,29 +569,6 @@ export default function Assessment({ client }: PropType) {
             )}
           </>
         )}
-
-        {formField.map((form, index) => (
-          <Preview
-            key={index}
-            medicationName={form.medicationName}
-            medicationType={form.medicationType}
-            medicationRoute={form.medicationRoute}
-            medicationDosageForm={form.medicationDosageForm}
-            dosage={form.dosage}
-            dosagemeasurement={form.dosagemeasurement}
-            frequencyNumber={form.frequencyNumber}
-            frequencyType={form.frequencyType}
-            datePrescribed={form.datePrescribed}
-            startDate={form.startDate}
-            endDate={form.endDate}
-            prescriber={form.prescriber}
-            additionalNote={form.additionalNote}
-            isOpen={isOpen}
-            onClose={() => setIsOpen(false)}
-            createNewMedication={createNewMedication}
-            isLoading={isLoading}
-          />
-        ))}
       </Box>
 
       <Box

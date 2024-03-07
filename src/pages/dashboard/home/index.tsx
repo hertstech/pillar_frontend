@@ -164,7 +164,11 @@ export default function Home() {
             variant="subtitle2"
             fontWeight={600}
             fontSize={24}
-            textTransform={"capitalize"}
+            sx={{
+              "&::first-letter": {
+                textTransform: "uppercase",
+              },
+            }}
           >
             Welcome back, {user?.title} {user?.lastName}
           </Typography>

@@ -15,10 +15,8 @@ import { useEffect, useState } from "react";
 import { FaAngleUp, FaAngleDown } from "react-icons/fa";
 import { Calendar } from "../../../components/CalendarField";
 import InputField, { TextLabel } from "../../../components/InputField";
-import ReferralPReview from "./ReferralPReview";
 import { useNavigate, useParams } from "react-router-dom";
 import { axiosInstance } from "../../../Utils";
-import Swal from "sweetalert2";
 import moment from "moment";
 
 interface FormState {
@@ -53,20 +51,6 @@ interface apiResponse {
   urgencyStatus: string;
   waitingStatus: string;
 }
-
-// const initialFormState = {
-//   dateInitiated: "",
-//   careSetting: "",
-//   referralSource: "",
-//   referralName: "",
-//   referralReason: "",
-//   urgencyStatus: "",
-//   waitingStatus: "",
-//   teamReferredTo: "",
-//   referralDateReceived: "",
-//   referralAcceptedDate: "",
-//   additionalNote: "",
-// };
 
 interface client {
   id: string;
@@ -112,8 +96,6 @@ export default function Referral({ client }: PropType) {
 
   const [record, setRecord] = useState<apiResponse[]>([]);
 
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-
   const [isLoading, setIsLoading] = useState(false);
 
   const { id } = useParams();
@@ -123,19 +105,6 @@ export default function Referral({ client }: PropType) {
   const navToUpdateReferral = () => {
     navigate(`/dashboard/user/${id}/update/5`);
   };
-
-  // const addForm = () => {
-  //   // Check if any of the form fields have a value
-  //   const isFormEmpty = Object.values(formField).every((value) => !value);
-
-  //   if (!isFormEmpty) {
-  //     // If any form field has a value, disable the "Add New" button
-  //     return;
-  //   }
-
-  //   setHide(true);
-  //   setFormField((prevForms) => [...prevForms, { ...initialFormState }]);
-  // };
 
   const deleteForm = (index: number) => {
     setFormField((prevForms) => {
@@ -174,62 +143,6 @@ export default function Referral({ client }: PropType) {
     } catch (error) {
       console.error(error);
       setIsLoading(false);
-    }
-  };
-
-  const handleSubmit = async () => {
-    setIsLoading(true);
-    const dataObject = formField[0];
-
-    const areCategoriesAndTypeEmpty = (formStateArray: FormState[]) => {
-      return formStateArray.every((formState) => {
-        // Check if both 'care setting' and  are empty
-        return formState.careSetting.trim() === "";
-      });
-    };
-
-    // Example usage
-    const areEmpty = areCategoriesAndTypeEmpty(formField);
-
-    if (areEmpty) {
-      setIsLoading(false);
-
-      setIsOpen(false);
-      return Swal.fire({
-        icon: "info",
-        text: `You can not submit an empty form!`,
-        confirmButtonColor: "#099250",
-      });
-    }
-
-    try {
-      const res = await axiosInstance.post(
-        `/create-serviceuser-referralrecord/${id}`,
-        dataObject
-      );
-
-      setIsOpen(false);
-      setIsLoading(false);
-      Swal.fire({
-        icon: "success",
-        title: `Successful`,
-        text: `${res.data.message}`,
-        confirmButtonColor: "#099250",
-      });
-
-      getHealthRecord();
-
-      setFormField([]);
-      setHide(false);
-    } catch (error: any) {
-      error;
-      setIsLoading(false);
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: `${error.response.data.message}`,
-        confirmButtonColor: "#099250",
-      });
     }
   };
 
@@ -495,7 +408,7 @@ export default function Referral({ client }: PropType) {
                     px: 3,
                   }}
                   variant="outlined"
-                  onClick={() => setIsOpen(true)}
+                  // onClick={() => setIsOpen(true)}
                 >
                   Continue
                 </Button>
@@ -503,10 +416,6 @@ export default function Referral({ client }: PropType) {
             </Card>
           </form>
         ))}
-
-        {/* {!hide && record?.length <= 0 && (
-          <NoResultIllustration text={"No record found"} />
-        )} */}
 
         {isLoading ? (
           <SpinLoader />
@@ -623,27 +532,6 @@ export default function Referral({ client }: PropType) {
             )}
           </>
         )}
-
-        {formField.map((form, index) => (
-          <ReferralPReview
-            key={index}
-            dateInitiated={form.dateInitiated}
-            careSetting={form.careSetting}
-            referralSource={form.referralSource}
-            referralName={form.referralName}
-            referralReason={form.referralReason}
-            urgencyStatus={form.urgencyStatus}
-            waitingStatus={form.waitingStatus}
-            teamReferredTo={form.teamReferredTo}
-            referralDateReceived={form.referralDateReceived}
-            referralAcceptedDate={form.referralAcceptedDate}
-            additionalNote={form.additionalNote}
-            isOpen={isOpen}
-            onClose={() => setIsOpen(false)}
-            handleSubmit={handleSubmit}
-            isLoading={isLoading}
-          />
-        ))}
       </Box>
 
       <Box

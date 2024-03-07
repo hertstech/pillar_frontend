@@ -436,8 +436,7 @@ export default function Management({
                               >
                                 View
                               </MenuItem>
-                              {item.status === "suspend" ||
-                              item.status === "archive" ? (
+                              {item.status === "suspend" ? (
                                 <MenuItem
                                   sx={{ padding: "6px 8px" }}
                                   onClick={() => {

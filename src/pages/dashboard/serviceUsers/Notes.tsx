@@ -11,8 +11,6 @@ import NoResultIllustration, { SpinLoader } from "../../../components/NoResult";
 import { useEffect, useState } from "react";
 import InputField, { TextLabel } from "../../../components/InputField";
 import Styles from "./styles.module.css";
-import NotePreview from "./NotePreview";
-import Swal from "sweetalert2";
 import { axiosInstance } from "../../../Utils";
 import { useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
@@ -31,11 +29,6 @@ interface apiResponse {
   pillar_user_id_fk: string;
   serviceuser_id_fk: string;
 }
-
-// const initialFormState = {
-//   writtenBy: "",
-//   additionalNote: "",
-// };
 
 interface client {
   id: string;
@@ -80,8 +73,6 @@ export default function Notes({ client }: PropType) {
 
   const [record, setRecord] = useState<apiResponse[]>([]);
 
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-
   const [isLoading, setIsLoading] = useState(false);
 
   const { id } = useParams();
@@ -91,19 +82,6 @@ export default function Notes({ client }: PropType) {
   const navToUpdateNotes = () => {
     navigate(`/dashboard/user/${id}/update/4`);
   };
-
-  // const addForm = () => {
-  //   // Check if any of the form fields have a value
-  //   const isFormEmpty = Object.values(formField).every((value) => !value);
-
-  //   if (!isFormEmpty) {
-  //     // If any form field has a value, disable the "Add New" button
-  //     return;
-  //   }
-
-  //   setHide(true);
-  //   setFormField((prevForms) => [...prevForms, { ...initialFormState }]);
-  // };
 
   const deleteForm = (index: number) => {
     setFormField((prevForms) => {
@@ -124,65 +102,6 @@ export default function Notes({ client }: PropType) {
     } catch (error) {
       console.error(error);
       setIsLoading(false);
-    }
-  };
-
-  const handleSubmit = async () => {
-    setIsLoading(true);
-    const dataObject = formField[0];
-
-    const areCategoriesAndTypeEmpty = (formStateArray: FormState[]) => {
-      return formStateArray.every((formState) => {
-        // Check if both 'substane' and 'reactiontype' are empty
-        return (
-          formState.writtenBy.trim() === "" &&
-          formState.additionalNote.trim() === ""
-        );
-      });
-    };
-
-    // Example usage
-    const areEmpty = areCategoriesAndTypeEmpty(formField);
-
-    if (areEmpty) {
-      setIsLoading(false);
-
-      setIsOpen(false);
-      return Swal.fire({
-        icon: "info",
-        text: `You can not submit an empty form!`,
-        confirmButtonColor: "#099250",
-      });
-    }
-
-    try {
-      const res = await axiosInstance.post(
-        `/create-serviceuser-additionalnotes/${id}`,
-        dataObject
-      );
-
-      setIsOpen(false);
-      setIsLoading(false);
-      Swal.fire({
-        icon: "success",
-        title: `Successful`,
-        text: `${res.data.message}`,
-        confirmButtonColor: "#099250",
-      });
-
-      getNotes();
-
-      setFormField([]);
-      setHide(false);
-    } catch (error: any) {
-      error;
-      setIsLoading(false);
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: `${error.response.data.message}`,
-        confirmButtonColor: "#099250",
-      });
     }
   };
 
@@ -310,7 +229,7 @@ export default function Notes({ client }: PropType) {
                     px: 3,
                   }}
                   variant="outlined"
-                  onClick={() => setIsOpen(true)}
+                  // onClick={() => setIsOpen(true)}
                 >
                   Continue
                 </Button>
@@ -339,18 +258,6 @@ export default function Notes({ client }: PropType) {
             )}
           </>
         )}
-
-        {formField.map((form, index) => (
-          <NotePreview
-            key={index}
-            isOpen={isOpen}
-            writtenBy={form.writtenBy}
-            additionalNote={form.additionalNote}
-            onClose={() => setIsOpen(false)}
-            handleSubmit={handleSubmit}
-            isLoading={isLoading}
-          />
-        ))}
       </Box>
 
       <Box

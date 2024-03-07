@@ -26,10 +26,8 @@ import {
   treatmentStatus,
   treatmentType,
 } from "./shared";
-import HealthPreview from "./HealthPreview";
 import { axiosInstance } from "../../../Utils";
 import { useNavigate, useParams } from "react-router-dom";
-import Swal from "sweetalert2";
 import moment from "moment";
 import dayjs from "dayjs";
 
@@ -91,32 +89,6 @@ interface apiResponse {
   serviceuser_id_fk: string;
   type: string;
 }
-
-// const initialFormState = {
-//   categories: "",
-//   type: "",
-//   bloodType: "",
-//   genotype: "",
-//   manufacturer: "",
-//   batchNumber: "",
-//   administrationDate: "",
-//   systolic: "",
-//   diasttolic: "",
-//   bpm: "",
-//   title: "",
-//   mgDl: "",
-//   degreeRating: "",
-//   primaryDiagnosis: "",
-//   secondaryDiagnosis: "",
-//   severity: "",
-//   treatmentStatus: "",
-//   treatmentType: "",
-//   followUpPlans: "",
-//   progressNote: "",
-//   expirationDate: "",
-//   reading: "",
-//   notes: "",
-// };
 
 interface client {
   id: string;
@@ -199,7 +171,6 @@ export default function Health({ client }: PropType) {
   const [hide, setHide] = useState(false);
   const [show, setShow] = useState("");
   const [formField, setFormField] = useState<FormState[]>([]);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [record, setRecord] = useState<apiResponse[]>([]);
 
   const { id } = useParams();
@@ -215,19 +186,6 @@ export default function Health({ client }: PropType) {
   const navToUpdateHealth = () => {
     navigate(`/dashboard/user/${id}/update/1`);
   };
-
-  // const addForm = () => {
-  //   // Check if any of the form fields have a value
-  //   const isFormEmpty = Object.values(formField).every((value) => !value);
-
-  //   if (!isFormEmpty) {
-  //     // If any form field has a value, disable the "Add New" button
-  //     return;
-  //   }
-
-  //   setHide(true);
-  //   setFormField((prevForms) => [...prevForms, { ...initialFormState }]);
-  // };
 
   const deleteForm = (index: number) => {
     setFormField((prevForms) => {
@@ -250,65 +208,6 @@ export default function Health({ client }: PropType) {
     } catch (error) {
       console.error(error);
       setIsLoading(false);
-    }
-  };
-
-  const handleSubmit = async () => {
-    setIsLoading(true);
-
-    const isEmpty = (formStateArray: FormState[]) => {
-      return formStateArray.every((formState) => {
-        // Check if both 'categories' and 'type' are empty
-        return (
-          formState.categories.trim() === "" && formState.type.trim() === ""
-        );
-      });
-    };
-
-    // Example usage
-    const areEmpty = isEmpty(formField);
-
-    if (areEmpty === true) {
-      setIsLoading(false);
-
-      setIsOpen(false);
-      return Swal.fire({
-        icon: "info",
-        text: `You can not submit an empty form!`,
-        confirmButtonColor: "#099250",
-      });
-    }
-
-    const dataObject = formField[0];
-
-    try {
-      const res = await axiosInstance.post(
-        `/create-serviceuser-healthsummary/${id}`,
-        dataObject
-      );
-
-      setIsOpen(false);
-      setIsLoading(false);
-      Swal.fire({
-        icon: "success",
-        title: `Successful`,
-        text: `${res.data.message}`,
-        confirmButtonColor: "#099250",
-      });
-
-      getHealthRecord();
-
-      setFormField([]);
-      setHide(false);
-    } catch (error: any) {
-      error;
-      setIsLoading(false);
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: `${error.response.data.message}`,
-        confirmButtonColor: "#099250",
-      });
     }
   };
 
@@ -907,7 +806,7 @@ export default function Health({ client }: PropType) {
                     px: 3,
                   }}
                   variant="outlined"
-                  onClick={() => setIsOpen(true)}
+                  // onClick={() => setIsOpen(true)}
                 >
                   Continue
                 </Button>
@@ -915,11 +814,6 @@ export default function Health({ client }: PropType) {
             </Card>
           </form>
         ))}
-
-        {/* INITIAL STATE WHEN EMPTY */}
-        {/* {!hide && record.length <= 0 && (
-          <NoResultIllustration text={"No record found"} />
-        )} */}
 
         {isLoading ? (
           <SpinLoader />
@@ -1144,39 +1038,6 @@ export default function Health({ client }: PropType) {
             )}
           </>
         )}
-
-        {formField.map((form, index) => (
-          <HealthPreview
-            key={index}
-            isOpen={isOpen}
-            onClose={() => setIsOpen(false)}
-            categories={form.categories}
-            type={form.type}
-            systolic={form.systolic}
-            diasttolic={form.diasttolic}
-            reading={form.reading}
-            notes={form.notes}
-            bpm={form.bpm}
-            title={form.title}
-            mgDl={form.mgDl}
-            degreeRating={form.degreeRating}
-            primaryDiagnosis={form.primaryDiagnosis}
-            secondaryDiagnosis={form.secondaryDiagnosis}
-            severity={form.severity}
-            treatmentStatus={form.treatmentStatus}
-            treatmentType={form.treatmentType}
-            followUpPlans={form.followUpPlans}
-            progressNote={form.progressNote}
-            bloodType={form.bloodType}
-            genotype={form.genotype}
-            manufacturer={form.manufacturer}
-            batchNumber={form.batchNumber}
-            administrationDate={form.administrationDate}
-            expirationDate={form.expirationDate}
-            handleSubmit={handleSubmit}
-            isLoading={isLoading}
-          />
-        ))}
       </Box>
 
       <Box
