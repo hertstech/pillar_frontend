@@ -13,6 +13,7 @@ interface TextProps {
   required?: boolean;
   disabled?: boolean;
   pattern?: string;
+  onWheel?: any;
 }
 
 export default function InputField({
@@ -25,6 +26,7 @@ export default function InputField({
   required,
   disabled,
   pattern,
+  onWheel,
 }: TextProps) {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -44,6 +46,7 @@ export default function InputField({
           required={required}
           disabled={disabled}
           pattern={pattern}
+          onWheel={onWheel}
         />
         {type === "password" && (
           <div

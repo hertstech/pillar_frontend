@@ -223,20 +223,22 @@ export default function HealthRecord() {
                 style={{ display: "flex", gap: 12, flexDirection: "column" }}
               >
                 <InputField
-                  type="text"
+                  type="number"
                   label="Systolic"
                   name="systolic"
                   value={formField.systolic}
+                  onWheel={(e: any) => e.target.blur()}
                   onChange={(e: any) =>
                     handleChange("systolic", e.target.value)
                   }
                 />
 
                 <InputField
-                  type="text"
+                  type="number"
                   label="Diastolic"
                   name="diasttolic"
                   value={formField.diasttolic}
+                  onWheel={(e: any) => e.target.blur()}
                   onChange={(e: any) =>
                     handleChange("diasttolic", e.target.value)
                   }
@@ -247,10 +249,11 @@ export default function HealthRecord() {
           {formField.categories === "Vitals" &&
             formField.type === "Pulse Rate" && (
               <InputField
-                type="text"
+                type="number"
                 label="Pulse Reading"
                 name="bpm"
                 value={formField.bpm}
+                onWheel={(e: any) => e.target.blur()}
                 onChange={(e: any) => handleChange("bpm", e.target.value)}
               />
             )}
@@ -272,10 +275,11 @@ export default function HealthRecord() {
             formField.type === "Body Temperature" && (
               <div style={{ display: "flex", gap: 5, alignItems: "flex-end" }}>
                 <InputField
-                  type="text"
+                  type="number"
                   label="Temperature Reading"
                   name="reading"
                   value={formField.reading}
+                  onWheel={(e: any) => e.target.blur()}
                   onChange={(e: any) => handleChange("reading", e.target.value)}
                 />
 
