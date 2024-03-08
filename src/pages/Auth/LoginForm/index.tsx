@@ -26,13 +26,6 @@ export default function LoginPage() {
     return emailRegex.test(email);
   };
 
-  const isStrongPassword = (password: string) => {
-    const passwordRegex =
-      /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
-
-    return passwordRegex.test(password);
-  };
-
   const handleChange = (e: any) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
@@ -46,11 +39,6 @@ export default function LoginPage() {
 
     if (!isValidEmail(formData.email)) {
       setError("Email is Invalid");
-      return;
-    }
-
-    if (!isStrongPassword(formData.password) || formData.password.length < 8) {
-      // setError("Authentication failed!!!");
       return;
     }
 
