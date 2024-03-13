@@ -5,7 +5,9 @@ import { dispatchLogout, dispatchSetAccessToken } from "../redux/userSlice";
 import { Navigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
-const apiBaseUrl = "https://www.pillartechnologybackend.com.ng/";
+const viteEnvs = import.meta.env;
+
+export const apiBaseUrl = viteEnvs.VITE_HOST_API;
 
 const Toast = Swal.mixin({
   toast: true,
