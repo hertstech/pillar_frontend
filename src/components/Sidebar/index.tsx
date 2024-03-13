@@ -56,14 +56,22 @@ export default function Sidebar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const [show, setShow] = useState(false);
 
   const logOut = async () => {
-    await axiosInstance.delete("/auth/logout").then(() => {
-      dispatch(dispatchLogout());
-      dispatch(resetClientState("tab1"));
-      return navigate("/");
-    });
+    setIsLoading(true);
+    try {
+      await axiosInstance.delete("/auth/logout").then(() => {
+        dispatch(dispatchLogout());
+        dispatch(resetClientState("tab1"));
+        return navigate("/");
+      });
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+    }
   };
   return (
     <aside className={Styles.container}>
@@ -204,6 +212,7 @@ export default function Sidebar() {
                 borderRadius: "6px",
               }}
               onClick={logOut}
+              disabled={isLoading}
             >
               Log Out
             </Button>
