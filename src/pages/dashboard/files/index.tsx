@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Checkbox,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -19,29 +20,44 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import InputField from "../../../components/InputField";
-// import NoResultIllustration from "../../../components/NoResult";
+import NoResultIllustration, {
+  TableLoader,
+} from "../../../components/NoResult";
 import Buttons from "../../../components/Button";
 // import { Link } from "react-router-dom";
-// import { axiosInstance } from "../../../Utils";
-
-// const viteEnvs = import.meta.env.VITE_CLOUD_NAME;
+import { axiosInstance } from "../../../Utils";
+import moment from "moment";
 
 const TABLE_HEAD = [
+  { id: "c" },
   { id: "name", label: "Full Name", align: "left" },
   { id: "type", label: "File Type", align: "left" },
   { id: "added by", label: "Added By", align: "left" },
   { id: "date", label: "Date Added", align: "left" },
+  { id: "o" },
   { id: "" },
 ];
 
 export default function File() {
   const [search, setSearch] = useState("");
 
-  const [show, setShow] = useState(false);
+  const [showUpload, setShowUpload] = useState(false);
+
+  const [showRename, setShowRename] = useState(false);
+
+  const [showDelete, setShowDelete] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const [showOptions, setShowOptions] = useState(false);
+
+  const [data, setData] = useState<any[]>([]);
+
+  const [selectedUserId, setSelectedUserId] = useState(null);
+
+  const [renameValue, setRenameValue] = useState("");
 
   // const [uploadProgress, setUploadProgress] = useState<number | null>(null);
 
@@ -109,36 +125,48 @@ export default function File() {
     }
   };
 
-  const handleUpload = async (e: any) => {
-    e.preventDefault();
+  const getFiles = async () => {
     setIsLoading(true);
     try {
-      // const file = selectedFile;
+      const res = await axiosInstance.get("/hcp/tenet/files/metadata");
 
-      // if (file) {
-      //   const newFile = new FormData();
-      //   newFile.append("file", file);
-      //   newFile.append("upload_preset", "pillarz");
-
-      //   const res = await axiosInstance.post(`/hcp/tenet/files/upload`,)
-
-
-
-      //   const data = res.data;
-      //   setIsLoading(false);
-
-      //   setSelectedFile(e.target.value);
-      //   console.log(data);
-      // }
-
-      setShow(false);
+      setData(res.data);
+      setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
     }
   };
 
-  // const public_id =
-  //   // "https://res.cloudinary.com/pillar-test/image/upload/v1710105202/Introduction_to_Tax_Planning_07Feb2024_qn1979.pdf";
+  useEffect(() => {
+    getFiles();
+  }, []);
+
+  const handleUpload = async (e: any) => {
+    e.preventDefault();
+    setIsLoading(true);
+    try {
+      const file = selectedFile;
+
+      if (file) {
+        const newFile = new FormData();
+
+        newFile.append("file", file);
+
+        await axiosInstance.post(`/hcp/tenet/files/upload`, newFile, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        setIsLoading(false);
+
+        setSelectedFile(e.target.value);
+      }
+
+      setShowUpload(false);
+    } catch (error) {
+      setIsLoading(false);
+    }
+  };
 
   // const createDownloadLink = (link: string) => {
   //   if (link) {
@@ -147,8 +175,45 @@ export default function File() {
   //   }
   //   return "";
   // };
+  const handleCLick = (id: any) => {
+    setSelectedUserId(id === selectedUserId ? null : id);
+    setShowOptions((prevIndex) => (prevIndex === id ? null : id));
+    setSelectedUserId(id);
+  };
 
-  // const downloadLink = createDownloadLink(public_id);
+  const handleRenameFile = async () => {
+    setIsLoading(true);
+
+    try {
+      const res = await axiosInstance.delete(
+        `/hcp/tenet/files/update/metadata/${selectedUserId}`
+      );
+      console.log(res.data);
+      setIsLoading(false);
+      setShowRename(false);
+
+      getFiles();
+    } catch (error) {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDeleteFile = async () => {
+    setIsLoading(true);
+
+    try {
+      await axiosInstance.delete(
+        `/hcp/tenet/files//delete/metadata/${selectedUserId}`
+      );
+
+      setIsLoading(false);
+      setShowDelete(false);
+
+      getFiles();
+    } catch (error) {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <Box sx={{ background: "white" }}>
@@ -320,7 +385,7 @@ export default function File() {
                 px: 2,
                 py: 1,
               }}
-              onClick={() => setShow(true)}
+              onClick={() => setShowUpload(true)}
             >
               Add File
             </Button>
@@ -357,356 +422,236 @@ export default function File() {
               <TableBody
                 sx={{ fontWeight: 500, fontSize: 14, color: "#101828" }}
               >
-                {/* <TableRow
-                  hover
-                  sx={{
-                    "&:nth-of-type(odd)": {
-                      background: "white",
-                    },
-                    "&:nth-of-type(even)": {
-                      background: "#FCFCFD",
-                    },
-                    position: "relative",
-                  }}
-                >
-                  <TableCell>Blood Pressure of Youths in Edo State</TableCell>
-                  <TableCell>.pdf</TableCell>
-                  <TableCell>Olumide Chukwudife</TableCell>
-                  <TableCell>3rd Jan, 2023</TableCell>
-                  <TableCell>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Link
-                        style={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          minWidth: "64px",
-                          justifyContent: "center",
-                          verticalAlign: "middle",
-                        }}
-                        to={downloadLink}
-                      >
-                        <svg
-                          width="24"
-                          height="25"
-                          viewBox="0 0 24 25"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <g id="download">
-                            <path
-                              id="Icon"
-                              d="M18 13V16.3333C18 16.7754 17.8244 17.1993 17.5118 17.5118C17.1993 17.8244 16.7754 18 16.3333 18H4.66667C4.22464 18 3.80072 17.8244 3.48816 17.5118C3.17559 17.1993 3 16.7754 3 16.3333V13M6.33333 8.83333L10.5 13M10.5 13L14.6667 8.83333M10.5 13V3"
-                              stroke="#667185"
-                              stroke-width="1.66667"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </g>
-                        </svg>
-                      </Link>
-                      <Button sx={{ p: 0 }}>
-                        <svg
-                          width="24"
-                          height="25"
-                          viewBox="0 0 24 25"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            fill-rule="evenodd"
-                            clip-rule="evenodd"
-                            d="M12 1.41602C9.37665 1.41602 7.25 3.54266 7.25 6.16602V6.41602H4C3.58579 6.41602 3.25 6.7518 3.25 7.16602C3.25 7.58023 3.58579 7.91602 4 7.91602H20C20.4142 7.91602 20.75 7.58023 20.75 7.16602C20.75 6.7518 20.4142 6.41602 20 6.41602H16.75V6.16602C16.75 3.54266 14.6234 1.41602 12 1.41602ZM12 2.91602C13.7949 2.91602 15.25 4.37109 15.25 6.16602V6.41602H8.75V6.16602C8.75 4.37109 10.2051 2.91602 12 2.91602Z"
-                            fill="#667185"
-                          />
-                          <path
-                            d="M5.74664 9.09508C5.70746 8.68272 5.34142 8.3802 4.92906 8.41938C4.5167 8.45856 4.21418 8.8246 4.25336 9.23696C4.34783 10.2312 4.51833 11.4563 4.73748 13.0311L5.01903 15.0542C5.28819 16.9889 5.44085 18.0861 5.77109 18.985C6.3857 20.6578 7.48205 21.9988 8.89206 22.5938C9.65773 22.9169 10.5335 22.9166 11.8373 22.9161H12.1627C13.4665 22.9166 14.3423 22.9169 15.1079 22.5938C16.5179 21.9988 17.6143 20.6578 18.2289 18.985C18.5592 18.0861 18.7118 16.9889 18.981 15.0541L19.2625 13.0311C19.4817 11.4563 19.6522 10.2312 19.7466 9.23696C19.7858 8.8246 19.4833 8.45856 19.0709 8.41938C18.6586 8.3802 18.2925 8.68272 18.2534 9.09507C18.1623 10.053 17.9965 11.246 17.7744 12.8421L17.512 14.7272C17.2215 16.8148 17.0884 17.7396 16.8209 18.4677C16.305 19.8718 15.4472 20.8226 14.5248 21.2119C14.0746 21.4018 13.5292 21.416 12 21.416C10.4708 21.416 9.92544 21.4018 9.47524 21.2119C8.55279 20.8226 7.69496 19.8718 7.17907 18.4677C6.91156 17.7396 6.77851 16.8148 6.48798 14.7272L6.22564 12.8421C6.00352 11.246 5.83766 10.053 5.74664 9.09508Z"
-                            fill="#667185"
-                          />
-                          <path
-                            d="M10.75 10.166C10.75 9.7518 10.4142 9.41602 10 9.41602C9.58579 9.41602 9.25 9.7518 9.25 10.166V18.166C9.25 18.5802 9.58579 18.916 10 18.916C10.4142 18.916 10.75 18.5802 10.75 18.166V10.166Z"
-                            fill="#667185"
-                          />
-                          <path
-                            d="M14.75 10.166C14.75 9.7518 14.4142 9.41602 14 9.41602C13.5858 9.41602 13.25 9.7518 13.25 10.166V18.166C13.25 18.5802 13.5858 18.916 14 18.916C14.4142 18.916 14.75 18.5802 14.75 18.166V10.166Z"
-                            fill="#667185"
-                          />
-                        </svg>
-                      </Button>
-                    </Box>
-                  </TableCell>
-                </TableRow> */}
+                {isLoading ? (
+                  <TableLoader />
+                ) : (
+                  <>
+                    {data?.length > 0 ? (
+                      data
+                        .slice(
+                          page * rowsPerPage,
+                          page * rowsPerPage + rowsPerPage
+                        )
+                        .map((row: any) => {
+                          const isSelected = row.id === selectedUserId;
+                          return (
+                            <TableRow
+                              hover
+                              onClick={() => handleCLick(`${row.id}`)}
+                              role="checkbox"
+                              key={row.id}
+                              selected={isSelected}
+                              sx={{
+                                position: "relative",
+                                cursor: "pointer",
+                                "&:nth-of-type(odd)": {
+                                  background: "white",
+                                },
+                                "&:nth-of-type(even)": {
+                                  background: "#FCFCFD",
+                                },
+                                "&.MuiTableRow-hover": {
+                                  "&:hover": {
+                                    backgroundColor: "#EDFCF2",
+                                    borderBottom: "1px #73E2A3 solid",
+                                    borderTop: "1px #73E2A3 solid",
+                                    borderTopWidth: 2,
+                                    borderBottomWidth: 2,
+                                  },
+                                },
+                              }}
+                            >
+                              <TableCell padding="checkbox">
+                                <Checkbox
+                                  sx={{
+                                    "&.Mui-checked": {
+                                      color: "#EDFCF2",
+                                      stroke: "#099250",
+                                      strokeWidth: 1,
+                                      fill: "#099250",
+                                    },
+                                  }}
+                                  checked={isSelected}
+                                />
+                              </TableCell>
+                              <TableCell>
+                                {row.fileName.split(".")[0]}
+                              </TableCell>
+                              <TableCell width={140}>.{row.format}</TableCell>
+                              <TableCell sx={{ textTransform: "capitalize" }}>
+                                {row.firstName} {row.lastName}
+                              </TableCell>
+                              <TableCell width={140}>
+                                {moment(row.created_at).format("DD/MM/YYYY")}
+                              </TableCell>
 
-                {/* <TableRow
-                  hover
-                  sx={{
-                    "&:nth-of-type(odd)": {
-                      background: "white",
-                    },
-                    "&:nth-of-type(even)": {
-                      background: "#FCFCFD",
-                    },
-                    position: "relative",
-                  }}
-                >
-                  <TableCell>Blood Pressure of Youths in Edo State</TableCell>
-                  <TableCell>.pdf</TableCell>
-                  <TableCell>Olumide Chukwudife</TableCell>
-                  <TableCell>3rd Jan, 2023</TableCell>
-                  <TableCell>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Link
-                        style={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          minWidth: "64px",
-                          justifyContent: "center",
-                          verticalAlign: "middle",
-                        }}
-                        to={downloadLink}
-                      >
-                        <svg
-                          width="24"
-                          height="25"
-                          viewBox="0 0 24 25"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <g id="download">
-                            <path
-                              id="Icon"
-                              d="M18 13V16.3333C18 16.7754 17.8244 17.1993 17.5118 17.5118C17.1993 17.8244 16.7754 18 16.3333 18H4.66667C4.22464 18 3.80072 17.8244 3.48816 17.5118C3.17559 17.1993 3 16.7754 3 16.3333V13M6.33333 8.83333L10.5 13M10.5 13L14.6667 8.83333M10.5 13V3"
-                              stroke="#667185"
-                              stroke-width="1.66667"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </g>
-                        </svg>
-                      </Link>
-                      <Button sx={{ p: 0 }}>
-                        <svg
-                          width="24"
-                          height="25"
-                          viewBox="0 0 24 25"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            fill-rule="evenodd"
-                            clip-rule="evenodd"
-                            d="M12 1.41602C9.37665 1.41602 7.25 3.54266 7.25 6.16602V6.41602H4C3.58579 6.41602 3.25 6.7518 3.25 7.16602C3.25 7.58023 3.58579 7.91602 4 7.91602H20C20.4142 7.91602 20.75 7.58023 20.75 7.16602C20.75 6.7518 20.4142 6.41602 20 6.41602H16.75V6.16602C16.75 3.54266 14.6234 1.41602 12 1.41602ZM12 2.91602C13.7949 2.91602 15.25 4.37109 15.25 6.16602V6.41602H8.75V6.16602C8.75 4.37109 10.2051 2.91602 12 2.91602Z"
-                            fill="#667185"
-                          />
-                          <path
-                            d="M5.74664 9.09508C5.70746 8.68272 5.34142 8.3802 4.92906 8.41938C4.5167 8.45856 4.21418 8.8246 4.25336 9.23696C4.34783 10.2312 4.51833 11.4563 4.73748 13.0311L5.01903 15.0542C5.28819 16.9889 5.44085 18.0861 5.77109 18.985C6.3857 20.6578 7.48205 21.9988 8.89206 22.5938C9.65773 22.9169 10.5335 22.9166 11.8373 22.9161H12.1627C13.4665 22.9166 14.3423 22.9169 15.1079 22.5938C16.5179 21.9988 17.6143 20.6578 18.2289 18.985C18.5592 18.0861 18.7118 16.9889 18.981 15.0541L19.2625 13.0311C19.4817 11.4563 19.6522 10.2312 19.7466 9.23696C19.7858 8.8246 19.4833 8.45856 19.0709 8.41938C18.6586 8.3802 18.2925 8.68272 18.2534 9.09507C18.1623 10.053 17.9965 11.246 17.7744 12.8421L17.512 14.7272C17.2215 16.8148 17.0884 17.7396 16.8209 18.4677C16.305 19.8718 15.4472 20.8226 14.5248 21.2119C14.0746 21.4018 13.5292 21.416 12 21.416C10.4708 21.416 9.92544 21.4018 9.47524 21.2119C8.55279 20.8226 7.69496 19.8718 7.17907 18.4677C6.91156 17.7396 6.77851 16.8148 6.48798 14.7272L6.22564 12.8421C6.00352 11.246 5.83766 10.053 5.74664 9.09508Z"
-                            fill="#667185"
-                          />
-                          <path
-                            d="M10.75 10.166C10.75 9.7518 10.4142 9.41602 10 9.41602C9.58579 9.41602 9.25 9.7518 9.25 10.166V18.166C9.25 18.5802 9.58579 18.916 10 18.916C10.4142 18.916 10.75 18.5802 10.75 18.166V10.166Z"
-                            fill="#667185"
-                          />
-                          <path
-                            d="M14.75 10.166C14.75 9.7518 14.4142 9.41602 14 9.41602C13.5858 9.41602 13.25 9.7518 13.25 10.166V18.166C13.25 18.5802 13.5858 18.916 14 18.916C14.4142 18.916 14.75 18.5802 14.75 18.166V10.166Z"
-                            fill="#667185"
-                          />
-                        </svg>
-                      </Button>
-                    </Box>
-                  </TableCell>
-                </TableRow>
+                              <TableCell align="center" width={160}>
+                                <Box
+                                  sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: 2,
+                                  }}
+                                >
+                                  {/* <Link
+                                style={{
+                                  display: "inline-flex",
+                                  alignItems: "center",
+                                  minWidth: "64px",
+                                  justifyContent: "center",
+                                  verticalAlign: "middle",
+                                }}
+                                to={createDownloadLink(item.secure_url
+                                  )}
+                              >
+                                <svg
+                                  width="24"
+                                  height="25"
+                                  viewBox="0 0 24 25"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <g id="download">
+                                    <path
+                                      id="Icon"
+                                      d="M18 13V16.3333C18 16.7754 17.8244 17.1993 17.5118 17.5118C17.1993 17.8244 16.7754 18 16.3333 18H4.66667C4.22464 18 3.80072 17.8244 3.48816 17.5118C3.17559 17.1993 3 16.7754 3 16.3333V13M6.33333 8.83333L10.5 13M10.5 13L14.6667 8.83333M10.5 13V3"
+                                      stroke="#667185"
+                                      stroke-width="1.66667"
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                    />
+                                  </g>
+                                </svg>
+                              </Link> */}
 
-                <TableRow
-                  hover
-                  sx={{
-                    "&:nth-of-type(odd)": {
-                      background: "white",
-                    },
-                    "&:nth-of-type(even)": {
-                      background: "#FCFCFD",
-                    },
-                    position: "relative",
-                  }}
-                >
-                  <TableCell>Blood Pressure of Youths in Edo State</TableCell>
-                  <TableCell>.pdf</TableCell>
-                  <TableCell>Olumide Chukwudife</TableCell>
-                  <TableCell>3rd Jan, 2023</TableCell>
-                  <TableCell>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Link
-                        style={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          minWidth: "64px",
-                          justifyContent: "center",
-                          verticalAlign: "middle",
-                        }}
-                        to={downloadLink}
-                      >
-                        <svg
-                          width="24"
-                          height="25"
-                          viewBox="0 0 24 25"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <g id="download">
-                            <path
-                              id="Icon"
-                              d="M18 13V16.3333C18 16.7754 17.8244 17.1993 17.5118 17.5118C17.1993 17.8244 16.7754 18 16.3333 18H4.66667C4.22464 18 3.80072 17.8244 3.48816 17.5118C3.17559 17.1993 3 16.7754 3 16.3333V13M6.33333 8.83333L10.5 13M10.5 13L14.6667 8.83333M10.5 13V3"
-                              stroke="#667185"
-                              stroke-width="1.66667"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </g>
-                        </svg>
-                      </Link>
-                      <Button sx={{ p: 0 }}>
-                        <svg
-                          width="24"
-                          height="25"
-                          viewBox="0 0 24 25"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            fill-rule="evenodd"
-                            clip-rule="evenodd"
-                            d="M12 1.41602C9.37665 1.41602 7.25 3.54266 7.25 6.16602V6.41602H4C3.58579 6.41602 3.25 6.7518 3.25 7.16602C3.25 7.58023 3.58579 7.91602 4 7.91602H20C20.4142 7.91602 20.75 7.58023 20.75 7.16602C20.75 6.7518 20.4142 6.41602 20 6.41602H16.75V6.16602C16.75 3.54266 14.6234 1.41602 12 1.41602ZM12 2.91602C13.7949 2.91602 15.25 4.37109 15.25 6.16602V6.41602H8.75V6.16602C8.75 4.37109 10.2051 2.91602 12 2.91602Z"
-                            fill="#667185"
-                          />
-                          <path
-                            d="M5.74664 9.09508C5.70746 8.68272 5.34142 8.3802 4.92906 8.41938C4.5167 8.45856 4.21418 8.8246 4.25336 9.23696C4.34783 10.2312 4.51833 11.4563 4.73748 13.0311L5.01903 15.0542C5.28819 16.9889 5.44085 18.0861 5.77109 18.985C6.3857 20.6578 7.48205 21.9988 8.89206 22.5938C9.65773 22.9169 10.5335 22.9166 11.8373 22.9161H12.1627C13.4665 22.9166 14.3423 22.9169 15.1079 22.5938C16.5179 21.9988 17.6143 20.6578 18.2289 18.985C18.5592 18.0861 18.7118 16.9889 18.981 15.0541L19.2625 13.0311C19.4817 11.4563 19.6522 10.2312 19.7466 9.23696C19.7858 8.8246 19.4833 8.45856 19.0709 8.41938C18.6586 8.3802 18.2925 8.68272 18.2534 9.09507C18.1623 10.053 17.9965 11.246 17.7744 12.8421L17.512 14.7272C17.2215 16.8148 17.0884 17.7396 16.8209 18.4677C16.305 19.8718 15.4472 20.8226 14.5248 21.2119C14.0746 21.4018 13.5292 21.416 12 21.416C10.4708 21.416 9.92544 21.4018 9.47524 21.2119C8.55279 20.8226 7.69496 19.8718 7.17907 18.4677C6.91156 17.7396 6.77851 16.8148 6.48798 14.7272L6.22564 12.8421C6.00352 11.246 5.83766 10.053 5.74664 9.09508Z"
-                            fill="#667185"
-                          />
-                          <path
-                            d="M10.75 10.166C10.75 9.7518 10.4142 9.41602 10 9.41602C9.58579 9.41602 9.25 9.7518 9.25 10.166V18.166C9.25 18.5802 9.58579 18.916 10 18.916C10.4142 18.916 10.75 18.5802 10.75 18.166V10.166Z"
-                            fill="#667185"
-                          />
-                          <path
-                            d="M14.75 10.166C14.75 9.7518 14.4142 9.41602 14 9.41602C13.5858 9.41602 13.25 9.7518 13.25 10.166V18.166C13.25 18.5802 13.5858 18.916 14 18.916C14.4142 18.916 14.75 18.5802 14.75 18.166V10.166Z"
-                            fill="#667185"
-                          />
-                        </svg>
-                      </Button>
-                    </Box>
-                  </TableCell>
-                </TableRow>
+                                  {showOptions === row.id && (
+                                    <>
+                                      <svg
+                                        onClick={() => {
+                                          setShowRename(true);
+                                          // console.log(selectedUserId);
+                                          // setSelectedUserId(selectedUserId);
+                                        }}
+                                        width="21"
+                                        height="21"
+                                        viewBox="0 0 21 21"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                      >
+                                        <g id="Edit 2">
+                                          <g id="Vector">
+                                            <path
+                                              fill-rule="evenodd"
+                                              clip-rule="evenodd"
+                                              d="M13.359 1.67532L13.4641 1.73599C14.3719 2.26007 15.1289 2.69709 15.6832 3.12485C16.2682 3.57634 16.7326 4.09457 16.9271 4.82045C17.1216 5.54633 16.9785 6.22731 16.6976 6.91084C16.4315 7.55843 15.9944 8.3154 15.4702 9.22317L10.9488 17.0547C10.6024 17.6558 10.3284 18.1312 9.91153 18.4894C9.49461 18.8476 8.98344 19.0469 8.33696 19.2988L8.16226 19.367C6.96267 19.8357 5.97385 20.2221 5.16412 20.4113C4.31725 20.6091 3.49958 20.6337 2.73743 20.1937C1.97527 19.7537 1.58776 19.0333 1.33568 18.2009C1.09465 17.4051 0.934834 16.3556 0.740952 15.0823L0.712651 14.8969C0.607617 14.2111 0.524565 13.6688 0.626339 13.1286C0.639061 13.0611 0.654485 12.9946 0.672415 12.9287C0.797926 12.4678 1.04624 12.0385 1.35024 11.5129L5.87179 3.68151C6.39587 2.7737 6.83289 2.01671 7.26064 1.46241C7.71213 0.877344 8.23036 0.412978 8.95624 0.218479C9.68212 0.0239797 10.3631 0.167019 11.0466 0.447952C11.6942 0.714113 12.4512 1.15118 13.359 1.67532ZM6.9195 5.36682L13.4869 9.15849L9.49285 16.0763C9.05773 16.83 8.93332 17.0227 8.77105 17.1621C8.60878 17.3015 8.39954 17.3955 7.58897 17.7122C6.30976 18.212 5.43853 18.55 4.76598 18.7072C4.11629 18.859 3.82149 18.7989 3.61242 18.6782C3.40336 18.5575 3.20394 18.3322 3.01055 17.6937C2.81035 17.0326 2.66751 16.1091 2.46073 14.7514C2.3297 13.8911 2.30647 13.6629 2.34608 13.4526C2.38569 13.2424 2.49037 13.0383 2.92549 12.2847L6.9195 5.36682ZM15.079 6.24559C14.9244 6.62177 14.6879 7.06408 14.36 7.64189L7.79633 3.85234C8.13278 3.27946 8.39761 2.85353 8.64608 2.53155C8.97795 2.1015 9.20149 1.9645 9.40918 1.90885C9.61686 1.8532 9.87895 1.86007 10.3814 2.06657C10.9073 2.28273 11.5625 2.65886 12.5365 3.2212C13.5105 3.78354 14.1639 4.1629 14.614 4.51028C15.0441 4.84215 15.1811 5.06569 15.2367 5.27338C15.2924 5.48106 15.2855 5.74316 15.079 6.24559Z"
+                                              fill="#667185"
+                                            />
+                                            <path
+                                              d="M11.7688 19.7917C11.7688 19.3084 12.1606 18.9167 12.6438 18.9167H19.6438C20.127 18.9167 20.5188 19.3084 20.5188 19.7917C20.5188 20.2749 20.127 20.6667 19.6438 20.6667H12.6438C12.1606 20.6667 11.7688 20.2749 11.7688 19.7917Z"
+                                              fill="#667185"
+                                            />
+                                          </g>
+                                        </g>
+                                      </svg>
 
-                <TableRow
-                  hover
-                  sx={{
-                    "&:nth-of-type(odd)": {
-                      background: "white",
-                    },
-                    "&:nth-of-type(even)": {
-                      background: "#FCFCFD",
-                    },
-                    position: "relative",
-                  }}
-                >
-                  <TableCell>Blood Pressure of Youths in Edo State</TableCell>
-                  <TableCell>.pdf</TableCell>
-                  <TableCell>Olumide Chukwudife</TableCell>
-                  <TableCell>3rd Jan, 2023</TableCell>
-                  <TableCell>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Link
-                        style={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          minWidth: "64px",
-                          justifyContent: "center",
-                          verticalAlign: "middle",
-                        }}
-                        to={downloadLink}
-                      >
-                        <svg
-                          width="24"
-                          height="25"
-                          viewBox="0 0 24 25"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <g id="download">
-                            <path
-                              id="Icon"
-                              d="M18 13V16.3333C18 16.7754 17.8244 17.1993 17.5118 17.5118C17.1993 17.8244 16.7754 18 16.3333 18H4.66667C4.22464 18 3.80072 17.8244 3.48816 17.5118C3.17559 17.1993 3 16.7754 3 16.3333V13M6.33333 8.83333L10.5 13M10.5 13L14.6667 8.83333M10.5 13V3"
-                              stroke="#667185"
-                              stroke-width="1.66667"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </g>
-                        </svg>
-                      </Link>
-                      <Button sx={{ p: 0 }}>
-                        <svg
-                          width="24"
-                          height="25"
-                          viewBox="0 0 24 25"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            fill-rule="evenodd"
-                            clip-rule="evenodd"
-                            d="M12 1.41602C9.37665 1.41602 7.25 3.54266 7.25 6.16602V6.41602H4C3.58579 6.41602 3.25 6.7518 3.25 7.16602C3.25 7.58023 3.58579 7.91602 4 7.91602H20C20.4142 7.91602 20.75 7.58023 20.75 7.16602C20.75 6.7518 20.4142 6.41602 20 6.41602H16.75V6.16602C16.75 3.54266 14.6234 1.41602 12 1.41602ZM12 2.91602C13.7949 2.91602 15.25 4.37109 15.25 6.16602V6.41602H8.75V6.16602C8.75 4.37109 10.2051 2.91602 12 2.91602Z"
-                            fill="#667185"
-                          />
-                          <path
-                            d="M5.74664 9.09508C5.70746 8.68272 5.34142 8.3802 4.92906 8.41938C4.5167 8.45856 4.21418 8.8246 4.25336 9.23696C4.34783 10.2312 4.51833 11.4563 4.73748 13.0311L5.01903 15.0542C5.28819 16.9889 5.44085 18.0861 5.77109 18.985C6.3857 20.6578 7.48205 21.9988 8.89206 22.5938C9.65773 22.9169 10.5335 22.9166 11.8373 22.9161H12.1627C13.4665 22.9166 14.3423 22.9169 15.1079 22.5938C16.5179 21.9988 17.6143 20.6578 18.2289 18.985C18.5592 18.0861 18.7118 16.9889 18.981 15.0541L19.2625 13.0311C19.4817 11.4563 19.6522 10.2312 19.7466 9.23696C19.7858 8.8246 19.4833 8.45856 19.0709 8.41938C18.6586 8.3802 18.2925 8.68272 18.2534 9.09507C18.1623 10.053 17.9965 11.246 17.7744 12.8421L17.512 14.7272C17.2215 16.8148 17.0884 17.7396 16.8209 18.4677C16.305 19.8718 15.4472 20.8226 14.5248 21.2119C14.0746 21.4018 13.5292 21.416 12 21.416C10.4708 21.416 9.92544 21.4018 9.47524 21.2119C8.55279 20.8226 7.69496 19.8718 7.17907 18.4677C6.91156 17.7396 6.77851 16.8148 6.48798 14.7272L6.22564 12.8421C6.00352 11.246 5.83766 10.053 5.74664 9.09508Z"
-                            fill="#667185"
-                          />
-                          <path
-                            d="M10.75 10.166C10.75 9.7518 10.4142 9.41602 10 9.41602C9.58579 9.41602 9.25 9.7518 9.25 10.166V18.166C9.25 18.5802 9.58579 18.916 10 18.916C10.4142 18.916 10.75 18.5802 10.75 18.166V10.166Z"
-                            fill="#667185"
-                          />
-                          <path
-                            d="M14.75 10.166C14.75 9.7518 14.4142 9.41602 14 9.41602C13.5858 9.41602 13.25 9.7518 13.25 10.166V18.166C13.25 18.5802 13.5858 18.916 14 18.916C14.4142 18.916 14.75 18.5802 14.75 18.166V10.166Z"
-                            fill="#667185"
-                          />
-                        </svg>
-                      </Button>
-                    </Box>
-                  </TableCell>
-                </TableRow> */}
-                {/* <TableCell
-                  colSpan={12}
-                  rowSpan={12}
-                  style={{ height: "200px" }}
-                  sx={{ height: 200 }}
-                >
-                  {/* <NoResultIllustration text="No files has been uploaded yet" />
+                                      <svg
+                                        width="32"
+                                        height="33"
+                                        viewBox="0 0 32 33"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                      >
+                                        <path
+                                          d="M16.0007 23.0893L20.4113 18.68L19.4673 17.736L16.6673 20.536V14.2693H15.334V20.536L12.534 17.736L11.59 18.68L16.0007 23.0893ZM6.66732 10.5773V24.68C6.66732 24.9191 6.74421 25.1156 6.89798 25.2693C7.05176 25.4231 7.24821 25.5 7.48732 25.5H24.514C24.7531 25.5 24.9495 25.4231 25.1033 25.2693C25.2571 25.1156 25.334 24.9191 25.334 24.68V10.5773H6.66732ZM7.69398 26.8333C7.09665 26.8333 6.55398 26.5893 6.06598 26.1013C5.57798 25.6124 5.33398 25.0702 5.33398 24.4747V10.1493C5.33398 9.88889 5.37532 9.64444 5.45798 9.416C5.54154 9.18667 5.66598 8.97556 5.83132 8.78267L7.90865 6.28667C8.10154 6.02711 8.34287 5.83111 8.63265 5.69867C8.92243 5.56622 9.23354 5.5 9.56598 5.5H22.3846C22.7171 5.5 23.0326 5.56622 23.3313 5.69867C23.6291 5.832 23.8744 6.028 24.0673 6.28667L26.17 8.83333C26.3353 9.02622 26.4598 9.24178 26.5433 9.48C26.626 9.71733 26.6673 9.96622 26.6673 10.2267V24.4733C26.6673 25.0689 26.4233 25.6111 25.9353 26.1C25.4464 26.588 24.9042 26.832 24.3087 26.832L7.69398 26.8333ZM7.17398 9.244H24.8006L23.0273 7.116C22.9411 7.02978 22.8424 6.96133 22.7313 6.91067C22.6202 6.85911 22.5047 6.83333 22.3846 6.83333H9.58998C9.47087 6.83333 9.35532 6.85911 9.24332 6.91067C9.1331 6.96133 9.03532 7.02978 8.94998 7.116L7.17398 9.244Z"
+                                          fill="#667185"
+                                        />
+                                      </svg>
 
-                </TableCell> */}
+                                      <svg
+                                        onClick={() => setShowDelete(true)}
+                                        width="24"
+                                        height="25"
+                                        viewBox="0 0 24 25"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                      >
+                                        <path
+                                          fill-rule="evenodd"
+                                          clip-rule="evenodd"
+                                          d="M12 1.41602C9.37665 1.41602 7.25 3.54266 7.25 6.16602V6.41602H4C3.58579 6.41602 3.25 6.7518 3.25 7.16602C3.25 7.58023 3.58579 7.91602 4 7.91602H20C20.4142 7.91602 20.75 7.58023 20.75 7.16602C20.75 6.7518 20.4142 6.41602 20 6.41602H16.75V6.16602C16.75 3.54266 14.6234 1.41602 12 1.41602ZM12 2.91602C13.7949 2.91602 15.25 4.37109 15.25 6.16602V6.41602H8.75V6.16602C8.75 4.37109 10.2051 2.91602 12 2.91602Z"
+                                          fill="#667185"
+                                        />
+                                        <path
+                                          d="M5.74664 9.09508C5.70746 8.68272 5.34142 8.3802 4.92906 8.41938C4.5167 8.45856 4.21418 8.8246 4.25336 9.23696C4.34783 10.2312 4.51833 11.4563 4.73748 13.0311L5.01903 15.0542C5.28819 16.9889 5.44085 18.0861 5.77109 18.985C6.3857 20.6578 7.48205 21.9988 8.89206 22.5938C9.65773 22.9169 10.5335 22.9166 11.8373 22.9161H12.1627C13.4665 22.9166 14.3423 22.9169 15.1079 22.5938C16.5179 21.9988 17.6143 20.6578 18.2289 18.985C18.5592 18.0861 18.7118 16.9889 18.981 15.0541L19.2625 13.0311C19.4817 11.4563 19.6522 10.2312 19.7466 9.23696C19.7858 8.8246 19.4833 8.45856 19.0709 8.41938C18.6586 8.3802 18.2925 8.68272 18.2534 9.09507C18.1623 10.053 17.9965 11.246 17.7744 12.8421L17.512 14.7272C17.2215 16.8148 17.0884 17.7396 16.8209 18.4677C16.305 19.8718 15.4472 20.8226 14.5248 21.2119C14.0746 21.4018 13.5292 21.416 12 21.416C10.4708 21.416 9.92544 21.4018 9.47524 21.2119C8.55279 20.8226 7.69496 19.8718 7.17907 18.4677C6.91156 17.7396 6.77851 16.8148 6.48798 14.7272L6.22564 12.8421C6.00352 11.246 5.83766 10.053 5.74664 9.09508Z"
+                                          fill="#667185"
+                                        />
+                                        <path
+                                          d="M10.75 10.166C10.75 9.7518 10.4142 9.41602 10 9.41602C9.58579 9.41602 9.25 9.7518 9.25 10.166V18.166C9.25 18.5802 9.58579 18.916 10 18.916C10.4142 18.916 10.75 18.5802 10.75 18.166V10.166Z"
+                                          fill="#667185"
+                                        />
+                                        <path
+                                          d="M14.75 10.166C14.75 9.7518 14.4142 9.41602 14 9.41602C13.5858 9.41602 13.25 9.7518 13.25 10.166V18.166C13.25 18.5802 13.5858 18.916 14 18.916C14.4142 18.916 14.75 18.5802 14.75 18.166V10.166Z"
+                                          fill="#667185"
+                                        />
+                                      </svg>
+                                    </>
+                                  )}
+                                </Box>
+                              </TableCell>
+
+                              <TableCell align="right" width={100}>
+                                <svg
+                                  onClick={() => setShowOptions(!showOptions)}
+                                  width="20"
+                                  height="20"
+                                  viewBox="0 0 20 20"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <g id="Teeny icon / more-vertical">
+                                    <g id="Vector">
+                                      <path
+                                        d="M9.99969 4.00029C9.63149 4.00029 9.33301 3.7018 9.33301 3.33361C9.33301 2.96541 9.63149 2.66693 9.99969 2.66693C10.3679 2.66693 10.6664 2.96541 10.6664 3.33361C10.6664 3.7018 10.3679 4.00029 9.99969 4.00029Z"
+                                        stroke="#545C68"
+                                        stroke-width="1.33336"
+                                      />
+                                      <path
+                                        d="M9.99969 10.6671C9.63149 10.6671 9.33301 10.3686 9.33301 10.0004C9.33301 9.63221 9.63149 9.33373 9.99969 9.33373C10.3679 9.33373 10.6664 9.63221 10.6664 10.0004C10.6664 10.3686 10.3679 10.6671 9.99969 10.6671Z"
+                                        stroke="#545C68"
+                                        stroke-width="1.33336"
+                                      />
+                                      <path
+                                        d="M9.99969 17.3339C9.63149 17.3339 9.33301 17.0354 9.33301 16.6672C9.33301 16.299 9.63149 16.0005 9.99969 16.0005C10.3679 16.0005 10.6664 16.299 10.6664 16.6672C10.6664 17.0354 10.3679 17.3339 9.99969 17.3339Z"
+                                        stroke="#545C68"
+                                        stroke-width="1.33336"
+                                      />
+                                    </g>
+                                  </g>
+                                </svg>
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })
+                    ) : (
+                      <TableRow>
+                        <TableCell
+                          colSpan={12}
+                          rowSpan={12}
+                          style={{ height: "200px" }}
+                          sx={{ height: 200 }}
+                        >
+                          <NoResultIllustration text="No file has been uploaded yet" />
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </>
+                )}
               </TableBody>
             </Table>
 
             <TablePagination
               rowsPerPageOptions={[10, 25, 75]}
-              count={length}
+              count={data.length}
               component="div"
               rowsPerPage={rowsPerPage}
               page={page}
@@ -718,7 +663,8 @@ export default function File() {
       </Box>
 
       <>
-        <Dialog maxWidth="sm" fullWidth open={show}>
+        {/* UPLOAD FILE MODAL */}
+        <Dialog maxWidth="sm" fullWidth open={showUpload}>
           <Button
             sx={{
               position: "absolute",
@@ -727,7 +673,7 @@ export default function File() {
               padding: "16px 8px",
             }}
             onClick={(e: any) => {
-              setShow(false);
+              setShowUpload(false);
               setSelectedFile(e.target.value);
             }}
           >
@@ -894,7 +840,7 @@ export default function File() {
               }}
               // onClick={deleteImage}
               onClick={(e: any) => {
-                setShow(false);
+                setShowUpload(false);
                 setSelectedFile(e.target.value);
               }}
             >
@@ -908,6 +854,205 @@ export default function File() {
                 loading={isLoading}
               />
             </div>
+          </Stack>
+        </Dialog>
+
+        {/* RENAME FILE MODAL */}
+        <Dialog maxWidth="xs" fullWidth open={showRename}>
+          <Button
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+              padding: "16px 8px",
+            }}
+            onClick={() => {
+              setShowRename(false);
+            }}
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g id="Teeny icon / x-small">
+                <path
+                  id="Vector"
+                  d="M4.19922 4.2002L9.79922 9.8002M4.19922 9.8002L9.79922 4.2002"
+                  stroke="#099250"
+                />
+              </g>
+            </svg>
+          </Button>
+
+          <DialogTitle
+            sx={{
+              display: "flex",
+              textAlign: "Left",
+              flexDirection: "column",
+              marginTop: 5,
+              pb: 0,
+            }}
+          >
+            Rename File
+          </DialogTitle>
+
+          <DialogContent>
+            <InputField
+              label=""
+              type="text"
+              name="rename"
+              value={renameValue}
+              onChange={(e: any) => setRenameValue(e.target.value)}
+              placeholder="Enter new file name"
+            />
+            {/* File Name:{" "}
+            {selectedUserId &&
+              data.find((user: any) => user.id === selectedUserId)?.fileName} */}
+          </DialogContent>
+
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent={"center"}
+            gap={5}
+            p={2}
+          >
+            <Button
+              variant="outlined"
+              sx={{
+                color: "#099250",
+                outline: "none",
+                textTransform: "none",
+                fontWeight: 600,
+                background: "#D3F8DF",
+                py: 1.5,
+                px: 2,
+                "&:hover": { backgroundColor: "#D3F8DF" },
+                width: "50%",
+                borderRadius: "6px",
+              }}
+              onClick={() => {
+                setShowRename(false);
+              }}
+            >
+              Cancel
+            </Button>
+
+            <div style={{ width: "50%" }}>
+              <Buttons
+                title="Save"
+                onClick={handleRenameFile}
+                loading={isLoading}
+              />
+            </div>
+          </Stack>
+        </Dialog>
+
+        {/* DELETE FILE MODAL */}
+        <Dialog maxWidth="xs" fullWidth open={showDelete}>
+          <DialogTitle sx={{ marginBottom: 2 }}>
+            <Button
+              sx={{
+                position: "absolute",
+                right: 8,
+                top: 8,
+                padding: "16px 8px",
+              }}
+              onClick={() => setShowDelete(false)}
+            >
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 14 14"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g id="Teeny icon / x-small">
+                  <path
+                    id="Vector"
+                    d="M4.19922 4.2002L9.79922 9.8002M4.19922 9.8002L9.79922 4.2002"
+                    stroke="#099250"
+                  />
+                </g>
+              </svg>
+            </Button>
+          </DialogTitle>
+
+          <div style={{ display: "grid", placeContent: "center" }}>
+            <svg
+              width="49"
+              height="48"
+              viewBox="0 0 49 48"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect x="0.5" width="48" height="48" rx="24" fill="#FBEAE9" />
+              <path
+                d="M32.321 24.9354L33.2124 25.0594L33.2124 25.0594L32.321 24.9354ZM32.0062 27.1974L32.8976 27.3215L32.8976 27.3215L32.0062 27.1974ZM16.9946 27.1974L17.886 27.0734L17.886 27.0734L16.9946 27.1974ZM16.6798 24.9354L15.7883 25.0595L15.7883 25.0595L16.6798 24.9354ZM21.1208 35.6842L20.7709 36.5134L20.7709 36.5134L21.1208 35.6842ZM17.8705 31.8724L18.7153 31.562L18.7153 31.562L17.8705 31.8724ZM31.1303 31.8724L31.9751 32.1828L31.9751 32.1828L31.1303 31.8724ZM27.88 35.6842L27.5301 34.855L27.5301 34.855L27.88 35.6842ZM16.9964 20.3149C16.9493 19.82 16.5101 19.457 16.0153 19.504C15.5204 19.5511 15.1574 19.9903 15.2044 20.4851L16.9964 20.3149ZM33.7964 20.4851C33.8434 19.9903 33.4803 19.5511 32.9855 19.504C32.4907 19.457 32.0514 19.82 32.0044 20.3149L33.7964 20.4851ZM34.1004 18.9C34.5974 18.9 35.0004 18.4971 35.0004 18C35.0004 17.5029 34.5974 17.1 34.1004 17.1V18.9ZM14.9004 17.1C14.4033 17.1 14.0004 17.5029 14.0004 18C14.0004 18.4971 14.4033 18.9 14.9004 18.9V17.1ZM21.2004 31.2C21.2004 31.6971 21.6033 32.1 22.1004 32.1C22.5974 32.1 23.0004 31.6971 23.0004 31.2H21.2004ZM23.0004 21.6C23.0004 21.1029 22.5974 20.7 22.1004 20.7C21.6033 20.7 21.2004 21.1029 21.2004 21.6H23.0004ZM26.0004 31.2C26.0004 31.6971 26.4033 32.1 26.9004 32.1C27.3974 32.1 27.8004 31.6971 27.8004 31.2H26.0004ZM27.8004 21.6C27.8004 21.1029 27.3974 20.7 26.9004 20.7C26.4033 20.7 26.0004 21.1029 26.0004 21.6H27.8004ZM29.3004 18V18.9H30.2004V18H29.3004ZM19.7004 18H18.8004V18.9H19.7004V18ZM31.4296 24.8113L31.1148 27.0734L32.8976 27.3215L33.2124 25.0594L31.4296 24.8113ZM17.886 27.0734L17.5712 24.8113L15.7883 25.0595L16.1031 27.3215L17.886 27.0734ZM24.5004 35.1C22.6654 35.1 22.0109 35.083 21.4707 34.855L20.7709 36.5134C21.7274 36.917 22.8271 36.9 24.5004 36.9V35.1ZM16.1031 27.3215C16.4388 29.7333 16.6213 31.082 17.0257 32.1828L18.7153 31.562C18.3943 30.6883 18.2346 29.5785 17.886 27.0734L16.1031 27.3215ZM21.4707 34.855C20.3637 34.3879 19.3343 33.247 18.7153 31.562L17.0257 32.1828C17.7632 34.1902 19.0789 35.7994 20.7709 36.5134L21.4707 34.855ZM31.1148 27.0734C30.7662 29.5785 30.6065 30.6883 30.2855 31.562L31.9751 32.1828C32.3795 31.082 32.562 29.7333 32.8976 27.3215L31.1148 27.0734ZM24.5004 36.9C26.1737 36.9 27.2734 36.917 28.2299 36.5134L27.5301 34.855C26.9899 35.083 26.3354 35.1 24.5004 35.1V36.9ZM30.2855 31.562C29.6664 33.247 28.637 34.3879 27.5301 34.855L28.2299 36.5134C29.9219 35.7994 31.2375 34.1902 31.9751 32.1828L30.2855 31.562ZM17.5712 24.8113C17.3046 22.896 17.1056 21.4644 16.9964 20.3149L15.2044 20.4851C15.3182 21.6828 15.5239 23.1595 15.7883 25.0595L17.5712 24.8113ZM33.2124 25.0594C33.4769 23.1595 33.6826 21.6828 33.7964 20.4851L32.0044 20.3149C31.8952 21.4644 31.6962 22.896 31.4296 24.8113L33.2124 25.0594ZM34.1004 17.1H14.9004V18.9H34.1004V17.1ZM23.0004 31.2V21.6H21.2004V31.2H23.0004ZM27.8004 31.2V21.6H26.0004V31.2H27.8004ZM28.4004 16.8V18H30.2004V16.8H28.4004ZM29.3004 17.1H19.7004V18.9H29.3004V17.1ZM20.6004 18V16.8H18.8004V18H20.6004ZM24.5004 12.9C26.6543 12.9 28.4004 14.6461 28.4004 16.8H30.2004C30.2004 13.652 27.6484 11.1 24.5004 11.1V12.9ZM24.5004 11.1C21.3524 11.1 18.8004 13.652 18.8004 16.8H20.6004C20.6004 14.6461 22.3465 12.9 24.5004 12.9V11.1Z"
+                fill="#CB1A14"
+              />
+            </svg>
+          </div>
+
+          <Typography variant="h5" align="center" sx={{ p: 2, mb: 0 }}>
+            Delete File?
+          </Typography>
+          <span style={{ padding: 8, textAlign: "center" }}>
+            This action cannot be reversed. Deleted files will no longer be
+            available on Pillar.
+          </span>
+
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent={"center"}
+            gap={5}
+            p={2}
+          >
+            <Button
+              variant="outlined"
+              sx={{
+                color: "#099250",
+                outline: "none",
+                textTransform: "none",
+                fontWeight: 600,
+                background: "#D3F8DF",
+                py: 1.5,
+                px: 2,
+                "&:hover": { backgroundColor: "#D3F8DF" },
+                width: "50%",
+                borderRadius: "6px",
+              }}
+              onClick={() => {
+                setShowDelete(false);
+              }}
+            >
+              Cancel
+            </Button>
+
+            <Button
+              variant="outlined"
+              sx={{
+                color: "#FBEAE9",
+                outline: "none",
+                textTransform: "none",
+                fontWeight: 600,
+                background: "#D42620",
+                py: 1.5,
+                px: 2,
+                "&:hover": { background: "#D42620" },
+                width: "50%",
+                borderRadius: "6px",
+                border: "none",
+              }}
+              onClick={handleDeleteFile}
+              disabled={isLoading}
+            >
+              Delete
+            </Button>
           </Stack>
         </Dialog>
       </>
