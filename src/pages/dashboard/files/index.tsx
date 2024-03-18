@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Card,
   Checkbox,
   Dialog,
   DialogContent,
@@ -24,9 +25,10 @@ import NoResultIllustration, {
   TableLoader,
 } from "../../../components/NoResult";
 import Buttons from "../../../components/Button";
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { axiosInstance } from "../../../Utils";
 import moment from "moment";
+import { FileIcon } from "react-file-icon";
 
 const TABLE_HEAD = [
   { id: "c" },
@@ -35,8 +37,9 @@ const TABLE_HEAD = [
   { id: "added by", label: "Added By", align: "left" },
   { id: "date", label: "Date Added", align: "left" },
   { id: "o" },
-  { id: "" },
 ];
+
+// type Order = "asc" | "desc";
 
 export default function File() {
   const [search, setSearch] = useState("");
@@ -49,6 +52,8 @@ export default function File() {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const [upLoading, setUploading] = useState(false);
+
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const [showOptions, setShowOptions] = useState(false);
@@ -59,7 +64,9 @@ export default function File() {
 
   const [renameValue, setRenameValue] = useState("");
 
-  // const [uploadProgress, setUploadProgress] = useState<number | null>(null);
+  const [fileId, setFileId] = useState("");
+
+  const [fileExt, setFileExt] = useState("");
 
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -91,7 +98,7 @@ export default function File() {
 
   useEffect(() => {
     setPage(0);
-  }, []);
+  }, [data]);
 
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -143,7 +150,7 @@ export default function File() {
 
   const handleUpload = async (e: any) => {
     e.preventDefault();
-    setIsLoading(true);
+    setUploading(true);
     try {
       const file = selectedFile;
 
@@ -157,36 +164,36 @@ export default function File() {
             "Content-Type": "multipart/form-data",
           },
         });
-        setIsLoading(false);
 
         setSelectedFile(e.target.value);
+        setUploading(false);
       }
-
+      getFiles();
       setShowUpload(false);
     } catch (error) {
-      setIsLoading(false);
+      setUploading(false);
     }
   };
 
-  // const createDownloadLink = (link: string) => {
-  //   if (link) {
-  //     const first = link.split("upload");
-  //     return `${first[0]}${"upload/fl_attachment"}${first[1]}`;
-  //   }
-  //   return "";
-  // };
-  const handleCLick = (id: any) => {
+  const handleCLick = ({ id, fileName, asset_id, format }: any) => {
     setSelectedUserId(id === selectedUserId ? null : id);
     setShowOptions((prevIndex) => (prevIndex === id ? null : id));
     setSelectedUserId(id);
+
+    setRenameValue(fileName);
+    setFileId(asset_id);
+    setFileExt(format);
   };
 
   const handleRenameFile = async () => {
     setIsLoading(true);
 
+    const payLoad = { fileName: renameValue, status: "active" };
+
     try {
-      const res = await axiosInstance.delete(
-        `/hcp/tenet/files/update/metadata/${selectedUserId}`
+      const res = await axiosInstance.post(
+        `/hcp/tenet/files/update/metadata/${selectedUserId}`,
+        payLoad
       );
       console.log(res.data);
       setIsLoading(false);
@@ -210,6 +217,27 @@ export default function File() {
       setShowDelete(false);
 
       getFiles();
+    } catch (error) {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDownloadFile = async () => {
+    try {
+      const response = await axiosInstance.get(`/download/file/${fileId}`, {
+        responseType: "blob",
+      });
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `${renameValue}${fileExt}`); // Specify the filename here
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      // getFiles();
     } catch (error) {
       setIsLoading(false);
     }
@@ -312,6 +340,8 @@ export default function File() {
               View
               <Select
                 defaultValue={"Recent"}
+                // value={sortCriterion}
+                // onChange={(e) => toggleSortOrder(e.target.value)}
                 sx={{
                   minWidth: 110,
                   color: "#2A2D32",
@@ -320,10 +350,10 @@ export default function File() {
                     { px: 2, py: 1 },
                 }}
               >
-                <MenuItem value="Recent">Recent</MenuItem>
-                <MenuItem value="Older">Older</MenuItem>
-                <MenuItem value="From z-A">From z-A</MenuItem>
-                <MenuItem value="From A-Z">From A-Z</MenuItem>
+                <MenuItem value="date">Recent</MenuItem>
+                <MenuItem value="dater">Older</MenuItem>
+                <MenuItem value="name">From z-A</MenuItem>
+                <MenuItem value="name">From A-Z</MenuItem>
               </Select>
             </label>
 
@@ -391,275 +421,368 @@ export default function File() {
             </Button>
           </Stack>
         </Stack>
-        {isGrid && <></>}
 
-        <Box marginTop={2}>
-          <TableContainer
-            sx={{ borderRadius: 2.5, background: "#FFF", position: "relative" }}
-          >
-            <Table size="medium">
-              <TableHead sx={{ background: "#FCFCFD", fontSize: 12 }}>
-                <TableRow
-                  hover
-                  sx={{
-                    "&:nth-of-type(odd)": {
-                      background: "white",
-                    },
-                    "&:nth-of-type(even)": {
-                      background: "#FCFCFD",
-                    },
-                    position: "relative",
-                  }}
+        {isGrid ? (
+          <Box marginTop={2}>
+            <TableContainer
+              sx={{
+                borderRadius: 2.5,
+                background: "#FFF",
+                position: "relative",
+              }}
+            >
+              <Table size="medium">
+                <TableHead sx={{ background: "#FCFCFD", fontSize: 12 }}>
+                  <TableRow
+                    sx={{
+                      cursor: "pointer",
+                    }}
+                  >
+                    {TABLE_HEAD.map((item) => (
+                      <TableCell sx={{ color: "#344054" }} key={item.id}>
+                        {item.label}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
+
+                <TableBody
+                  sx={{ fontWeight: 500, fontSize: 14, color: "#101828" }}
                 >
-                  {TABLE_HEAD.map((item) => (
-                    <TableCell sx={{ color: "#344054" }} key={item.id}>
-                      {item.label}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-
-              <TableBody
-                sx={{ fontWeight: 500, fontSize: 14, color: "#101828" }}
-              >
-                {isLoading ? (
-                  <TableLoader />
-                ) : (
-                  <>
-                    {data?.length > 0 ? (
-                      data
-                        .slice(
-                          page * rowsPerPage,
-                          page * rowsPerPage + rowsPerPage
-                        )
-                        .map((row: any) => {
-                          const isSelected = row.id === selectedUserId;
-                          return (
-                            <TableRow
-                              hover
-                              onClick={() => handleCLick(`${row.id}`)}
-                              role="checkbox"
-                              key={row.id}
-                              selected={isSelected}
-                              sx={{
-                                position: "relative",
-                                cursor: "pointer",
-                                "&:nth-of-type(odd)": {
-                                  background: "white",
-                                },
-                                "&:nth-of-type(even)": {
-                                  background: "#FCFCFD",
-                                },
-                                "&.MuiTableRow-hover": {
-                                  "&:hover": {
-                                    backgroundColor: "#EDFCF2",
-                                    borderBottom: "1px #73E2A3 solid",
-                                    borderTop: "1px #73E2A3 solid",
-                                    borderTopWidth: 2,
-                                    borderBottomWidth: 2,
+                  {isLoading ? (
+                    <TableLoader />
+                  ) : (
+                    <>
+                      {data?.length > 0 ? (
+                        data
+                          .slice(
+                            page * rowsPerPage,
+                            page * rowsPerPage + rowsPerPage
+                          )
+                          .map((row: any) => {
+                            const isSelected = row.id === selectedUserId;
+                            return (
+                              <TableRow
+                                hover
+                                onClick={() =>
+                                  handleCLick({
+                                    id: row.id,
+                                    fileName: row.fileName,
+                                    asset_id: row.asset_id,
+                                    format: row.format,
+                                  })
+                                }
+                                role="checkbox"
+                                key={row.id}
+                                selected={isSelected}
+                                sx={{
+                                  position: "relative",
+                                  cursor: "pointer",
+                                  "&:nth-of-type(odd)": {
+                                    background: "white",
                                   },
-                                },
-                              }}
-                            >
-                              <TableCell padding="checkbox">
-                                <Checkbox
-                                  sx={{
-                                    "&.Mui-checked": {
-                                      color: "#EDFCF2",
-                                      stroke: "#099250",
-                                      strokeWidth: 1,
-                                      fill: "#099250",
+                                  "&:nth-of-type(even)": {
+                                    background: "#FCFCFD",
+                                  },
+                                  "&.MuiTableRow-hover": {
+                                    "&:hover": {
+                                      backgroundColor: "#EDFCF2",
+                                      borderBottom: "1px #73E2A3 solid",
+                                      borderTop: "1px #73E2A3 solid",
+                                      borderTopWidth: 2,
+                                      borderBottomWidth: 2,
                                     },
-                                  }}
-                                  checked={isSelected}
-                                />
-                              </TableCell>
-                              <TableCell>
-                                {row.fileName.split(".")[0]}
-                              </TableCell>
-                              <TableCell width={140}>.{row.format}</TableCell>
-                              <TableCell sx={{ textTransform: "capitalize" }}>
-                                {row.firstName} {row.lastName}
-                              </TableCell>
-                              <TableCell width={140}>
-                                {moment(row.created_at).format("DD/MM/YYYY")}
-                              </TableCell>
-
-                              <TableCell align="center" width={160}>
-                                <Box
-                                  sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: 2,
-                                  }}
-                                >
-                                  {/* <Link
-                                style={{
-                                  display: "inline-flex",
-                                  alignItems: "center",
-                                  minWidth: "64px",
-                                  justifyContent: "center",
-                                  verticalAlign: "middle",
+                                  },
                                 }}
-                                to={createDownloadLink(item.secure_url
-                                  )}
                               >
-                                <svg
-                                  width="24"
-                                  height="25"
-                                  viewBox="0 0 24 25"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <g id="download">
-                                    <path
-                                      id="Icon"
-                                      d="M18 13V16.3333C18 16.7754 17.8244 17.1993 17.5118 17.5118C17.1993 17.8244 16.7754 18 16.3333 18H4.66667C4.22464 18 3.80072 17.8244 3.48816 17.5118C3.17559 17.1993 3 16.7754 3 16.3333V13M6.33333 8.83333L10.5 13M10.5 13L14.6667 8.83333M10.5 13V3"
-                                      stroke="#667185"
-                                      stroke-width="1.66667"
-                                      stroke-linecap="round"
-                                      stroke-linejoin="round"
-                                    />
-                                  </g>
-                                </svg>
-                              </Link> */}
+                                <TableCell padding="checkbox">
+                                  <Checkbox
+                                    sx={{
+                                      "&.Mui-checked": {
+                                        color: "#EDFCF2",
+                                        stroke: "#099250",
+                                        strokeWidth: 1,
+                                        fill: "#099250",
+                                      },
+                                    }}
+                                    checked={isSelected}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  {row.fileName.split(".")[0]}
+                                </TableCell>
+                                <TableCell width={140}>{row.format}</TableCell>
+                                <TableCell sx={{ textTransform: "capitalize" }}>
+                                  {row.firstName} {row.lastName}
+                                </TableCell>
+                                <TableCell width={140}>
+                                  {moment(row.created_at).format("DD/MM/YYYY")}
+                                </TableCell>
 
-                                  {showOptions === row.id && (
-                                    <>
-                                      <svg
-                                        onClick={() => {
-                                          setShowRename(true);
-                                          // console.log(selectedUserId);
-                                          // setSelectedUserId(selectedUserId);
-                                        }}
-                                        width="21"
-                                        height="21"
-                                        viewBox="0 0 21 21"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                      >
-                                        <g id="Edit 2">
-                                          <g id="Vector">
-                                            <path
-                                              fill-rule="evenodd"
-                                              clip-rule="evenodd"
-                                              d="M13.359 1.67532L13.4641 1.73599C14.3719 2.26007 15.1289 2.69709 15.6832 3.12485C16.2682 3.57634 16.7326 4.09457 16.9271 4.82045C17.1216 5.54633 16.9785 6.22731 16.6976 6.91084C16.4315 7.55843 15.9944 8.3154 15.4702 9.22317L10.9488 17.0547C10.6024 17.6558 10.3284 18.1312 9.91153 18.4894C9.49461 18.8476 8.98344 19.0469 8.33696 19.2988L8.16226 19.367C6.96267 19.8357 5.97385 20.2221 5.16412 20.4113C4.31725 20.6091 3.49958 20.6337 2.73743 20.1937C1.97527 19.7537 1.58776 19.0333 1.33568 18.2009C1.09465 17.4051 0.934834 16.3556 0.740952 15.0823L0.712651 14.8969C0.607617 14.2111 0.524565 13.6688 0.626339 13.1286C0.639061 13.0611 0.654485 12.9946 0.672415 12.9287C0.797926 12.4678 1.04624 12.0385 1.35024 11.5129L5.87179 3.68151C6.39587 2.7737 6.83289 2.01671 7.26064 1.46241C7.71213 0.877344 8.23036 0.412978 8.95624 0.218479C9.68212 0.0239797 10.3631 0.167019 11.0466 0.447952C11.6942 0.714113 12.4512 1.15118 13.359 1.67532ZM6.9195 5.36682L13.4869 9.15849L9.49285 16.0763C9.05773 16.83 8.93332 17.0227 8.77105 17.1621C8.60878 17.3015 8.39954 17.3955 7.58897 17.7122C6.30976 18.212 5.43853 18.55 4.76598 18.7072C4.11629 18.859 3.82149 18.7989 3.61242 18.6782C3.40336 18.5575 3.20394 18.3322 3.01055 17.6937C2.81035 17.0326 2.66751 16.1091 2.46073 14.7514C2.3297 13.8911 2.30647 13.6629 2.34608 13.4526C2.38569 13.2424 2.49037 13.0383 2.92549 12.2847L6.9195 5.36682ZM15.079 6.24559C14.9244 6.62177 14.6879 7.06408 14.36 7.64189L7.79633 3.85234C8.13278 3.27946 8.39761 2.85353 8.64608 2.53155C8.97795 2.1015 9.20149 1.9645 9.40918 1.90885C9.61686 1.8532 9.87895 1.86007 10.3814 2.06657C10.9073 2.28273 11.5625 2.65886 12.5365 3.2212C13.5105 3.78354 14.1639 4.1629 14.614 4.51028C15.0441 4.84215 15.1811 5.06569 15.2367 5.27338C15.2924 5.48106 15.2855 5.74316 15.079 6.24559Z"
-                                              fill="#667185"
-                                            />
-                                            <path
-                                              d="M11.7688 19.7917C11.7688 19.3084 12.1606 18.9167 12.6438 18.9167H19.6438C20.127 18.9167 20.5188 19.3084 20.5188 19.7917C20.5188 20.2749 20.127 20.6667 19.6438 20.6667H12.6438C12.1606 20.6667 11.7688 20.2749 11.7688 19.7917Z"
-                                              fill="#667185"
-                                            />
+                                <TableCell align="center" width={160}>
+                                  <Box
+                                    sx={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                      gap: 2,
+                                    }}
+                                  >
+                                    {showOptions === row.id && (
+                                      <>
+                                        <svg
+                                          onClick={() => {
+                                            setShowRename(true);
+                                          }}
+                                          width="21"
+                                          height="21"
+                                          viewBox="0 0 21 21"
+                                          fill="none"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                          <g id="Edit 2">
+                                            <g id="Vector">
+                                              <path
+                                                fill-rule="evenodd"
+                                                clip-rule="evenodd"
+                                                d="M13.359 1.67532L13.4641 1.73599C14.3719 2.26007 15.1289 2.69709 15.6832 3.12485C16.2682 3.57634 16.7326 4.09457 16.9271 4.82045C17.1216 5.54633 16.9785 6.22731 16.6976 6.91084C16.4315 7.55843 15.9944 8.3154 15.4702 9.22317L10.9488 17.0547C10.6024 17.6558 10.3284 18.1312 9.91153 18.4894C9.49461 18.8476 8.98344 19.0469 8.33696 19.2988L8.16226 19.367C6.96267 19.8357 5.97385 20.2221 5.16412 20.4113C4.31725 20.6091 3.49958 20.6337 2.73743 20.1937C1.97527 19.7537 1.58776 19.0333 1.33568 18.2009C1.09465 17.4051 0.934834 16.3556 0.740952 15.0823L0.712651 14.8969C0.607617 14.2111 0.524565 13.6688 0.626339 13.1286C0.639061 13.0611 0.654485 12.9946 0.672415 12.9287C0.797926 12.4678 1.04624 12.0385 1.35024 11.5129L5.87179 3.68151C6.39587 2.7737 6.83289 2.01671 7.26064 1.46241C7.71213 0.877344 8.23036 0.412978 8.95624 0.218479C9.68212 0.0239797 10.3631 0.167019 11.0466 0.447952C11.6942 0.714113 12.4512 1.15118 13.359 1.67532ZM6.9195 5.36682L13.4869 9.15849L9.49285 16.0763C9.05773 16.83 8.93332 17.0227 8.77105 17.1621C8.60878 17.3015 8.39954 17.3955 7.58897 17.7122C6.30976 18.212 5.43853 18.55 4.76598 18.7072C4.11629 18.859 3.82149 18.7989 3.61242 18.6782C3.40336 18.5575 3.20394 18.3322 3.01055 17.6937C2.81035 17.0326 2.66751 16.1091 2.46073 14.7514C2.3297 13.8911 2.30647 13.6629 2.34608 13.4526C2.38569 13.2424 2.49037 13.0383 2.92549 12.2847L6.9195 5.36682ZM15.079 6.24559C14.9244 6.62177 14.6879 7.06408 14.36 7.64189L7.79633 3.85234C8.13278 3.27946 8.39761 2.85353 8.64608 2.53155C8.97795 2.1015 9.20149 1.9645 9.40918 1.90885C9.61686 1.8532 9.87895 1.86007 10.3814 2.06657C10.9073 2.28273 11.5625 2.65886 12.5365 3.2212C13.5105 3.78354 14.1639 4.1629 14.614 4.51028C15.0441 4.84215 15.1811 5.06569 15.2367 5.27338C15.2924 5.48106 15.2855 5.74316 15.079 6.24559Z"
+                                                fill="#667185"
+                                              />
+                                              <path
+                                                d="M11.7688 19.7917C11.7688 19.3084 12.1606 18.9167 12.6438 18.9167H19.6438C20.127 18.9167 20.5188 19.3084 20.5188 19.7917C20.5188 20.2749 20.127 20.6667 19.6438 20.6667H12.6438C12.1606 20.6667 11.7688 20.2749 11.7688 19.7917Z"
+                                                fill="#667185"
+                                              />
+                                            </g>
                                           </g>
-                                        </g>
-                                      </svg>
+                                        </svg>
 
-                                      <svg
-                                        width="32"
-                                        height="33"
-                                        viewBox="0 0 32 33"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                      >
-                                        <path
-                                          d="M16.0007 23.0893L20.4113 18.68L19.4673 17.736L16.6673 20.536V14.2693H15.334V20.536L12.534 17.736L11.59 18.68L16.0007 23.0893ZM6.66732 10.5773V24.68C6.66732 24.9191 6.74421 25.1156 6.89798 25.2693C7.05176 25.4231 7.24821 25.5 7.48732 25.5H24.514C24.7531 25.5 24.9495 25.4231 25.1033 25.2693C25.2571 25.1156 25.334 24.9191 25.334 24.68V10.5773H6.66732ZM7.69398 26.8333C7.09665 26.8333 6.55398 26.5893 6.06598 26.1013C5.57798 25.6124 5.33398 25.0702 5.33398 24.4747V10.1493C5.33398 9.88889 5.37532 9.64444 5.45798 9.416C5.54154 9.18667 5.66598 8.97556 5.83132 8.78267L7.90865 6.28667C8.10154 6.02711 8.34287 5.83111 8.63265 5.69867C8.92243 5.56622 9.23354 5.5 9.56598 5.5H22.3846C22.7171 5.5 23.0326 5.56622 23.3313 5.69867C23.6291 5.832 23.8744 6.028 24.0673 6.28667L26.17 8.83333C26.3353 9.02622 26.4598 9.24178 26.5433 9.48C26.626 9.71733 26.6673 9.96622 26.6673 10.2267V24.4733C26.6673 25.0689 26.4233 25.6111 25.9353 26.1C25.4464 26.588 24.9042 26.832 24.3087 26.832L7.69398 26.8333ZM7.17398 9.244H24.8006L23.0273 7.116C22.9411 7.02978 22.8424 6.96133 22.7313 6.91067C22.6202 6.85911 22.5047 6.83333 22.3846 6.83333H9.58998C9.47087 6.83333 9.35532 6.85911 9.24332 6.91067C9.1331 6.96133 9.03532 7.02978 8.94998 7.116L7.17398 9.244Z"
-                                          fill="#667185"
-                                        />
-                                      </svg>
+                                        <Link
+                                          download
+                                          to=""
+                                          onClick={handleDownloadFile}
+                                          style={{
+                                            display: "inline-flex",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                            verticalAlign: "middle",
+                                            padding: 0,
+                                            minWidth: "0px",
+                                          }}
+                                        >
+                                          <svg
+                                            width="24"
+                                            height="25"
+                                            viewBox="0 0 24 25"
+                                            fill="none"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                          >
+                                            <g id="download">
+                                              <path
+                                                id="Icon"
+                                                d="M18 13V16.3333C18 16.7754 17.8244 17.1993 17.5118 17.5118C17.1993 17.8244 16.7754 18 16.3333 18H4.66667C4.22464 18 3.80072 17.8244 3.48816 17.5118C3.17559 17.1993 3 16.7754 3 16.3333V13M6.33333 8.83333L10.5 13M10.5 13L14.6667 8.83333M10.5 13V3"
+                                                stroke="#667185"
+                                                stroke-width="1.66667"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                              />
+                                            </g>
+                                          </svg>
+                                        </Link>
 
-                                      <svg
-                                        onClick={() => setShowDelete(true)}
-                                        width="24"
-                                        height="25"
-                                        viewBox="0 0 24 25"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                      >
-                                        <path
-                                          fill-rule="evenodd"
-                                          clip-rule="evenodd"
-                                          d="M12 1.41602C9.37665 1.41602 7.25 3.54266 7.25 6.16602V6.41602H4C3.58579 6.41602 3.25 6.7518 3.25 7.16602C3.25 7.58023 3.58579 7.91602 4 7.91602H20C20.4142 7.91602 20.75 7.58023 20.75 7.16602C20.75 6.7518 20.4142 6.41602 20 6.41602H16.75V6.16602C16.75 3.54266 14.6234 1.41602 12 1.41602ZM12 2.91602C13.7949 2.91602 15.25 4.37109 15.25 6.16602V6.41602H8.75V6.16602C8.75 4.37109 10.2051 2.91602 12 2.91602Z"
-                                          fill="#667185"
-                                        />
-                                        <path
-                                          d="M5.74664 9.09508C5.70746 8.68272 5.34142 8.3802 4.92906 8.41938C4.5167 8.45856 4.21418 8.8246 4.25336 9.23696C4.34783 10.2312 4.51833 11.4563 4.73748 13.0311L5.01903 15.0542C5.28819 16.9889 5.44085 18.0861 5.77109 18.985C6.3857 20.6578 7.48205 21.9988 8.89206 22.5938C9.65773 22.9169 10.5335 22.9166 11.8373 22.9161H12.1627C13.4665 22.9166 14.3423 22.9169 15.1079 22.5938C16.5179 21.9988 17.6143 20.6578 18.2289 18.985C18.5592 18.0861 18.7118 16.9889 18.981 15.0541L19.2625 13.0311C19.4817 11.4563 19.6522 10.2312 19.7466 9.23696C19.7858 8.8246 19.4833 8.45856 19.0709 8.41938C18.6586 8.3802 18.2925 8.68272 18.2534 9.09507C18.1623 10.053 17.9965 11.246 17.7744 12.8421L17.512 14.7272C17.2215 16.8148 17.0884 17.7396 16.8209 18.4677C16.305 19.8718 15.4472 20.8226 14.5248 21.2119C14.0746 21.4018 13.5292 21.416 12 21.416C10.4708 21.416 9.92544 21.4018 9.47524 21.2119C8.55279 20.8226 7.69496 19.8718 7.17907 18.4677C6.91156 17.7396 6.77851 16.8148 6.48798 14.7272L6.22564 12.8421C6.00352 11.246 5.83766 10.053 5.74664 9.09508Z"
-                                          fill="#667185"
-                                        />
-                                        <path
-                                          d="M10.75 10.166C10.75 9.7518 10.4142 9.41602 10 9.41602C9.58579 9.41602 9.25 9.7518 9.25 10.166V18.166C9.25 18.5802 9.58579 18.916 10 18.916C10.4142 18.916 10.75 18.5802 10.75 18.166V10.166Z"
-                                          fill="#667185"
-                                        />
-                                        <path
-                                          d="M14.75 10.166C14.75 9.7518 14.4142 9.41602 14 9.41602C13.5858 9.41602 13.25 9.7518 13.25 10.166V18.166C13.25 18.5802 13.5858 18.916 14 18.916C14.4142 18.916 14.75 18.5802 14.75 18.166V10.166Z"
-                                          fill="#667185"
-                                        />
-                                      </svg>
-                                    </>
-                                  )}
-                                </Box>
-                              </TableCell>
+                                        <svg
+                                          onClick={() => setShowDelete(true)}
+                                          width="24"
+                                          height="25"
+                                          viewBox="0 0 24 25"
+                                          fill="none"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                          <path
+                                            fill-rule="evenodd"
+                                            clip-rule="evenodd"
+                                            d="M12 1.41602C9.37665 1.41602 7.25 3.54266 7.25 6.16602V6.41602H4C3.58579 6.41602 3.25 6.7518 3.25 7.16602C3.25 7.58023 3.58579 7.91602 4 7.91602H20C20.4142 7.91602 20.75 7.58023 20.75 7.16602C20.75 6.7518 20.4142 6.41602 20 6.41602H16.75V6.16602C16.75 3.54266 14.6234 1.41602 12 1.41602ZM12 2.91602C13.7949 2.91602 15.25 4.37109 15.25 6.16602V6.41602H8.75V6.16602C8.75 4.37109 10.2051 2.91602 12 2.91602Z"
+                                            fill="#667185"
+                                          />
+                                          <path
+                                            d="M5.74664 9.09508C5.70746 8.68272 5.34142 8.3802 4.92906 8.41938C4.5167 8.45856 4.21418 8.8246 4.25336 9.23696C4.34783 10.2312 4.51833 11.4563 4.73748 13.0311L5.01903 15.0542C5.28819 16.9889 5.44085 18.0861 5.77109 18.985C6.3857 20.6578 7.48205 21.9988 8.89206 22.5938C9.65773 22.9169 10.5335 22.9166 11.8373 22.9161H12.1627C13.4665 22.9166 14.3423 22.9169 15.1079 22.5938C16.5179 21.9988 17.6143 20.6578 18.2289 18.985C18.5592 18.0861 18.7118 16.9889 18.981 15.0541L19.2625 13.0311C19.4817 11.4563 19.6522 10.2312 19.7466 9.23696C19.7858 8.8246 19.4833 8.45856 19.0709 8.41938C18.6586 8.3802 18.2925 8.68272 18.2534 9.09507C18.1623 10.053 17.9965 11.246 17.7744 12.8421L17.512 14.7272C17.2215 16.8148 17.0884 17.7396 16.8209 18.4677C16.305 19.8718 15.4472 20.8226 14.5248 21.2119C14.0746 21.4018 13.5292 21.416 12 21.416C10.4708 21.416 9.92544 21.4018 9.47524 21.2119C8.55279 20.8226 7.69496 19.8718 7.17907 18.4677C6.91156 17.7396 6.77851 16.8148 6.48798 14.7272L6.22564 12.8421C6.00352 11.246 5.83766 10.053 5.74664 9.09508Z"
+                                            fill="#667185"
+                                          />
+                                          <path
+                                            d="M10.75 10.166C10.75 9.7518 10.4142 9.41602 10 9.41602C9.58579 9.41602 9.25 9.7518 9.25 10.166V18.166C9.25 18.5802 9.58579 18.916 10 18.916C10.4142 18.916 10.75 18.5802 10.75 18.166V10.166Z"
+                                            fill="#667185"
+                                          />
+                                          <path
+                                            d="M14.75 10.166C14.75 9.7518 14.4142 9.41602 14 9.41602C13.5858 9.41602 13.25 9.7518 13.25 10.166V18.166C13.25 18.5802 13.5858 18.916 14 18.916C14.4142 18.916 14.75 18.5802 14.75 18.166V10.166Z"
+                                            fill="#667185"
+                                          />
+                                        </svg>
+                                      </>
+                                    )}
+                                  </Box>
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })
+                      ) : (
+                        <TableRow>
+                          <TableCell
+                            colSpan={12}
+                            rowSpan={12}
+                            style={{ height: "200px" }}
+                            sx={{ height: 200 }}
+                          >
+                            <NoResultIllustration text="No file has been uploaded yet" />
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </>
+                  )}
+                </TableBody>
+              </Table>
 
-                              <TableCell align="right" width={100}>
-                                <svg
-                                  onClick={() => setShowOptions(!showOptions)}
-                                  width="20"
-                                  height="20"
-                                  viewBox="0 0 20 20"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <g id="Teeny icon / more-vertical">
-                                    <g id="Vector">
-                                      <path
-                                        d="M9.99969 4.00029C9.63149 4.00029 9.33301 3.7018 9.33301 3.33361C9.33301 2.96541 9.63149 2.66693 9.99969 2.66693C10.3679 2.66693 10.6664 2.96541 10.6664 3.33361C10.6664 3.7018 10.3679 4.00029 9.99969 4.00029Z"
-                                        stroke="#545C68"
-                                        stroke-width="1.33336"
-                                      />
-                                      <path
-                                        d="M9.99969 10.6671C9.63149 10.6671 9.33301 10.3686 9.33301 10.0004C9.33301 9.63221 9.63149 9.33373 9.99969 9.33373C10.3679 9.33373 10.6664 9.63221 10.6664 10.0004C10.6664 10.3686 10.3679 10.6671 9.99969 10.6671Z"
-                                        stroke="#545C68"
-                                        stroke-width="1.33336"
-                                      />
-                                      <path
-                                        d="M9.99969 17.3339C9.63149 17.3339 9.33301 17.0354 9.33301 16.6672C9.33301 16.299 9.63149 16.0005 9.99969 16.0005C10.3679 16.0005 10.6664 16.299 10.6664 16.6672C10.6664 17.0354 10.3679 17.3339 9.99969 17.3339Z"
-                                        stroke="#545C68"
-                                        stroke-width="1.33336"
-                                      />
-                                    </g>
-                                  </g>
-                                </svg>
-                              </TableCell>
-                            </TableRow>
-                          );
-                        })
-                    ) : (
-                      <TableRow>
-                        <TableCell
-                          colSpan={12}
-                          rowSpan={12}
-                          style={{ height: "200px" }}
-                          sx={{ height: 200 }}
-                        >
-                          <NoResultIllustration text="No file has been uploaded yet" />
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </>
-                )}
-              </TableBody>
-            </Table>
+              <TablePagination
+                rowsPerPageOptions={[10, 25, 75]}
+                count={data.length}
+                component="div"
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </TableContainer>
+          </Box>
+        ) : (
+          <>
+            {data.length > 0 ? (
+              <Box
+                marginTop={2}
+                sx={{
+                  display: "grid",
+                  marginBottom: 10,
+                  gap: 3,
+                  gridTemplateColumns: "repeat(3, 1fr)",
+                }}
+              >
+                {data.map((item: any) => (
+                  <Card
+                    key={item.id}
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      width: 320,
+                      margin: "auto",
+                      borderRadius: 1.5,
+                      justifyContent: "space-between",
+                      border: "1px #E7E9FB solid",
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        gap: 2,
+                        px: 2,
+                      }}
+                    >
+                      <div
+                        style={{
+                          height: "70px",
+                          width: "48px",
+                          margin: "16px",
+                        }}
+                      >
+                        <FileIcon
+                          extension={item.format}
+                          gradientOpacity={0}
+                          radius={2}
+                          labelUppercase
+                          color={
+                            item.format === ".png"
+                              ? "aliceblue"
+                              : item.format === ".jpg"
+                              ? "lightgreen"
+                              : item.format === ".jpeg"
+                              ? "lightgreen"
+                              : item.format === ".docx"
+                              ? "#2C5898"
+                              : item.format === ".xlsx"
+                              ? "#1A754C"
+                              : item.format === ".pptx"
+                              ? "#D14423"
+                              : item.format === ".pdf"
+                              ? "mistyrose"
+                              : ""
+                          }
+                          labelColor={
+                            item.format === ".docx"
+                              ? "#2C5898"
+                              : item.format === ".xlsx"
+                              ? "#1A754C"
+                              : item.format === ".pptx"
+                              ? "#D14423"
+                              : ""
+                          }
+                          type={
+                            item.format === ".docx"
+                              ? "document"
+                              : item.format === ".xlsx"
+                              ? "spreadsheet"
+                              : item.format === ".pptx"
+                              ? "presentation"
+                              : item.format === ".png"
+                              ? "image"
+                              : item.format === ".jpg"
+                              ? "image"
+                              : item.format === ".jpeg"
+                              ? "image"
+                              : "document"
+                          }
+                          glyphColor="rgba(255,255,255,0.4)"
+                        />
+                      </div>
 
-            <TablePagination
-              rowsPerPageOptions={[10, 25, 75]}
-              count={data.length}
-              component="div"
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          </TableContainer>
-        </Box>
+                      <Typography>{item.fileName.split(".")[0]}</Typography>
+
+                      <svg
+                        // onClick={() => setShowOptions(!showOptions)}
+                        width="20"
+                        height="20"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <g id="Teeny icon / more-vertical">
+                          <g id="Vector">
+                            <path
+                              d="M9.99969 4.00029C9.63149 4.00029 9.33301 3.7018 9.33301 3.33361C9.33301 2.96541 9.63149 2.66693 9.99969 2.66693C10.3679 2.66693 10.6664 2.96541 10.6664 3.33361C10.6664 3.7018 10.3679 4.00029 9.99969 4.00029Z"
+                              stroke="#545C68"
+                              stroke-width="1.33336"
+                            />
+                            <path
+                              d="M9.99969 10.6671C9.63149 10.6671 9.33301 10.3686 9.33301 10.0004C9.33301 9.63221 9.63149 9.33373 9.99969 9.33373C10.3679 9.33373 10.6664 9.63221 10.6664 10.0004C10.6664 10.3686 10.3679 10.6671 9.99969 10.6671Z"
+                              stroke="#545C68"
+                              stroke-width="1.33336"
+                            />
+                            <path
+                              d="M9.99969 17.3339C9.63149 17.3339 9.33301 17.0354 9.33301 16.6672C9.33301 16.299 9.63149 16.0005 9.99969 16.0005C10.3679 16.0005 10.6664 16.299 10.6664 16.6672C10.6664 17.0354 10.3679 17.3339 9.99969 17.3339Z"
+                              stroke="#545C68"
+                              stroke-width="1.33336"
+                            />
+                          </g>
+                        </g>
+                      </svg>
+                    </Box>
+                  </Card>
+                ))}
+              </Box>
+            ) : (
+              <div className="">
+                <NoResultIllustration text="No file has been uploaded yet" />
+              </div>
+            )}
+          </>
+        )}
       </Box>
 
       <>
@@ -767,7 +890,7 @@ export default function File() {
                 <input
                   style={{ display: "none" }}
                   type="file"
-                  accept="image/*, .png, .jpg, .jpeg, .pdf, .docx, .pptx, .xlsx "
+                  accept="image/*, .png, .jpg, .jpeg, .pdf, .docx, doc, .pptx, .xlsx"
                   id="fileInput"
                   onChange={handleChange}
                 />
@@ -851,7 +974,7 @@ export default function File() {
               <Buttons
                 title="Upload Files"
                 onClick={handleUpload}
-                loading={isLoading}
+                loading={upLoading}
               />
             </div>
           </Stack>

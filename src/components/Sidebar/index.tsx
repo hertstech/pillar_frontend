@@ -68,7 +68,6 @@ export default function Sidebar() {
         dispatch(resetClientState("tab1"));
         return navigate("/");
       });
-      setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
     }
