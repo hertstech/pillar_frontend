@@ -1,11 +1,11 @@
 import { Box, Button, MenuItem, Select, Stack } from "@mui/material";
-// import React, { useState } from "react";
+import { useState } from "react";
 import InputField from "../../../../components/InputField";
 import NoResultIllustration from "../../../../components/NoResult";
 import { Link } from "react-router-dom";
 
 export default function Report() {
-  const [search, setSearch] = React.useState("");
+  const [search, setSearch] = useState("");
   // const [isPinned, setIsPinned] = useState(false);
 
   return (
