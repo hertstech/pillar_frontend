@@ -1,10 +1,12 @@
-import { Box, Button } from "@mui/material";
-import React from "react";
-import InputField from "../../../components/InputField";
-import NoResultIllustration from "../../../components/NoResult";
+import { Box, Button, MenuItem, Select, Stack } from "@mui/material";
+import React, { useState } from "react";
+import InputField from "../../../../components/InputField";
+import NoResultIllustration from "../../../../components/NoResult";
+import { Link } from "react-router-dom";
 
 export default function Report() {
   const [search, setSearch] = React.useState("");
+  const [isPinned, setIsPinned] = useState(false);
 
   return (
     <Box>
@@ -50,10 +52,11 @@ export default function Report() {
           </Button>
         </div>
 
-        {/* <Stack
+        <Stack
           direction="row"
-          // justifyContent="space-between"
-          alignItems="baseline"
+          justifyContent="space-between"
+          alignItems="center"
+          gap={3}
         >
           <label
             htmlFor=""
@@ -70,7 +73,13 @@ export default function Report() {
             View
             <Select
               defaultValue={"Pinned"}
-              sx={{ minWidth: 120, color: "#2A2D32", fontWeight: 500 }}
+              sx={{
+                minWidth: 120,
+                color: "#2A2D32",
+                fontWeight: 500,
+                ".css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input":
+                  { px: 2, py: 1 },
+              }}
             >
               <MenuItem value="All Reports" onClick={() => setIsPinned(true)}>
                 All Reports
@@ -80,7 +89,60 @@ export default function Report() {
               </MenuItem>
             </Select>
           </label>
-        </Stack> */}
+
+          <Button
+            component="label"
+            variant="contained"
+            sx={{
+              background: "#099250",
+              "&:hover": { backgroundColor: "#099250" },
+              px: 2,
+              py: 1,
+              "&.Mui-disabled": {
+                opacity: 0.3,
+                color: "white",
+              },
+            }}
+            // onClick={() => setShowUpload(true)}
+            // disabled
+          >
+            Export Report
+          </Button>
+
+          <Link
+            to={"create-report"}
+            style={{
+              fontWeight: 500,
+              color: "#FFF",
+              textDecoration: "none",
+              borderRadius: 6,
+              display: "flex",
+              background: "#099250",
+              padding: 10,
+              gap: 5,
+              textTransform: "capitalize",
+              alignItems: "flex-start",
+              fontFamily: "fontbold",
+            }}
+          >
+            <svg
+              width="19"
+              height="19"
+              viewBox="0 0 19 19"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g id="Add">
+                <path
+                  id="Vector"
+                  d="M10.25 1.5C10.25 1.08579 9.91421 0.75 9.5 0.75C9.08579 0.75 8.75 1.08579 8.75 1.5L8.75 8.75H1.5C1.08579 8.75 0.75 9.08579 0.75 9.5C0.75 9.91421 1.08579 10.25 1.5 10.25H8.75V17.5C8.75 17.9142 9.08579 18.25 9.5 18.25C9.91421 18.25 10.25 17.9142 10.25 17.5V10.25H17.5C17.9142 10.25 18.25 9.91421 18.25 9.5C18.25 9.08579 17.9142 8.75 17.5 8.75H10.25L10.25 1.5Z"
+                  fill="#FAFEF5"
+                />
+              </g>
+            </svg>
+            New Report
+          </Link>
+        </Stack>
       </Box>
 
       <Box marginTop={2}>

@@ -368,33 +368,3 @@ export default function Singleuser() {
     </Stack>
   );
 }
-
-{
-  /* <Box>
-          <Typography
-            fontWeight={600}
-            fontSize={18}
-            color={"#101928"}
-            sx={{ py: 2 }}
-          >
-            Activity
-          </Typography>
-
-          {activity.map((item, index) => (
-            <Typography
-              key={index}
-              sx={{ display: "flex", flexDirection: "row", gap: 1, py: 1 }}
-            >
-              <span style={{ fontSize: 14, fontWeight: 400, color: "#667185" }}>
-                {item.time}
-              </span>
-              <span style={{ fontSize: 16, fontWeight: 500, color: "#667185" }}>
-                .
-              </span>
-              <span style={{ fontSize: 16, fontWeight: 500, color: "#101928" }}>
-                {item.purpose}
-              </span>
-            </Typography>
-          ))}
-        </Box> */
-}

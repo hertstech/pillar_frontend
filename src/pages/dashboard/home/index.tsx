@@ -1,11 +1,18 @@
 import dayjs, { Dayjs } from "dayjs";
-import { Box, Stack, Typography, Button } from "@mui/material";
+import {
+  Box,
+  Stack,
+  Typography,
+  Button,
+  Select,
+  MenuItem,
+} from "@mui/material";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import InputField from "../../../components/InputField";
 import Buttons from "../../../components/Button";
 import Styles from "./home.module.css";
@@ -147,6 +154,10 @@ export default function Home() {
     const dateString = dateObj ? dateObj.format() : "";
     setDateOfBirth(dateString);
   };
+
+  const handleNavigate = () => {
+    navigate("/dashboard/create-new");
+  };
   return (
     <Box>
       <Box
@@ -178,15 +189,35 @@ export default function Home() {
         </div>
 
         <Stack alignItems="start" px={2}>
-          <Link
-            to="/dashboard/create-new"
+          <Select defaultValue={"Add New Record"}>
+            <MenuItem
+              onClick={handleNavigate}
+              sx={{ "&:hover": { background: "#EDFCF2", color: "#099250" } }}
+              value="Add New Record"
+            >
+              Add New Record
+            </MenuItem>
+            <MenuItem
+              sx={{ "&:hover": { background: "#EDFCF2", color: "#099250" } }}
+              value="Add Birth Record"
+            >
+              Add Birth Record
+            </MenuItem>
+            <MenuItem
+              sx={{ "&:hover": { background: "#EDFCF2", color: "#099250" } }}
+              value="Add Death Record"
+            >
+              Add Death Record
+            </MenuItem>
+          </Select>
+          {/* <Link
             style={{
               fontWeight: 500,
-              color: "#099250",
+
               textDecoration: "none",
               borderRadius: 10,
               display: "flex",
-              background: "#EDFCF2",
+
               padding: 16,
               gap: 7,
               alignItems: "center",
@@ -214,8 +245,8 @@ export default function Home() {
                 fill="#099250"
               />
             </svg>
-            <span>Add New Record</span>
-          </Link>
+            <span></span>
+          </Link> */}
         </Stack>
       </Box>
 

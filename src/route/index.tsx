@@ -12,6 +12,7 @@ import Home from "../pages/dashboard/home";
 import Result from "../pages/dashboard/home/Result";
 import Monitor from "../pages/dashboard/monitor";
 import File from "../pages/dashboard/files";
+import CreateReport from "../pages/dashboard/monitor/Report/CreateReport";
 
 export const router = createBrowserRouter([
   // AUTH
@@ -64,7 +65,14 @@ export const router = createBrowserRouter([
         element: <Settings />,
       },
 
-      { path: "monitoring", element: <Monitor /> },
+      {
+        path: "monitoring",
+        element: <Outlet />,
+        children: [
+          { index: true, element: <Monitor /> },
+          { path: "create-report", element: <CreateReport /> },
+        ],
+      },
 
       { path: "files", element: <File /> },
 

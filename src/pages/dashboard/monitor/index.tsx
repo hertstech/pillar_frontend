@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import Report from "./Report";
 import Activity from "./Activity";
 import { axiosInstance } from "../../../Utils";
-import { SpinLoader } from "../../../components/NoResult";
 import { useSelector } from "react-redux";
 
 export default function Monitor() {
@@ -21,7 +20,10 @@ export default function Monitor() {
 
   const tabs = [
     { label: "Report", content: <Report /> },
-    { label: "Activity Log", content: <Activity data={data} /> },
+    {
+      label: "Activity Log",
+      content: <Activity data={data} isLoading={isLoading} />,
+    },
   ];
 
   // Filter tabs based on user's role
@@ -48,9 +50,9 @@ export default function Monitor() {
   useEffect(() => {
     getActivity();
 
-    setInterval(() => {
-      getActivity();
-    }, 60000);
+    // setInterval(() => {
+    //   // getActivity();
+    // }, 60000);
   }, []);
 
   return (
@@ -109,11 +111,7 @@ export default function Monitor() {
 
       {/* Display the content of the selected tab */}
       <Box sx={{ p: "20px", pb: 12, background: "#F9F9FB" }}>
-        {isLoading ? (
-          <SpinLoader />
-        ) : (
-          filteredTabs.find((tab) => tab.label === currentTab)?.content
-        )}
+        {filteredTabs.find((tab) => tab.label === currentTab)?.content}
       </Box>
     </Box>
   );

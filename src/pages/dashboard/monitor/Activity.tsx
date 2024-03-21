@@ -17,6 +17,7 @@ import {
 import React from "react";
 import moment from "moment";
 import InputField from "../../../components/InputField";
+import { TableLoader } from "../../../components/NoResult";
 
 const TABLE_HEAD = [
   { id: "user", label: "User", align: "left" },
@@ -28,7 +29,7 @@ const TABLE_HEAD = [
   { id: "location", label: "Location", align: "left" },
 ];
 
-export default function Activity({ data }: any) {
+export default function Activity({ data, isLoading }: any) {
   const [search, setSearch] = React.useState("");
 
   const [page, setPage] = React.useState(0);
@@ -177,82 +178,88 @@ export default function Activity({ data }: any) {
             </TableHead>
 
             <TableBody>
-              {data
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((item: any) => (
-                  <TableRow
-                    hover
-                    key={item.id}
-                    sx={{
-                      "&:nth-of-type(odd)": {
-                        background: "white",
-                      },
-                      "&:nth-of-type(even)": {
-                        background: "#FCFCFD",
-                      },
-                      position: "relative",
-                    }}
-                  >
-                    <TableCell>
-                      <Typography
+              {isLoading ? (
+                <TableLoader />
+              ) : (
+                <>
+                  {data
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((item: any) => (
+                      <TableRow
+                        hover
+                        key={item.id}
                         sx={{
-                          display: "flex",
-                          flexDirection: "column",
-                          textTransform: "capitalize",
+                          "&:nth-of-type(odd)": {
+                            background: "white",
+                          },
+                          "&:nth-of-type(even)": {
+                            background: "#FCFCFD",
+                          },
+                          position: "relative",
                         }}
-                        variant="subtitle2"
-                        noWrap
                       >
-                        {item.tenet_name}
-                        {/* <span>IT Support</span> */}
-                      </Typography>
-                    </TableCell>
+                        <TableCell>
+                          <Typography
+                            sx={{
+                              display: "flex",
+                              flexDirection: "column",
+                              textTransform: "capitalize",
+                            }}
+                            variant="subtitle2"
+                            noWrap
+                          >
+                            {item.tenet_name}
+                            {/* <span>IT Support</span> */}
+                          </Typography>
+                        </TableCell>
 
-                    <TableCell>
-                      <span>{item.activity_info}</span>
-                    </TableCell>
+                        <TableCell>
+                          <span>{item.activity_info}</span>
+                        </TableCell>
 
-                    <TableCell>
-                      <Chip
-                        sx={{
-                          background:
-                            item.status === "Successful"
-                              ? "#E7F6EC"
-                              : "#FBEAE9",
-                          textTransform: "capitalize",
-                          fontWeight: "fontBold",
-                          color:
-                            item.status === "Successful"
-                              ? "#099137"
-                              : "#D42620",
-                        }}
-                        label={item.status}
-                      />
-                    </TableCell>
+                        <TableCell>
+                          <Chip
+                            sx={{
+                              background:
+                                item.status === "Successful"
+                                  ? "#E7F6EC"
+                                  : "#FBEAE9",
+                              textTransform: "capitalize",
+                              fontWeight: "fontBold",
+                              color:
+                                item.status === "Successful"
+                                  ? "#099137"
+                                  : "#D42620",
+                            }}
+                            label={item.status}
+                          />
+                        </TableCell>
 
-                    <TableCell>
-                      <span>{item.ip_address}</span>
-                    </TableCell>
+                        <TableCell>
+                          <span>{item.ip_address}</span>
+                        </TableCell>
 
-                    <TableCell>
-                      <span>
-                        {moment(item.start_date).format("DD-MM-YY")}{" "}
-                        {moment(item.start_date).format("LT")}
-                      </span>
-                    </TableCell>
+                        <TableCell>
+                          <span>
+                            {moment(item.start_date).format("DD-MM-YY")}{" "}
+                            {moment(item.start_date).format("LT")}
+                          </span>
+                        </TableCell>
 
-                    <TableCell>
-                      <span>
-                        {moment(item.end_date).format("DD-MM-YY")}{" "}
-                        {moment(item.end_date).format("LT")}
-                      </span>
-                    </TableCell>
+                        <TableCell>
+                          <span>
+                            {moment(item.end_date).format("DD-MM-YY")}{" "}
+                            {moment(item.end_date).format("LT")}
+                          </span>
+                        </TableCell>
 
-                    <TableCell>
-                      <span>{item.location}</span>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                        <TableCell>
+                          <span>{item.location}</span>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                </>
+              )}
             </TableBody>
           </Table>
 
