@@ -1,12 +1,12 @@
 import { Box, Button, MenuItem, Select, Stack } from "@mui/material";
-import React, { useState } from "react";
+// import React, { useState } from "react";
 import InputField from "../../../../components/InputField";
 import NoResultIllustration from "../../../../components/NoResult";
 import { Link } from "react-router-dom";
 
 export default function Report() {
   const [search, setSearch] = React.useState("");
-  const [isPinned, setIsPinned] = useState(false);
+  // const [isPinned, setIsPinned] = useState(false);
 
   return (
     <Box>
@@ -81,10 +81,16 @@ export default function Report() {
                   { px: 2, py: 1 },
               }}
             >
-              <MenuItem value="All Reports" onClick={() => setIsPinned(true)}>
+              <MenuItem
+                value="All Reports"
+                // onClick={() => setIsPinned(true)}
+              >
                 All Reports
               </MenuItem>
-              <MenuItem value="Pinned" onClick={() => setIsPinned(false)}>
+              <MenuItem
+                value="Pinned"
+                // onClick={() => setIsPinned(false)}
+              >
                 Pinned
               </MenuItem>
             </Select>
