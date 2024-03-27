@@ -7,19 +7,6 @@
   color: #101928;
 }
 
-/* .list li:not(:last-child)::before,
-.list li:not(:last-child)::before {
-  content: "";
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 2px;
-  height: 100%;
-  background-color: #000;
-  transform: translateX(-50%);
-} */
-
 .list li {
   align-items: center;
   display: flex;
@@ -76,7 +63,6 @@
   outline: none;
   border: 1px solid #d0d5dd;
   padding: 12px;
-  /* height: 56px; */
   width: 100%;
   border-radius: 6px;
   margin-top: 5px;
@@ -93,11 +79,3 @@ textarea {
   grid-template-columns: repeat(4, 1fr);
   gap: 10px;
 }
-/* column-gap: 1.5;
-  row-gap: 1.5;
-
-/* @media (min-width: 768px) {
-  .display {
-    grid-template-columns: repeat(4, 1fr);
-  }
-} */

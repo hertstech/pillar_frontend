@@ -458,14 +458,6 @@ export default function CreateUser() {
                   <Buttons onClick={handleNext} title={"Next"} />
                 )}
 
-                {/* {activeStep > 0 && activeStep <= 1 && (
-                  <Buttons
-                    onClick={createUser}
-                    loading={isLoading}
-                    title={"Continue"}
-                  />
-                )} */}
-
                 {activeStep > 0 && activeStep <= 1 && (
                   <>
                     {result === "Verification Successful" ? (

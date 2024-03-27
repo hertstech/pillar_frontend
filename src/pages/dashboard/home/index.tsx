@@ -195,7 +195,7 @@ export default function Home() {
               sx={{ "&:hover": { background: "#EDFCF2", color: "#099250" } }}
               value="Add New Record"
             >
-              Add New Record
+              Add New Service User
             </MenuItem>
             <MenuItem
               sx={{ "&:hover": { background: "#EDFCF2", color: "#099250" } }}

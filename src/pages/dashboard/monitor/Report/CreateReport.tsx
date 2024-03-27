@@ -15,26 +15,27 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Buttons from "../../../../components/Button";
+import StepThree from "./StepThree";
+import { axiosInstance } from "../../../../Utils";
 
 interface FormData {
-  duration: string;
+  duration: string | null;
   reportType: string;
+  state: string[] | null;
   yAxis: {
-    state: string[] | null;
-    gender: string | null;
-    age: string[] | null;
-  };
-  xAxis: {
-    state: string[] | null;
-    gender: string | null;
-    age: string[] | null;
+    gender: string[] | null;
+    age: number[] | null;
   };
   from: string;
   to: string;
+  chartType: string | null;
+  static: boolean;
 }
 
 export default function CreateReport() {
   const navigate = useNavigate();
+
+  const [result, setResult] = useState({});
 
   const [activeStep, setActiveStep] = useState(0);
 
@@ -42,16 +43,23 @@ export default function CreateReport() {
     // STEP ONE
     duration: "",
     reportType: "",
-    yAxis: { state: [], gender: null, age: [] },
-    xAxis: { state: [], gender: null, age: [] },
+    state: [],
+    yAxis: { gender: [], age: [] },
+    chartType: "",
 
     // STEP TWO
     from: "",
     to: "",
+    static: false,
   });
 
-  const handleChange = (name: string, value: any, axis: "xAxis" | "yAxis") => {
-    if (name === "state" || name === "age" || name === "gender") {
+  const handleChange = (
+    name: string,
+    value: any,
+    axis: "yAxis",
+    chartType: string
+  ) => {
+    if (name === "age" || name === "gender") {
       const selectedState =
         typeof value === "string" ? value.split(",") : value;
 
@@ -61,12 +69,47 @@ export default function CreateReport() {
           ...prevData[axis],
           [name]: selectedState,
         },
+        chartType: chartType,
       }));
     } else {
       setFormData({
         ...formData,
         [name || ""]: value,
+        chartType: chartType,
       });
+    }
+  };
+
+  const handleBack = () => {
+    if (activeStep > 0) {
+      setActiveStep(activeStep - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (activeStep < tabs.length - 1) {
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    }
+    console.log(formData);
+  };
+
+  const handleGenerate = async () => {
+    try {
+      const res = await axiosInstance.post(
+        `/hcp/monitoring/demographics`,
+        formData
+      );
+      setResult(res.data);
+
+      console.log(res.data);
+      if (res.status === 200) {
+        if (activeStep < tabs.length - 1) {
+          setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        }
+      }
+      setFormData(formData);
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -118,24 +161,18 @@ export default function CreateReport() {
         />
       ),
     },
+    {
+      label: "Save Report",
+      content: (
+        <StepThree
+          formData={formData}
+          result={result}
+          setFormData={setFormData}
+          handleChange={handleChange}
+        />
+      ),
+    },
   ];
-
-  const handleBack = () => {
-    if (activeStep > 0) {
-      setActiveStep(activeStep - 1);
-    }
-  };
-
-  const handleNext = () => {
-    if (activeStep < tabs.length - 1) {
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    }
-    console.log(formData);
-  };
-
-  const handleGenerate = async () => {
-    console.log(formData);
-  };
 
   return (
     <Box>
@@ -212,7 +249,8 @@ export default function CreateReport() {
               </defs>
             </svg>
             <span>Go Back</span>
-          </div>
+          </div>{" "}
+          <Typography>Generate Report</Typography>
         </Stack>
       </Box>
 
@@ -317,7 +355,6 @@ export default function CreateReport() {
           <Grid item xs={12} md={8}>
             <Card
               sx={{
-                p: 3,
                 width: "80%",
                 margin: "auto",
                 border: "none",
@@ -331,7 +368,7 @@ export default function CreateReport() {
                   <Buttons onClick={handleNext} title={"Continue"} />
                 )}
 
-                {activeStep >= 1 && (
+                {activeStep >= 1 && activeStep <= 1 && (
                   <Button
                     fullWidth
                     size="large"
@@ -353,23 +390,17 @@ export default function CreateReport() {
                     variant="outlined"
                     onClick={handleBack}
                   >
-                    {"Back"}
+                    Back
                   </Button>
                 )}
 
-                {activeStep > 0 && (
+                {activeStep > 0 && activeStep <= 1 && (
                   <Buttons onClick={handleGenerate} title={"Generate Report"} />
                 )}
 
-                {/* {activeStep > 0 && activeStep <= 1 && (
-                  <>
-                    {result === "Verification Successful" ? (
-                      <Buttons onClick={() => {}} loading title={"Continue"} />
-                    ) : (
-                      <Buttons onClick={() => {}} title={"Verify"} />
-                    )}
-                  </>
-                )} */}
+                {activeStep >= 2 && (
+                  <Buttons onClick={handleGenerate} title={"Save Report"} />
+                )}
               </Stack>
             </Card>
           </Grid>

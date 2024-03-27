@@ -1,38 +1,52 @@
 import { Box, Button, Typography } from "@mui/material";
-import { Calendar } from "../../../../components/CalendarField";
 import InputField from "../../../../components/InputField";
 import { IoPieChart, IoBarChartOutline, IoStatsChart } from "react-icons/io5";
 import { FaChartBar, FaChartLine } from "react-icons/fa6";
 import { MdOutlineStackedBarChart } from "react-icons/md";
-// import { useEffect, useState } from "react";
-// import moment from "moment";
+import moment from "moment";
+
 const chartType = [
   {
     icon: <IoBarChartOutline size={32} color={"#667185"} />,
     title: "Bar Chart",
+    type: "BAR",
   },
   {
     icon: <FaChartBar size={32} color={"#667185"} />,
     title: "Inversed Bar Chart",
+    type: "INVERSED",
   },
   {
     icon: <IoStatsChart size={32} color={"#667185"} />,
     title: "Statistic Chart",
+    type: "STATISTIC",
   },
   {
     icon: <MdOutlineStackedBarChart size={32} color={"#667185"} />,
     title: "Stacked Chart",
+    type: "STACKED",
   },
   {
     icon: <IoPieChart size={32} color={"#667185"} />,
     title: "Pie Chart",
+    type: "PIE",
   },
   {
     icon: <FaChartLine size={32} color={"#667185"} />,
     title: "Line Chart",
+    type: "LINE",
   },
 ];
+
 export default function StepTwo({ formData, handleChange }: any) {
+  const timeFrame = [
+    "a day ago",
+    "7 days ago",
+    "3 months ago",
+    "6 months ago",
+    "a year ago",
+  ];
+
   return (
     <Box
       sx={{
@@ -57,36 +71,44 @@ export default function StepTwo({ formData, handleChange }: any) {
       </div>
 
       <div style={{ display: "flex", gap: "15px", flexDirection: "column" }}>
-        <Typography fontWeight={600} color={"#090816"} fontSize={18}>
-          Time Period
-        </Typography>
-
         <div style={{ display: "flex", gap: 10 }}>
-          <div style={{ width: "50%" }}>
-            <Calendar
-              label="From"
-              value={formData.from}
-              disableFuture={false}
-              onChange={(newValue: any) =>
-                handleChange("from", newValue.format())
-              }
-            />
-          </div>
+          <InputField
+            label="From"
+            name="startTime"
+            type="text"
+            disabled
+            value={
+              formData.duration === "a day ago"
+                ? moment().subtract(1, "days").format("DD/MM/YYYY")
+                : formData.duration === "7 days ago"
+                ? moment().subtract(7, "days").format("DD/MM/YYYY")
+                : formData.duration === "3 months ago"
+                ? moment().subtract(3, "months").format("DD/MM/YYYY")
+                : formData.duration === "6 months ago"
+                ? moment().subtract(6, "months").format("DD/MM/YYYY")
+                : formData.duration === "a year ago"
+                ? moment().subtract(1, "years").format("DD/MM/YYYY")
+                : moment(formData.from).format("DD/MM/YYYY")
+            }
+            onChange={() => {}}
+          />
 
-          <div style={{ width: "50%" }}>
-            <Calendar
-              label="TO free"
-              value={formData.to}
-              disableFuture={false}
-              onChange={(newValue: any) =>
-                handleChange("to", newValue.format())
-              }
-            />
-          </div>
+          <InputField
+            label="To"
+            name="endTime"
+            type="text"
+            disabled
+            value={
+              timeFrame.includes(formData.duration)
+                ? moment(new Date()).format("DD/MM/YYYY")
+                : moment(formData.to).format("DD/MM/YYYY")
+            }
+            onChange={() => {}}
+          />
         </div>
 
-        <div className="">
-          <Typography>Chart Type</Typography>
+        <div>
+          <Typography mb={2}>Chart Type</Typography>
 
           <Box
             sx={{
@@ -98,6 +120,7 @@ export default function StepTwo({ formData, handleChange }: any) {
           >
             {chartType.map((chart) => (
               <Button
+                key={chart.type}
                 sx={{
                   display: "flex",
                   alignItems: "center",
@@ -105,12 +128,18 @@ export default function StepTwo({ formData, handleChange }: any) {
                   textAlign: "center",
                   Padding: 3,
                   height: "150px",
-                  width: "190px",
+                  width: "150px",
                   flexDirection: "column",
                   textTransform: "none",
                   "&:hover": { backgroundColor: "#F6FEF9" },
                   border: "1px #E7E9FB solid",
+                  backgroundColor:
+                    formData.chartType === chart.type ? "#F6FEF9" : "inherit",
+                  margin: "auto",
                 }}
+                onClick={() =>
+                  handleChange("chartType", chart.type, "yAxis", chart.type)
+                }
               >
                 <div
                   style={{
@@ -129,10 +158,19 @@ export default function StepTwo({ formData, handleChange }: any) {
           </Box>
         </div>
 
-        <div className="">
+        <div>
           <Typography fontWeight={600} color={"#090816"} fontSize={18}>
             Selected Axis
           </Typography>
+
+          <InputField
+            type="text"
+            label="Field 1"
+            name=""
+            value={formData.state}
+            onChange={() => {}}
+            disabled
+          />
 
           {Object.entries(formData.yAxis).map(([key, value]) => (
             <div key={key}>
@@ -140,7 +178,7 @@ export default function StepTwo({ formData, handleChange }: any) {
                 (Array.isArray(value) ? value.length > 0 : true) && (
                   <InputField
                     type="text"
-                    label="Y-Axis"
+                    label="Field 2"
                     name=""
                     // @ts-ignore
                     value={
@@ -156,38 +194,6 @@ export default function StepTwo({ formData, handleChange }: any) {
                 )}
             </div>
           ))}
-
-          {Object.entries(formData.xAxis).map(([key, value]) => (
-            <div key={key}>
-              {value !== null &&
-                (Array.isArray(value) ? value.length > 0 : true) && (
-                  <InputField
-                    type="text"
-                    label="X-Axis"
-                    name=""
-                    // @ts-ignore
-                    value={
-                      value !== undefined
-                        ? Array.isArray(value)
-                          ? value.join(", ")
-                          : value
-                        : ""
-                    }
-                    onChange={() => {}}
-                    disabled
-                  />
-                )}
-            </div>
-          ))}
-
-          {/* <InputField
-            type="text"
-            label="X-Axis"
-            name=""
-            value={formData.xAxis}
-            onChange={() => {}}
-            disabled
-          /> */}
         </div>
       </div>
     </Box>
