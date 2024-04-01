@@ -46,6 +46,8 @@ interface FormData {
 export default function CreateReport() {
   const navigate = useNavigate();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const [result, setResult] = useState({});
 
   const [activeStep, setActiveStep] = useState(0);
@@ -153,15 +155,15 @@ export default function CreateReport() {
   };
 
   const handleSubmitDemographicChart = async () => {
-    console.log(formData);
+    setIsLoading(true);
     try {
       const res = await axiosInstance.post(
         `/hcp/monitoring/demographics`,
         formData
       );
       setResult(res.data);
+      setIsLoading(false);
 
-      console.log(res.data);
       if (res.status === 200) {
         if (activeStep < tabs.length - 1) {
           setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -170,19 +172,20 @@ export default function CreateReport() {
       setFormData(formData);
     } catch (error) {
       console.error(error);
+      setIsLoading(false);
     }
   };
 
   const handleSubmitHealthInfoChart = async () => {
-    console.log(formData);
+    setIsLoading(true);
     try {
       const res = await axiosInstance.post(
         `/hcp/monitoring/healthinformation`,
         formData
       );
       setResult(res.data);
+      setIsLoading(false);
 
-      console.log(res.data);
       if (res.status === 200) {
         if (activeStep < tabs.length - 1) {
           setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -191,19 +194,20 @@ export default function CreateReport() {
       setFormData(formData);
     } catch (error) {
       console.error(error);
+      setIsLoading(false);
     }
   };
 
   const handleSubmitMedicationsChart = async () => {
-    console.log(formData);
+    setIsLoading(true);
     try {
       const res = await axiosInstance.post(
         `/hcp/monitoring/medicationinformation`,
         formData
       );
       setResult(res.data);
+      setIsLoading(false);
 
-      console.log(res.data);
       if (res.status === 200) {
         if (activeStep < tabs.length - 1) {
           setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -212,6 +216,7 @@ export default function CreateReport() {
       setFormData(formData);
     } catch (error) {
       console.error(error);
+      setIsLoading(false);
     }
   };
 
@@ -500,6 +505,7 @@ export default function CreateReport() {
                   <>
                     {formData.reportType === "Demographics" && (
                       <Buttons
+                        loading={isLoading}
                         onClick={handleSubmitDemographicChart}
                         title={"Generate Report"}
                       />
@@ -507,6 +513,7 @@ export default function CreateReport() {
 
                     {formData.reportType === "Health Information" && (
                       <Buttons
+                        loading={isLoading}
                         onClick={handleSubmitHealthInfoChart}
                         title={"Generate Report"}
                       />
@@ -514,6 +521,7 @@ export default function CreateReport() {
 
                     {formData.reportType === "Medication" && (
                       <Buttons
+                        loading={isLoading}
                         onClick={handleSubmitMedicationsChart}
                         title={"Generate Report"}
                       />

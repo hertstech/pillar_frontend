@@ -22,7 +22,7 @@ import {
 
 const states = ["Abuja", "Anambra", "Kano", "Lagos"];
 
-const genderType = ["Male", "Female"];
+const genderType = ["male", "female"];
 
 const ageRange = [
   { value: [0, 12], label: "0-12" },

@@ -158,7 +158,7 @@ export default function StepThree({ formData, result, handleChange }: any) {
       </div>
 
       <div style={{ display: "flex", gap: 20, flexDirection: "column" }}>
-        <div className="">
+        {/* <div className="">
           <Typography>Report CSV file</Typography>
           <Box
             sx={{
@@ -179,7 +179,7 @@ export default function StepThree({ formData, result, handleChange }: any) {
             </div>
             <span style={{ display: "flex", color: "#099250" }}>Open file</span>
           </Box>
-        </div>
+        </div> */}
 
         <div style={{ height: 400, backgroundColor: "#FFF" }}>
           {result.chartType === "BAR" ? (
