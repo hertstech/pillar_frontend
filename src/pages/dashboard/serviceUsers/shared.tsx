@@ -216,3 +216,13 @@ export const relations = [
 ];
 
 export const titles = ["Mr", "Mrs", "Miss", "Ms", "Chief", "Dr", "Prof"];
+
+export const immunizationTypes = [
+  "Lonza",
+  "Pfizer",
+  "Sanofi",
+  "Moderna",
+  "Sinovac",
+];
+
+export const genoTypes = ["AA", "AS", "SS", "Other"];

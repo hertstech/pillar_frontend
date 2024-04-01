@@ -28,7 +28,11 @@ ChartJS.register(
 interface Dataset {
   label: string;
   data: number[];
+  barPercentage: number;
+  barThickness: number;
+  maxBarThickness: number;
   backgroundColor: string;
+  borderRadius: number;
 }
 
 const ageRange = [
@@ -40,23 +44,52 @@ const ageRange = [
 ];
 
 const colors = [
-  "rgba(53, 162, 235, 0.5)",
-  "rgba(255, 99, 132, 0.5)",
-  "rgba(255, 206, 86, 0.5)",
+  "#F44336",
+  "#546E7A",
+  "#E91E63",
+  "#9C27B0",
+  "#6172F3",
+  "#FF9C66",
+  "#7E36AF",
   "#AAF0C4",
-  "rgba(153, 102, 255, 0.5)",
+  "#D9534F",
 ];
 
-export default function StepThree({ result, handleChange }: any) {
+export default function StepThree({ formData, result, handleChange }: any) {
   const options = {
+    indexAxis: result.chartType === "INVERSED" ? "y" : "x",
     maintainAspectRatio: false,
     responsive: true,
+    // layout: { padding: 10 },
     plugins: {
       legend: {
-        // labels: { boxWidth: 10, boxHeight: 10, usePointStyle: true },
+        labels: {
+          usePointStyle: true,
+          padding: 10,
+        },
         position: "top" as const,
-        // align: "end" as const,
-        // pointStyle: "circle",
+        align: "center" as const,
+        pointStyle: "circle",
+        title: {
+          display: true,
+          text: "Custom Chart Title",
+          padding: {
+            top: 10,
+          },
+        },
+      },
+    },
+    element: {
+      bar: {
+        borderRadius: 12,
+      },
+    },
+    scales: {
+      x: {
+        stacked: result.chartType === "STACKED" ? true : false,
+      },
+      y: {
+        stacked: result.chartType === "STACKED" ? true : false,
       },
     },
   };
@@ -85,7 +118,11 @@ export default function StepThree({ result, handleChange }: any) {
           datasets.push({
             label: label,
             data: [data[state][key]],
-            backgroundColor: colors[colorIndex], // Adjust color as needed
+            backgroundColor: colors[colorIndex],
+            barPercentage: 1.5,
+            barThickness: 30,
+            maxBarThickness: 20,
+            borderRadius: 5,
           });
         }
       }
@@ -144,15 +181,21 @@ export default function StepThree({ result, handleChange }: any) {
           </Box>
         </div>
 
-        <div className="">
-          {/* INVERSED, STATISTIC STACKED */}
+        <div style={{ height: 400, backgroundColor: "#FFF" }}>
           {result.chartType === "BAR" ? (
+            // @ts-ignore
             <Bar options={options} data={resData} />
           ) : result.chartType === "PIE" ? (
+            // @ts-ignore
             <Pie options={options} data={resData} />
           ) : result.chartType === "LINE" ? (
+            // @ts-ignore
             <Line options={options} data={resData} />
           ) : result.chartType === "INVERSED" ? (
+            // @ts-ignore
+            <Bar options={options} data={resData} />
+          ) : result.chartType === "STACKED" ? (
+            // @ts-ignore
             <Bar options={options} data={resData} />
           ) : (
             ""
@@ -163,8 +206,8 @@ export default function StepThree({ result, handleChange }: any) {
           type="text"
           label="Title"
           name="chartTitle"
-          value=""
-          onChange={() => {}}
+          value={formData.chartTitle}
+          onChange={(e: any) => handleChange("chartTitle", e.target.value)}
         />
 
         <label htmlFor="additional notes">
@@ -174,7 +217,7 @@ export default function StepThree({ result, handleChange }: any) {
             name={`description`}
             rows={5}
             cols={50}
-            value={""}
+            value={formData.description}
             onChange={(e) => handleChange("description", e.target.value)}
           ></textarea>
         </label>

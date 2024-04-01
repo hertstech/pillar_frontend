@@ -20,16 +20,27 @@ import { axiosInstance } from "../../../../Utils";
 
 interface FormData {
   duration: string | null;
-  reportType: string;
+  reportType: string | null;
   state: string[] | null;
   yAxis: {
     gender: string[] | null;
     age: number[] | null;
   };
-  from: string;
-  to: string;
+  diagnosis: {
+    primaryDiagnosis: string | null;
+    secondaryDiagnosis: string | null;
+    treatmentStatus: string[] | null;
+  };
+  bloodType: string[];
+  genoType: string[];
+  immunizationtype: string[];
+  medicationName: string[];
+  from: string | null;
+  to: string | null;
   chartType: string | null;
   static: boolean;
+  // description: string | null;
+  // chartTitle: string | null;
 }
 
 export default function CreateReport() {
@@ -41,25 +52,73 @@ export default function CreateReport() {
 
   const [formData, setFormData] = useState<FormData>({
     // STEP ONE
-    duration: "",
-    reportType: "",
+    duration: null,
+    reportType: null,
     state: [],
     yAxis: { gender: [], age: [] },
-    chartType: "",
+    chartType: null,
+    diagnosis: {
+      primaryDiagnosis: null,
+      secondaryDiagnosis: null,
+      treatmentStatus: [],
+    },
+    bloodType: [],
+    genoType: [],
+    immunizationtype: [],
+    medicationName: [],
 
     // STEP TWO
-    from: "",
-    to: "",
+    from: null,
+    to: null,
     static: false,
+    // description: null,
+    // chartTitle: null,
   });
+
+  // const handleChange = (
+  //   name: string,
+  //   value: any,
+  //   axis: "yAxis",
+  //   chartType: string
+  // ) => {
+  //   if (name === "age" || name === "gender") {
+  //     const selectedState =
+  //       typeof value === "string" ? value.split(",") : value;
+
+  //     setFormData((prevData) => ({
+  //       ...prevData,
+  //       [axis]: {
+  //         ...prevData[axis],
+  //         [name]: selectedState,
+  //       },
+  //       chartType: chartType,
+  //     }));
+  //   } else {
+  //     setFormData({
+  //       ...formData,
+  //       [name || ""]: value,
+  //       chartType: chartType,
+  //     });
+  //   }
+  // };
 
   const handleChange = (
     name: string,
     value: any,
     axis: "yAxis",
-    chartType: string
+    chartType: string,
+    healthInfo?: boolean
   ) => {
-    if (name === "age" || name === "gender") {
+    if (healthInfo) {
+      setFormData((prevData) => ({
+        ...prevData,
+        diagnosis: {
+          ...prevData.diagnosis,
+          [name]: value === "" ? null : value,
+        },
+        chartType: chartType,
+      }));
+    } else if (name === "age" || name === "gender") {
       const selectedState =
         typeof value === "string" ? value.split(",") : value;
 
@@ -72,11 +131,11 @@ export default function CreateReport() {
         chartType: chartType,
       }));
     } else {
-      setFormData({
-        ...formData,
-        [name || ""]: value,
+      setFormData((prevData) => ({
+        ...prevData,
+        [name || ""]: value === "" ? null : value,
         chartType: chartType,
-      });
+      }));
     }
   };
 
@@ -93,10 +152,53 @@ export default function CreateReport() {
     console.log(formData);
   };
 
-  const handleGenerate = async () => {
+  const handleSubmitDemographicChart = async () => {
+    console.log(formData);
     try {
       const res = await axiosInstance.post(
         `/hcp/monitoring/demographics`,
+        formData
+      );
+      setResult(res.data);
+
+      console.log(res.data);
+      if (res.status === 200) {
+        if (activeStep < tabs.length - 1) {
+          setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        }
+      }
+      setFormData(formData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleSubmitHealthInfoChart = async () => {
+    console.log(formData);
+    try {
+      const res = await axiosInstance.post(
+        `/hcp/monitoring/healthinformation`,
+        formData
+      );
+      setResult(res.data);
+
+      console.log(res.data);
+      if (res.status === 200) {
+        if (activeStep < tabs.length - 1) {
+          setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        }
+      }
+      setFormData(formData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleSubmitMedicationsChart = async () => {
+    console.log(formData);
+    try {
+      const res = await axiosInstance.post(
+        `/hcp/monitoring/medicationinformation`,
         formData
       );
       setResult(res.data);
@@ -395,11 +497,32 @@ export default function CreateReport() {
                 )}
 
                 {activeStep > 0 && activeStep <= 1 && (
-                  <Buttons onClick={handleGenerate} title={"Generate Report"} />
+                  <>
+                    {formData.reportType === "Demographics" && (
+                      <Buttons
+                        onClick={handleSubmitDemographicChart}
+                        title={"Generate Report"}
+                      />
+                    )}
+
+                    {formData.reportType === "Health Information" && (
+                      <Buttons
+                        onClick={handleSubmitHealthInfoChart}
+                        title={"Generate Report"}
+                      />
+                    )}
+
+                    {formData.reportType === "Medication" && (
+                      <Buttons
+                        onClick={handleSubmitMedicationsChart}
+                        title={"Generate Report"}
+                      />
+                    )}
+                  </>
                 )}
 
                 {activeStep >= 2 && (
-                  <Buttons onClick={handleGenerate} title={"Save Report"} />
+                  <Buttons onClick={() => {}} title={"Save Report"} />
                 )}
               </Stack>
             </Card>
