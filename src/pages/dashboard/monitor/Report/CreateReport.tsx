@@ -9,6 +9,7 @@ import {
   Link,
   Stack,
   Step,
+  // StepIcon,
   StepLabel,
   Stepper,
   Typography,
@@ -76,6 +77,7 @@ export default function CreateReport() {
     // description: null,
     // chartTitle: null,
   });
+
 
   // const handleChange = (
   //   name: string,
@@ -169,7 +171,7 @@ export default function CreateReport() {
           setActiveStep((prevActiveStep) => prevActiveStep + 1);
         }
       }
-      setFormData(formData);
+      // setFormData(formData);
     } catch (error) {
       console.error(error);
       setIsLoading(false);
@@ -191,7 +193,7 @@ export default function CreateReport() {
           setActiveStep((prevActiveStep) => prevActiveStep + 1);
         }
       }
-      setFormData(formData);
+      // setFormData(formData);
     } catch (error) {
       console.error(error);
       setIsLoading(false);
@@ -213,7 +215,7 @@ export default function CreateReport() {
           setActiveStep((prevActiveStep) => prevActiveStep + 1);
         }
       }
-      setFormData(formData);
+      // setFormData(formData);
     } catch (error) {
       console.error(error);
       setIsLoading(false);
@@ -397,7 +399,15 @@ export default function CreateReport() {
               >
                 {tabs.map((item, index) => (
                   <Step sx={{ marginTop: 2 }} key={item.label}>
-                    <StepLabel>
+                    <StepLabel
+                    // StepIconComponent={() => (
+                    //   <StepIcon
+                    //     active={activeStep === index}
+                    //     completed
+                    //     icon={index + 1}
+                    //   />
+                    // )}
+                    >
                       <Typography
                         sx={{
                           fontWeight: activeStep === index ? 600 : 400,
@@ -475,7 +485,7 @@ export default function CreateReport() {
                   <Buttons onClick={handleNext} title={"Continue"} />
                 )}
 
-                {activeStep >= 1 && activeStep <= 1 && (
+                {activeStep >= 1 && (
                   <Button
                     fullWidth
                     size="large"

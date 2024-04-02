@@ -35,14 +35,6 @@ interface Dataset {
   borderRadius: number;
 }
 
-const ageRange = [
-  { value: [0, 12], label: "0-12" },
-  { value: [13, 18], label: "13-18" },
-  { value: [19, 29], label: "19-29" },
-  { value: [30, 60], label: "30-60" },
-  { value: [60, 110], label: "60 and Above" },
-];
-
 const colors = [
   "#F44336",
   "#546E7A",
@@ -60,7 +52,6 @@ export default function StepThree({ formData, result, handleChange }: any) {
     indexAxis: result.chartType === "INVERSED" ? "y" : "x",
     maintainAspectRatio: false,
     responsive: true,
-    // layout: { padding: 10 },
     plugins: {
       legend: {
         labels: {
@@ -90,6 +81,10 @@ export default function StepThree({ formData, result, handleChange }: any) {
       },
       y: {
         stacked: result.chartType === "STACKED" ? true : false,
+        ticks: {
+          stepSize: 1,
+        },
+        beginAtZero: true,
       },
     },
   };
@@ -100,31 +95,98 @@ export default function StepThree({ formData, result, handleChange }: any) {
 
   const datasets: Dataset[] = [];
 
-  states.forEach((state, index) => {
+  // states.forEach((state) => {
+  //   const stateData = data[state]; // Get the data for the current state
+  //   if (stateData) {
+  //     Object.keys(stateData).forEach((key, index) => {
+  //       const label = ageRange.find((range) => range.label === key)
+  //         ? key
+  //         : data[state][key]
+  //         ? key
+  //         : null;
+  //       console.log(label);
+  //       if (label) {
+  //         const value = stateData[key];
+
+  //         console.log(value);
+  //         const colorIndex = datasets.length % colors.length; // Ensure each dataset gets a different color
+  //         let existingDataset = datasets.find(
+  //           (dataset) => dataset.label === label
+  //         );
+
+  //         console.log(existingDataset);
+  //         if (!existingDataset) {
+  //           // If dataset doesn't exist for this label, create a new one
+  //           existingDataset = {
+  //             label: label,
+  //             data: [data[state][key]],
+  //             backgroundColor: colors[colorIndex],
+  //             barPercentage: 1.5,
+  //             barThickness: 30,
+  //             maxBarThickness: 20,
+  //             borderRadius: 5,
+  //           };
+  //           datasets.push(existingDataset);
+  //         }
+  //         // Fill in empty values for previous states
+  //         while (existingDataset.data.length < index) {
+  //           existingDataset.data.push(0);
+  //         }
+  //         // Add the current value to the dataset
+  //         existingDataset.data.push(value);
+  //       }
+  //     });
+  //   }
+  // });
+
+  // states.forEach((state, index) => {
+  //   let colorIndex = index % colors.length;
+  //   Object.keys(data[state]).forEach((key) => {
+  //     const label = ageRange.find((range) => range.label === key)
+  //       ? key
+  //       : data[state][key]
+  //       ? key
+  //       : null;
+  //     if (label) {
+  //       const existingDataset = datasets.find(
+  //         (dataset) => dataset.label === label
+  //       );
+  //       if (existingDataset) {
+  //         existingDataset.data.push(data[state][key]);
+  //       } else {
+  //         datasets.push({
+  //           label: label,
+  //           data: [data[state][key]],
+  //           backgroundColor: colors[colorIndex],
+  //           barPercentage: 1.5,
+  //           barThickness: 30,
+  //           maxBarThickness: 20,
+  //           borderRadius: 5,
+  //         });
+  //       }
+  //     }
+  //     colorIndex = (colorIndex + 1) % colors.length;
+  //   });
+  // });
+
+  Object.keys(data).forEach((state, index) => {
     let colorIndex = index % colors.length;
-    Object.keys(data[state]).forEach((key) => {
-      const label = ageRange.find((range) => range.label === key)
-        ? key
-        : data[state][key]
-        ? key
-        : null;
-      if (label) {
-        const existingDataset = datasets.find(
-          (dataset) => dataset.label === label
-        );
-        if (existingDataset) {
-          existingDataset.data.push(data[state][key]);
-        } else {
-          datasets.push({
-            label: label,
-            data: [data[state][key]],
-            backgroundColor: colors[colorIndex],
-            barPercentage: 1.5,
-            barThickness: 30,
-            maxBarThickness: 20,
-            borderRadius: 5,
-          });
-        }
+    Object.entries(data[state]).forEach(([label, value]: any) => {
+      const existingDataset = datasets.find(
+        (dataset) => dataset.label === label
+      );
+      if (existingDataset) {
+        existingDataset.data.push(value);
+      } else {
+        datasets.push({
+          label: label,
+          data: [value],
+          backgroundColor: colors[colorIndex],
+          barPercentage: 1.5,
+          barThickness: 30,
+          maxBarThickness: 20,
+          borderRadius: 5,
+        });
       }
       colorIndex = (colorIndex + 1) % colors.length;
     });
@@ -134,6 +196,20 @@ export default function StepThree({ formData, result, handleChange }: any) {
     labels: states,
     datasets: datasets,
   };
+
+  // const statesKeys: { [key: string]: string[] } = {};
+
+  // // Iterate over each state to get its keys
+  // Object.keys(data).forEach((state) => {
+  //   statesKeys[state] = Object.keys(result[state]);
+  // });
+
+  // console.log(dataz);
+
+  // // const chartData = {
+  // //   labels: dataz.map((x: any) => x[0]),
+  // //   datasets: [{ label: statesKeys,data: }],
+  // // };
   return (
     <Box
       sx={{

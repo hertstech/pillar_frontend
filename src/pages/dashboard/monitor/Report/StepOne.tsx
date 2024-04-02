@@ -185,9 +185,22 @@ export default function StepOne({ formData, handleChange }: any) {
                   value={formData.state || []}
                   renderValue={(selected) => selected.join(", ")}
                 >
-                  <MenuItem value=""></MenuItem>
+                  {/* <MenuItem disableGutters onClick={() => [states.length]}>
+                    Select All
+                  </MenuItem> */}
+                    <Checkbox
+                      checked={formData.state.length === states.length}
+                      indeterminate={
+                        formData.state.length > 0 &&
+                        formData.state.length < states.length
+                      }
+                      onChange={(e) => {
+                        const allStates = e.target.checked ? states : [];
+                        handleChange("state", allStates);
+                      }}
+                    />
                   {states?.map((state) => (
-                    <MenuItem key={state} value={state}>
+                    <MenuItem disableGutters selected key={state} value={state}>
                       <Checkbox
                         sx={{
                           "&.Mui-checked": {
@@ -236,7 +249,12 @@ export default function StepOne({ formData, handleChange }: any) {
                       renderValue={(selected) => selected.join(", ")}
                     >
                       {genderType.map((item) => (
-                        <MenuItem key={item} value={item}>
+                        <MenuItem
+                          disableGutters
+                          selected
+                          key={item}
+                          value={item}
+                        >
                           <Checkbox
                             sx={{
                               "&.Mui-checked": {
@@ -268,6 +286,8 @@ export default function StepOne({ formData, handleChange }: any) {
                       {ageRange.map((age) => (
                         // @ts-ignore
                         <MenuItem
+                          disableGutters
+                          selected
                           key={age.label}
                           value={age.value}
                           // disabled={formData.yAxis.age.length > 2 && !formData.yAxis.age.includes(age.value)}
@@ -374,7 +394,12 @@ export default function StepOne({ formData, handleChange }: any) {
                         renderValue={(selected) => selected.join(", ")}
                       >
                         {bloodTypes.map((item, index) => (
-                          <MenuItem key={index} value={item.value}>
+                          <MenuItem
+                            disableGutters
+                            selected
+                            key={index}
+                            value={item.value}
+                          >
                             <Checkbox
                               sx={{
                                 "&.Mui-checked": {
@@ -406,7 +431,12 @@ export default function StepOne({ formData, handleChange }: any) {
                         renderValue={(selected) => selected.join(", ")}
                       >
                         {immunizationTypes.map((immunization) => (
-                          <MenuItem key={immunization} value={immunization}>
+                          <MenuItem
+                            disableGutters
+                            selected
+                            key={immunization}
+                            value={immunization}
+                          >
                             <Checkbox
                               sx={{
                                 "&.Mui-checked": {
@@ -440,7 +470,12 @@ export default function StepOne({ formData, handleChange }: any) {
                         renderValue={(selected) => selected.join(", ")}
                       >
                         {genoTypes.map((genotype) => (
-                          <MenuItem key={genotype} value={genotype}>
+                          <MenuItem
+                            disableGutters
+                            selected
+                            key={genotype}
+                            value={genotype}
+                          >
                             <Checkbox
                               sx={{
                                 "&.Mui-checked": {
@@ -483,7 +518,12 @@ export default function StepOne({ formData, handleChange }: any) {
                       renderValue={(selected) => selected.join(", ")}
                     >
                       {treatmentStatus.map((item) => (
-                        <MenuItem key={item} value={item}>
+                        <MenuItem
+                          disableGutters
+                          selected
+                          key={item}
+                          value={item}
+                        >
                           <Checkbox
                             sx={{
                               "&.Mui-checked": {
@@ -518,6 +558,8 @@ export default function StepOne({ formData, handleChange }: any) {
               >
                 {medName.map((item, index) => (
                   <MenuItem
+                    disableGutters
+                    selected
                     key={index}
                     value={item.value}
                     disabled={
