@@ -1,6 +1,7 @@
 import {
   Box,
   Checkbox,
+  FormControlLabel,
   MenuItem,
   Select,
   Switch,
@@ -185,20 +186,31 @@ export default function StepOne({ formData, handleChange }: any) {
                   value={formData.state || []}
                   renderValue={(selected) => selected.join(", ")}
                 >
-                  {/* <MenuItem disableGutters onClick={() => [states.length]}>
-                    Select All
-                  </MenuItem> */}
-                    <Checkbox
-                      checked={formData.state.length === states.length}
-                      indeterminate={
-                        formData.state.length > 0 &&
-                        formData.state.length < states.length
-                      }
-                      onChange={(e) => {
-                        const allStates = e.target.checked ? states : [];
-                        handleChange("state", allStates);
-                      }}
-                    />
+                  <FormControlLabel
+                    sx={{ pl: 1 }}
+                    control={
+                      <Checkbox
+                        sx={{
+                          "&.Mui-checked": {
+                            color: "#EDFCF2",
+                            stroke: "#099250",
+                            strokeWidth: 1,
+                            fill: "#099250",
+                          },
+                        }}
+                        checked={formData.state.length === states.length}
+                        indeterminate={
+                          formData.state.length > 0 &&
+                          formData.state.length < states.length
+                        }
+                        onChange={(e) => {
+                          const allStates = e.target.checked ? states : [];
+                          handleChange("state", allStates);
+                        }}
+                      />
+                    }
+                    label={"Select All"}
+                  />
                   {states?.map((state) => (
                     <MenuItem disableGutters selected key={state} value={state}>
                       <Checkbox
@@ -248,6 +260,35 @@ export default function StepOne({ formData, handleChange }: any) {
                       }
                       renderValue={(selected) => selected.join(", ")}
                     >
+                      <FormControlLabel
+                        sx={{ pl: 1 }}
+                        control={
+                          <Checkbox
+                            sx={{
+                              "&.Mui-checked": {
+                                color: "#EDFCF2",
+                                stroke: "#099250",
+                                strokeWidth: 1,
+                                fill: "#099250",
+                              },
+                            }}
+                            checked={
+                              formData.yAxis.gender.length === genderType.length
+                            }
+                            indeterminate={
+                              formData.yAxis.gender.length > 0 &&
+                              formData.yAxis.gender.length < genderType.length
+                            }
+                            onChange={(e) => {
+                              const allGender = e.target.checked
+                                ? genderType
+                                : [];
+                              handleChange("gender", allGender, "yAxis");
+                            }}
+                          />
+                        }
+                        label={"Select All"}
+                      />
                       {genderType.map((item) => (
                         <MenuItem
                           disableGutters
@@ -283,6 +324,35 @@ export default function StepOne({ formData, handleChange }: any) {
                       }
                       renderValue={(selected) => selected.join(", ")}
                     >
+                      <FormControlLabel
+                        sx={{ pl: 1 }}
+                        control={
+                          <Checkbox
+                            sx={{
+                              "&.Mui-checked": {
+                                color: "#EDFCF2",
+                                stroke: "#099250",
+                                strokeWidth: 1,
+                                fill: "#099250",
+                              },
+                            }}
+                            checked={
+                              formData.yAxis.age.length === ageRange.length
+                            }
+                            indeterminate={
+                              formData.yAxis.age.length > 0 &&
+                              formData.yAxis.age.length < ageRange.length
+                            }
+                            onChange={(e) => {
+                              const allAgeRange = e.target.checked
+                                ? ageRange.map((age) => age.value)
+                                : [];
+                              handleChange("age", allAgeRange, "yAxis");
+                            }}
+                          />
+                        }
+                        label={"Select All"}
+                      />
                       {ageRange.map((age) => (
                         // @ts-ignore
                         <MenuItem
@@ -290,7 +360,6 @@ export default function StepOne({ formData, handleChange }: any) {
                           selected
                           key={age.label}
                           value={age.value}
-                          // disabled={formData.yAxis.age.length > 2 && !formData.yAxis.age.includes(age.value)}
                         >
                           <Checkbox
                             sx={{
@@ -523,6 +592,10 @@ export default function StepOne({ formData, handleChange }: any) {
                           selected
                           key={item}
                           value={item}
+                          disabled={
+                            formData.diagnosis.treatmentStatus.length > 4 &&
+                            !formData.diagnosis.treatmentStatus.includes(item)
+                          }
                         >
                           <Checkbox
                             sx={{

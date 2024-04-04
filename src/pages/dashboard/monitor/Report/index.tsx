@@ -97,16 +97,31 @@ export default function Report() {
           </label>
 
           <Button
-            component="label"
             variant="contained"
+            // sx={{
+            //   background: "#099250",
+            //   "&:hover": { backgroundColor: "#099250" },
+            //   px: 2,
+            //   py: 1,
+            //   "&.Mui-disabled": {
+            //     opacity: 0.3,
+            //     color: "white",
+            //   },
+            // }}
+
             sx={{
-              background: "#099250",
+              color: "#F6FEF9",
+              outline: "none",
+              fontWeight: 600,
+              backgroundColor: "#099250",
               "&:hover": { backgroundColor: "#099250" },
               px: 2,
-              py: 1,
+              p1: 1,
               "&.Mui-disabled": {
                 opacity: 0.3,
                 color: "white",
+                px: 2,
+                p1: 1,
               },
             }}
             // onClick={() => setShowUpload(true)}

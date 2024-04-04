@@ -95,79 +95,11 @@ export default function StepThree({ formData, result, handleChange }: any) {
 
   const datasets: Dataset[] = [];
 
-  // states.forEach((state) => {
-  //   const stateData = data[state]; // Get the data for the current state
-  //   if (stateData) {
-  //     Object.keys(stateData).forEach((key, index) => {
-  //       const label = ageRange.find((range) => range.label === key)
-  //         ? key
-  //         : data[state][key]
-  //         ? key
-  //         : null;
-  //       console.log(label);
-  //       if (label) {
-  //         const value = stateData[key];
-
-  //         console.log(value);
-  //         const colorIndex = datasets.length % colors.length; // Ensure each dataset gets a different color
-  //         let existingDataset = datasets.find(
-  //           (dataset) => dataset.label === label
-  //         );
-
-  //         console.log(existingDataset);
-  //         if (!existingDataset) {
-  //           // If dataset doesn't exist for this label, create a new one
-  //           existingDataset = {
-  //             label: label,
-  //             data: [data[state][key]],
-  //             backgroundColor: colors[colorIndex],
-  //             barPercentage: 1.5,
-  //             barThickness: 30,
-  //             maxBarThickness: 20,
-  //             borderRadius: 5,
-  //           };
-  //           datasets.push(existingDataset);
-  //         }
-  //         // Fill in empty values for previous states
-  //         while (existingDataset.data.length < index) {
-  //           existingDataset.data.push(0);
-  //         }
-  //         // Add the current value to the dataset
-  //         existingDataset.data.push(value);
-  //       }
-  //     });
-  //   }
-  // });
-
-  // states.forEach((state, index) => {
-  //   let colorIndex = index % colors.length;
-  //   Object.keys(data[state]).forEach((key) => {
-  //     const label = ageRange.find((range) => range.label === key)
-  //       ? key
-  //       : data[state][key]
-  //       ? key
-  //       : null;
-  //     if (label) {
-  //       const existingDataset = datasets.find(
-  //         (dataset) => dataset.label === label
-  //       );
-  //       if (existingDataset) {
-  //         existingDataset.data.push(data[state][key]);
-  //       } else {
-  //         datasets.push({
-  //           label: label,
-  //           data: [data[state][key]],
-  //           backgroundColor: colors[colorIndex],
-  //           barPercentage: 1.5,
-  //           barThickness: 30,
-  //           maxBarThickness: 20,
-  //           borderRadius: 5,
-  //         });
-  //       }
-  //     }
-  //     colorIndex = (colorIndex + 1) % colors.length;
-  //   });
-  // });
+  const labels = Object.keys(data);
+  const dataz = labels.map((state) =>
+    Object.values(data[state]).reduce((acc: any, val: any) => acc + val, 0)
+  );
+  const backgroundColors = colors.slice(0, labels.length);
 
   Object.keys(data).forEach((state, index) => {
     let colorIndex = index % colors.length;
@@ -197,19 +129,16 @@ export default function StepThree({ formData, result, handleChange }: any) {
     datasets: datasets,
   };
 
-  // const statesKeys: { [key: string]: string[] } = {};
+  const pieData = {
+    labels: labels,
+    datasets: [
+      {
+        data: dataz,
+        backgroundColor: backgroundColors,
+      },
+    ],
+  };
 
-  // // Iterate over each state to get its keys
-  // Object.keys(data).forEach((state) => {
-  //   statesKeys[state] = Object.keys(result[state]);
-  // });
-
-  // console.log(dataz);
-
-  // // const chartData = {
-  // //   labels: dataz.map((x: any) => x[0]),
-  // //   datasets: [{ label: statesKeys,data: }],
-  // // };
   return (
     <Box
       sx={{
@@ -263,7 +192,7 @@ export default function StepThree({ formData, result, handleChange }: any) {
             <Bar options={options} data={resData} />
           ) : result.chartType === "PIE" ? (
             // @ts-ignore
-            <Pie options={options} data={resData} />
+            <Pie data={pieData} />
           ) : result.chartType === "LINE" ? (
             // @ts-ignore
             <Line options={options} data={resData} />

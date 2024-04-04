@@ -119,41 +119,59 @@ export default function StepTwo({ formData, handleChange }: any) {
             }}
           >
             {chartType.map((chart) => (
-              <Button
-                key={chart.type}
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  textAlign: "center",
-                  Padding: 3,
-                  height: "150px",
-                  width: "150px",
-                  flexDirection: "column",
-                  textTransform: "none",
-                  "&:hover": { backgroundColor: "#F6FEF9" },
-                  border: "1px #E7E9FB solid",
-                  backgroundColor:
-                    formData.chartType === chart.type ? "#F6FEF9" : "inherit",
-                  margin: "auto",
-                }}
-                onClick={() =>
-                  handleChange("chartType", chart.type, "yAxis", chart.type)
-                }
-              >
-                <div
-                  style={{
+              <>
+                <Button
+                  key={chart.type}
+                  sx={{
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
+                    textAlign: "center",
+                    Padding: 3,
+                    height: "150px",
+                    width: "150px",
+                    flexDirection: "column",
+                    textTransform: "none",
+                    "&:hover": { backgroundColor: "#F6FEF9" },
+                    border: "1px #E7E9FB solid",
+                    backgroundColor:
+                      formData.chartType === chart.type ? "#F6FEF9" : "inherit",
+                    margin: "auto",
+                    "&.Mui-disabled": {
+                      backgroundColor: "#FBEAE9",
+                      cursor: "not-allowed",
+                      pointerEvents: "auto",
+                    },
                   }}
+                  disabled={
+                    (formData.yAxis.age.length > 1 ||
+                      formData.yAxis.gender.length > 1 ||
+                      formData.diagnosis.treatmentStatus.length > 1) &&
+                    chart.type === "PIE"
+                  }
+                  onClick={() =>
+                    handleChange("chartType", chart.type, "yAxis", chart.type)
+                  }
                 >
-                  {chart.icon}
-                </div>
-                <span style={{ color: "#099250", fontFamily: "fontBold" }}>
-                  {chart.title}
-                </span>
-              </Button>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {chart.icon}
+                  </div>
+                  <span style={{ color: "#099250", fontFamily: "fontBold" }}>
+                    {chart.title}
+                  </span>
+                  {/* {disabled && (
+                    <Typography fontSize={10} color={"error"}>
+                      Cannot render with multiple Variables
+                    </Typography>
+                  )} */}
+                </Button>
+              </>
             ))}
           </Box>
         </div>
