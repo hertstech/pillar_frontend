@@ -3,6 +3,7 @@ import InputField from "../../../../components/InputField";
 import { IoPieChart, IoBarChartOutline, IoStatsChart } from "react-icons/io5";
 import { FaChartBar, FaChartLine } from "react-icons/fa6";
 import { MdOutlineStackedBarChart } from "react-icons/md";
+import Styles from "../../serviceUsers/styles.module.css";
 import moment from "moment";
 
 const chartType = [
@@ -107,6 +108,25 @@ export default function StepTwo({ formData, handleChange }: any) {
           />
         </div>
 
+        <InputField
+          type="text"
+          label="Title"
+          name="title"
+          value={formData.title}
+          onChange={(e: any) => handleChange("title", e.target.value)}
+        />
+
+        <label htmlFor="additional notes">
+          Description
+          <textarea
+            className={Styles.area}
+            name={`description`}
+            rows={5}
+            cols={50}
+            value={formData.description}
+            onChange={(e: any) => handleChange("description", e.target.value)}
+          ></textarea>
+        </label>
         <div>
           <Typography mb={2}>Chart Type</Typography>
 
@@ -144,13 +164,18 @@ export default function StepTwo({ formData, handleChange }: any) {
                     },
                   }}
                   disabled={
-                    (formData.yAxis.age.length > 1 ||
-                      formData.yAxis.gender.length > 1 ||
+                    (formData.demographics.age.length > 1 ||
+                      formData.demographics.gender.length > 1 ||
                       formData.diagnosis.treatmentStatus.length > 1) &&
                     chart.type === "PIE"
                   }
                   onClick={() =>
-                    handleChange("chartType", chart.type, "yAxis", chart.type)
+                    handleChange(
+                      "chartType",
+                      chart.type,
+                      "demographics",
+                      chart.type
+                    )
                   }
                 >
                   <div
@@ -165,17 +190,16 @@ export default function StepTwo({ formData, handleChange }: any) {
                   <span style={{ color: "#099250", fontFamily: "fontBold" }}>
                     {chart.title}
                   </span>
-                  {/* {disabled && (
-                    <Typography fontSize={10} color={"error"}>
-                      Cannot render with multiple Variables
-                    </Typography>
-                  )} */}
                 </Button>
               </>
             ))}
           </Box>
         </div>
-
+        {/* {disabled && (
+                    <Typography fontSize={10} color={"error"}>
+                      Cannot render with multiple Variables
+                    </Typography>
+                  )} */}
         <div>
           <Typography fontWeight={600} color={"#090816"} fontSize={18}>
             Selected Axis
@@ -190,7 +214,7 @@ export default function StepTwo({ formData, handleChange }: any) {
             disabled
           />
 
-          {Object.entries(formData.yAxis).map(([key, value]) => (
+          {Object.entries(formData.demographics).map(([key, value]) => (
             <div key={key}>
               {value !== null &&
                 (Array.isArray(value) ? value.length > 0 : true) && (

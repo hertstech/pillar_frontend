@@ -14,19 +14,40 @@ export default function Monitor() {
 
   const [data, setData] = useState([]);
 
+  const [chartId, setChartId] = useState([]);
+
+  const [chartData, setChartData] = useState<any[]>([]);
+
   const handleChange = (_event: any, newValue: string) => {
     setCurrentTab(newValue);
   };
 
+  const getMonitoring = async () => {
+    setIsLoading(true);
+    try {
+      const [res, resp] = await Promise.all([
+        axiosInstance.get("/hcp/tenet/activity"),
+        axiosInstance.get(`/hcp/monitoring/charts/`),
+      ]);
+
+      setData(res.data);
+
+      setChartId(resp.data);
+
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+    }
+  };
+
   const tabs = [
-    { label: "Report", content: <Report /> },
+    { label: "Report", content: <Report chartData={chartData} /> },
     {
       label: "Activity Log",
       content: <Activity data={data} isLoading={isLoading} />,
     },
   ];
 
-  // Filter tabs based on user's role
   const filteredTabs = tabs.filter((tab) => {
     if (user.role === "superadmin") {
       return true;
@@ -35,25 +56,34 @@ export default function Monitor() {
     }
   });
 
-  const getActivity = async () => {
-    setIsLoading(true);
-    try {
-      const res = await axiosInstance.get("/hcp/tenet/activity");
-
-      setData(res.data);
-      setIsLoading(false);
-    } catch (error) {
-      setIsLoading(false);
-    }
-  };
+  useEffect(() => {
+    getMonitoring();
+  }, []);
 
   useEffect(() => {
-    getActivity();
+    const getAllChart = async () => {
+      try {
+        const fetchDataPromise = chartId.map(async (item: { id: string }) => {
+          try {
+            const res = await axiosInstance.get(
+              `/hcp/monitoring/get/charts/${item.id}`
+            );
+            return res.data;
+          } catch (error) {
+            console.error(`Error fetching chart with ID ${item.id}:`, error);
+            return null;
+          }
+        });
 
-    // setInterval(() => {
-    //   // getActivity();
-    // }, 60000);
-  }, []);
+        const allData = await Promise.all(fetchDataPromise);
+        setChartData(allData);
+      } catch (error) {
+        console.error("Error fetching charts:", error);
+      }
+    };
+
+    getAllChart();
+  }, [chartId]);
 
   return (
     <Box sx={{ background: "white" }}>

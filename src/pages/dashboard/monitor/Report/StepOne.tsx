@@ -232,14 +232,14 @@ export default function StepOne({ formData, handleChange }: any) {
             </div>
           </label>
 
-          <label htmlFor="yAxis" style={{ marginTop: "20px" }}>
+          <label htmlFor="demographics" style={{ marginTop: "20px" }}>
             Field 2
             {formData.reportType === "Demographics" && (
               <div style={{ display: "flex", gap: 10 }}>
                 <div style={{ width: "50%" }}>
                   <Select
                     fullWidth
-                    name="yAxis"
+                    name="demographics"
                     value={selectedValue2}
                     onChange={handleSelectChange}
                   >
@@ -254,9 +254,9 @@ export default function StepOne({ formData, handleChange }: any) {
                       multiple
                       fullWidth
                       name="gender"
-                      value={formData.yAxis.gender || []}
+                      value={formData.demographics.gender || []}
                       onChange={(e) =>
-                        handleChange("gender", e.target.value, "yAxis")
+                        handleChange("gender", e.target.value, "demographics")
                       }
                       renderValue={(selected) => selected.join(", ")}
                     >
@@ -273,17 +273,19 @@ export default function StepOne({ formData, handleChange }: any) {
                               },
                             }}
                             checked={
-                              formData.yAxis.gender.length === genderType.length
+                              formData.demographics.gender.length ===
+                              genderType.length
                             }
                             indeterminate={
-                              formData.yAxis.gender.length > 0 &&
-                              formData.yAxis.gender.length < genderType.length
+                              formData.demographics.gender.length > 0 &&
+                              formData.demographics.gender.length <
+                                genderType.length
                             }
                             onChange={(e) => {
                               const allGender = e.target.checked
                                 ? genderType
                                 : [];
-                              handleChange("gender", allGender, "yAxis");
+                              handleChange("gender", allGender, "demographics");
                             }}
                           />
                         }
@@ -305,7 +307,9 @@ export default function StepOne({ formData, handleChange }: any) {
                                 fill: "#099250",
                               },
                             }}
-                            checked={formData.yAxis.gender.indexOf(item) > -1}
+                            checked={
+                              formData.demographics.gender.indexOf(item) > -1
+                            }
                           />
                           {item}
                         </MenuItem>
@@ -318,9 +322,9 @@ export default function StepOne({ formData, handleChange }: any) {
                       multiple
                       fullWidth
                       name="age"
-                      value={formData.yAxis.age || []}
+                      value={formData.demographics.age || []}
                       onChange={(e) =>
-                        handleChange("age", e.target.value, "yAxis")
+                        handleChange("age", e.target.value, "demographics")
                       }
                       renderValue={(selected) => selected.join(", ")}
                     >
@@ -337,17 +341,18 @@ export default function StepOne({ formData, handleChange }: any) {
                               },
                             }}
                             checked={
-                              formData.yAxis.age.length === ageRange.length
+                              formData.demographics.age.length ===
+                              ageRange.length
                             }
                             indeterminate={
-                              formData.yAxis.age.length > 0 &&
-                              formData.yAxis.age.length < ageRange.length
+                              formData.demographics.age.length > 0 &&
+                              formData.demographics.age.length < ageRange.length
                             }
                             onChange={(e) => {
                               const allAgeRange = e.target.checked
                                 ? ageRange.map((age) => age.value)
                                 : [];
-                              handleChange("age", allAgeRange, "yAxis");
+                              handleChange("age", allAgeRange, "demographics");
                             }}
                           />
                         }
@@ -370,7 +375,9 @@ export default function StepOne({ formData, handleChange }: any) {
                                 fill: "#099250",
                               },
                             }}
-                            checked={formData.yAxis.age.indexOf(age.value) > -1}
+                            checked={
+                              formData.demographics.age.indexOf(age.value) > -1
+                            }
                           />
                           {age.label}
                         </MenuItem>
@@ -386,7 +393,7 @@ export default function StepOne({ formData, handleChange }: any) {
                   <div style={{ width: "50%" }}>
                     <Select
                       fullWidth
-                      name="yAxis"
+                      name="demographics"
                       value={diagnosisValue}
                       onChange={(e: any) => setDiagnosisValue(e.target.value)}
                     >

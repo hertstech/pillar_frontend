@@ -3,10 +3,13 @@ import { useState } from "react";
 import InputField from "../../../../components/InputField";
 import NoResultIllustration from "../../../../components/NoResult";
 import { Link } from "react-router-dom";
+import ChartComponent from "../ChartComponent";
 
-export default function Report() {
+
+export default function Report(chartData: any) {
   const [search, setSearch] = useState("");
-  // const [isPinned, setIsPinned] = useState(false);
+
+  const result = chartData?.chartData;
 
   return (
     <Box>
@@ -167,7 +170,26 @@ export default function Report() {
       </Box>
 
       <Box marginTop={2}>
-        <NoResultIllustration text="No report generated yet" />
+        {result.length > 0 ? (
+          <Box
+            sx={{
+              display: "grid",
+              columnGap: 1,
+              rowGap: 1,
+              gridTemplateColumns: "repeat(3, 1fr)",
+            }}
+          >
+            {result?.map((chart: any, index: any) => (
+              <ChartComponent
+                chart={chart}
+                chartResponse={chart.result}
+                index={index}
+              />
+            ))}
+          </Box>
+        ) : (
+          <NoResultIllustration text="No report generated yet" />
+        )}
       </Box>
     </Box>
   );

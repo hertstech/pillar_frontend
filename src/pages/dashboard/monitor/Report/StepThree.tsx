@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
-import InputField from "../../../../components/InputField";
-import Styles from "../../serviceUsers/styles.module.css";
+// import InputField from "../../../../components/InputField";
+// import Styles from "../../serviceUsers/styles.module.css";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -47,7 +47,7 @@ const colors = [
   "#D9534F",
 ];
 
-export default function StepThree({ formData, result, handleChange }: any) {
+export default function StepThree({ result }: any) {
   const options = {
     indexAxis: result.chartType === "INVERSED" ? "y" : "x",
     maintainAspectRatio: false,
@@ -186,7 +186,14 @@ export default function StepThree({ formData, result, handleChange }: any) {
           </Box>
         </div> */}
 
-        <div style={{ height: 400, backgroundColor: "#FFF" }}>
+        <div
+          style={{
+            height: 400,
+            backgroundColor: "#FFF",
+            margin: "auto",
+            width: "600px",
+          }}
+        >
           {result.chartType === "BAR" ? (
             // @ts-ignore
             <Bar options={options} data={resData} />
@@ -207,12 +214,12 @@ export default function StepThree({ formData, result, handleChange }: any) {
           )}
         </div>
 
-        <InputField
+        {/* <InputField
           type="text"
           label="Title"
-          name="chartTitle"
-          value={formData.chartTitle}
-          onChange={(e: any) => handleChange("chartTitle", e.target.value)}
+          name="title"
+          value={formData.title}
+          onChange={(e: any) => handleChange("title", e.target.value)}
         />
 
         <label htmlFor="additional notes">
@@ -223,9 +230,9 @@ export default function StepThree({ formData, result, handleChange }: any) {
             rows={5}
             cols={50}
             value={formData.description}
-            onChange={(e) => handleChange("description", e.target.value)}
+            onChange={(e: any) => handleChange("description", e.target.value)}
           ></textarea>
-        </label>
+        </label> */}
       </div>
     </Box>
   );
