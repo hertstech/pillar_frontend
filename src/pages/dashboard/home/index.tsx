@@ -1,24 +1,33 @@
 import dayjs, { Dayjs } from "dayjs";
 import {
   Box,
-  Stack,
   Typography,
   Button,
-  Select,
-  MenuItem,
+  Dialog,
+  DialogContent,
+  List,
+  ListItem,
+  ListItemButton,
 } from "@mui/material";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useState } from "react";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import InputField from "../../../components/InputField";
 import Buttons from "../../../components/Button";
 import Styles from "./home.module.css";
 import { useSelector } from "react-redux";
 import { axiosInstance } from "../../../Utils";
 import Swal from "sweetalert2";
+import Page from "../../../components/PageWrapper";
+
+const list = [
+  { icon: "", title: "health record", to: "/dashboard/create-new" },
+  { icon: "", title: "birth record", to: "/" },
+  { icon: "", title: "death record", to: "/" },
+];
 
 export default function Home() {
   const [searchOptions, setSearchOption] = useState(false);
@@ -30,7 +39,10 @@ export default function Home() {
   const navigate = useNavigate();
 
   const [numberValue, setNumberValue] = useState("");
+
   const [numbError, setNumbError] = useState("");
+
+  const [showList, setShowList] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -155,19 +167,20 @@ export default function Home() {
     setDateOfBirth(dateString);
   };
 
-  const handleNavigate = () => {
-    navigate("/dashboard/create-new");
+  const handleNavigate = (to: string) => {
+    navigate(`${to}`);
+    console.log(to);
   };
   return (
-    <Box>
+    <Page title="EHR Portal">
       <Box
         sx={{
           display: "flex",
           alignItems: "center",
           flexDirection: "row",
           justifyContent: "space-between",
-          px: 2.5,
-          pt: 2.5,
+          p: 2.5,
+          borderBottom: "1px #E7E9FB solid",
         }}
       >
         <div>
@@ -188,66 +201,81 @@ export default function Home() {
           </span>
         </div>
 
-        <Stack alignItems="start" px={2}>
-          <Select defaultValue={"Add New Record"}>
-            <MenuItem
-              onClick={handleNavigate}
-              sx={{ "&:hover": { background: "#EDFCF2", color: "#099250" } }}
-              value="Add New Record"
-            >
-              Add New Service User
-            </MenuItem>
-            <MenuItem
-              sx={{ "&:hover": { background: "#EDFCF2", color: "#099250" } }}
-              value="Add Birth Record"
-            >
-              Add Birth Record
-            </MenuItem>
-            <MenuItem
-              sx={{ "&:hover": { background: "#EDFCF2", color: "#099250" } }}
-              value="Add Death Record"
-            >
-              Add Death Record
-            </MenuItem>
-          </Select>
-          {/* <Link
-            style={{
-              fontWeight: 500,
-
-              textDecoration: "none",
-              borderRadius: 10,
-              display: "flex",
-
-              padding: 16,
-              gap: 7,
-              alignItems: "center",
-            }}
+        <Button
+          variant="contained"
+          size="large"
+          sx={{
+            px: 2,
+            textTransform: "none",
+            color: "#F5FAFF",
+            gap: 2,
+            display: "flex",
+            fontFamily: "fontbold",
+            width: "190px",
+            height: "52px",
+          }}
+          onClick={() => setShowList(true)}
+        >
+          <svg
+            width="19"
+            height="19"
+            viewBox="0 0 19 19"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <svg
-              width="25"
-              height="24"
-              viewBox="0 0 25 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+            <g id="Add">
               <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M11.5 1.25C8.87665 1.25 6.75 3.37665 6.75 6C6.75 8.62335 8.87665 10.75 11.5 10.75C14.1234 10.75 16.25 8.62335 16.25 6C16.25 3.37665 14.1234 1.25 11.5 1.25ZM8.25 6C8.25 4.20507 9.70507 2.75 11.5 2.75C13.2949 2.75 14.75 4.20507 14.75 6C14.75 7.79493 13.2949 9.25 11.5 9.25C9.70507 9.25 8.25 7.79493 8.25 6Z"
-                fill="#099250"
+                id="Vector"
+                d="M10.25 1.5C10.25 1.08579 9.91421 0.75 9.5 0.75C9.08579 0.75 8.75 1.08579 8.75 1.5L8.75 8.75H1.5C1.08579 8.75 0.75 9.08579 0.75 9.5C0.75 9.91421 1.08579 10.25 1.5 10.25H8.75V17.5C8.75 17.9142 9.08579 18.25 9.5 18.25C9.91421 18.25 10.25 17.9142 10.25 17.5V10.25H17.5C17.9142 10.25 18.25 9.91421 18.25 9.5C18.25 9.08579 17.9142 8.75 17.5 8.75H10.25L10.25 1.5Z"
+                fill="#FAFEF5"
               />
-              <path
-                d="M8.5 12.25C5.87665 12.25 3.75 14.3766 3.75 17C3.75 19.6234 5.87665 21.75 8.5 21.75H14.5C14.9142 21.75 15.25 21.4142 15.25 21C15.25 20.5858 14.9142 20.25 14.5 20.25H8.5C6.70507 20.25 5.25 18.7949 5.25 17C5.25 15.2051 6.70507 13.75 8.5 13.75H14.5C14.9142 13.75 15.25 13.4142 15.25 13C15.25 12.5858 14.9142 12.25 14.5 12.25H8.5Z"
-                fill="#099250"
-              />
-              <path
-                d="M19.25 14C19.25 13.5858 18.9142 13.25 18.5 13.25C18.0858 13.25 17.75 13.5858 17.75 14V16.25H15.5C15.0858 16.25 14.75 16.5858 14.75 17C14.75 17.4142 15.0858 17.75 15.5 17.75H17.75V20C17.75 20.4142 18.0858 20.75 18.5 20.75C18.9142 20.75 19.25 20.4142 19.25 20V17.75H21.5C21.9142 17.75 22.25 17.4142 22.25 17C22.25 16.5858 21.9142 16.25 21.5 16.25H19.25V14Z"
-                fill="#099250"
-              />
-            </svg>
-            <span></span>
-          </Link> */}
-        </Stack>
+            </g>
+          </svg>{" "}
+          Add New
+        </Button>
+        <>
+          <Dialog
+            hideBackdrop
+            sx={{
+              position: "absolute",
+              bottom: "35%",
+              left: "auto",
+              background: "none",
+            }}
+            disableEscapeKeyDown
+            onClose={() => setShowList(false)}
+            open={showList}
+          >
+            <DialogContent sx={{ p: 0 }}>
+              <List
+                sx={{
+                  p: 0,
+                  textTransform: "capitalize",
+                  fontFamily: "fontBold",
+                  fontWeight: 500,
+                  width: "175px",
+                }}
+              >
+                {list.map((item) => (
+                  <ListItem
+                    key={item.title}
+                    onClick={() => handleNavigate(`${item.to}`)}
+                  >
+                    <ListItemButton
+                      sx={{
+                        textTransform: "capitalize",
+                        fontFamily: "fontBold",
+                        fontWeight: 500,
+                      }}
+                    >
+                      {item.title}
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
+            </DialogContent>
+          </Dialog>
+        </>
       </Box>
 
       <div className={Styles.boxContainer}>
@@ -381,6 +409,7 @@ export default function Home() {
                   <div className={Styles.bttn}>
                     <Buttons
                       loading={isLoading}
+                      disabled={!firstName || !lastName}
                       title="Search records"
                       onClick={searchNameDate}
                     />
@@ -419,6 +448,7 @@ export default function Home() {
                   <div className={Styles.bttn}>
                     <Buttons
                       title="Search records"
+                      disabled={!numberValue}
                       loading={isLoading}
                       onClick={searchNHRID}
                     />
@@ -429,6 +459,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-    </Box>
+    </Page>
   );
 }

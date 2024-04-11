@@ -1,14 +1,14 @@
-import { Box, Tab, Tabs, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import Report from "./Report";
 import Activity from "./Activity";
 import { axiosInstance } from "../../../Utils";
 import { useSelector } from "react-redux";
+import Analytics from "./Analytics";
+import HeaderTabs from "../../../components/HeaderTabs";
+import Page from "../../../components/PageWrapper";
 
 export default function Monitor() {
   const user = useSelector((state: any) => state.user.user);
-
-  const [currentTab, setCurrentTab] = useState("Report");
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -17,10 +17,6 @@ export default function Monitor() {
   const [chartId, setChartId] = useState([]);
 
   const [chartData, setChartData] = useState<any[]>([]);
-
-  const handleChange = (_event: any, newValue: string) => {
-    setCurrentTab(newValue);
-  };
 
   const getMonitoring = async () => {
     setIsLoading(true);
@@ -39,22 +35,6 @@ export default function Monitor() {
       setIsLoading(false);
     }
   };
-
-  const tabs = [
-    { label: "Report", content: <Report chartData={chartData} /> },
-    {
-      label: "Activity Log",
-      content: <Activity data={data} isLoading={isLoading} />,
-    },
-  ];
-
-  const filteredTabs = tabs.filter((tab) => {
-    if (user.role === "superadmin") {
-      return true;
-    } else {
-      return tab.label !== "Activity Log";
-    }
-  });
 
   useEffect(() => {
     getMonitoring();
@@ -85,64 +65,37 @@ export default function Monitor() {
     getAllChart();
   }, [chartId]);
 
+  const tabs = [
+    {
+      label: "Analytics",
+      content: <Analytics chartId={chartId} chartData={chartData} />,
+    },
+    {
+      label: "Report",
+      content: (
+        <Report
+          chartId={chartId}
+          triggerRefresh={getMonitoring}
+          chartData={chartData}
+        />
+      ),
+    },
+    {
+      label: "Activity Log",
+      content: <Activity data={data} />,
+    },
+  ];
+
+  const filteredTabs = tabs.filter((tab) => {
+    if (user.role === "superadmin") {
+      return true;
+    } else {
+      return tab.label !== "Activity Log";
+    }
+  });
   return (
-    <Box sx={{ background: "white" }}>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          borderBottom: "1px #E7E9FB solid",
-          px: "20px",
-        }}
-      >
-        <Typography
-          variant="h4"
-          gutterBottom
-          fontWeight={600}
-          fontSize={28}
-          sx={{
-            color: "#000",
-            textTransform: "capitalize",
-            pt: "20px",
-          }}
-        >
-          Monitoring
-        </Typography>
-      </Box>
-
-      <Tabs
-        TabIndicatorProps={{ style: { display: "none" } }}
-        variant="scrollable"
-        scrollButtons={false}
-        textColor="inherit"
-        value={currentTab}
-        onChange={handleChange}
-      >
-        {filteredTabs.map((tab) => (
-          <Tab
-            sx={{
-              textTransform: "capitalize",
-              color: currentTab === tab.label ? "#087443" : "#344054",
-              borderBottom:
-                currentTab === tab.label
-                  ? "2px solid #087443"
-                  : "0px solid #099250",
-              fontWeight: currentTab === tab.label ? 600 : 400,
-            }}
-            key={tab.label}
-            value={tab.content}
-            label={tab.label}
-            onClick={() => setCurrentTab(tab.label)}
-          />
-        ))}
-      </Tabs>
-
-      {/* Display the content of the selected tab */}
-      <Box sx={{ p: "20px", pb: 12, background: "#F9F9FB" }}>
-        {filteredTabs.find((tab) => tab.label === currentTab)?.content}
-      </Box>
-    </Box>
+    <Page title="Monitoring">
+      <HeaderTabs links={filteredTabs} isLoaded={isLoading} />
+    </Page>
   );
 }

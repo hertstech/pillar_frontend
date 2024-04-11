@@ -202,7 +202,6 @@ export default function File() {
     setFileExt(format);
   };
 
-
   const handleRenameFile = async () => {
     setIsLoading(true);
 

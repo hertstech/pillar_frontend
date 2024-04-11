@@ -44,7 +44,15 @@ const colors = [
   "#D9534F",
 ];
 
-export default function ChartComponent({ chart, chartResponse, index }: any) {
+export default function ChartComponent({
+  chart,
+  chartResponse,
+  index,
+  xs,
+  lg,
+  xl,
+  md,
+}: any) {
   const options = {
     indexAxis: chart.chartType === "INVERSED" ? "y" : "x",
     maintainAspectRatio: false,
@@ -54,13 +62,14 @@ export default function ChartComponent({ chart, chartResponse, index }: any) {
         labels: {
           usePointStyle: true,
           padding: 10,
+          align: "left" as const,
         },
         position: "top" as const,
-        align: "center" as const,
+        align: "start" as const,
         pointStyle: "circle",
         title: {
-          display: true,
-          text: index && !!index ? chart?.title : "",
+          // display: true,
+          text: index === index ? chart?.title : "",
           padding: {
             top: 10,
           },
@@ -79,13 +88,16 @@ export default function ChartComponent({ chart, chartResponse, index }: any) {
           stepSize: 1,
         },
         beginAtZero: true,
+        grace: 1,
       },
       y: {
         stacked: chart.chartType === "STACKED" ? true : false,
         ticks: {
           stepSize: 1,
+          crossAlign: "start",
         },
         beginAtZero: true,
+        grace: 1,
       },
     },
   };
@@ -147,7 +159,8 @@ export default function ChartComponent({ chart, chartResponse, index }: any) {
         sx={{
           height: 320,
           backgroundColor: "#FFF",
-          width: "400px",
+          width: { xs: xs, lg: lg, xl: xl, md: md },
+          padding: 2,
         }}
       >
         {chart.chartType === "BAR" ? (

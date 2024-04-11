@@ -34,7 +34,6 @@ export default function HeaderTabs({ heading, links, isLoaded }: TabProps) {
         <Box sx={{ flexGrow: 1 }}>
           <Typography
             variant="h4"
-            // gutterBottom
             fontWeight={600}
             fontSize={28}
             sx={{ color: "#000" }}
@@ -72,7 +71,14 @@ export default function HeaderTabs({ heading, links, isLoaded }: TabProps) {
           </Tabs>
 
           {/* Display the content of the selected tab */}
-          <Box sx={{ p: "20px", pb: 12, background: "#F9F9FB" }}>
+          <Box
+            sx={{
+              p: "20px",
+              pb: 12,
+              background: "#F9F9FB",
+              height: "calc(100vh - 100px)",
+            }}
+          >
             {isLoaded ? <SpinLoader /> : links[value].content}
           </Box>
         </Box>

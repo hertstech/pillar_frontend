@@ -4,7 +4,6 @@ import {
   Typography,
   TableContainer,
   Table,
-  TableHead,
   TableRow,
   TableCell,
   TableBody,
@@ -17,6 +16,7 @@ import moment from "moment";
 import NoResultIllustration from "../NoResult";
 import { useDispatch } from "react-redux";
 import { dispatchClient } from "../../redux/clientSlice";
+import { TableHeadCustom } from "./TableHeadCustom";
 
 const TABLE_HEAD = [
   { id: "name", label: "Name", align: "left" },
@@ -56,15 +56,7 @@ export default function UserTable({ results }: any) {
     <Box sx={{ px: 2 }}>
       <TableContainer sx={{ borderRadius: 2.5, background: "#FFF" }}>
         <Table size="medium">
-          <TableHead sx={{ background: "#FCFCFD", fontSize: 12 }}>
-            <TableRow>
-              {TABLE_HEAD.map((item) => (
-                <TableCell sx={{ color: "#344054" }} key={item.id}>
-                  {item.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
+          <TableHeadCustom headLabel={TABLE_HEAD} />
 
           <TableBody sx={{ fontWeight: 500, fontSize: 14, color: "#101828" }}>
             {results?.length > 0 ? (

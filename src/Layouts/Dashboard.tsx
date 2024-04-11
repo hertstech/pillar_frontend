@@ -1,7 +1,7 @@
 import { Box, Container } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
-import Header from "../components/Header";
+// import Header from "../components/Header";
 import Styles from "./style.module.css";
 import ProfileGuard from "../Guard/ProfileGuard";
 
@@ -33,7 +33,7 @@ export default function Dashboard() {
             position: "absolute",
           }}
         >
-          <Header />
+          {/* <Header /> */}
           <div className={Styles.container}>
             <Outlet />
           </div>

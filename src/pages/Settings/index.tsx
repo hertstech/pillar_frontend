@@ -7,7 +7,6 @@ import {
   MenuItem,
   Stack,
   TextField,
-  Typography,
 } from "@mui/material";
 import HeaderTabs from "../../components/HeaderTabs";
 import Buttons from "../../components/Button";
@@ -19,6 +18,7 @@ import Management from "./Management";
 import { axiosInstance } from "../../Utils";
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
+import Page from "../../components/PageWrapper";
 
 const title = [
   "Mr.",
@@ -272,31 +272,17 @@ export default function Settings() {
   });
 
   return (
-    <Box sx={{ background: "white" }}>
+    <Page title="Settings">
       <Box
         sx={{
           display: "flex",
           alignItems: "center",
           flexDirection: "row",
-          justifyContent: "space-between",
+          justifyContent: "flex-end",
           borderBottom: "1px #E7E9FB solid",
-          px: "20px",
+          p: "10px",
         }}
       >
-        <Typography
-          variant="h4"
-          gutterBottom
-          fontWeight={600}
-          fontSize={28}
-          sx={{
-            color: "#000",
-            textTransform: "capitalize",
-            pt: "20px",
-          }}
-        >
-          Settings
-        </Typography>
-
         {(user.role === "admin" || user.role === "superadmin") && (
           <Button
             sx={{
@@ -465,6 +451,6 @@ export default function Settings() {
           </DialogContent>
         </Dialog>
       </>
-    </Box>
+    </Page>
   );
 }

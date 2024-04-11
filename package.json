@@ -26,6 +26,7 @@
     "react-day-picker": "^8.9.1",
     "react-dom": "^18.2.0",
     "react-file-icon": "^1.4.0",
+    "react-helmet-async": "^2.0.4",
     "react-icons": "^4.12.0",
     "react-phone-input-2": "^2.15.1",
     "react-redux": "^9.0.4",

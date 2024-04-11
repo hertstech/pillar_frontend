@@ -575,8 +575,6 @@ export default function Overview({ client }: PropType) {
                   </Typography>
                 </div>
                 <div className="flex justify-center items-center">
-                  {/* <FaTemperatureQuarter color={"#4A5BC3"} size={28} /> */}
-
                   <svg
                     width="25"
                     height="24"
