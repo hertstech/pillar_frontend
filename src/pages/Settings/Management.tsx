@@ -223,14 +223,14 @@ export default function Management({
         icon: "success",
         title: `Success`,
         text: `You’ve updated your record`,
-        confirmButtonColor: "#099250",
+        confirmButtonColor: "#2E90FA",
       });
     } catch (error) {
       Swal.fire({
         icon: "error",
         title: `error`,
         text: `Please try again`,
-        confirmButtonColor: "#099250",
+        confirmButtonColor: "#2E90FA",
       });
       setLoading(false);
     }

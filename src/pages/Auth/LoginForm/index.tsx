@@ -58,7 +58,7 @@ export default function LoginPage() {
         icon: "success",
         title: `${response.data.message}`,
         text: `Welcome ${response.data.firstName}`,
-        confirmButtonColor: "#099250",
+        confirmButtonColor: "#2E90FA",
       });
     } catch (error: any) {
       setIsLoadingButton(false);
@@ -66,7 +66,7 @@ export default function LoginPage() {
         icon: "error",
         title: "Login Error",
         text: `Authentication failed!!!`,
-        confirmButtonColor: "#099250",
+        confirmButtonColor: "#2E90FA",
       });
     }
   };

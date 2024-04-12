@@ -93,7 +93,7 @@ export default function MedicationRecord() {
       return Swal.fire({
         icon: "info",
         text: `You can not submit an empty form!`,
-        confirmButtonColor: "#099250",
+        confirmButtonColor: "#2E90FA",
       });
     }
 
@@ -110,7 +110,7 @@ export default function MedicationRecord() {
         icon: "success",
         title: `Successful`,
         text: `${res.data.message}`,
-        confirmButtonColor: "#099250",
+        confirmButtonColor: "#2E90FA",
       });
 
       navigate(`/dashboard/user/${id}/3`);
@@ -121,7 +121,7 @@ export default function MedicationRecord() {
         icon: "error",
         title: "Error",
         text: `${error.response.data.message}`,
-        confirmButtonColor: "#099250",
+        confirmButtonColor: "#2E90FA",
       });
     }
   };

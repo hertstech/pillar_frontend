@@ -209,7 +209,7 @@ export default function CreateReport() {
 
       setIsLoading(false);
       console.log(res.data);
-      if (res.data === "Successful") {
+      if (res.status === 201) {
         setShowModal(true);
       }
     } catch (error) {

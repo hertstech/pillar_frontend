@@ -213,7 +213,7 @@ export default function CreateUser() {
         icon: "error",
         title: "Error",
         text: `${error.response.data.detail}`,
-        confirmButtonColor: "#099250",
+        confirmButtonColor: "#2E90FA",
       });
       // dispatch(clearNewSlice());
       setIsLoading(false);

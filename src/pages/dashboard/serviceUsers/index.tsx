@@ -106,7 +106,7 @@ export default function Singleuser() {
       Swal.fire({
         icon: "success",
         text: `${res.data}`,
-        confirmButtonColor: "#099250",
+        confirmButtonColor: "#2E90FA",
       });
     } catch (error) {
       setIsLoading(false);

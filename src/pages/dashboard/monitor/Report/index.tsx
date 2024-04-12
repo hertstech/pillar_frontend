@@ -56,8 +56,6 @@ export default function Report({ chartId, chartData, triggerRefresh }: any) {
 
   const [isGrid, setIsGrid] = useState(true);
 
-  console.log("The Chart Data 1==>", chartData);
-
   const handlePin = async (id: string) => {
     const payLoad = { status: true };
     try {

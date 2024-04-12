@@ -91,7 +91,7 @@ export default function Settings() {
         icon: "success",
         title: `Success`,
         text: `You’ve created a new HCP`,
-        confirmButtonColor: "#099250",
+        confirmButtonColor: "#2E90FA",
       });
 
       setIsLoading(false);
@@ -105,7 +105,7 @@ export default function Settings() {
         icon: "info",
         title: `Error`,
         text: `${error.response.data.detail}`,
-        confirmButtonColor: "#099250",
+        confirmButtonColor: "#2E90FA",
       });
       setIsLoading(false);
     }
@@ -285,14 +285,15 @@ export default function Settings() {
       >
         {(user.role === "admin" || user.role === "superadmin") && (
           <Button
+            variant="contained"
             sx={{
               textTransform: "none",
-              background: "#099250",
+              color: "#F5FAFF",
+              display: "flex",
+              fontFamily: "fontbold",
+              height: "48px",
               px: 2,
               alignItems: "center",
-              color: "#F6FEF9",
-              "&:hover": { backgroundColor: "#099250" },
-              gap: 1,
               fontSize: "16px",
             }}
             startIcon={

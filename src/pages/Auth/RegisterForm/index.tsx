@@ -96,7 +96,7 @@ export default function RegisterPage() {
         icon: "success",
         title: `Sign up Successful`,
         text: `${res.data.message}`,
-        confirmButtonColor: "#099250",
+        confirmButtonColor: "#2E90FA",
       });
 
       navigate("/auth/login");
@@ -107,7 +107,7 @@ export default function RegisterPage() {
         icon: "error",
         title: "Error",
         text: `${error.response.data.message}`,
-        confirmButtonColor: "#099250",
+        confirmButtonColor: "#2E90FA",
       });
     }
   };

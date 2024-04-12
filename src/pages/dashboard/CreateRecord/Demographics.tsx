@@ -91,7 +91,7 @@ export default function Demographics() {
         icon: "success",
         title: `Successful`,
         text: "Record Successfully Updated",
-        confirmButtonColor: "#099250",
+        confirmButtonColor: "#2E90FA",
       });
 
       console.log(res.data);
@@ -105,7 +105,7 @@ export default function Demographics() {
       Swal.fire({
         icon: "error",
         title: "Error",
-        confirmButtonColor: "#099250",
+        confirmButtonColor: "#2E90FA",
       });
     }
   };

@@ -99,7 +99,7 @@ export default function Home() {
         icon: "info",
         title: "Not Found",
         text: `Incorrect NHR ID, please try again`,
-        confirmButtonColor: "#099250",
+        confirmButtonColor: "#2E90FA",
       });
       setIsLoading(false);
     }
@@ -154,7 +154,7 @@ export default function Home() {
         icon: "info",
         title: "Not Found",
         text: `Incorrect User data, please try again`,
-        confirmButtonColor: "#099250",
+        confirmButtonColor: "#2E90FA",
       });
       setIsLoading(false);
     }
@@ -208,29 +208,32 @@ export default function Home() {
             px: 2,
             textTransform: "none",
             color: "#F5FAFF",
-            gap: 2,
+            gap: 1,
+            alignItems: "center",
             display: "flex",
             fontFamily: "fontbold",
-            width: "190px",
-            height: "52px",
+            width: "147px",
+            height: "48px",
           }}
+          startIcon={
+            <svg
+              width="19"
+              height="19"
+              viewBox="0 0 19 19"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g id="Add">
+                <path
+                  id="Vector"
+                  d="M10.25 1.5C10.25 1.08579 9.91421 0.75 9.5 0.75C9.08579 0.75 8.75 1.08579 8.75 1.5L8.75 8.75H1.5C1.08579 8.75 0.75 9.08579 0.75 9.5C0.75 9.91421 1.08579 10.25 1.5 10.25H8.75V17.5C8.75 17.9142 9.08579 18.25 9.5 18.25C9.91421 18.25 10.25 17.9142 10.25 17.5V10.25H17.5C17.9142 10.25 18.25 9.91421 18.25 9.5C18.25 9.08579 17.9142 8.75 17.5 8.75H10.25L10.25 1.5Z"
+                  fill="#FAFEF5"
+                />
+              </g>
+            </svg>
+          }
           onClick={() => setShowList(true)}
         >
-          <svg
-            width="19"
-            height="19"
-            viewBox="0 0 19 19"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <g id="Add">
-              <path
-                id="Vector"
-                d="M10.25 1.5C10.25 1.08579 9.91421 0.75 9.5 0.75C9.08579 0.75 8.75 1.08579 8.75 1.5L8.75 8.75H1.5C1.08579 8.75 0.75 9.08579 0.75 9.5C0.75 9.91421 1.08579 10.25 1.5 10.25H8.75V17.5C8.75 17.9142 9.08579 18.25 9.5 18.25C9.91421 18.25 10.25 17.9142 10.25 17.5V10.25H17.5C17.9142 10.25 18.25 9.91421 18.25 9.5C18.25 9.08579 17.9142 8.75 17.5 8.75H10.25L10.25 1.5Z"
-                fill="#FAFEF5"
-              />
-            </g>
-          </svg>{" "}
           Add New
         </Button>
         <>
