@@ -199,7 +199,7 @@ export default function Management({
         `/hcp/tenet-profile/${selectedUserId}`
       );
       setFormField(res.data);
-      console.log(res.data);
+      // console.log(res.data);
     } catch (error) {
       setLoading(false);
     }

@@ -330,8 +330,10 @@ export default function MedicationRecord() {
               color: "#FFF",
               outline: "none",
               fontWeight: 600,
-              background: "#099250",
-              "&:hover": { backgroundColor: "#099250" },
+              background: "#2E90FA",
+              height: "48px",
+              "&:hover": { backgroundColor: "#2E90FA" },
+              borderRadius: 2,
               px: 3,
               width: "100%",
             }}
@@ -440,8 +442,10 @@ export default function MedicationRecord() {
               variant="contained"
               sx={{
                 px: 5,
-                background: "#099250",
-                "&:hover": { backgroundColor: "#099250" },
+                background: "#2E90FA",
+                height: "48px",
+                "&:hover": { backgroundColor: "#2E90FA" },
+                borderRadius: 2,
               }}
               onClick={createNewMedication}
               disabled={isLoading}

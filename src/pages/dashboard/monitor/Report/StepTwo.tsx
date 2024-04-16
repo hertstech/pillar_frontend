@@ -158,7 +158,7 @@ export default function StepTwo({ formData, handleChange }: any) {
                       formData.chartType === chart.type ? "#F6FEF9" : "inherit",
                     margin: "auto",
                     "&.Mui-disabled": {
-                      backgroundColor: "#FBEAE9",
+                      backgroundColor: "white",
                       cursor: "not-allowed",
                       pointerEvents: "auto",
                     },
@@ -187,7 +187,18 @@ export default function StepTwo({ formData, handleChange }: any) {
                   >
                     {chart.icon}
                   </div>
-                  <span style={{ color: "#099250", fontFamily: "fontBold" }}>
+                  <span
+                    style={{
+                      color:
+                        (formData.demographics.age.length > 1 ||
+                          formData.demographics.gender.length > 1 ||
+                          formData.diagnosis.treatmentStatus.length > 1) &&
+                        chart.type === "PIE"
+                          ? "#667185"
+                          : "#099250",
+                      fontFamily: "fontBold",
+                    }}
+                  >
                     {chart.title}
                   </span>
                 </Button>
@@ -195,11 +206,7 @@ export default function StepTwo({ formData, handleChange }: any) {
             ))}
           </Box>
         </div>
-        {/* {disabled && (
-                    <Typography fontSize={10} color={"error"}>
-                      Cannot render with multiple Variables
-                    </Typography>
-                  )} */}
+
         <div>
           <Typography fontWeight={600} color={"#090816"} fontSize={18}>
             Selected Axis

@@ -8,7 +8,6 @@ import {
   Dialog,
   DialogTitle,
   Grid,
-  Link,
   Stack,
   Step,
   // StepIcon,
@@ -20,6 +19,7 @@ import { useNavigate } from "react-router-dom";
 import Buttons from "../../../../components/Button";
 import StepThree from "./StepThree";
 import { axiosInstance } from "../../../../Utils";
+import { NeedHelp } from "../../../../components/CalendarField";
 
 interface FormData {
   duration: string | null;
@@ -208,7 +208,7 @@ export default function CreateReport() {
       );
 
       setIsLoading(false);
-      console.log(res.data);
+      // console.log(res.data);
       if (res.status === 201) {
         setShowModal(true);
       }
@@ -412,41 +412,7 @@ export default function CreateReport() {
                 ))}
               </Stepper>
 
-              <Box>
-                <Typography
-                  variant="h4"
-                  fontWeight={600}
-                  fontSize={16}
-                  sx={{ color: "#344054" }}
-                >
-                  Need Help?
-                </Typography>
-                <span
-                  style={{
-                    color: "#98A2B3",
-                    width: "250px",
-                    display: "block",
-                    fontWeight: 400,
-                  }}
-                >
-                  Experiencing any difficulty? Let us know below.
-                </span>
-                <Stack alignItems="flex-start" sx={{ mt: 2 }}>
-                  <Link
-                    href="#"
-                    underline="none"
-                    sx={{
-                      borderRadius: 2.5,
-                      px: 2,
-                      py: 1,
-                      border: "1px solid #16B364",
-                      color: "#099250",
-                    }}
-                  >
-                    Contact Us
-                  </Link>
-                </Stack>
-              </Box>
+              <NeedHelp />
             </Card>
           </Grid>
 

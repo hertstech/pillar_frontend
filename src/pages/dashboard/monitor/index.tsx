@@ -82,7 +82,7 @@ export default function Monitor() {
     },
     {
       label: "Activity Log",
-      content: <Activity data={data} />,
+      content: <Activity data={data} triggerRefresh={getMonitoring} />,
     },
   ];
 

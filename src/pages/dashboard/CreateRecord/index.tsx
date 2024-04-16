@@ -1,14 +1,5 @@
 import React from "react";
-import {
-  Box,
-  Card,
-  Grid,
-  Link,
-  Stack,
-  Tab,
-  Tabs,
-  Typography,
-} from "@mui/material";
+import { Box, Card, Grid, Stack, Tab, Tabs } from "@mui/material";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import Demographics from "./Demographics";
@@ -17,7 +8,7 @@ import MedicationRecord from "./MedicationRecord";
 import AllergyRecord from "./AllergyRecord";
 import AdditionalInformationRecord from "./AdditionalInformationRecord";
 import ReferralRecord from "./ReferralRecord";
-// import MessageNew from "./MessageNew";
+import { NeedHelp } from "../../../components/CalendarField";
 
 // interface LinkItem {
 //   label: string;
@@ -157,12 +148,14 @@ export default function CreateRecord() {
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
-          <rect  x="0.5"
+          <rect
+            x="0.5"
             y="0.5"
             width="41"
             height="41"
             rx="20.5"
-            stroke="#E7E9FB"/>
+            stroke="#E7E9FB"
+          />
           <path
             fillRule="evenodd"
             clipRule="evenodd"
@@ -235,14 +228,14 @@ export default function CreateRecord() {
     },
   ];
 
-    // Filter tabs based on user's role
-    const filteredTabs = tabs.filter((tab) => {
-      if (user.role === "admin" || user.role === "superadmin") {
-        return true;
-      } else {
-        return tab.label ===  "Demographics";
-      }
-    });
+  // Filter tabs based on user's role
+  const filteredTabs = tabs.filter((tab) => {
+    if (user.role === "admin" || user.role === "superadmin") {
+      return true;
+    } else {
+      return tab.label === "Demographics";
+    }
+  });
 
   return (
     <Box>
@@ -386,43 +379,7 @@ export default function CreateRecord() {
                 ))}
               </Tabs>
 
-              <Box sx={{ p: 2 }}>
-                <Typography
-                  variant="h4"
-                  fontWeight={600}
-                  fontSize={16}
-                  sx={{ color: "#344054" }}
-                >
-                  Need Help?
-                </Typography>
-                <span
-                  style={{
-                    color: "#98A2B3",
-                    width: "250px",
-                    display: "block",
-                    fontWeight: 400,
-                    fontSize: 14,
-                    margin: "10px 0px",
-                  }}
-                >
-                  Experiencing any difficulty? Let us know below.
-                </span>
-                <Stack alignItems="flex-start" sx={{ mt: 2 }}>
-                  <Link
-                    href="#"
-                    underline="none"
-                    sx={{
-                      borderRadius: 2.5,
-                      px: 2,
-                      py: 1,
-                      border: "1px solid #16B364",
-                      color: "#099250",
-                    }}
-                  >
-                    Contact Us
-                  </Link>
-                </Stack>
-              </Box>
+              <NeedHelp />
             </Card>
           </Grid>
 

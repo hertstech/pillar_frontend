@@ -94,7 +94,7 @@ export default function Demographics() {
         confirmButtonColor: "#2E90FA",
       });
 
-      console.log(res.data);
+      // console.log(res.data);
       if (user.role === "superadmin" || user.role === "admin") {
         navigate(`/dashboard/user/${id}/1`);
       } else {
@@ -511,8 +511,10 @@ export default function Demographics() {
               outline: "none",
               textTransform: "capitalize",
               fontWeight: 600,
-              background: "#099250",
-              "&:hover": { backgroundColor: "#099250" },
+              background: "#2E90FA",
+              height: "48px",
+              "&:hover": { backgroundColor: "#2E90FA" },
+              borderRadius: 2,
             }}
             onClick={updateUser}
             disabled={isLoad}

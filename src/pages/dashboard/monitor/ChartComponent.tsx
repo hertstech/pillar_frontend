@@ -54,7 +54,7 @@ export default function ChartComponent({
   md,
 }: any) {
   const options = {
-    indexAxis: chart.chartType === "INVERSED" ? "y" : "x",
+    indexAxis: chart?.chartType === "INVERSED" ? "y" : "x",
     maintainAspectRatio: false,
     responsive: true,
     plugins: {
@@ -83,7 +83,7 @@ export default function ChartComponent({
     },
     scales: {
       x: {
-        stacked: chart.chartType === "STACKED" ? true : false,
+        stacked: chart?.chartType === "STACKED" ? true : false,
         ticks: {
           stepSize: 1,
         },
@@ -91,7 +91,7 @@ export default function ChartComponent({
         grace: 1,
       },
       y: {
-        stacked: chart.chartType === "STACKED" ? true : false,
+        stacked: chart?.chartType === "STACKED" ? true : false,
         ticks: {
           stepSize: 1,
           crossAlign: "start",
@@ -102,13 +102,13 @@ export default function ChartComponent({
     },
   };
 
-  const states = Object.keys(chartResponse);
+  const states = Object?.keys(chartResponse);
 
   const datasets: Dataset[] = [];
 
-  const labels = Object.keys(chartResponse);
-  const dataz = labels.map((state) =>
-    Object.values(chartResponse[state]).reduce(
+  const labels = Object?.keys(chartResponse);
+  const dataz = labels?.map((state) =>
+    Object?.values(chartResponse[state]).reduce(
       (acc: any, val: any) => acc + val,
       0
     )
@@ -163,19 +163,19 @@ export default function ChartComponent({
           padding: 2,
         }}
       >
-        {chart.chartType === "BAR" ? (
+        {chart?.chartType === "BAR" ? (
           // @ts-ignore
           <Bar options={options} data={barData} />
-        ) : chart.chartType === "PIE" ? (
+        ) : chart?.chartType === "PIE" ? (
           // @ts-ignore
           <Pie options={options} data={pieData} />
-        ) : chart.chartType === "LINE" ? (
+        ) : chart?.chartType === "LINE" ? (
           // @ts-ignore
           <Line options={options} data={barData} />
-        ) : chart.chartType === "INVERSED" ? (
+        ) : chart?.chartType === "INVERSED" ? (
           // @ts-ignore
           <Bar options={options} data={barData} />
-        ) : chart.chartType === "STACKED" ? (
+        ) : chart?.chartType === "STACKED" ? (
           // @ts-ignore
           <Bar options={options} data={barData} />
         ) : (

@@ -4,7 +4,6 @@ import {
   Card,
   Grid,
   Step,
-  Link,
   StepLabel,
   Stepper,
   Typography,
@@ -22,6 +21,7 @@ import {
 import { axiosInstance } from "../../../Utils";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { NeedHelp } from "../../../components/CalendarField";
 // import { clearNewSlice } from "../../../redux/createServiceUserSlice";
 
 export default function CreateUser() {
@@ -369,41 +369,7 @@ export default function CreateUser() {
                 ))}
               </Stepper>
 
-              <Box>
-                <Typography
-                  variant="h4"
-                  fontWeight={600}
-                  fontSize={16}
-                  sx={{ color: "#344054" }}
-                >
-                  Need Help?
-                </Typography>
-                <span
-                  style={{
-                    color: "#98A2B3",
-                    width: "250px",
-                    display: "block",
-                    fontWeight: 400,
-                  }}
-                >
-                  Experiencing any difficulty? Let us know below.
-                </span>
-                <Stack alignItems="flex-start" sx={{ mt: 2 }}>
-                  <Link
-                    href="#"
-                    underline="none"
-                    sx={{
-                      borderRadius: 2.5,
-                      px: 2,
-                      py: 1,
-                      border: "1px solid #16B364",
-                      color: "#099250",
-                    }}
-                  >
-                    Contact Us
-                  </Link>
-                </Stack>
-              </Box>
+              <NeedHelp />
             </Card>
           </Grid>
 
@@ -439,12 +405,14 @@ export default function CreateUser() {
                     fullWidth
                     size="large"
                     sx={{
-                      color: "#099250",
-                      border: "1px solid #099250",
+                      color: "#1570EF",
+                      border: "1px solid #D1E9FF",
                       outline: "none",
                       textTransform: "capitalize",
                       fontWeight: 600,
                       height: 48,
+                      background: "#D1E9FF",
+                      "&:hover": { backgroundColor: "#D1E9FF" },
                     }}
                     disabled={activeStep <= 0 || isLoading}
                     variant="outlined"

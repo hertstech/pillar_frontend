@@ -6,6 +6,8 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { Box, Typography, Stack } from "@mui/material";
+import { Link } from "react-router-dom";
 // import Style from "../../components/InputField/styles.module.css";
 // import Styles from "./styles.module.css";
 // import { MdOutlineCalendarToday } from "react-icons/md";
@@ -84,5 +86,46 @@ export function Calendar({
         </DemoContainer>
       </LocalizationProvider>
     </label>
+  );
+}
+
+export function NeedHelp() {
+  return (
+    <Box sx={{ p: 2 }}>
+      <Typography
+        variant="h4"
+        fontWeight={600}
+        fontSize={16}
+        sx={{ color: "#344054" }}
+      >
+        Need Help?
+      </Typography>
+      <span
+        style={{
+          color: "#98A2B3",
+          width: "250px",
+          display: "block",
+          fontWeight: 400,
+          fontSize: 14,
+          margin: "10px 0px",
+        }}
+      >
+        Experiencing any difficulty? Let us know below.
+      </span>
+      <Stack alignItems="flex-start" sx={{ mt: 2 }}>
+        <Link
+          to="#"
+          style={{
+            borderRadius: 8,
+            padding: "8px 16px",
+            border: "1px solid #2E90FA",
+            color: "#1570EF",
+            textDecoration: "none",
+          }}
+        >
+          Contact Us
+        </Link>
+      </Stack>
+    </Box>
   );
 }

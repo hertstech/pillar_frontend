@@ -623,7 +623,7 @@ export default function Overview({ client }: PropType) {
 
               <Divider />
 
-              <div style={{ height: 400, backgroundColor: "#FFF" }}>
+              <div style={{ height: 405, backgroundColor: "#FFF" }}>
                 <Line options={options} data={pulseData} />
               </div>
             </Box>
@@ -647,7 +647,7 @@ export default function Overview({ client }: PropType) {
 
               <Divider />
 
-              <div style={{ height: 400, backgroundColor: "#FFF" }}>
+              <div style={{ height: 405, backgroundColor: "#FFF" }}>
                 <Line options={options} data={pressureData} />
               </div>
             </Box>

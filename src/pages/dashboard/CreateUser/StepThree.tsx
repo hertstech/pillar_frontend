@@ -127,7 +127,7 @@ export default function StepThree({ data }: any) {
             borderRadius={2}
             sx={{
               display: "flex",
-              background: "#099250",
+              background: "#2E90FA",
               p: 2,
               justifyContent: "center",
             }}

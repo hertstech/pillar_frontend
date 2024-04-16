@@ -115,10 +115,11 @@ export default function Result() {
               textDecoration: "none",
               borderRadius: 10,
               display: "flex",
-              background: "#099250",
+              background: "#2E90FA",
               padding: 16,
               gap: 5,
               alignItems: "center",
+              height: "48px",
             }}
             to="/dashboard/create-new"
           >
