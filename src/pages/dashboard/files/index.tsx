@@ -1310,10 +1310,10 @@ export default function File() {
                 outline: "none",
                 textTransform: "none",
                 fontWeight: 600,
-                background: "#D3F8DF",
+                background: "#D1E9FF",
                 py: 1.5,
                 px: 2,
-                "&:hover": { backgroundColor: "#D3F8DF" },
+                "&:hover": { backgroundColor: "#D1E9FF" },
                 width: "50%",
                 borderRadius: "6px",
               }}

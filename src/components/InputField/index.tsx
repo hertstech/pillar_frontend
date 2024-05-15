@@ -82,6 +82,7 @@ interface TextLabelProps {
   isLoading?: boolean;
   suffix?: string;
 }
+
 export const TextLabel = ({
   text,
   label,

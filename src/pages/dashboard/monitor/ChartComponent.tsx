@@ -33,15 +33,12 @@ interface Dataset {
 }
 
 const colors = [
-  "#F44336",
-  "#546E7A",
-  "#E91E63",
-  "#9C27B0",
-  "#6172F3",
-  "#FF9C66",
-  "#7E36AF",
-  "#AAF0C4",
-  "#D9534F",
+  "#560BAD",
+  "#F72585",
+  "#32DDFF",
+  "#17ACB5",
+  "#3F37C9",
+  "#0003EB",
 ];
 
 export default function ChartComponent({
