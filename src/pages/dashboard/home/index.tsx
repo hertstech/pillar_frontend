@@ -1,550 +1,235 @@
-import dayjs, { Dayjs } from "dayjs";
-import {
-  Box,
-  Typography,
-  Button,
-  List,
-  ListItem,
-  ListItemButton,
-  Popover,
-} from "@mui/material";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { Box, Button, Divider, Typography } from "@mui/material";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import InputField from "../../../components/InputField";
-import Buttons from "../../../components/Button";
-import Styles from "./home.module.css";
-import { useSelector } from "react-redux";
+import ChartComponent from "../monitor/ChartComponent";
+import NoResultIllustration from "../../../components/NoResult";
 import { axiosInstance } from "../../../Utils";
-import Swal from "sweetalert2";
 import Page from "../../../components/PageWrapper";
 
-const list = [
-  {
-    icon: (
-      <svg
-        width="21"
-        height="20"
-        viewBox="0 0 21 20"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <g id="health-record">
-          <path
-            id="Vector"
-            d="M16.9177 13.6281L16.5639 13.9819L14.8977 15.6481L16.9177 13.6281ZM16.9177 13.6281L16.5637 13.2745M16.9177 13.6281L16.5637 13.2745M16.5637 13.2745L15.9737 12.6854L15.6201 12.3323L15.2668 12.6856L14.2484 13.704L14.0628 13.5187L13.7093 13.1657L13.356 13.5189L12.7668 14.1081L12.4133 14.4617M16.5637 13.2745L12.4133 14.4617M12.4133 14.4617L12.7668 14.8152M12.4133 14.4617L12.7668 14.8152M12.7668 14.8152L13.5997 15.6481L12.7668 14.8152ZM14.6 15.8474C14.4887 15.8936 14.3693 15.9174 14.2487 15.9174C14.1281 15.9174 14.0087 15.8936 13.8974 15.8474C13.7862 15.8013 13.6852 15.7337 13.6001 15.6486L14.6 15.8474ZM14.6 15.8474C14.7112 15.8013 14.8122 15.7337 14.8973 15.6486L14.6 15.8474ZM14.96 3.87204C14.8819 3.7939 14.7759 3.75 14.6654 3.75H13.9154H13.4154L14.96 3.87204ZM12.2487 14.4951V14.495V11.75H17.082V14.495V14.495C17.0821 14.8928 16.9839 15.2845 16.7962 15.6352C16.6086 15.9859 16.3373 16.2849 16.0063 16.5056C16.0063 16.5057 16.0063 16.5057 16.0063 16.5057L14.6654 17.3996L13.3252 16.5064L13.3251 16.5064C12.994 16.2857 12.7224 15.9866 12.5347 15.6358C12.3469 15.2849 12.2486 14.893 12.2487 14.4951Z"
-            fill="#344054"
-            stroke="#344054"
-          />
-        </g>
-      </svg>
-    ),
+export default function Home({ triggerRefresh, chartData }: any) {
+  const [show, setShow] = useState(false);
 
-    title: "health record",
-    to: "/dashboard/create-new",
-  },
-  {
-    icon: (
-      <svg
-        width="21"
-        height="20"
-        viewBox="0 0 21 20"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <g id="birth-record">
-          <g id="Vector">
-            <mask id="path-1-inside-1_3348_146703" fill="white">
-              <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M13 5.00083C13 6.35333 11.8808 7.45 10.5 7.45C9.11917 7.45 8 6.35333 8 5.00083C8 3.64833 9.11917 2.55167 10.5 2.55167C11.8808 2.55167 13 3.6475 13 5.00083ZM10.5 6.63417C11.4208 6.63417 12.1667 5.9025 12.1667 5.00083C12.1667 4.09917 11.4208 3.36833 10.5 3.36833C9.57917 3.36833 8.83333 4.09917 8.83333 5.00167C8.83333 5.9025 9.57917 6.63333 10.5 6.63333V6.63417Z"
-              />
-            </mask>
-            <path
-              fill-rule="evenodd"
-              clip-rule="evenodd"
-              d="M13 5.00083C13 6.35333 11.8808 7.45 10.5 7.45C9.11917 7.45 8 6.35333 8 5.00083C8 3.64833 9.11917 2.55167 10.5 2.55167C11.8808 2.55167 13 3.6475 13 5.00083ZM10.5 6.63417C11.4208 6.63417 12.1667 5.9025 12.1667 5.00083C12.1667 4.09917 11.4208 3.36833 10.5 3.36833C9.57917 3.36833 8.83333 4.09917 8.83333 5.00167C8.83333 5.9025 9.57917 6.63333 10.5 6.63333V6.63417Z"
-              fill="#344054"
-            />
-            <path
-              d="M10.5 6.63417H9.5V7.63417H10.5V6.63417ZM10.5 6.63333H11.5V5.63333H10.5V6.63333ZM12 5.00083C12 5.78185 11.3479 6.45 10.5 6.45V8.45C12.4137 8.45 14 6.92482 14 5.00083H12ZM10.5 6.45C9.65205 6.45 9 5.78185 9 5.00083H7C7 6.92482 8.58628 8.45 10.5 8.45V6.45ZM9 5.00083C9 4.21982 9.65205 3.55167 10.5 3.55167V1.55167C8.58628 1.55167 7 3.07685 7 5.00083H9ZM10.5 3.55167C11.3482 3.55167 12 4.2192 12 5.00083H14C14 3.0758 12.4135 1.55167 10.5 1.55167V3.55167ZM10.5 7.63417C11.9543 7.63417 13.1667 6.47344 13.1667 5.00083H11.1667C11.1667 5.33156 10.8874 5.63417 10.5 5.63417V7.63417ZM13.1667 5.00083C13.1667 3.52757 11.9536 2.36833 10.5 2.36833V4.36833C10.8881 4.36833 11.1667 4.67076 11.1667 5.00083H13.1667ZM10.5 2.36833C9.04606 2.36833 7.83333 3.5279 7.83333 5.00167H9.83333C9.83333 4.67043 10.1123 4.36833 10.5 4.36833V2.36833ZM7.83333 5.00167C7.83333 6.47442 9.04673 7.63333 10.5 7.63333V5.63333C10.1116 5.63333 9.83333 5.33057 9.83333 5.00167H7.83333ZM9.5 6.63333V6.63417H11.5V6.63333H9.5Z"
-              fill="#344054"
-              mask="url(#path-1-inside-1_3348_146703)"
-            />
-          </g>
-          <path
-            id="Vector_2"
-            fill-rule="evenodd"
-            clip-rule="evenodd"
-            d="M14.0133 6.67417C14.0837 6.70676 14.1433 6.75871 14.1852 6.82394C14.2271 6.88916 14.2496 6.96497 14.25 7.0425V13.9983C14.25 14.8917 13.9642 15.805 13.3392 16.5008C12.7058 17.2058 11.7558 17.6542 10.5 17.6542C7.91333 17.6542 6.75 15.5458 6.75 13.9983V7.04167C6.75036 6.96519 6.77218 6.89035 6.81299 6.82567C6.8538 6.761 6.91196 6.70908 6.98083 6.67583C7.05036 6.64209 7.12778 6.62798 7.20474 6.63503C7.28169 6.64208 7.35526 6.67002 7.4175 6.71583C8.75417 7.70333 9.70083 8.1275 10.5725 8.125C11.44 8.12333 12.3358 7.69917 13.5725 6.72333C13.6342 6.67503 13.708 6.64479 13.7858 6.63596C13.8637 6.62713 13.9424 6.6409 14.0133 6.67417ZM7.58333 8.06167V13.9983C7.58333 15.2342 8.50417 16.8383 10.5 16.8383C11.5367 16.8383 12.2525 16.475 12.7133 15.9617C13.0708 15.5633 13.2917 15.0558 13.3767 14.5133C13.3223 14.4738 13.2785 14.4214 13.2492 14.3608C12.6225 13.0775 11.4608 11.6508 10.23 10.4025C9.29417 9.4525 8.33833 8.62667 7.58333 8.06167ZM13.4167 12.9808C12.72 11.8967 11.7808 10.8 10.8292 9.835C10.5025 9.50366 10.1677 9.1805 9.825 8.86583C10.075 8.91667 10.325 8.9425 10.575 8.9425C11.525 8.94 12.425 8.55417 13.4167 7.865V12.9817V12.9808Z"
-            fill="black"
-          />
-        </g>
-      </svg>
-    ),
-    title: "birth record",
-    to: "/",
-  },
-  {
-    icon: (
-      <svg
-        width="21"
-        height="20"
-        viewBox="0 0 21 20"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <g id="death-record">
-          <path
-            id="Vector"
-            d="M7.74145 2.16716L7.74127 2.40698L7.44145 2.35119L7.51249 2.16696L7.74145 2.16716Z"
-            fill="#344054"
-            stroke="#344054"
-          />
-        </g>
-      </svg>
-    ),
-    title: "death record",
-    to: "/",
-  },
-];
-
-export default function Home() {
-  const [searchOptions, setSearchOption] = useState(false);
-
-  const user = useSelector((state: any) => state.user.user);
-
-  const token = useSelector((state: any) => state.user.access_token);
-
-  const navigate = useNavigate();
-
-  const [numberValue, setNumberValue] = useState("");
-
-  const [numbError, setNumbError] = useState("");
-
-  const [showList, setShowList] = useState(false);
-
-  const [isLoading, setIsLoading] = useState(false);
-
-  const [firstName, setfirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState("");
-  const [error, setError] = useState("");
-
-  function formatNumberForView(number: string) {
-    // Add a dash after every 4 characters
-    return number.replace(/(\d{4})(?=\d)/g, "$1-");
-  }
-
-  function parseNumberForApi(number: any) {
-    // Remove dashes before sending to the API
-    return number.replace(/-/g, "");
-  }
-
-  const handleIDChange = (e: any) => {
-    const inputValue = e.target.value;
-
-    const numericValue = inputValue.replace(/-/g, "");
-
-    const formattedValue = formatNumberForView(numericValue);
-
-    setNumberValue(formattedValue);
-    setNumbError("");
-  };
-
-  const searchNHRID = async (e: any) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    if (numberValue === "") {
-      setNumbError("Please input a valid NHR ID!");
-      setIsLoading(false);
-      return;
-    }
-
-    // Remove dashes before sending to the API
-    const apiData = parseNumberForApi(numberValue);
-
+  const handleUnPin = async (id: string) => {
+    const payLoad = { status: false };
     try {
-      const res = await axiosInstance.get(`/search-serviceuser/${apiData}`);
+      const res = await axiosInstance.post(
+        `/hcp/monitoring/chart/status/${id}`,
+        payLoad
+      );
 
       if (res.status === 200) {
-        navigate(`/dashboard/app/search`, {
-          state: { searchResults: res.data },
-        });
-        setIsLoading(false);
+        // setShowAlert(true);
+        // setMessage("Item Unpinned success");
+        triggerRefresh();
+        // setTimeout(() => {
+        //   // setShowAlert(false);
+        // }, 3000);
       }
-    } catch (error: any) {
-      Swal.fire({
-        icon: "info",
-        title: "Not Found",
-        text: `Incorrect NHR ID, please try again`,
-        confirmButtonColor: "#2E90FA",
-      });
-      setIsLoading(false);
+    } catch (error) {
+      console.error(error);
     }
   };
 
-  const searchNameDate = async (e: any) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    if (firstName === "" && lastName === "") {
-      setError("Please input a valid name and date of birth!!!");
-      setIsLoading(false);
-      return;
-    }
-
-    interface Payload {
-      firstName?: string | null;
-      lastName?: string | null;
-      dateOfBirth?: string | null;
-    }
-
-    const payload: Payload = {};
-
-    if (firstName) {
-      payload.firstName = firstName;
-    }
-
-    if (lastName) {
-      payload.lastName = lastName;
-    }
-
-    if (dateOfBirth) {
-      payload.dateOfBirth = dateOfBirth;
-    }
-
+  const deleteChart = async (id: string) => {
     try {
-      const res = await axiosInstance.get("/search-serviceuser", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        params: payload,
-      });
+      const res = await axiosInstance.delete(`/hcp/monitoring/chart/${id}`);
 
       if (res.status === 200) {
-        navigate(`/dashboard/app/search`, {
-          state: { searchResults: res.data },
-        });
-        setIsLoading(false);
+        // setShowAlert(true);
+        // setMessage("Item Deleted successfully");
+
+        setTimeout(() => {
+          // setShowAlert(false);
+          triggerRefresh();
+        }, 2000);
       }
-    } catch (error: any) {
-      Swal.fire({
-        icon: "info",
-        title: "Not Found",
-        text: `Incorrect User data, please try again`,
-        confirmButtonColor: "#2E90FA",
-      });
-      setIsLoading(false);
+    } catch (error) {
+      console.error(error);
     }
   };
-
-  // Assuming dateObj is of type Dayjs | null
-  const handleDateChange = (dateObj: Dayjs | null) => {
-    // Convert Dayjs object to string or use an empty string if null
-    const dateString = dateObj ? dateObj.format() : "";
-    setDateOfBirth(dateString);
-  };
-
-  const handleNavigate = (to: string) => {
-    navigate(`${to}`);
-    // console.log(to);
+  const handleToggle = (id: any) => {
+    setShow((prevIndex) => (prevIndex === id ? null : id));
   };
   return (
-    <Page title="EHR Portal">
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          p: 2.5,
-          borderBottom: "1px #E7E9FB solid",
-        }}
-      >
-        <div>
-          <Typography
-            variant="subtitle2"
-            fontWeight={600}
-            fontSize={24}
+    <Page title="">
+        <Box marginTop={2}>
+        {chartData?.filter(
+          (result: { status: boolean }) => result?.status === true
+        ).length > 0 ? (
+          <Box
             sx={{
-              "&::first-letter": {
-                textTransform: "uppercase",
-              },
+              display: "grid",
+              columnGap: 1,
+              rowGap: 1,
+              gridTemplateColumns: "repeat(2, 1fr)",
             }}
           >
-            Welcome back, {user?.title} {user?.lastName}
-          </Typography>
-          <span style={{ color: "#667185" }}>
-            Search client’s health record here
-          </span>
-        </div>
-
-        <Button
-          variant="contained"
-          size="large"
-          sx={{
-            px: 2,
-            textTransform: "none",
-            color: "#F5FAFF",
-            gap: 1,
-            alignItems: "center",
-            display: "flex",
-            fontFamily: "fontbold",
-            width: "147px",
-            height: "48px",
-          }}
-          startIcon={
-            <svg
-              width="19"
-              height="19"
-              viewBox="0 0 19 19"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g id="Add">
-                <path
-                  id="Vector"
-                  d="M10.25 1.5C10.25 1.08579 9.91421 0.75 9.5 0.75C9.08579 0.75 8.75 1.08579 8.75 1.5L8.75 8.75H1.5C1.08579 8.75 0.75 9.08579 0.75 9.5C0.75 9.91421 1.08579 10.25 1.5 10.25H8.75V17.5C8.75 17.9142 9.08579 18.25 9.5 18.25C9.91421 18.25 10.25 17.9142 10.25 17.5V10.25H17.5C17.9142 10.25 18.25 9.91421 18.25 9.5C18.25 9.08579 17.9142 8.75 17.5 8.75H10.25L10.25 1.5Z"
-                  fill="#FAFEF5"
-                />
-              </g>
-            </svg>
-          }
-          onClick={() => setShowList(true)}
-        >
-          Add New
-        </Button>
-        <>
-          <Popover
-            open={showList}
-            onClose={() => setShowList(false)}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
-            }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "left",
-            }}
-            sx={{ marginTop: "140px" }}
-          >
-            <List
-              sx={{
-                p: 0,
-                textTransform: "capitalize",
-                fontFamily: "fontBold",
-                fontWeight: 500,
-                width: "175px",
-              }}
-            >
-              {list.map((item) => (
-                <ListItem
-                  key={item.title}
-                  onClick={() => handleNavigate(`${item.to}`)}
+            {chartData
+              ?.filter((result: { status: boolean }) => result?.status === true)
+              .map((chart: any, index: any) => (
+                <Box
+                  sx={{
+                    borderRadius: 2,
+                    border: "1px #E4E7EC solid",
+                    background: "white",
+                  }}
                 >
-                  <ListItemButton
-                    sx={{
-                      textTransform: "capitalize",
-                      fontFamily: "fontBold",
-                      fontWeight: 500,
-                    }}
-                  >
-                    {item.title}
-                  </ListItemButton>
-                </ListItem>
-              ))}
-            </List>
-          </Popover>
-        </>
-      </Box>
-
-      <div className={Styles.boxContainer}>
-        <div className={Styles.boxWrapper}>
-          <div
-            className=""
-            style={{
-              background: "white",
-              border: "1px #E7E9FB solid",
-              borderRadius: 12,
-            }}
-          >
-            <div className={Styles.bttnWrapper}>
-              <Button
-                fullWidth
-                sx={{
-                  color: "#000",
-                  outline: "none",
-                  textTransform: "capitalize",
-                  fontWeight: 600,
-                  height: 48,
-                  background: searchOptions ? "#FFF" : "#EDFCF2",
-                  borderBottom: searchOptions ? "none" : "2px solid #3CCB7F",
-                  borderTopLeftRadius: 12,
-                  fontSize: 18,
-                }}
-                size="large"
-                onClick={() => setSearchOption(false)}
-              >
-                NHR ID
-              </Button>
-
-              <Button
-                fullWidth
-                sx={{
-                  color: "#000",
-                  outline: "none",
-                  textTransform: "capitalize",
-                  fontWeight: 600,
-                  height: 48,
-                  background: searchOptions ? "#EDFCF2" : "#FFF",
-                  borderBottom: searchOptions ? "2px solid #3CCB7F" : "none",
-                  borderTopRightRadius: 12,
-                  fontSize: 18,
-                }}
-                size="large"
-                onClick={() => setSearchOption(true)}
-              >
-                Client Details
-              </Button>
-            </div>
-
-            {searchOptions ? (
-              // SECOND CHOICE CLIENT DETAILS
-              <form action="">
-                <div className={Styles.content}>
-                  <Typography
-                    variant="subtitle2"
-                    fontWeight={700}
-                    fontSize={32}
-                    sx={{
-                      color: "#101828",
-                      textAlign: "center",
-                      marginBottom: 3,
-                    }}
-                  >
-                    Enter client's details
-                  </Typography>
-
                   <Box
                     sx={{
-                      display: "grid",
-                      columnGap: 1.5,
-                      rowGap: 1.5,
-                      gridTemplateColumns: {
-                        xs: "repeat(1, 1fr)",
-                        md: "repeat(2, 1fr)",
-                      },
+                      display: "flex",
+                      flexDirection: "row",
+                      gap: 1,
+                      justifyContent: "space-between",
+                      p: 2,
                     }}
                   >
-                    <InputField
-                      type="text"
-                      label="First Name"
-                      name="firstName"
-                      value={firstName}
-                      onChange={(e: any) => {
-                        setfirstName(e.target.value);
-                        setError("");
-                      }}
-                      placeholder=""
-                    />
+                    <Typography fontWeight={600} fontSize={18} color="#090816">
+                      {chart.title}
+                    </Typography>
 
-                    <InputField
-                      type="text"
-                      label="Last Name"
-                      name="lastName"
-                      value={lastName}
-                      onChange={(e: any) => {
-                        setLastName(e.target.value);
-                        setError("");
+                    <Button
+                      sx={{
+                        borderRadius: "50%",
+                        height: "36px",
+                        minWidth: "36px",
                       }}
-                      placeholder=""
-                    />
+                      onClick={() => handleToggle(`${chart.id}`)}
+                    >
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <g id="Teeny icon / more-vertical">
+                          <g id="Vector">
+                            <path
+                              d="M9.99969 4.00029C9.63149 4.00029 9.33301 3.7018 9.33301 3.33361C9.33301 2.96541 9.63149 2.66693 9.99969 2.66693C10.3679 2.66693 10.6664 2.96541 10.6664 3.33361C10.6664 3.7018 10.3679 4.00029 9.99969 4.00029Z"
+                              stroke="#545C68"
+                              stroke-width="1.33336"
+                            />
+                            <path
+                              d="M9.99969 10.6671C9.63149 10.6671 9.33301 10.3686 9.33301 10.0004C9.33301 9.63221 9.63149 9.33373 9.99969 9.33373C10.3679 9.33373 10.6664 9.63221 10.6664 10.0004C10.6664 10.3686 10.3679 10.6671 9.99969 10.6671Z"
+                              stroke="#545C68"
+                              stroke-width="1.33336"
+                            />
+                            <path
+                              d="M9.99969 17.3339C9.63149 17.3339 9.33301 17.0354 9.33301 16.6672C9.33301 16.299 9.63149 16.0005 9.99969 16.0005C10.3679 16.0005 10.6664 16.299 10.6664 16.6672C10.6664 17.0354 10.3679 17.3339 9.99969 17.3339Z"
+                              stroke="#545C68"
+                              stroke-width="1.33336"
+                            />
+                          </g>
+                        </g>
+                      </svg>
+                      <>
+                        {show === chart.id && (
+                          <Box
+                            sx={{
+                              position: "absolute",
+                              zIndex: 1,
+                              background: "white",
+                              border: "1px #F2F4F7 solid",
+                              borderRadius: 2,
+                              width: "120px",
+                              top: "53px",
+                              right: "-16px",
+                              p: 1,
+                            }}
+                          >
+                            {chart.status === true && (
+                              <Button
+                                onClick={() => handleUnPin(chart.id)}
+                                sx={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  textTransform: "none",
+                                  color: "#2A2D32",
+                                }}
+                                startIcon={
+                                  <svg
+                                    width="17"
+                                    height="19"
+                                    viewBox="0 0 17 19"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <g id="Pin">
+                                      <path
+                                        id="Vector"
+                                        d="M7.06735 2.86245C8.39053 0.570633 11.3211 -0.2146 13.6129 1.10858C15.9047 2.43176 16.6899 5.3623 15.3668 7.65412L15.2766 7.8102C16.3452 9.58526 16.5265 11.8238 15.627 13.8089C15.496 14.0982 15.3127 14.4156 14.9955 14.965L14.9629 15.0215C14.925 15.0872 14.8857 15.1554 14.8432 15.2147C14.438 15.7802 13.6897 15.9807 13.0559 15.6936C12.9895 15.6635 12.9214 15.6241 12.8558 15.5861L7.69641 12.6073L4.67558 17.8396C4.50299 18.1385 4.12074 18.2409 3.82181 18.0683C3.52288 17.8958 3.42045 17.5135 3.59304 17.2146L6.61388 11.9823L1.45448 9.00357C1.38881 8.96572 1.32064 8.92643 1.26136 8.88395C0.695836 8.4787 0.49533 7.7304 0.782464 7.09669C0.812562 7.03026 0.851956 6.96214 0.8899 6.89654L0.922512 6.84007C1.23969 6.29067 1.423 5.97315 1.60797 5.71503C2.87717 3.94385 4.90585 2.98161 6.97693 3.01907L7.06735 2.86245Z"
+                                        fill="#090816"
+                                      />
+                                    </g>
+                                  </svg>
+                                }
+                              >
+                                Unpin
+                              </Button>
+                            )}
+                            <Button
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                textTransform: "none",
+                                color: "#CB1A14",
+                                justifyContent: "flex-start",
+                              }}
+                              startIcon={
+                                <svg
+                                  width="15"
+                                  height="18"
+                                  viewBox="0 0 15 18"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <g id="Delete 2">
+                                    <g id="Vector">
+                                      <path
+                                        fill-rule="evenodd"
+                                        clip-rule="evenodd"
+                                        d="M7.50065 0.0410156C5.31452 0.0410156 3.54232 1.81322 3.54232 3.99935V4.20768H0.833984C0.488806 4.20768 0.208984 4.4875 0.208984 4.83268C0.208984 5.17786 0.488806 5.45768 0.833984 5.45768H14.1673C14.5125 5.45768 14.7923 5.17786 14.7923 4.83268C14.7923 4.4875 14.5125 4.20768 14.1673 4.20768H11.459V3.99935C11.459 1.81322 9.68678 0.0410156 7.50065 0.0410156ZM7.50065 1.29102C8.99642 1.29102 10.209 2.50358 10.209 3.99935V4.20768H4.79232V3.99935C4.79232 2.50358 6.00488 1.29102 7.50065 1.29102Z"
+                                        fill="#CB1A14"
+                                      />
+                                      <path
+                                        d="M2.28952 6.44023C2.25687 6.0966 1.95183 5.8445 1.6082 5.87715C1.26457 5.9098 1.01247 6.21484 1.04512 6.55847C1.12384 7.38703 1.26592 8.40794 1.44855 9.72023L1.68317 11.4061C1.90748 13.0184 2.03469 13.9328 2.3099 14.6818C2.82207 16.0759 3.73569 17.1934 4.9107 17.6892C5.54876 17.9585 6.27859 17.9582 7.36509 17.9577H7.63621C8.72271 17.9582 9.45254 17.9585 10.0906 17.6892C11.2656 17.1934 12.1792 16.0759 12.6914 14.6818C12.9666 13.9328 13.0938 13.0184 13.3181 11.4061L13.5527 9.72025C13.7354 8.40795 13.8775 7.38703 13.9562 6.55847C13.9888 6.21484 13.7367 5.9098 13.3931 5.87715C13.0495 5.8445 12.7444 6.0966 12.7118 6.44023C12.6359 7.23853 12.4977 8.23271 12.3126 9.56278L12.094 11.1336C11.8519 12.8733 11.741 13.644 11.5181 14.2507C11.0882 15.4209 10.3733 16.2132 9.60462 16.5375C9.22945 16.6959 8.77496 16.7077 7.50065 16.7077C6.22635 16.7077 5.77185 16.6959 5.39668 16.5375C4.62798 16.2132 3.91312 15.4209 3.48321 14.2507C3.26028 13.644 3.14941 12.8733 2.9073 11.1336L2.68869 9.56278C2.50358 8.23271 2.36537 7.23854 2.28952 6.44023Z"
+                                        fill="#CB1A14"
+                                      />
+                                      <path
+                                        d="M6.45898 7.33268C6.45898 6.9875 6.17916 6.70768 5.83398 6.70768C5.48881 6.70768 5.20898 6.9875 5.20898 7.33268V13.9993C5.20898 14.3445 5.48881 14.6243 5.83398 14.6243C6.17916 14.6243 6.45898 14.3445 6.45898 13.9993V7.33268Z"
+                                        fill="#CB1A14"
+                                      />
+                                      <path
+                                        d="M9.79232 7.33268C9.79232 6.9875 9.5125 6.70768 9.16732 6.70768C8.82214 6.70768 8.54232 6.9875 8.54232 7.33268V13.9993C8.54232 14.3445 8.82214 14.6243 9.16732 14.6243C9.5125 14.6243 9.79232 14.3445 9.79232 13.9993V7.33268Z"
+                                        fill="#CB1A14"
+                                      />
+                                    </g>
+                                  </g>
+                                </svg>
+                              }
+                              onClick={() => deleteChart(chart.id)}
+                            >
+                              Delete
+                            </Button>
+                          </Box>
+                        )}
+                      </>
+                    </Button>
                   </Box>
-                  <Typography sx={{ mb: 1 }} color="error" fontSize={12}>
-                    {error && error}
-                  </Typography>
 
-                  <label style={{ marginTop: 10 }} htmlFor="dateOfBirth">
-                    Date of Birth
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DemoContainer components={["DatePicker"]}>
-                        <DatePicker
-                          orientation="portrait"
-                          views={["year", "month", "day"]}
-                          format="DD/MM/YYYY"
-                          sx={{ marginTop: "5px", width: "100%" }}
-                          disableFuture={true}
-                          value={dayjs(dateOfBirth)}
-                          slotProps={{
-                            field: {
-                              readOnly: true,
-                            },
-                          }}
-                          onChange={handleDateChange}
-                        />
-                      </DemoContainer>
-                    </LocalizationProvider>
-                  </label>
-
-                  <div className={Styles.bttn}>
-                    <Buttons
-                      loading={isLoading}
-                      disabled={!firstName || !lastName}
-                      title="Search records"
-                      onClick={searchNameDate}
-                    />
-                  </div>
-                </div>
-              </form>
-            ) : (
-              // DEFAULT: NHR ID
-              <form action="">
-                <div className={Styles.content}>
-                  <Typography
-                    variant="subtitle2"
-                    fontWeight={700}
-                    fontSize={32}
-                    sx={{
-                      color: "#101828",
-                      textAlign: "center",
-                      marginBottom: 5,
-                    }}
-                  >
-                    Enter client's NHR ID
-                  </Typography>
-
-                  <InputField
-                    type="text"
-                    label="NHR ID"
-                    name="NHR_ID"
-                    value={numberValue}
-                    onChange={handleIDChange}
-                    placeholder="Enter NHR ID number"
+                  <Divider />
+                  <ChartComponent
+                    chart={chart}
+                    chartResponse={chart.result}
+                    index={index}
+                    xs={"100%"}
                   />
-                  <Typography sx={{ mb: 1 }} color="error" fontSize={12}>
-                    {numbError && numbError}
-                  </Typography>
-
-                  <div className={Styles.bttn}>
-                    <Buttons
-                      title="Search records"
-                      disabled={!numberValue}
-                      loading={isLoading}
-                      onClick={searchNHRID}
-                    />
-                  </div>
-                </div>
-              </form>
-            )}
-          </div>
-        </div>
-      </div>
+                </Box>
+              ))}
+          </Box>
+        ) : (
+          <NoResultIllustration text="No report generated yet" />
+        )}
+      </Box>
     </Page>
   );
 }

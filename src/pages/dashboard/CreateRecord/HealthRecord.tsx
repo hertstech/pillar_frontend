@@ -16,7 +16,7 @@ import categories from "../../../../categories.json";
 import { Calendar } from "../../../components/CalendarField";
 import InputField from "../../../components/InputField";
 import {
-  bloodTypes,
+  bloodGroups,
   primaryDiagnosis,
   secondaryDiagnosis,
   severity,
@@ -85,7 +85,7 @@ export default function HealthRecord() {
   const [formField, setFormField] = React.useState({
     categories: "",
     type: "",
-    bloodType: "",
+    bloodGroup: "",
     genotype: "",
     manufacturer: "",
     batchNumber: "",
@@ -307,18 +307,18 @@ export default function HealthRecord() {
           )}
 
           {formField.categories === "Genetic Information" &&
-            formField.type === "Blood Type" && (
-              <label htmlFor="bloodType">
-                Blood Type
+            formField.type === "Blood Group" && (
+              <label htmlFor="bloodGroup">
+                Blood Group
                 <TextField
                   select
                   sx={{ marginTop: "5px" }}
                   fullWidth
-                  name="bloodType"
-                  value={formField.bloodType}
-                  onChange={(e) => handleChange("bloodType", e.target.value)}
+                  name="bloodGroup"
+                  value={formField.bloodGroup}
+                  onChange={(e) => handleChange("bloodGroup", e.target.value)}
                 >
-                  {bloodTypes.map((item, index) => (
+                  {bloodGroups.map((item, index) => (
                     <MenuItem key={index} value={item.value}>
                       {item.label}
                     </MenuItem>
@@ -559,7 +559,7 @@ export default function HealthRecord() {
 
           {formField.categories === "Diagnosis" && (
             <label htmlFor="notes">
-              Progress Notes
+              Clinical Notes
               <textarea
                 className={Styles.area}
                 name={`progressNote_`}
@@ -671,8 +671,8 @@ export default function HealthRecord() {
                 )}
 
                 {/* GENETIC INFORMATION */}
-                {formField.type === "Blood Type" && (
-                  <TextLabel label="Blood Type" text={formField.bloodType} />
+                {formField.type === "Blood Group" && (
+                  <TextLabel label="Blood Group" text={formField.bloodGroup} />
                 )}
 
                 {formField.type === "Genotype" && (
@@ -765,7 +765,7 @@ export default function HealthRecord() {
 
                 {formField.categories === "Diagnosis" && (
                   <TextLabel
-                    label="Progress notes"
+                    label="Clinical notes"
                     text={formField.progressNote}
                   />
                 )}

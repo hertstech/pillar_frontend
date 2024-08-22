@@ -7,6 +7,7 @@ import { IoLogOutOutline } from "react-icons/io5";
 import { FiGrid } from "react-icons/fi";
 import { resetClientState } from "../../redux/clientSlice";
 import { FiHome } from "react-icons/fi";
+import { LuSearch } from "react-icons/lu";
 import { MdDisplaySettings } from "react-icons/md";
 import { FaRegFile } from "react-icons/fa";
 import { BiSupport } from "react-icons/bi";
@@ -18,17 +19,23 @@ import { axiosInstance } from "../../Utils";
 // HOME, dashboard, Monitoring, Form, Files, Settings, Support
 
 const navLinks = [
-  {
-    id: 0,
-    name: "Home",
-    to: "/dashboard/app",
-    icon: <FiHome size={24} />,
-  },
+  // {
+  //   id: 0,
+  //   name: "Home",
+  //   to: "/dashboard/app",
+  //   icon: <FiHome size={24} />,
+  // },
   {
     id: 1,
     name: "Dashboard",
-    to: "/",
+    to: "/dashboard/home",
     icon: <FiGrid size={24} />,
+  },
+  {
+    id: 5,
+    name: "Search Record",
+    to: "/dashboard/search",
+    icon: <LuSearch size={24} />,
   },
   {
     id: 2,
@@ -43,13 +50,14 @@ const navLinks = [
     to: "/dashboard/files",
     icon: <FaRegFile size={24} />,
   },
+
   {
-    id: 5,
+    id: 6,
     name: "Settings",
     to: "/dashboard/setting",
     icon: <MdOutlineSettings size={24} />,
   },
-  { id: 6, name: "Support", to: "/", icon: <BiSupport size={24} /> },
+  { id: 7, name: "Support", to: "/", icon: <BiSupport size={24} /> },
 ];
 
 export default function Sidebar() {

@@ -18,7 +18,7 @@ import NoResultIllustration, { SpinLoader } from "../../../components/NoResult";
 import { FaAngleUp, FaAngleDown } from "react-icons/fa";
 import { Calendar } from "../../../components/CalendarField";
 import {
-  bloodTypes,
+  bloodGroups,
   followUpPlans,
   primaryDiagnosis,
   secondaryDiagnosis,
@@ -36,7 +36,7 @@ const title = ["Dr.", "Mrs.", "Ms."];
 interface FormState {
   categories: string;
   type: string;
-  bloodType: string;
+  bloodGroup: string;
   genotype: string;
   manufacturer: string;
   batchNumber: string;
@@ -75,7 +75,7 @@ interface apiResponse {
   degreeRating: string;
   administrationDate: string;
   batchNumber: string;
-  bloodType: string;
+  bloodGroup: string;
   categories: string;
   date_created: string;
   expirationDate: string;
@@ -433,23 +433,23 @@ export default function Health({ client }: PropType) {
                   )}
 
                 {form.categories === "Genetic Information" &&
-                  form.type === "Blood Type" && (
+                  form.type === "Blood Group" && (
                     <label
-                      htmlFor={`bloodType${index}`}
+                      htmlFor={`bloodGroup${index}`}
                       style={{ marginTop: "10px" }}
                     >
-                      Blood Type
+                      Blood Group
                       <TextField
                         select
                         sx={{ marginTop: "5px" }}
                         fullWidth
-                        name="bloodType"
-                        value={form.bloodType}
+                        name="bloodGroup"
+                        value={form.bloodGroup}
                         onChange={(e) =>
-                          handleFormChange(index, "bloodType", e.target.value)
+                          handleFormChange(index, "bloodGroup", e.target.value)
                         }
                       >
-                        {bloodTypes.map((item, index) => (
+                        {bloodGroups.map((item, index) => (
                           <MenuItem key={index} value={item.value}>
                             {item.label}
                           </MenuItem>
@@ -755,7 +755,7 @@ export default function Health({ client }: PropType) {
 
               {form.categories === "Diagnosis" && (
                 <label htmlFor="notes" style={{ marginTop: "10px" }}>
-                  Progress Notes
+                  Clinical Notes
                   <textarea
                     className={Styles.area}
                     name={`progressNote_${index}`}
@@ -905,8 +905,8 @@ export default function Health({ client }: PropType) {
                         )}
 
                         {/* GENETIC INFORMATION */}
-                        {item.type === "blood type" && (
-                          <TextLabel label="Blood Type" text={item.bloodType} />
+                        {item.type === "blood group" && (
+                          <TextLabel label="Blood Group" text={item.bloodGroup} />
                         )}
 
                         {item.type === "genotype" && (
@@ -1001,7 +1001,7 @@ export default function Health({ client }: PropType) {
 
                         {item.categories === "diagnosis" && (
                           <TextLabel
-                            label="Progress notes"
+                            label="Clinical notes"
                             text={item.progressNote}
                           />
                         )}

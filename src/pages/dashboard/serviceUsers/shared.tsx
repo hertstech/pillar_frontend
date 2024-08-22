@@ -108,12 +108,12 @@ export const category = [
       "Pulse Rate",
       "Respiration Rate",
       "Oxygen Saturation",
-      "Blood type",
+      "Blood group",
     ],
   },
 ];
 
-export const bloodTypes = [
+export const bloodGroups = [
   { value: "A+", label: "A+" },
   { value: "A-", label: "A-" },
   { value: "B+", label: "B+" },
@@ -155,7 +155,6 @@ export const treatmentStatus = [
   "Pending",
   "Active",
   "Completed",
-  "Discharged",
   "On Hold",
   "Cancelled",
   "Suspended",

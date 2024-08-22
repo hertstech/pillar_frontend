@@ -12,7 +12,7 @@
   },
   {
     "name": "Genetic Information",
-    "type": ["Blood Type", "Genotype"]
+    "type": ["Blood Group", "Genotype"]
   },
   {
     "name": "Immunization",

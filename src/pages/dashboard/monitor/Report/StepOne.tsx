@@ -12,7 +12,7 @@ import moment from "moment";
 import { Calendar } from "../../../../components/CalendarField";
 import { useState } from "react";
 import {
-  bloodTypes,
+  bloodGroups,
   genoTypes,
   immunizationTypes,
   medName,
@@ -469,7 +469,7 @@ export default function StepOne({ formData, handleChange }: any) {
                         }
                         renderValue={(selected) => selected.join(", ")}
                       >
-                        {bloodTypes.map((item, index) => (
+                        {bloodGroups.map((item, index) => (
                           <MenuItem
                             disableGutters
                             selected

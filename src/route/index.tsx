@@ -8,11 +8,12 @@ import Page404 from "../pages/Page404";
 import Singleuser from "../pages/dashboard/serviceUsers";
 import AuthGuard from "../Guard/AuthGuard";
 import CreateRecord from "../pages/dashboard/CreateRecord";
-import Home from "../pages/dashboard/home";
-import Result from "../pages/dashboard/home/Result";
+import Search from "../pages/dashboard/search";
+import Result from "../pages/dashboard/search/Result";
 import Monitor from "../pages/dashboard/monitor";
 import File from "../pages/dashboard/files";
 import CreateReport from "../pages/dashboard/monitor/Report/CreateReport";
+import Home from "../pages/dashboard/home";
 
 export const router = createBrowserRouter([
   // AUTH
@@ -44,14 +45,21 @@ export const router = createBrowserRouter([
     element: <DashboardLayout />,
 
     children: [
-      { element: <Navigate to="/dashboard/app" replace />, index: true },
-
+      { element: <Navigate to="/dashboard" replace />, index: true },
       {
-        path: "app",
+        path: "home",
+        element: <Home />,
+        // children: [
+        //   { index: true, element: <Home /> },
+        //   { path: "search", element: <Result /> },
+        // ],
+      },
+      {
+        path: "search",
         element: <Outlet />,
         children: [
-          { index: true, element: <Home /> },
-          { path: "search", element: <Result /> },
+          { index: true, element: <Search /> },
+          { path: "result", element: <Result /> },
         ],
       },
 
