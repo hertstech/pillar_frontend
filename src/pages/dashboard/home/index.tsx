@@ -50,7 +50,7 @@ export default function Home({ triggerRefresh, chartData }: any) {
     setShow((prevIndex) => (prevIndex === id ? null : id));
   };
   return (
-    <Page title="">
+    <Page title="Pinned Reports">
         <Box marginTop={2}>
         {chartData?.filter(
           (result: { status: boolean }) => result?.status === true

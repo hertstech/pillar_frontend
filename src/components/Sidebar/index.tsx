@@ -6,7 +6,6 @@ import { dispatchLogout } from "../../redux/userSlice";
 import { IoLogOutOutline } from "react-icons/io5";
 import { FiGrid } from "react-icons/fi";
 import { resetClientState } from "../../redux/clientSlice";
-import { FiHome } from "react-icons/fi";
 import { LuSearch } from "react-icons/lu";
 import { MdDisplaySettings } from "react-icons/md";
 import { FaRegFile } from "react-icons/fa";
