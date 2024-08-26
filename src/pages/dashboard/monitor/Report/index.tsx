@@ -17,7 +17,7 @@ import {
 import { useEffect, useState } from "react";
 import InputField from "../../../../components/InputField";
 import NoResultIllustration from "../../../../components/NoResult";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ChartComponent from "../ChartComponent";
 import { TableHeadCustom } from "../../../../components/UserTable/TableHeadCustom";
 import moment from "moment";
@@ -31,6 +31,7 @@ const TABLE_HEAD = [
 ];
 
 export default function Report({ chartId, chartData, triggerRefresh }: any) {
+  const navigate = useNavigate();
   const [search, setSearch] = useState("");
 
   const [show, setShow] = useState(false);
@@ -41,6 +42,8 @@ export default function Report({ chartId, chartData, triggerRefresh }: any) {
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  console.log("chart ids report;", chartId);
 
   useEffect(() => {
     setPage(0);
@@ -73,6 +76,7 @@ export default function Report({ chartId, chartData, triggerRefresh }: any) {
         setTimeout(() => {
           setShowAlert(false);
           triggerRefresh();
+          navigate("/dashboard/home");
         }, 3000);
       }
     } catch (error) {

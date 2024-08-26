@@ -4,8 +4,14 @@ import ChartComponent from "../monitor/ChartComponent";
 import NoResultIllustration from "../../../components/NoResult";
 import { axiosInstance } from "../../../Utils";
 import Page from "../../../components/PageWrapper";
+import { RootState } from "../../../redux/store";
+import { useSelector } from "react-redux";
 
 export default function Home({ triggerRefresh, chartData }: any) {
+  // const chartData = useSelector((state: RootState) => state.charts.chartData);
+
+  console.log("chart data from index:", chartData);
+
   const [show, setShow] = useState(false);
 
   const handleUnPin = async (id: string) => {
@@ -46,12 +52,13 @@ export default function Home({ triggerRefresh, chartData }: any) {
       console.error(error);
     }
   };
+
   const handleToggle = (id: any) => {
     setShow((prevIndex) => (prevIndex === id ? null : id));
   };
   return (
     <Page title="Pinned Reports">
-        <Box marginTop={2}>
+      <Box marginTop={2}>
         {chartData?.filter(
           (result: { status: boolean }) => result?.status === true
         ).length > 0 ? (

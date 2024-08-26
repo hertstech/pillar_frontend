@@ -14,6 +14,8 @@ import storage from "redux-persist/lib/storage";
 import userReducer from "./userSlice";
 import clientReducer from "./clientSlice";
 import createServiceUserSlice from "./createServiceUserSlice";
+import chartReducer from "./dashboardSlices/chartSlice";
+import monitoringReducer from "./dashboardSlices/monitoringSlice";
 
 const persistConfig = {
   key: "root",
@@ -25,6 +27,8 @@ const rootReducer = combineReducers({
   user: userReducer,
   client: clientReducer,
   createNewUser: createServiceUserSlice,
+  charts: chartReducer,
+  monitoring: monitoringReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -40,3 +44,5 @@ export const store = configureStore({
 });
 
 export let persistor = persistStore(store);
+export type AppDispatch = typeof store.dispatch;
+export type RootState = ReturnType<typeof store.getState>;

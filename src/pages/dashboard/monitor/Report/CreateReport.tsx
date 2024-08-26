@@ -689,7 +689,7 @@ export default function CreateReport() {
                 borderRadius: "6px",
               }}
               onClick={() => {
-                navigate("/dashboard/app");
+                navigate("/dashboard/home");
                 setShowModal(false);
               }}
             >

@@ -3,8 +3,12 @@ import ChartComponent from "./ChartComponent";
 import NoResultIllustration from "../../../components/NoResult";
 import { useState } from "react";
 import { axiosInstance } from "../../../Utils";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../redux/store";
 
 export default function Analytics({ triggerRefresh, chartData }: any) {
+  // const chartData = useSelector((state: RootState) => state.charts.chartData);
+
   const [show, setShow] = useState(false);
 
   const handleUnPin = async (id: string) => {

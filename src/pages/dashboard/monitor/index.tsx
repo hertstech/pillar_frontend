@@ -6,6 +6,9 @@ import { useSelector } from "react-redux";
 import Analytics from "./Analytics";
 import HeaderTabs from "../../../components/HeaderTabs";
 import Page from "../../../components/PageWrapper";
+import { fetchMonitoringData } from "../../../services/apis/monitoring/charts";
+import { RootState } from "../../../redux/store";
+// import { axiosInstance } from "../../../Utils";
 
 export default function Monitor() {
   const user = useSelector((state: any) => state.user.user);
@@ -66,10 +69,10 @@ export default function Monitor() {
   }, [chartId]);
 
   const tabs = [
-    {
-      label: "Analytics",
-      content: <Analytics chartId={chartId} chartData={chartData} />,
-    },
+    // {
+    //   label: "Analytics",
+    //   content: <Analytics chartId={chartId} chartData={chartData} />,
+    // },
     {
       label: "Report",
       content: (
