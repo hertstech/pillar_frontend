@@ -139,7 +139,7 @@ export default function Search() {
       });
 
       if (res.status === 200) {
-        navigate(`/dashboard/app/search`, {
+        navigate(`/dashboard/search/result`, {
           state: { searchResults: res.data },
         });
         setIsLoading(false);
