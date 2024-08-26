@@ -4,8 +4,6 @@ import ChartComponent from "../monitor/ChartComponent";
 import NoResultIllustration from "../../../components/NoResult";
 import { axiosInstance } from "../../../Utils";
 import Page from "../../../components/PageWrapper";
-import { RootState } from "../../../redux/store";
-import { useSelector } from "react-redux";
 
 export default function Home({ triggerRefresh, chartData }: any) {
   // const chartData = useSelector((state: RootState) => state.charts.chartData);

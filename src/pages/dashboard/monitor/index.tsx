@@ -3,11 +3,8 @@ import Report from "./Report";
 import Activity from "./Activity";
 import { axiosInstance } from "../../../Utils";
 import { useSelector } from "react-redux";
-import Analytics from "./Analytics";
 import HeaderTabs from "../../../components/HeaderTabs";
 import Page from "../../../components/PageWrapper";
-import { fetchMonitoringData } from "../../../services/apis/monitoring/charts";
-import { RootState } from "../../../redux/store";
 // import { axiosInstance } from "../../../Utils";
 
 export default function Monitor() {
