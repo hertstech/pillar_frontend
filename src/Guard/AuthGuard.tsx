@@ -6,7 +6,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const isLogged = useSelector((state: any) => state.user.isLogged);
 
   if (isLogged === true) {
-    return <Navigate to="/dashboard" />;
+    return <Navigate to="/dashboard/home" />;
   }
   return <>{children}</>;
 }
