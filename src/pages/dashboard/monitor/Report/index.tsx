@@ -21,11 +21,11 @@ import { Link, useNavigate } from "react-router-dom";
 import ChartComponent from "../ChartComponent";
 import { TableHeadCustom } from "../../../../components/UserTable/TableHeadCustom";
 import moment from "moment";
-import { axiosInstance } from "../../../../Utils";
 import { LuLayoutGrid } from "react-icons/lu";
 import { FaListUl, FaPlus, FaTrash } from "react-icons/fa";
 import { PinIcon, SearchIcon } from "../../../../assets/icons";
 import { FaEllipsis } from "react-icons/fa6";
+import { useChartApi } from "../../../../hooks/monitoring/chartsAction";
 
 const TABLE_HEAD = [
   { id: "name", label: "Report Name", align: "left" },
@@ -37,17 +37,18 @@ const TABLE_HEAD = [
 export default function Report({ chartId, chartData, triggerRefresh }: any) {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
-
   const [show, setShow] = useState(false);
-
-  const [showAlert, setShowAlert] = useState(false);
-
-  const [message, setMessage] = useState("");
-
   const [page, setPage] = useState(0);
+  const [isGrid, setIsGrid] = useState(true);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-
-  console.log("chart ids report;", chartId);
+  const {
+    showAlert,
+    message,
+    handlePin,
+    handleUnPin,
+    deleteChart,
+    setShowAlert,
+  } = useChartApi();
 
   useEffect(() => {
     setPage(0);
@@ -63,68 +64,34 @@ export default function Report({ chartId, chartData, triggerRefresh }: any) {
 
   const dataFiltered = applySortFilter({ chartId, search });
 
-  const [isGrid, setIsGrid] = useState(true);
-
-  const handlePin = async (id: string) => {
-    const payLoad = { status: true };
-    try {
-      const res = await axiosInstance.post(
-        `/hcp/monitoring/chart/status/${id}`,
-        payLoad
-      );
-
-      if (res.status === 200) {
-        setShowAlert(true);
-        setMessage("Item Pinned success");
-
-        setTimeout(() => {
-          setShowAlert(false);
-          triggerRefresh();
-          navigate("/dashboard/home");
-        }, 3000);
-      }
-    } catch (error) {
-      console.error(error);
+  const onPinHandler = async (id: string) => {
+    const success = await handlePin(id);
+    if (success) {
+      setTimeout(() => {
+        setShowAlert(false);
+        triggerRefresh();
+        navigate("/dashboard/home");
+      }, 3000);
     }
   };
 
-  const handleUnPin = async (id: string) => {
-    const payLoad = { status: false };
-    try {
-      const res = await axiosInstance.post(
-        `/hcp/monitoring/chart/status/${id}`,
-        payLoad
-      );
-
-      if (res.status === 200) {
-        setShowAlert(true);
-        setMessage("Item Unpinned success");
-
-        setTimeout(() => {
-          setShowAlert(false);
-          triggerRefresh();
-        }, 3000);
-      }
-    } catch (error) {
-      console.error(error);
+  const onUnPinHandler = async (id: string) => {
+    const success = await handleUnPin(id);
+    if (success) {
+      setTimeout(() => {
+        setShowAlert(false);
+        triggerRefresh();
+      }, 3000);
     }
   };
 
-  const deleteChart = async (id: string) => {
-    try {
-      const res = await axiosInstance.delete(`/hcp/monitoring/chart/${id}`);
-
-      if (res.status === 200) {
-        setShowAlert(true);
-        setMessage("Item Deleted successfully");
-
-        setTimeout(() => {
-          setShowAlert(false);
-          triggerRefresh();
-        }, 3000);
-      }
-    } catch (error) {
-      console.error(error);
+  const onDeleteHandler = async (id: string) => {
+    const success = await deleteChart(id);
+    if (success) {
+      setTimeout(() => {
+        setShowAlert(false);
+        triggerRefresh();
+      }, 3000);
     }
   };
 
@@ -349,7 +316,7 @@ export default function Report({ chartId, chartData, triggerRefresh }: any) {
                               >
                                 {row.chartData.status === true ? (
                                   <Button
-                                    onClick={() => handleUnPin(row.id)}
+                                    onClick={() => onUnPinHandler(row.id)}
                                     sx={{
                                       display: "flex",
                                       alignItems: "center",
@@ -362,7 +329,7 @@ export default function Report({ chartId, chartData, triggerRefresh }: any) {
                                   </Button>
                                 ) : (
                                   <Button
-                                    onClick={() => handlePin(row.id)}
+                                    onClick={() => onPinHandler(row.id)}
                                     sx={{
                                       display: "flex",
 
@@ -386,7 +353,7 @@ export default function Report({ chartId, chartData, triggerRefresh }: any) {
                                     justifyContent: "flex-start",
                                   }}
                                   startIcon={<FaTrash />}
-                                  onClick={() => deleteChart(row.id)}
+                                  onClick={() => onDeleteHandler(row.id)}
                                 >
                                   Delete
                                 </Button>
@@ -477,7 +444,7 @@ export default function Report({ chartId, chartData, triggerRefresh }: any) {
                           >
                             {chart.status === true ? (
                               <Button
-                                onClick={() => handleUnPin(chart.id)}
+                                onClick={() => onUnPinHandler(chart.id)}
                                 sx={{
                                   display: "flex",
                                   alignItems: "center",
@@ -489,7 +456,7 @@ export default function Report({ chartId, chartData, triggerRefresh }: any) {
                               </Button>
                             ) : (
                               <Button
-                                onClick={() => handlePin(chart.id)}
+                                onClick={() => onPinHandler(chart.id)}
                                 sx={{
                                   display: "flex",
                                   alignItems: "center",
