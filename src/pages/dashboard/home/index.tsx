@@ -7,17 +7,21 @@ import {
   chartDataState,
   pinnedChartsState,
 } from "../../../atoms/monitoring/charts";
-import NoResultIllustration from "../../../components/NoResult";
+import NoResultIllustration, { SpinLoader } from "../../../components/NoResult";
 import ChartComponent from "../monitor/ChartComponent";
 import { IoEllipsisVertical } from "react-icons/io5";
 import { FaTrash } from "react-icons/fa";
 import { PinIcon } from "../../../assets/icons";
+import { useChartData, useMonitoringData } from "../../../hooks/monitoring";
 
 export default function Home() {
+  const [show, setShow] = useState(false);
+
   const pinnedCharts = useRecoilValue(pinnedChartsState);
   const setChartData = useSetRecoilState(chartDataState);
 
-  const [show, setShow] = useState(false);
+  const { isLoading, chartId } = useMonitoringData();
+  const chartData = useChartData(chartId);
 
   const handleUnPin = async (id: string) => {
     const payLoad = { status: false };
@@ -59,8 +63,12 @@ export default function Home() {
   };
 
   useEffect(() => {
-    console.log("pinnedCharts updated:", pinnedCharts);
-  }, [pinnedCharts]);
+    console.log("test run chart data:", chartData);
+  }, [chartData]);
+
+  if (isLoading) {
+    <SpinLoader />;
+  }
 
   return (
     <Page title="Pinned Reports">
