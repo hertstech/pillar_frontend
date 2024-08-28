@@ -126,7 +126,6 @@ export default function HealthRecord() {
 
   const handleSubmit = async () => {
     setIsLoading(true);
-
     const isCategoriesAndTypeEmpty =
       formField.categories === "" || formField.type === "";
 
@@ -155,17 +154,26 @@ export default function HealthRecord() {
         text: `${res.data.message}`,
         confirmButtonColor: "#2E90FA",
       });
-
       navigate(`/dashboard/user/${id}/2`);
     } catch (error: any) {
-      error;
       setIsLoading(false);
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: `${error.response.data.message}`,
-        confirmButtonColor: "#2E90FA",
-      });
+      setIsOpen(!isOpen);
+      // console.error("creation of report failed:", error.message);
+      if (error.response.status === 400) {
+        Swal.fire({
+          icon: "error",
+          title: "Not recorded",
+          text: `${error.response.data.detail}`,
+          confirmButtonColor: "#2E90FA",
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: `${error.response.data.message}`,
+          confirmButtonColor: "#2E90FA",
+        });
+      }
     }
   };
 
