@@ -6,7 +6,7 @@ import Report from "../monitor/Report";
 import Activity from "../monitor/Activity";
 import HeaderTabs from "../../../components/HeaderTabs";
 import { useSelector } from "react-redux";
-import Analytics from "../monitor/Analytics";
+import Analytics from "./Analytics";
 
 export default function Home() {
   const user = useSelector((state: any) => state.user.user);

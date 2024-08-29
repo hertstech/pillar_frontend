@@ -186,6 +186,8 @@ export default function Overview({ client }: PropType) {
     getOverview();
   }, [id]);
 
+  console.log("created blood group:", bloodGroup);
+
   const pressureData = {
     labels: pressure
       ? pressure
@@ -391,7 +393,7 @@ export default function Overview({ client }: PropType) {
                   </Typography>
                   <Typography color={"#344054"} sx={{ my: 1.5 }}>
                     <span style={{ fontWeight: 600, fontSize: 20 }}>
-                      {bloodGroup.bloodType || "N/A"}
+                      {bloodGroup.bloodGroup || "N/A"}
                     </span>
                   </Typography>
                   <Typography
