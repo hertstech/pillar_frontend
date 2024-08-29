@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import dayjs from "dayjs";
-import React, { useEffect } from "react";
+import React from "react";
 import categories from "../../../../categories.json";
 import { Calendar } from "../../../components/CalendarField";
 import InputField from "../../../components/InputField";
@@ -179,6 +179,8 @@ export default function HealthRecord() {
   };
 
   const { status } = useRecordStatus(id as string);
+
+  console.log(status)
 
   return (
     <Box>
