@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import dayjs from "dayjs";
-import React from "react";
+import React, { useEffect } from "react";
 import categories from "../../../../categories.json";
 import { Calendar } from "../../../components/CalendarField";
 import InputField from "../../../components/InputField";
@@ -29,6 +29,7 @@ import moment from "moment";
 import Swal from "sweetalert2";
 import { axiosInstance } from "../../../Utils";
 import { useNavigate, useParams } from "react-router-dom";
+import { useRecordStatus } from "../../../hooks/healthRecord";
 
 interface TextLabelProps {
   text: any;
@@ -177,6 +178,8 @@ export default function HealthRecord() {
     }
   };
 
+  const { status } = useRecordStatus(id as string);
+
   return (
     <Box>
       <div style={{ textAlign: "center", marginBottom: 25 }}>
@@ -218,7 +221,17 @@ export default function HealthRecord() {
               {categories
                 ?.find((category) => category.name === formField.categories)
                 ?.type.map((item, index) => (
-                  <MenuItem key={index} value={item}>
+                  <MenuItem
+                    // disabled={
+                    //   item === "Genotype"
+                    //     ? status.genotype
+                    //     : item === "Blood Group"
+                    //     ? status.bloodGroup
+                    //     : false
+                    // }
+                    key={index}
+                    value={item}
+                  >
                     {item ? item : ""}
                   </MenuItem>
                 ))}
@@ -315,27 +328,29 @@ export default function HealthRecord() {
           )}
 
           {formField.categories === "Genetic Information" &&
-            formField.type === "Blood Group" && (
-              <label htmlFor="bloodGroup">
-                Blood Group
-                <TextField
-                  select
-                  sx={{ marginTop: "5px" }}
-                  fullWidth
-                  name="bloodGroup"
-                  value={formField.bloodGroup}
-                  onChange={(e) => handleChange("bloodGroup", e.target.value)}
-                >
-                  {bloodGroups.map((item, index) => (
-                    <MenuItem key={index} value={item.value}>
-                      {item.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </label>
-            )}
-
-          {formField.categories === "Genetic Information" &&
+          formField.type === "Blood Group" ? (
+            <label htmlFor="bloodGroup">
+              Blood Group
+              <TextField
+                select
+                fullWidth
+                name="bloodGroup"
+                sx={{ marginTop: "5px" }}
+                value={formField.bloodGroup}
+                onChange={(e) => handleChange("bloodGroup", e.target.value)}
+              >
+                {bloodGroups.map((item, index) => (
+                  <MenuItem
+                    // disabled={status.bloodGroup}
+                    key={index}
+                    value={item.value}
+                  >
+                    {item.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </label>
+          ) : (
             formField.type === "Genotype" && (
               <label htmlFor="genotype">
                 Genotype
@@ -353,7 +368,8 @@ export default function HealthRecord() {
                   <MenuItem value="Other">Other</MenuItem>
                 </TextField>
               </label>
-            )}
+            )
+          )}
 
           {formField.categories === "Immunization" && (
             <label htmlFor={`manufacturer`}>

@@ -14,13 +14,13 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import moment from "moment";
 import { useEffect, useState } from "react";
 import InputField from "../../../../components/InputField";
 import NoResultIllustration from "../../../../components/NoResult";
 import { Link, useNavigate } from "react-router-dom";
 import ChartComponent from "../ChartComponent";
 import { TableHeadCustom } from "../../../../components/UserTable/TableHeadCustom";
-import moment from "moment";
 import { LuLayoutGrid } from "react-icons/lu";
 import { FaListUl, FaPlus, FaTrash } from "react-icons/fa";
 import { PinIcon, SearchIcon } from "../../../../assets/icons";
@@ -34,7 +34,12 @@ const TABLE_HEAD = [
   { id: "action", label: "Action", align: "center" },
 ];
 
-export default function Report({ chartId, chartData, triggerRefresh }: any) {
+export default function Report({
+  chartId,
+  chartData,
+  triggerRefresh,
+  isHome,
+}: any) {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [show, setShow] = useState(false);
