@@ -222,13 +222,13 @@ export default function HealthRecord() {
                 ?.find((category) => category.name === formField.categories)
                 ?.type.map((item, index) => (
                   <MenuItem
-                    // disabled={
-                    //   item === "Genotype"
-                    //     ? status.genotype
-                    //     : item === "Blood Group"
-                    //     ? status.bloodGroup
-                    //     : false
-                    // }
+                    disabled={
+                      item === "Genotype"
+                        ? status.genotype
+                        : item === "Blood Group"
+                        ? status.bloodGroup
+                        : false
+                    }
                     key={index}
                     value={item}
                   >
@@ -341,7 +341,7 @@ export default function HealthRecord() {
               >
                 {bloodGroups.map((item, index) => (
                   <MenuItem
-                    // disabled={status.bloodGroup}
+                    disabled={status.bloodGroup}
                     key={index}
                     value={item.value}
                   >
