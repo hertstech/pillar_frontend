@@ -2,7 +2,6 @@ import { Box, Button, Divider, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { axiosInstance } from "../../../Utils";
-import Page from "../../../components/PageWrapper";
 import {
   chartDataState,
   pinnedChartsState,

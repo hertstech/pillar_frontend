@@ -34,12 +34,7 @@ const TABLE_HEAD = [
   { id: "action", label: "Action", align: "center" },
 ];
 
-export default function Report({
-  chartId,
-  chartData,
-  triggerRefresh,
-  isHome,
-}: any) {
+export default function Report({ chartId, chartData, triggerRefresh }: any) {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [show, setShow] = useState(false);
