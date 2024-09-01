@@ -29,7 +29,7 @@ import moment from "moment";
 import Swal from "sweetalert2";
 import { axiosInstance } from "../../../Utils";
 import { useNavigate, useParams } from "react-router-dom";
-import { useRecordStatus } from "../../../hooks/healthRecord";
+import { useRecordStatus } from "../../../hooks/healthRecordStatus";
 
 interface TextLabelProps {
   text: any;
@@ -178,9 +178,10 @@ export default function HealthRecord() {
     }
   };
 
-  const { status } = useRecordStatus(id as string);
+  const { status, primaryDiagnosisStatus, secondaryDiagnosisStatus } =
+    useRecordStatus(id as string);
 
-  console.log(status)
+  console.log("the information status for pri diag:", primaryDiagnosisStatus);
 
   return (
     <Box>
@@ -440,7 +441,11 @@ export default function HealthRecord() {
                   }
                 >
                   {primaryDiagnosis.map((item, index) => (
-                    <MenuItem key={index} value={item}>
+                    <MenuItem
+                      key={index}
+                      value={item}
+                      disabled={primaryDiagnosisStatus?.includes(item)}
+                    >
                       {item}
                     </MenuItem>
                   ))}
@@ -463,7 +468,11 @@ export default function HealthRecord() {
                   }
                 >
                   {secondaryDiagnosis.map((item, index) => (
-                    <MenuItem key={index} value={item}>
+                    <MenuItem
+                      key={index}
+                      value={item}
+                      disabled={secondaryDiagnosisStatus?.includes(item)}
+                    >
                       {item}
                     </MenuItem>
                   ))}

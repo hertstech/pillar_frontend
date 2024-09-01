@@ -393,7 +393,7 @@ export default function Overview({ client }: PropType) {
                   </Typography>
                   <Typography color={"#344054"} sx={{ my: 1.5 }}>
                     <span style={{ fontWeight: 600, fontSize: 20 }}>
-                      {bloodGroup.bloodGroup || "N/A"}
+                      {bloodGroup.bloodType || "N/A"}
                     </span>
                   </Typography>
                   <Typography
