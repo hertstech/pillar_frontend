@@ -30,6 +30,7 @@ import { axiosInstance } from "../../../Utils";
 import { useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
 import dayjs from "dayjs";
+// import Drawer from "../../../components/Drawer";
 
 const title = ["Dr.", "Mrs.", "Ms."];
 
@@ -837,14 +838,56 @@ export default function Health({ client }: PropType) {
                     fullWidth
                     onClick={() => handleToggle(`${item?.type}${index}`)}
                   >
-                    <span>{item?.type}</span>
-                    <span>
-                      {show === `${item?.type}${index}` ? (
-                        <FaAngleUp />
-                      ) : (
-                        <FaAngleDown />
-                      )}
-                    </span>
+                    <span>{item?.type} </span>
+
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                      {/* <Drawer buttonProps={ sx={{
+                          width: "106px",
+                          color: "black",
+                          outline: "none",
+                          textTransform: "capitalize",
+                          fontWeight: 600,
+                          borderRadius: "16px",
+                          border: '1px "#099250"',
+                          background: "transparent",
+                          "&:hover": {
+                            backgroundColor: "#099250",
+                            color: "white",
+                          },
+                        }}} buttonText='Edit'>
+                        <Box>
+my contents here
+                        </Box>
+                      </Drawer> */}
+                      <Button
+                        variant="contained"
+                        sx={{
+                          width: "106px",
+                          color: "black",
+                          outline: "none",
+                          textTransform: "capitalize",
+                          fontWeight: 600,
+                          borderRadius: "16px",
+                          border: '1px "#099250"',
+                          background: "transparent",
+                          "&:hover": {
+                            backgroundColor: "#099250",
+                            color: "white",
+                          },
+                        }}
+                        onClick={navToUpdateHealth}
+                        disabled={hide}
+                      >
+                        Edit
+                      </Button>
+                      <span>
+                        {show === `${item?.type}${index}` ? (
+                          <FaAngleUp color="black" />
+                        ) : (
+                          <FaAngleDown color="black" />
+                        )}
+                      </span>
+                    </Box>
                   </Button>
 
                   {show === `${item?.type}${index}` && (
@@ -906,7 +949,10 @@ export default function Health({ client }: PropType) {
 
                         {/* GENETIC INFORMATION */}
                         {item.type === "blood group" && (
-                          <TextLabel label="Blood Group" text={item.bloodGroup} />
+                          <TextLabel
+                            label="Blood Group"
+                            text={item.bloodGroup}
+                          />
                         )}
 
                         {item.type === "genotype" && (

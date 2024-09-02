@@ -37,8 +37,6 @@ export default function Search() {
 
   const [numbError, setNumbError] = useState("");
 
-  const [showList, setShowList] = useState(false);
-
   const [isLoading, setIsLoading] = useState(false);
 
   const [firstName, setfirstName] = useState("");
