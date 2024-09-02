@@ -181,7 +181,7 @@ export default function HealthRecord() {
   const { status, primaryDiagnosisStatus, secondaryDiagnosisStatus } =
     useRecordStatus(id as string);
 
-  console.log("the information status for pri diag:", primaryDiagnosisStatus);
+  console.log("the information status for pri diag:", secondaryDiagnosisStatus);
 
   return (
     <Box>

@@ -13,15 +13,24 @@ interface TabProps {
   heading?: string;
   links: LinkItem[];
   isLoaded?: boolean;
+  activeTab?: number;
+  setActiveTab?: (index: number) => void;
 }
 
-export default function HeaderTabs({ heading, links, isLoaded }: TabProps) {
+export default function HeaderTabs({
+  heading,
+  links,
+  isLoaded,
+  activeTab,
+  setActiveTab,
+}: TabProps) {
   const [value, setValue] = React.useState(0);
 
   const { tabID } = useParams();
 
-  const handleChange = (_event: any, newValue: number) => {
+  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
+    setActiveTab?.(newValue);
   };
 
   React.useEffect(() => {
@@ -43,7 +52,7 @@ export default function HeaderTabs({ heading, links, isLoaded }: TabProps) {
 
           <Tabs
             TabIndicatorProps={{ style: { display: "none" } }}
-            value={value}
+            value={activeTab !== undefined ? activeTab : value}
             variant="scrollable"
             scrollButtons={false}
             onChange={handleChange}
@@ -65,7 +74,10 @@ export default function HeaderTabs({ heading, links, isLoaded }: TabProps) {
                 icon={tab.icon}
                 value={tab.content}
                 iconPosition="start"
-                onClick={() => setValue(index)}
+                onClick={() => {
+                  setActiveTab?.(index);
+                  setValue(index);
+                }}
               />
             ))}
           </Tabs>
@@ -79,7 +91,7 @@ export default function HeaderTabs({ heading, links, isLoaded }: TabProps) {
               height: "calc(100vh - 100px)",
             }}
           >
-            {isLoaded ? <SpinLoader /> : links[value].content}
+            {isLoaded ? <SpinLoader /> : links[activeTab ?? value].content}
           </Box>
         </Box>
       </Box>

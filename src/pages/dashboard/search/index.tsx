@@ -46,6 +46,19 @@ export default function Search() {
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [error, setError] = useState("");
 
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
+
   function formatNumberForView(number: string) {
     // Add a dash after every 4 characters
     return number.replace(/(\d{4})(?=\d)/g, "$1-");
@@ -164,8 +177,9 @@ export default function Search() {
 
   const handleNavigate = (to: string) => {
     navigate(`${to}`);
-    // console.log(to);
+    handleClose();
   };
+
   return (
     <Page title="">
       <Box
@@ -229,52 +243,56 @@ export default function Search() {
               </g>
             </svg>
           }
-          onClick={() => setShowList(true)}
+          onClick={handleClick}
         >
           Add New
         </Button>
-        <>
-          <Popover
-            open={showList}
-            onClose={() => setShowList(false)}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
+
+        <Popover
+          id={id}
+          open={open}
+          anchorEl={anchorEl}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "left",
+          }}
+          sx={{ marginTop: "14px" }}
+        >
+          <List
+            sx={{
+              p: 0,
+              textTransform: "capitalize",
+              fontFamily: "fontBold",
+              fontWeight: 500,
+              width: "175px",
             }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "left",
-            }}
-            sx={{ marginTop: "140px" }}
           >
-            <List
-              sx={{
-                p: 0,
-                textTransform: "capitalize",
-                fontFamily: "fontBold",
-                fontWeight: 500,
-                width: "175px",
-              }}
-            >
-              {list.map((item) => (
-                <ListItem
-                  key={item.title}
-                  onClick={() => handleNavigate(`${item.to}`)}
+            {list.map((item) => (
+              <ListItem
+                key={item.title}
+                onClick={() => {
+                  handleNavigate(`${item.to}`);
+                  handleClose();
+                }}
+              >
+                <ListItemButton
+                  sx={{
+                    textTransform: "capitalize",
+                    fontFamily: "fontBold",
+                    fontWeight: 500,
+                  }}
                 >
-                  <ListItemButton
-                    sx={{
-                      textTransform: "capitalize",
-                      fontFamily: "fontBold",
-                      fontWeight: 500,
-                    }}
-                  >
-                    {item.title}
-                  </ListItemButton>
-                </ListItem>
-              ))}
-            </List>
-          </Popover>
-        </>
+                  {item.title}
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+        </Popover>
       </Box>
 
       <div className={Styles.boxContainer}>

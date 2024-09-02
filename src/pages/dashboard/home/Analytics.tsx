@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Typography } from "@mui/material";
+import { Box, Button, Divider, Popover, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { axiosInstance } from "../../../Utils";
@@ -14,7 +14,8 @@ import { PinIcon } from "../../../assets/icons";
 import { useChartData, useMonitoringData } from "../../../hooks/monitoring";
 
 export default function Analytics() {
-  const [show, setShow] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [currentChartId, setCurrentChartId] = useState<number | null>(null);
 
   const pinnedCharts = useRecoilValue(pinnedChartsState);
   const setChartData = useSetRecoilState(chartDataState);
@@ -57,12 +58,23 @@ export default function Analytics() {
     }
   };
 
-  const handleToggle = (id: any) => {
-    setShow((prevIndex) => (prevIndex === id ? null : id));
+  const handleClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    chartId: number
+  ) => {
+    setAnchorEl(event.currentTarget);
+    setCurrentChartId(chartId);
   };
 
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
+
   useEffect(() => {
-    console.log("test run chart data:", chartData);
+    console.log(typeof chartData);
   }, [chartData]);
 
   if (isLoading) {
@@ -109,55 +121,65 @@ export default function Analytics() {
                       height: "36px",
                       minWidth: "36px",
                     }}
-                    onClick={() => handleToggle(chart.id)}
+                    onClick={(event) => handleClick(event, chart.id)}
                   >
                     <IoEllipsisVertical />
-                    <>
-                      {show === chart.id && (
-                        <Box
-                          sx={{
-                            position: "absolute",
-                            zIndex: 1,
-                            background: "white",
-                            border: "1px #F2F4F7 solid",
-                            borderRadius: 2,
-                            width: "120px",
-                            top: "53px",
-                            right: "-16px",
-                            p: 1,
-                          }}
-                        >
-                          {chart.status === true && (
-                            <Button
-                              onClick={() => handleUnPin(chart.id)}
-                              sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                textTransform: "none",
-                                color: "#2A2D32",
-                              }}
-                              startIcon={<PinIcon />}
-                            >
-                              Unpin
-                            </Button>
-                          )}
-                          <Button
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              textTransform: "none",
-                              color: "#CB1A14",
-                              justifyContent: "flex-start",
-                            }}
-                            startIcon={<FaTrash />}
-                            onClick={() => deleteChart(chart.id)}
-                          >
-                            Delete
-                          </Button>
-                        </Box>
-                      )}
-                    </>
                   </Button>
+                  <Popover
+                    id={id}
+                    open={open && currentChartId === chart.id}
+                    anchorEl={anchorEl}
+                    onClose={handleClose}
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "right",
+                    }}
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "right",
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        zIndex: 1,
+                        background: "white",
+                        border: "1px #F2F4F7 solid",
+                        borderRadius: 2,
+                        width: "120px",
+                        top: "53px",
+                        right: "-16px",
+                        p: 1,
+                      }}
+                    >
+                      {chart.status === true && (
+                        <Button
+                          onClick={() => handleUnPin(chart.id)}
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            textTransform: "none",
+                            color: "#2A2D32",
+                          }}
+                          startIcon={<PinIcon />}
+                        >
+                          Unpin
+                        </Button>
+                      )}
+                      <Button
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          textTransform: "none",
+                          color: "#CB1A14",
+                          justifyContent: "flex-start",
+                        }}
+                        startIcon={<FaTrash />}
+                        onClick={() => deleteChart(chart.id)}
+                      >
+                        Delete
+                      </Button>
+                    </Box>
+                  </Popover>
                 </Box>
 
                 <Divider />

@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Page from "../../../components/PageWrapper";
 import { useChartData, useMonitoringData } from "../../../hooks/monitoring";
 import Report from "../monitor/Report";
@@ -13,6 +13,7 @@ export default function Home() {
 
   const { isLoading, data, chartId, getMonitoring } = useMonitoringData();
   const chartData = useChartData(chartId);
+  const [activeTab, setActiveTab] = useState(0);
 
   const tabs = [
     {
@@ -26,6 +27,7 @@ export default function Home() {
           chartId={chartId}
           triggerRefresh={getMonitoring}
           chartData={chartData}
+          setActiveTab={setActiveTab}
         />
       ),
     },
@@ -44,13 +46,18 @@ export default function Home() {
   });
 
   useEffect(() => {
-    console.log("test run chart data:", chartData);
+    console.log(typeof chartData);
   }, [chartData]);
 
   return (
     <Page title={`Welcome back ${user.firstName}`}>
       <Box padding={2}>
-        <HeaderTabs links={filteredTabs} isLoaded={isLoading} />
+        <HeaderTabs
+          links={filteredTabs}
+          isLoaded={isLoading}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+        />
       </Box>
     </Page>
   );
