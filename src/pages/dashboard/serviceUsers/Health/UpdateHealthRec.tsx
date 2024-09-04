@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import DrawerComp from "../../../../components/Drawer";
 import { EditIcon } from "../../../../assets/icons";
 import { Box, Button } from "@mui/material";
@@ -6,21 +6,28 @@ import { MoveBackComp } from "../../../../components/MoveBack";
 import { CustomSelect } from "../../../../components/Select";
 import { useForm, useWatch } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
-import Joi from "joi";
+import { selectItems } from "../../../../data/healthRecord";
+import { axiosInstance } from "../../../../Utils";
+import Swal from "sweetalert2";
+import { recordSchema } from "./schemas/healthRecord";
 
 type HealthRecType = {
   id: string;
 };
 
 type FormValues = {
-  category: string;
+  severity: string;
+  treatmentStatus: string;
+  treatmentType: string;
+  followUpPlan: string;
+  notes: string;
 };
 
-const schema = Joi.object({
-  category: Joi.string().required().label("Category"),
-});
+interface IProps {
+  id: string | null;
+}
 
-export const UpdateHealthRec: React.FC<HealthRecType> = ({ id }) => {
+export const UpdateHealthRec: React.FC<HealthRecType> = ({ id }: IProps) => {
   console.log("the id to pick data for update:", id);
 
   const {
@@ -30,30 +37,62 @@ export const UpdateHealthRec: React.FC<HealthRecType> = ({ id }) => {
     setValue,
     control,
   } = useForm<FormValues>({
-    resolver: joiResolver(schema),
+    resolver: joiResolver(recordSchema),
   });
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  const selectedValue = useWatch({
-    control,
-    name: "category",
-  });
+  const handleOpenDrawer = () => {
+    setIsDrawerOpen(true);
+  };
+
+  const handleCloseDrawer = () => {
+    setIsDrawerOpen(false);
+  };
+
+  const severityValue = useWatch({ control, name: "severity" });
+  const treatmentStatusValue = useWatch({ control, name: "treatmentStatus" });
+  const treatmentTypeValue = useWatch({ control, name: "treatmentType" });
+  const followUpPlanValue = useWatch({ control, name: "followUpPlan" });
 
   useEffect(() => {
-    setValue("category", selectItems[0].value);
+    setValue("severity", selectItems.severity[0].value);
+    setValue("treatmentStatus", selectItems.treatmentStatus[0].value);
+    setValue("treatmentType", selectItems.treatmentType[0].value);
+    setValue("followUpPlan", selectItems.followUpPlan[0].value);
   }, [setValue]);
 
-  const onSubmit = (data: FormValues, event?: React.BaseSyntheticEvent) => {
+  const onSubmit = async (
+    data: FormValues,
+    event?: React.BaseSyntheticEvent
+  ) => {
     if (event) {
       event.preventDefault();
     }
-    console.log("Form Submitted:", data);
+    try {
+      console.log("Form Submitted:", data);
+      const response = await axiosInstance.put(
+        `/update-serviceuser-healthsummaryrecord/diagnosis/status/${id}`,
+        data
+      );
+      handleCloseDrawer();
+      Swal.fire({
+        icon: "success",
+        title: "Record Updated",
+        text: "The health record has been successfully updated.",
+      });
+      console.log("Update Response success:", response.data);
+    } catch (error: any) {
+      handleCloseDrawer();
+      Swal.fire({
+        icon: "error",
+        title: "Update Failed",
+        text:
+          error.response?.data?.message ||
+          "An error occurred while updating the record.",
+      });
+      console.error("Error updating record:", error);
+    }
   };
-
-  const selectItems = [
-    { id: "1", name: "Category 1", value: "cat1" },
-    { id: "2", name: "Category 2", value: "cat2" },
-    { id: "3", name: "Category 3", value: "cat3" },
-  ];
 
   return (
     <>
@@ -76,6 +115,9 @@ export const UpdateHealthRec: React.FC<HealthRecType> = ({ id }) => {
         }}
         isIcon={<EditIcon />}
         buttonText="Edit"
+        open={isDrawerOpen}
+        onOpen={handleOpenDrawer}
+        onClose={handleCloseDrawer}
       >
         <Box
           sx={{
@@ -89,24 +131,131 @@ export const UpdateHealthRec: React.FC<HealthRecType> = ({ id }) => {
           <MoveBackComp
             title="Update health information"
             subTitle="Some sickness here"
-            onMovingBack={() => null}
+            onMovingBack={handleCloseDrawer}
           />
-          <form style={{ marginTop: "32px" }} onSubmit={handleSubmit(onSubmit)}>
+          <form
+            style={{
+              marginTop: "32px",
+              flexDirection: "column",
+              display: "flex",
+              gap: "24px",
+            }}
+            onSubmit={handleSubmit(onSubmit)}
+          >
             <CustomSelect
-              label="Category"
-              name="category"
-              selectItems={selectItems}
-              value={selectedValue}
-              onChange={(value) => setValue("category", value)}
+              label="Severity"
+              name="severity"
+              selectItems={selectItems.severity}
+              value={severityValue}
+              onChange={(value) => setValue("severity", value)}
               register={register}
-              validationError={errors.category}
+              validationError={errors.severity}
+            />
+            <CustomSelect
+              label="Treatment Status"
+              name="treatmentStatus"
+              selectItems={selectItems.treatmentStatus}
+              value={treatmentStatusValue}
+              onChange={(value) => setValue("treatmentStatus", value)}
+              register={register}
+              validationError={errors.treatmentStatus}
+              itemStyle={(item) => ({
+                padding: "4px 16px",
+                whiteSpace: "nowrap",
+                width: "fit-content",
+                borderRadius: "600px",
+                fontSize: "12px",
+                fontWeight: 600,
+                backgroundColor:
+                  item.value === "pending"
+                    ? "#F2F4F7"
+                    : item.value === "active"
+                    ? "#E7F6EC"
+                    : item.value === "on_hold"
+                    ? "#FEF6E7"
+                    : item.value === "completed"
+                    ? "#EFF8FF"
+                    : item.value === "cancelled"
+                    ? "#FBEAE9"
+                    : "",
+                color:
+                  item.value === "pending"
+                    ? "#475367"
+                    : item.value === "active"
+                    ? "#099137"
+                    : item.value === "on_hold"
+                    ? "#DD900D"
+                    : item.value === "completed"
+                    ? "#1570EF"
+                    : item.value === "cancelled"
+                    ? "#CB1A14"
+                    : "",
+              })}
             />
 
-            {errors.category && (
-              <p style={{ color: "red" }}>{errors.category.message}</p>
+            <CustomSelect
+              label="Treatment Type"
+              name="treatmentType"
+              selectItems={selectItems.treatmentType}
+              value={treatmentTypeValue}
+              onChange={(value) => setValue("treatmentType", value)}
+              register={register}
+              validationError={errors.treatmentType}
+            />
+            <CustomSelect
+              label="Follow-Up Plan"
+              name="followUpPlan"
+              selectItems={selectItems.followUpPlan}
+              value={followUpPlanValue}
+              onChange={(value) => setValue("followUpPlan", value)}
+              register={register}
+              validationError={errors.followUpPlan}
+            />
+            <label htmlFor="notes" className="-mb-4 ">
+              Add Notes
+            </label>
+            <textarea
+              {...register("notes")}
+              rows={4}
+              cols={50}
+              style={{
+                width: "100%",
+                padding: "8px",
+                outline: "none",
+                minHeight: "100px",
+                borderRadius: "8px",
+                borderColor: errors.notes ? "red" : "#ccc",
+              }}
+              className="border-[1px]"
+            />
+            {errors.notes && (
+              <p style={{ color: "red" }}>{errors.notes.message}</p>
             )}
 
-            <Button type="submit">Submit</Button>
+            <Button
+              type="submit"
+              sx={{
+                color: "#F6FEF9",
+                outline: "none",
+                fontSize: "1rem",
+                fontWeight: 600,
+                background: "#2E90FA",
+                "&:hover": { backgroundColor: "#2E90FA" },
+                padding: "16px, 24px",
+                borderRadius: 2,
+                height: "3.5rem",
+                width: "16rem",
+                "&.Mui-disabled": {
+                  opacity: 0.3,
+                  color: "white",
+                },
+              }}
+              disabled={false}
+              variant="outlined"
+              className="!capitalize"
+            >
+              Update Record
+            </Button>
           </form>
         </Box>
       </DrawerComp>

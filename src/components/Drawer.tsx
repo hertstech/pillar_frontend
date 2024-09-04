@@ -10,6 +10,9 @@ type ReusableDrawerProps = {
   children: React.ReactNode;
   drawerProps?: Partial<React.ComponentProps<typeof DrawerComp>>;
   buttonProps?: Partial<React.ComponentProps<typeof Button>> | any;
+  open: boolean;
+  onClose: () => void;
+  onOpen: () => void;
 };
 
 const DrawerComp: React.FC<ReusableDrawerProps> = ({
@@ -18,20 +21,17 @@ const DrawerComp: React.FC<ReusableDrawerProps> = ({
   drawerProps = {},
   buttonProps = {},
   sx,
+  open,
+  onClose,
+  onOpen,
   ...rest
 }) => {
-  const [open, setOpen] = React.useState(false);
-
-  const toggleDrawer = (newOpen: boolean) => () => {
-    setOpen(newOpen);
-  };
-
   return (
-    <Box>
+    <Box onClick={(e) => e.stopPropagation()}>
       <Button
-        className="flex h-full w-full items-center justify-center gap-2 !bg-black"
+        className="flex h-full w-full items-center justify-center gap-2"
         sx={sx}
-        onClick={toggleDrawer(true)}
+        onClick={onOpen}
         {...buttonProps}
       >
         <>{buttonText}</>
@@ -40,11 +40,25 @@ const DrawerComp: React.FC<ReusableDrawerProps> = ({
       <Drawer
         open={open}
         anchor={"right"}
-        onClose={toggleDrawer(false)}
-        sx={{ borderRadius: "16px" }}
+        onClose={onClose}
+        sx={{
+          "& .MuiDrawer-paper": {
+            borderRadius: " 16px 0px 0px 16px",
+          },
+        }}
         {...drawerProps}
       >
-        <Box role="presentation">{children}</Box>
+        <Box
+          sx={{
+            "& .MuiDrawer-paper": {
+              borderRadius: "16px",
+            },
+          }}
+          role="presentation"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {children}
+        </Box>
       </Drawer>
     </Box>
   );

@@ -172,18 +172,24 @@ const TextLabel = ({ text, label, isLoading }: TextLabelProps) => (
 
 export default function Health({ client }: PropType) {
   const [hide, setHide] = useState(false);
-  const [show, setShow] = useState("");
+  const [show, setShow] = useState<string | null>(null);
   const [formField, setFormField] = useState<FormState[]>([]);
   const [record, setRecord] = useState<apiResponse[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const { id } = useParams();
 
   const navigate = useNavigate();
 
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleToggle = (index: any) => {
-    setShow((prevIndex) => (prevIndex === index ? null : index));
+  const handleToggle = (id: string, itemId: string) => {
+    if (show === id) {
+      setShow(null);
+      setSelectedId(null);
+    } else {
+      setShow(id);
+      setSelectedId(itemId);
+    }
   };
 
   const navToUpdateHealth = () => {
@@ -838,12 +844,14 @@ export default function Health({ client }: PropType) {
                       color: "#099250",
                     }}
                     fullWidth
-                    onClick={() => handleToggle(`${item?.type}${index}`)}
+                    onClick={() =>
+                      handleToggle(`${item?.type}${index}`, item.id)
+                    }
                   >
                     <span>{item?.type} </span>
 
                     <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                   <UpdateHealthRec id={item.id}/>
+                      <UpdateHealthRec id={selectedId as string} />
                       <span>
                         {show === `${item?.type}${index}` ? (
                           <FaAngleUp color="black" />

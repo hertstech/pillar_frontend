@@ -1,5 +1,5 @@
 import React from "react";
-import { MenuItem, TextField, TextFieldProps } from "@mui/material";
+import { Box, MenuItem, TextField, TextFieldProps } from "@mui/material";
 import { FieldError, UseFormRegister } from "react-hook-form";
 
 interface CustomSelectProps
@@ -11,6 +11,7 @@ interface CustomSelectProps
   register?: UseFormRegister<any>;
   onChange: (value: string) => void;
   selectItems: { id: string; name: string; value: string }[];
+  itemStyle?: (item: { id: string; name: string; value: string }) => any;
 }
 
 export const CustomSelect: React.FC<CustomSelectProps> = ({
@@ -20,11 +21,12 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
   value,
   onChange,
   register,
+  itemStyle,
   validationError,
   ...textFieldProps
 }) => {
   return (
-    <label htmlFor={name}>
+    <label htmlFor={name} className="!font-900">
       {label}
       <TextField
         select
@@ -33,8 +35,12 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
         sx={{
           marginTop: "8px",
           "& .MuiOutlinedInput-root": {
-            border: "1px solid #E7E9FB",
+            color: "#101928",
+            fontSize: "16px",
+            fontWeight: 500,
+            border: "0px solid #E7E9FB",
             borderRadius: "8px",
+            width: "auto",
           },
         }}
         error={!!validationError}
@@ -47,8 +53,22 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
         }}
       >
         {selectItems.map((item) => (
-          <MenuItem key={item.id} value={item.value}>
-            {item.name}
+          <MenuItem
+            key={item.id}
+            value={item.value}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              padding: "8px 16px",
+            }}
+          >
+            <Box
+              sx={{
+                ...(itemStyle ? itemStyle(item) : {}),
+              }}
+            >
+              {item.name}
+            </Box>
           </MenuItem>
         ))}
       </TextField>
