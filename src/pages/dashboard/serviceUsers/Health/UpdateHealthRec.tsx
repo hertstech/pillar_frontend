@@ -66,22 +66,22 @@ export const UpdateHealthRec: React.FC<IProps> = ({ id, refreshData }) => {
     }
   }, [treatmentStatusValue]);
 
-  useEffect(() => {
-    const getStatus = async () => {
-      try {
-        const res = await axiosInstance.get(
-          `/serviceuser-record/status/history/${id}`
-        );
-        console.log("record history:", res.data);
-      } catch (err) {
-        console.error("Error getting record:", err);
-      }
-    };
+  // useEffect(() => {
+  //   const getStatus = async () => {
+  //     try {
+  //       const res = await axiosInstance.get(
+  //         `/serviceuser-record/status/history/${id}`
+  //       );
+  //       console.log("record history:", res.data);
+  //     } catch (err) {
+  //       console.error("Error getting record:", err);
+  //     }
+  //   };
 
-    if (id !== null || undefined) {
-      getStatus();
-    }
-  }, [id]);
+  //   if (id !== null || undefined) {
+  //     getStatus();
+  //   }
+  // }, [id]);
 
   const onSubmit = async (data: FormValues) => {
     // if (isReasoningModalOpen) return;

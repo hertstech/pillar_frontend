@@ -164,7 +164,21 @@ const TextLabel = ({ text, label, isLoading }: TextLabelProps) => (
           fontWeight: "fontBold ",
         }}
         fontSize={16}
-        color={"#101928"}
+        // color={}
+        className={classNames(
+          "font-[600]",
+          text === "pending"
+            ? "text-[#475367]"
+            : text === "active"
+            ? "text-[#099137]"
+            : text === "on_hold"
+            ? "text-[#DD900D]"
+            : text === "completed"
+            ? "text-[#1570EF]"
+            : text === "cancelled"
+            ? "text-[#CB1A14]"
+            : "#101928"
+        )}
       >
         {text}
       </Typography>
