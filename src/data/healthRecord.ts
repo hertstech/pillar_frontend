@@ -10,6 +10,7 @@ export const selectItems = {
     { id: "3", name: "Severe", value: "severe" },
   ],
   treatmentStatus: [
+    { id: "0", name: "Select a status", value: "" },
     { id: "1", name: "Pending", value: "pending" },
     { id: "2", name: "Active", value: "active" },
     { id: "3", name: "On hold", value: "on_hold" },
@@ -21,7 +22,7 @@ export const selectItems = {
     { id: "2", name: "Surgery", value: "surgery" },
     { id: "3", name: "Therapy", value: "therapy" },
   ],
-  followUpPlan: [
+  followUpPlans: [
     { id: "1", name: "Monthly", value: "monthly" },
     { id: "2", name: "Quarterly", value: "quarterly" },
     { id: "3", name: "Annually", value: "annually" },

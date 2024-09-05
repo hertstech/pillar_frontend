@@ -1,36 +1,44 @@
-import {
-  FieldError,
-  FieldErrors,
-  UseFormRegister,
-  UseFormSetValue,
-} from "react-hook-form";
+import React, { Dispatch, SetStateAction } from "react";
 import { Box } from "@mui/material";
-import { Dispatch, SetStateAction } from "react";
 import Modal from "../../../../../components/Modal";
 import { reasons } from "../../../../../data/statusChangeData";
 import { CustomSelect } from "../../../../../components/Select";
 import { PrimaryButton } from "../../../../../components/Button/primaryButton";
+import { useForm, FieldError } from "react-hook-form";
 
 interface ReasoningModalProps {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  treatmentTypeValue: string;
-  setValue: UseFormSetValue<any>;
-  errors: FieldErrors;
-  register: UseFormRegister<any>;
+  treatmentStatusValue: string;
+  selectedId: string | any;
 }
 
 const ReasoningModal: React.FC<ReasoningModalProps> = ({
   open,
   setOpen,
-  treatmentTypeValue,
-  setValue,
-  errors,
-  register,
+  treatmentStatusValue,
+  selectedId,
 }) => {
+  const {
+    handleSubmit,
+
+    setValue,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      reasons: "",
+    },
+  });
+
+  console.log("Reason of change type", treatmentStatusValue);
+  const onSubmit = (data: any) => {
+    console.log("Form submitted with data: ", data);
+    console.log("idddddds: ", selectedId);
+  };
+
   const validationError =
-    errors.treatmentType instanceof Object && "type" in errors.treatmentType
-      ? (errors.treatmentType as FieldError)
+    errors.reasons instanceof Object && "message" in errors.reasons
+      ? (errors.reasons as FieldError)
       : undefined;
 
   return (
@@ -47,20 +55,31 @@ const ReasoningModal: React.FC<ReasoningModalProps> = ({
             x
           </p>
         </Box>
-        <h1 className=" text-[1.25rem] font-[600] leading-6">
+        <h1 className="text-[1.25rem] font-[600] leading-6">
           Select a reason for this change
         </h1>
 
-        <form className="flex flex-col justify-between ">
+        <form
+          className="flex flex-col justify-between"
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <CustomSelect
             label="Reasons for status change"
-            name="status_change"
-            selectItems={reasons.holdCancel}
-            value={treatmentTypeValue}
+            name="reasons"
+            selectItems={
+              treatmentStatusValue === "pending"
+                ? reasons.pending
+                : reasons.holdCancel
+            }
+            value={treatmentStatusValue}
             onChange={(value) => setValue("reasons", value)}
-            register={register}
-            validationError={validationError}
           />
+          {validationError && (
+            <p className="text-red-500 text-xs mt-1">
+              {validationError.message}
+            </p>
+          )}
+
           <Box className="flex justify-between mt-8">
             <PrimaryButton
               type="button"
@@ -69,10 +88,11 @@ const ReasoningModal: React.FC<ReasoningModalProps> = ({
               buttonName="Cancel"
             />
             <PrimaryButton
-              type="submit"
+              //   type="submit"
               width="10.7rem"
               buttonName="Confirm"
               disabled={false}
+              onClick={() => setOpen(false)}
             />
           </Box>
         </form>

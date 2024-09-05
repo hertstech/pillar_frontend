@@ -12,24 +12,22 @@ import Swal from "sweetalert2";
 import { recordSchema } from "./schemas/healthRecord";
 import ReasoningModal from "./Components/resonsModal";
 
-type HealthRecType = {
-  id: string;
-};
-
 type FormValues = {
   severity: string;
   treatmentStatus: string;
   treatmentType: string;
-  followUpPlan: string;
+  followUpPlans: string;
   notes: string;
 };
 
 interface IProps {
   id: string | null;
+  refreshData: () => void;
 }
 
-export const UpdateHealthRec: React.FC<HealthRecType> = ({ id }: IProps) => {
+export const UpdateHealthRec: React.FC<IProps> = ({ id, refreshData }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isReasoningModalOpen, setIsReasoningModalOpen] = useState(false);
 
   const {
@@ -48,17 +46,17 @@ export const UpdateHealthRec: React.FC<HealthRecType> = ({ id }: IProps) => {
   const severityValue = useWatch({ control, name: "severity" });
   const treatmentStatusValue = useWatch({ control, name: "treatmentStatus" });
   const treatmentTypeValue = useWatch({ control, name: "treatmentType" });
-  const followUpPlanValue = useWatch({ control, name: "followUpPlan" });
+  const followUpPlanValue = useWatch({ control, name: "followUpPlans" });
 
   useEffect(() => {
     setValue("severity", selectItems.severity[0].value);
     setValue("treatmentStatus", selectItems.treatmentStatus[0].value);
     setValue("treatmentType", selectItems.treatmentType[0].value);
-    setValue("followUpPlan", selectItems.followUpPlan[0].value);
+    setValue("followUpPlans", selectItems.followUpPlans[0].value);
   }, [setValue]);
 
   useEffect(() => {
-    if (
+    if (treatmentStatusValue === "pending"||
       treatmentStatusValue === "cancelled" ||
       treatmentStatusValue === "on_hold"
     ) {
@@ -68,26 +66,49 @@ export const UpdateHealthRec: React.FC<HealthRecType> = ({ id }: IProps) => {
     }
   }, [treatmentStatusValue]);
 
-  const onSubmit = async (
-    data: FormValues,
-    event?: React.BaseSyntheticEvent
-  ) => {
-    if (event) event.preventDefault();
+  useEffect(() => {
+    const getStatus = async () => {
+      try {
+        const res = await axiosInstance.get(
+          `/serviceuser-record/status/history/${id}`
+        );
+        console.log("record history:", res.data);
+      } catch (err) {
+        console.error("Error getting record:", err);
+      }
+    };
+
+    if (id !== null || undefined) {
+      getStatus();
+    }
+  }, [id]);
+
+  const onSubmit = async (data: FormValues) => {
+    // if (isReasoningModalOpen) return;
+
+    setIsSubmitting(true);
+
+    const newData = {
+      ...data,
+      reason_for_change: "I just wanna do it now",
+    };
 
     try {
-      console.log("Form Submitted:", data);
       const response = await axiosInstance.put(
         `/update-serviceuser-healthsummaryrecord/diagnosis/status/${id}`,
-        data
+        newData
       );
+      setIsSubmitting(true);
       handleCloseDrawer();
       Swal.fire({
         icon: "success",
         title: "Record Updated",
         text: "The health record has been successfully updated.",
       });
-      console.log("Update Response success:", response.data);
+      console.log("this is the success msg:", response);
+      refreshData();
     } catch (error: any) {
+      setIsSubmitting(false);
       handleCloseDrawer();
       Swal.fire({
         icon: "error",
@@ -123,7 +144,7 @@ export const UpdateHealthRec: React.FC<HealthRecType> = ({ id }: IProps) => {
         buttonText="Edit"
         open={isDrawerOpen}
         onOpen={handleOpenDrawer}
-        onClose={handleCloseDrawer}
+        onClose={() => setIsDrawerOpen(false)}
       >
         <Box
           sx={{
@@ -137,7 +158,7 @@ export const UpdateHealthRec: React.FC<HealthRecType> = ({ id }: IProps) => {
           <MoveBackComp
             title="Update health information"
             subTitle="Some sickness here"
-            onMovingBack={handleCloseDrawer}
+            onMovingBack={() => setIsDrawerOpen(false)}
           />
 
           <form
@@ -155,7 +176,7 @@ export const UpdateHealthRec: React.FC<HealthRecType> = ({ id }: IProps) => {
               selectItems={selectItems.severity}
               value={severityValue}
               onChange={(value) => setValue("severity", value)}
-              register={register}
+              register={register("severity")}
               validationError={errors.severity}
             />
             <CustomSelect
@@ -164,15 +185,15 @@ export const UpdateHealthRec: React.FC<HealthRecType> = ({ id }: IProps) => {
               selectItems={selectItems.treatmentStatus}
               value={treatmentStatusValue}
               onChange={(value) => setValue("treatmentStatus", value)}
-              register={register}
+              register={register("treatmentStatus")}
               validationError={errors.treatmentStatus}
               itemStyle={(item) => ({
                 padding: "4px 16px",
                 whiteSpace: "nowrap",
                 width: "fit-content",
                 borderRadius: "600px",
-                fontSize: "12px",
-                fontWeight: 600,
+                fontWeight: item.value === "" ? 400 : 600,
+                fontSize: item.value === "" ? "16px" : "12px",
                 backgroundColor:
                   item.value === "pending"
                     ? "#F2F4F7"
@@ -196,7 +217,7 @@ export const UpdateHealthRec: React.FC<HealthRecType> = ({ id }: IProps) => {
                     ? "#1570EF"
                     : item.value === "cancelled"
                     ? "#CB1A14"
-                    : "",
+                    : "black",
               })}
             />
             <CustomSelect
@@ -205,19 +226,19 @@ export const UpdateHealthRec: React.FC<HealthRecType> = ({ id }: IProps) => {
               selectItems={selectItems.treatmentType}
               value={treatmentTypeValue}
               onChange={(value) => setValue("treatmentType", value)}
-              register={register}
+              register={register("treatmentType")}
               validationError={errors.treatmentType}
             />
             <CustomSelect
               label="Follow-Up Plan"
-              name="followUpPlan"
-              selectItems={selectItems.followUpPlan}
+              name="followUpPlans"
+              selectItems={selectItems.followUpPlans}
               value={followUpPlanValue}
-              onChange={(value) => setValue("followUpPlan", value)}
-              register={register}
-              validationError={errors.followUpPlan}
+              onChange={(value) => setValue("followUpPlans", value)}
+              register={register("followUpPlans")}
+              validationError={errors.followUpPlans}
             />
-            <label htmlFor="notes" className="-mb-4 ">
+            <label htmlFor="notes" className="-mb-4">
               Add Notes
             </label>
             <textarea
@@ -247,7 +268,7 @@ export const UpdateHealthRec: React.FC<HealthRecType> = ({ id }: IProps) => {
                 fontWeight: 600,
                 background: "#2E90FA",
                 "&:hover": { backgroundColor: "#2E90FA" },
-                padding: "16px, 24px",
+                padding: "16px 24px",
                 borderRadius: 2,
                 height: "3.5rem",
                 width: "16rem",
@@ -256,7 +277,7 @@ export const UpdateHealthRec: React.FC<HealthRecType> = ({ id }: IProps) => {
                   color: "white",
                 },
               }}
-              disabled={false}
+              disabled={isSubmitting}
               variant="outlined"
               className="!capitalize"
             >
@@ -269,10 +290,8 @@ export const UpdateHealthRec: React.FC<HealthRecType> = ({ id }: IProps) => {
       <ReasoningModal
         open={isReasoningModalOpen}
         setOpen={setIsReasoningModalOpen}
-        treatmentTypeValue={treatmentTypeValue}
-        setValue={setValue}
-        errors={errors}
-        register={register}
+        treatmentStatusValue={treatmentStatusValue}
+        selectedId={id}
       />
     </>
   );

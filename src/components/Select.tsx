@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, MenuItem, TextField, TextFieldProps } from "@mui/material";
-import { FieldError, UseFormRegister } from "react-hook-form";
+import { FieldError, UseFormRegisterReturn } from "react-hook-form";
 
 interface CustomSelectProps
   extends Omit<TextFieldProps, "select" | "onChange" | "value"> {
@@ -8,7 +8,7 @@ interface CustomSelectProps
   name: string;
   value: string;
   validationError?: FieldError;
-  register?: UseFormRegister<any>;
+  register?: UseFormRegisterReturn;
   onChange: (value: string) => void;
   selectItems: { id: string; name: string; value: string }[];
   itemStyle?: (item: { id: string; name: string; value: string }) => any;
@@ -45,12 +45,15 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
         }}
         error={!!validationError}
         helperText={validationError ? validationError.message : ""}
-        {...(register ? register(name) : {})}
-        {...textFieldProps}
+        inputRef={register?.ref}
+        name={register?.name}
         onChange={(e) => {
           e.preventDefault();
+          register?.onChange(e);
           onChange(e.target.value);
         }}
+        onBlur={register?.onBlur}
+        {...textFieldProps}
       >
         {selectItems.map((item) => (
           <MenuItem

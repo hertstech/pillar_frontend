@@ -29,7 +29,7 @@ import moment from "moment";
 import Swal from "sweetalert2";
 import { axiosInstance } from "../../../Utils";
 import { useNavigate, useParams } from "react-router-dom";
-import { useRecordStatus } from "../../../hooks/healthRecordStatus";
+import { useRecordStatus } from "../../../hooks/Health/healthRecordStatus";
 
 interface TextLabelProps {
   text: any;

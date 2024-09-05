@@ -32,9 +32,9 @@ import { axiosInstance } from "../../../../Utils";
 import { useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
 import dayjs from "dayjs";
-import { UpdateHealthRec } from "./UpdateHealthRec";
 import classNames from "classnames";
 import { LuDot } from "react-icons/lu";
+import { UpdateHealthRec } from "./UpdateHealthRec";
 
 const title = ["Dr.", "Mrs.", "Ms."];
 
@@ -852,12 +852,31 @@ export default function Health({ client }: PropType) {
                   >
                     <Box className="flex flex-col text-left">
                       <Box className="flex gap-2 items-center">
-                        <p className="text-[14px] font-[500] text-gray-500">
+                        <p className="text-[14px] font-[600] text-gray-500">
                           {item?.type}
                         </p>
-                        <LuDot />
-                        <p className={classNames("text-orange-400")}>
-                          status here
+
+                        {item.treatmentStatus !== null && <LuDot />}
+                        <p
+                          className={classNames(
+                            "font-[600]",
+                            item.treatmentStatus?.toLowerCase() === "pending"
+                              ? "text-[#475367]"
+                              : item.treatmentStatus?.toLowerCase() === "active"
+                              ? "text-[#099137]"
+                              : item.treatmentStatus?.toLowerCase() ===
+                                "on_hold"
+                              ? "text-[#DD900D]"
+                              : item.treatmentStatus?.toLowerCase() ===
+                                "completed"
+                              ? "text-[#1570EF]"
+                              : item.treatmentStatus?.toLowerCase() ===
+                                "cancelled"
+                              ? "text-[#CB1A14]"
+                              : ""
+                          )}
+                        >
+                          {item?.treatmentStatus}
                         </p>
                       </Box>
                       <span className="text-[1rem] font-[600] text-[#090816]">
@@ -874,7 +893,10 @@ export default function Health({ client }: PropType) {
                     </Box>
 
                     <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                      <UpdateHealthRec id={selectedId as string} />
+                      <UpdateHealthRec
+                        id={selectedId as string}
+                        refreshData={getHealthRecord}
+                      />
                       <span>
                         {show === `${item?.type}${index}` ? (
                           <LiaAngleUpSolid color="black" />

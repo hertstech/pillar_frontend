@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { axiosInstance } from "../Utils";
+import { axiosInstance } from "../../Utils";
 
 export const useRecordStatus = (NHRID: string) => {
   const [status, setStatus] = useState({ genotype: false, bloodGroup: false });
