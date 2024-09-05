@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 import NoResultIllustration, {
   SpinLoader,
 } from "../../../../components/NoResult";
-import { FaAngleUp, FaAngleDown } from "react-icons/fa";
+import { LiaAngleUpSolid, LiaAngleDownSolid } from "react-icons/lia";
 import { Calendar } from "../../../../components/CalendarField";
 import {
   bloodGroups,
@@ -33,6 +33,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
 import dayjs from "dayjs";
 import { UpdateHealthRec } from "./UpdateHealthRec";
+import classNames from "classnames";
+import { LuDot } from "react-icons/lu";
 
 const title = ["Dr.", "Mrs.", "Ms."];
 
@@ -837,26 +839,47 @@ export default function Health({ client }: PropType) {
                       alignItems: "center",
                       p: 2,
                       userSelect: "none",
-                      fontSize: 18,
+                      fontWeight: 500,
                       justifyContent: "space-between",
                       border: "1px #E4E7EC solid",
                       textTransform: "capitalize",
-                      color: "#099250",
+                      // color: "#099250",
                     }}
                     fullWidth
                     onClick={() =>
                       handleToggle(`${item?.type}${index}`, item.id)
                     }
                   >
-                    <span>{item?.type} </span>
+                    <Box className="flex flex-col text-left">
+                      <Box className="flex gap-2 items-center">
+                        <p className="text-[14px] font-[500] text-gray-500">
+                          {item?.type}
+                        </p>
+                        <LuDot />
+                        <p className={classNames("text-orange-400")}>
+                          status here
+                        </p>
+                      </Box>
+                      <span className="text-[1rem] font-[600] text-[#090816]">
+                        {item.type === "primary diagnosis"
+                          ? item.primaryDiagnosis
+                          : item.type === "secondary diagnosis"
+                          ? item.secondaryDiagnosis
+                          : item.type === "genotype"
+                          ? item.genotype
+                          : item.type === "blood group"
+                          ? item.bloodGroup
+                          : null}
+                      </span>
+                    </Box>
 
                     <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                       <UpdateHealthRec id={selectedId as string} />
                       <span>
                         {show === `${item?.type}${index}` ? (
-                          <FaAngleUp color="black" />
+                          <LiaAngleUpSolid color="black" />
                         ) : (
-                          <FaAngleDown color="black" />
+                          <LiaAngleDownSolid color="black" />
                         )}
                       </span>
                     </Box>

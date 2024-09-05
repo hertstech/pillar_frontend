@@ -10,6 +10,7 @@ import { selectItems } from "../../../../data/healthRecord";
 import { axiosInstance } from "../../../../Utils";
 import Swal from "sweetalert2";
 import { recordSchema } from "./schemas/healthRecord";
+import ReasoningModal from "./Components/resonsModal";
 
 type HealthRecType = {
   id: string;
@@ -28,7 +29,8 @@ interface IProps {
 }
 
 export const UpdateHealthRec: React.FC<HealthRecType> = ({ id }: IProps) => {
-  console.log("the id to pick data for update:", id);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isReasoningModalOpen, setIsReasoningModalOpen] = useState(false);
 
   const {
     handleSubmit,
@@ -39,15 +41,9 @@ export const UpdateHealthRec: React.FC<HealthRecType> = ({ id }: IProps) => {
   } = useForm<FormValues>({
     resolver: joiResolver(recordSchema),
   });
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  const handleOpenDrawer = () => {
-    setIsDrawerOpen(true);
-  };
-
-  const handleCloseDrawer = () => {
-    setIsDrawerOpen(false);
-  };
+  const handleOpenDrawer = () => setIsDrawerOpen(true);
+  const handleCloseDrawer = () => setIsDrawerOpen(false);
 
   const severityValue = useWatch({ control, name: "severity" });
   const treatmentStatusValue = useWatch({ control, name: "treatmentStatus" });
@@ -61,13 +57,23 @@ export const UpdateHealthRec: React.FC<HealthRecType> = ({ id }: IProps) => {
     setValue("followUpPlan", selectItems.followUpPlan[0].value);
   }, [setValue]);
 
+  useEffect(() => {
+    if (
+      treatmentStatusValue === "cancelled" ||
+      treatmentStatusValue === "on_hold"
+    ) {
+      setIsReasoningModalOpen(true);
+    } else {
+      setIsReasoningModalOpen(false);
+    }
+  }, [treatmentStatusValue]);
+
   const onSubmit = async (
     data: FormValues,
     event?: React.BaseSyntheticEvent
   ) => {
-    if (event) {
-      event.preventDefault();
-    }
+    if (event) event.preventDefault();
+
     try {
       console.log("Form Submitted:", data);
       const response = await axiosInstance.put(
@@ -133,6 +139,7 @@ export const UpdateHealthRec: React.FC<HealthRecType> = ({ id }: IProps) => {
             subTitle="Some sickness here"
             onMovingBack={handleCloseDrawer}
           />
+
           <form
             style={{
               marginTop: "32px",
@@ -192,7 +199,6 @@ export const UpdateHealthRec: React.FC<HealthRecType> = ({ id }: IProps) => {
                     : "",
               })}
             />
-
             <CustomSelect
               label="Treatment Type"
               name="treatmentType"
@@ -259,6 +265,15 @@ export const UpdateHealthRec: React.FC<HealthRecType> = ({ id }: IProps) => {
           </form>
         </Box>
       </DrawerComp>
+
+      <ReasoningModal
+        open={isReasoningModalOpen}
+        setOpen={setIsReasoningModalOpen}
+        treatmentTypeValue={treatmentTypeValue}
+        setValue={setValue}
+        errors={errors}
+        register={register}
+      />
     </>
   );
 };

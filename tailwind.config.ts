@@ -12,6 +12,8 @@ const config: Config = {
       colors: {
         pri: {
           1: "",
+          50: "#EFF8FF",
+          500: "#2E90FA",
           600: "#1570EF",
         },
         sec: {
