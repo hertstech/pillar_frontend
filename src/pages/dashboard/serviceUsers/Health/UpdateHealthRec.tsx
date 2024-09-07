@@ -21,13 +21,30 @@ type FormValues = {
 };
 
 interface IProps {
-  id: string | null;
-  refreshData: () => void;
+  open: boolean;
+  id: string | undefined;
+  sickness: string | undefined;
+  severity: string | undefined;
+  treatmentType: string | undefined;
+  followUpPlans: string | undefined;
+  treatmentStatus: string | undefined;
+  onClose: () => void;
+  refreshData?: () => void;
 }
 
-export const UpdateHealthRec: React.FC<IProps> = ({ id, refreshData }) => {
+export const UpdateHealthRec: React.FC<IProps> = ({
+  id,
+  refreshData,
+  severity,
+  treatmentStatus,
+  treatmentType,
+  followUpPlans,
+  onClose,
+  ...rest
+}) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [isReasoningModalOpen, setIsReasoningModalOpen] = useState(false);
 
   const {
@@ -48,15 +65,41 @@ export const UpdateHealthRec: React.FC<IProps> = ({ id, refreshData }) => {
   const treatmentTypeValue = useWatch({ control, name: "treatmentType" });
   const followUpPlanValue = useWatch({ control, name: "followUpPlans" });
 
-  useEffect(() => {
-    setValue("severity", selectItems.severity[0].value);
-    setValue("treatmentStatus", selectItems.treatmentStatus[0].value);
-    setValue("treatmentType", selectItems.treatmentType[0].value);
-    setValue("followUpPlans", selectItems.followUpPlans[0].value);
-  }, [setValue]);
+  console.log(rest.sickness);
+  console.log(severity);
+  console.log(treatmentType);
+  console.log(followUpPlans);
+  console.log(treatmentStatus);
 
   useEffect(() => {
-    if (treatmentStatusValue === "pending"||
+    if (severity) {
+      setValue("severity", severity);
+    } else {
+      setValue("severity", selectItems.severity[0].value);
+    }
+
+    if (treatmentStatus) {
+      setValue("treatmentStatus", treatmentStatus);
+    } else {
+      setValue("treatmentStatus", selectItems.treatmentStatus[0].value);
+    }
+
+    if (treatmentType) {
+      setValue("treatmentType", treatmentType);
+    } else {
+      setValue("treatmentType", selectItems.treatmentType[0].value);
+    }
+
+    if (followUpPlans) {
+      setValue("followUpPlans", followUpPlans);
+    } else {
+      setValue("followUpPlans", selectItems.followUpPlans[0].value);
+    }
+  }, [severity, treatmentStatus, treatmentType, followUpPlans, setValue]);
+
+  useEffect(() => {
+    if (
+      treatmentStatusValue === "pending" ||
       treatmentStatusValue === "cancelled" ||
       treatmentStatusValue === "on_hold"
     ) {
@@ -84,8 +127,6 @@ export const UpdateHealthRec: React.FC<IProps> = ({ id, refreshData }) => {
   // }, [id]);
 
   const onSubmit = async (data: FormValues) => {
-    // if (isReasoningModalOpen) return;
-
     setIsSubmitting(true);
 
     const newData = {
@@ -106,7 +147,6 @@ export const UpdateHealthRec: React.FC<IProps> = ({ id, refreshData }) => {
         text: "The health record has been successfully updated.",
       });
       console.log("this is the success msg:", response);
-      refreshData();
     } catch (error: any) {
       setIsSubmitting(false);
       handleCloseDrawer();
@@ -141,7 +181,7 @@ export const UpdateHealthRec: React.FC<IProps> = ({ id, refreshData }) => {
           },
         }}
         isIcon={<EditIcon />}
-        buttonText="Edit"
+        buttonText="Update"
         open={isDrawerOpen}
         onOpen={handleOpenDrawer}
         onClose={() => setIsDrawerOpen(false)}
@@ -157,7 +197,7 @@ export const UpdateHealthRec: React.FC<IProps> = ({ id, refreshData }) => {
         >
           <MoveBackComp
             title="Update health information"
-            subTitle="Some sickness here"
+            subTitle={rest.sickness || "loading..."}
             onMovingBack={() => setIsDrawerOpen(false)}
           />
 

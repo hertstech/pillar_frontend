@@ -35,6 +35,8 @@ import dayjs from "dayjs";
 import classNames from "classnames";
 import { LuDot } from "react-icons/lu";
 import { UpdateHealthRec } from "./UpdateHealthRec";
+import { useRecoilState } from "recoil";
+import { drawerState } from "../../../../atoms/drawerState";
 
 const title = ["Dr.", "Mrs.", "Ms."];
 
@@ -193,18 +195,36 @@ export default function Health({ client }: PropType) {
   const [record, setRecord] = useState<apiResponse[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedRecord, setSelectedRecord] = useState<apiResponse | null>(
+    null
+  );
+
+  const [isDrawerOpen, setIsDrawerOpen] = useRecoilState(drawerState);
+
+  const handleOpenDrawer = (id: string, itemId: string) => {
+    if (show === id) {
+      setSelectedId(null);
+      setIsDrawerOpen(false);
+    } else {
+      setSelectedId(itemId);
+      setIsDrawerOpen(true);
+    }
+    return isDrawerOpen;
+  };
+  const handleCloseDrawer = () => setIsDrawerOpen(false);
+
+  console.log("selected records:", selectedRecord);
+  console.log("action on opening drawer:", isDrawerOpen);
 
   const { id } = useParams();
 
   const navigate = useNavigate();
 
-  const handleToggle = (id: string, itemId: string) => {
+  const handleToggle = (id: string) => {
     if (show === id) {
       setShow(null);
-      setSelectedId(null);
     } else {
       setShow(id);
-      setSelectedId(itemId);
     }
   };
 
@@ -227,9 +247,17 @@ export default function Health({ client }: PropType) {
       const res = await axiosInstance.get(
         `/serviceuser-healthsummaryrecord/${id}`
       );
-
       setRecord(res?.data);
       setIsLoading(false);
+
+      const recordData = res?.data;
+
+      if (selectedId) {
+        const specificRecord = recordData.find(
+          (rec: any) => rec.id === selectedId
+        );
+        setSelectedRecord(specificRecord);
+      }
     } catch (error) {
       console.error(error);
       setIsLoading(false);
@@ -860,9 +888,7 @@ export default function Health({ client }: PropType) {
                       // color: "#099250",
                     }}
                     fullWidth
-                    onClick={() =>
-                      handleToggle(`${item?.type}${index}`, item.id)
-                    }
+                    onClick={() => handleToggle(`${item?.type}${index}`)}
                   >
                     <Box className="flex flex-col text-left">
                       <Box className="flex gap-2 items-center">
@@ -909,8 +935,17 @@ export default function Health({ client }: PropType) {
                     <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                       <UpdateHealthRec
                         id={selectedId as string}
-                        refreshData={getHealthRecord}
+                        sickness={
+                          selectedRecord?.secondaryDiagnosis !== null
+                            ? selectedRecord?.secondaryDiagnosis
+                            : selectedRecord?.primaryDiagnosis
+                        }
+                        treatmentStatus={selectedRecord?.treatmentStatus}
+                        severity={selectedRecord?.severity}
+                        treatmentType={selectedRecord?.treatmentType}
+                        followUpPlans={selectedRecord?.followUpPlans}
                       />
+
                       <span>
                         {show === `${item?.type}${index}` ? (
                           <LiaAngleUpSolid color="black" />
