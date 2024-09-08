@@ -2,30 +2,43 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import Button from "@mui/material/Button";
+import { useRecoilState } from "recoil";
+import { drawerState } from "../atoms/drawerState";
 
 type ReusableDrawerProps = {
   sx?: any;
   isIcon?: any;
   buttonText: string;
   children: React.ReactNode;
-  drawerProps?: Partial<React.ComponentProps<typeof DrawerComp>>;
+  drawerProps?: Partial<React.ComponentProps<typeof Drawer>>;
   buttonProps?: Partial<React.ComponentProps<typeof Button>> | any;
-  open: boolean;
-  onClose: () => void;
   onOpen: () => void;
 };
 
 const DrawerComp: React.FC<ReusableDrawerProps> = ({
-  buttonText,
+  sx,
   children,
+  buttonText,
   drawerProps = {},
   buttonProps = {},
-  sx,
-  open,
-  onClose,
   onOpen,
   ...rest
 }) => {
+  const [openDrawer, setOpenDrawer] = useRecoilState(drawerState);
+
+  const toggleDrawer =
+    (action: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+      if (
+        event &&
+        event.type === "keydown" &&
+        ((event as React.KeyboardEvent).key === "Tab" ||
+          (event as React.KeyboardEvent).key === "Shift")
+      ) {
+        return;
+      }
+      setOpenDrawer(action);
+    };
+
   return (
     <Box onClick={(e) => e.stopPropagation()}>
       <Button
@@ -38,12 +51,21 @@ const DrawerComp: React.FC<ReusableDrawerProps> = ({
         {rest.isIcon && <> {rest.isIcon}</>}
       </Button>
       <Drawer
-        open={open}
+        open={openDrawer}
         anchor={"right"}
-        onClose={onClose}
+        onClose={toggleDrawer(false)}
         sx={{
           "& .MuiDrawer-paper": {
-            borderRadius: " 16px 0px 0px 16px",
+            borderRadius: "16px 0px 0px 16px",
+            boxShadow: "none",
+          },
+        }}
+        ModalProps={{
+          BackdropProps: {
+            sx: {
+              backgroundColor: "rgba(0, 0, 0, 0.1)",
+              backdropFilter: "blur(0px)",
+            },
           },
         }}
         {...drawerProps}

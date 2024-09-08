@@ -5,20 +5,18 @@ import {
   Card,
   Divider,
   MenuItem,
-  Skeleton,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
-import Styles from "../styles.module.css";
-import InputField from "../../../../components/InputField";
-import categories from "../../../../../categories.json";
+import moment from "moment";
+import dayjs from "dayjs";
+import classNames from "classnames";
+import { LuDot } from "react-icons/lu";
+import { useRecoilState } from "recoil";
 import { useEffect, useState } from "react";
-import NoResultIllustration, {
-  SpinLoader,
-} from "../../../../components/NoResult";
+import { useNavigate, useParams } from "react-router-dom";
 import { LiaAngleUpSolid, LiaAngleDownSolid } from "react-icons/lia";
-import { Calendar } from "../../../../components/CalendarField";
 import {
   bloodGroups,
   followUpPlans,
@@ -28,169 +26,35 @@ import {
   treatmentStatus,
   treatmentType,
 } from "../shared";
+import NoResultIllustration, {
+  SpinLoader,
+} from "../../../../components/NoResult";
+import Styles from "../styles.module.css";
+import {
+  apiResponse,
+  client,
+  FormState,
+} from "../../../../types/serviceUserTypes/health";
 import { axiosInstance } from "../../../../Utils";
-import { useNavigate, useParams } from "react-router-dom";
-import moment from "moment";
-import dayjs from "dayjs";
-import classNames from "classnames";
-import { LuDot } from "react-icons/lu";
+import { TextLabel } from "./Components/textLabel";
 import { UpdateHealthRec } from "./UpdateHealthRec";
-import { useRecoilState } from "recoil";
+import categories from "../../../../../categories.json";
+import InputField from "../../../../components/InputField";
 import { drawerState } from "../../../../atoms/drawerState";
+import { Calendar } from "../../../../components/CalendarField";
 
 const title = ["Dr.", "Mrs.", "Ms."];
 
-interface FormState {
-  categories: string;
-  type: string;
-  bloodGroup: string;
-  genotype: string;
-  manufacturer: string;
-  batchNumber: string;
-  administrationDate: string;
-  expirationDate: string;
-  reading: string;
-  notes: string;
-  systolic: string;
-  diasttolic: string;
-  bpm: string;
-  title: string;
-  mgDl: string;
-  degreeRating: string;
-  primaryDiagnosis: string;
-  secondaryDiagnosis: string;
-  severity: string;
-  treatmentStatus: string;
-  treatmentType: string;
-  followUpPlans: string;
-  progressNote: string;
-}
-
-interface apiResponse {
-  systolic: string;
-  diasttolic: string;
-  bpm: string;
-  mgDl: string;
-  primaryDiagnosis: string;
-  secondaryDiagnosis: string;
-  severity: string;
-  treatmentStatus: string;
-  treatmentType: string;
-  followUpPlans: string;
-  title: string;
-  progressNote: string;
-  degreeRating: string;
-  administrationDate: string;
-  batchNumber: string;
-  bloodGroup: string;
-  categories: string;
-  date_created: string;
-  expirationDate: string;
-  genotype: string;
-  id: string;
-  manufacturer: string;
-  notes: string;
-  pillar_faclityname_fk: string;
-  pillar_user_id_fk: string;
-  reading: string;
-  serviceuser_id_fk: string;
-  type: string;
-}
-
-interface client {
-  id: string;
-  email: string;
-  phoneNumber: string;
-  address: string;
-  lga: string;
-  dateOfBirth: Date;
-  height: number;
-  weight: number;
-  HMOPlan: string;
-  firstName: string;
-  lastName: string;
-  state: string;
-  gender: string;
-  religion: string;
-  date_created: string;
-  tribalMarks: string;
-  parentOne: string;
-  parentOneNumber: string;
-  parentOneNHR_ID: string;
-  parentOneRelationship: string;
-  parentTwo: string;
-  parentTwoNumber: string;
-  parentTwoNHR_ID: string;
-  parentTwoRelationship: string;
-  nominatedPharmarcy: string;
-  registeredDoctor: string;
-  nokFullName: string;
-  nokNHR_ID: string;
-  nokPhoneNumber: string;
-  nokRelationship: string;
-}
 interface PropType {
   client: client;
 }
 
-interface TextLabelProps {
-  text: any;
-  label: string;
-  isLoading?: boolean;
-}
-
-const TextLabel = ({ text, label, isLoading }: TextLabelProps) => (
-  <label
-    style={{
-      fontWeight: 400,
-      color: "#475467",
-      fontSize: 12,
-      margin: "20px 0px",
-    }}
-  >
-    {label}
-    {isLoading ? (
-      <Skeleton
-        variant="text"
-        animation="wave"
-        width={300}
-        sx={{ fontSize: "18px" }}
-      />
-    ) : (
-      <Typography
-        sx={{
-          "&::first-letter": {
-            textTransform: "uppercase",
-          },
-          mt: "4px",
-          fontWeight: "fontBold ",
-        }}
-        fontSize={16}
-        // color={}
-        className={classNames(
-          "font-[600]",
-          text === "pending"
-            ? "text-[#475367]"
-            : text === "active"
-            ? "text-[#099137]"
-            : text === "on_hold"
-            ? "text-[#DD900D]"
-            : text === "completed"
-            ? "text-[#1570EF]"
-            : text === "cancelled"
-            ? "text-[#CB1A14]"
-            : "#101928"
-        )}
-      >
-        {text}
-      </Typography>
-    )}
-  </label>
-);
-
 export default function Health({ client }: PropType) {
+  const { id } = useParams();
+
   const [hide, setHide] = useState(false);
   const [show, setShow] = useState<string | null>(null);
+  const [getUpdates, setGetUpdates] = useState<string | null>(null);
   const [formField, setFormField] = useState<FormState[]>([]);
   const [record, setRecord] = useState<apiResponse[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -201,22 +65,19 @@ export default function Health({ client }: PropType) {
 
   const [isDrawerOpen, setIsDrawerOpen] = useRecoilState(drawerState);
 
-  const handleOpenDrawer = (id: string, itemId: string) => {
-    if (show === id) {
-      setSelectedId(null);
+  const handleGetData = (id: string, itemId: string) => {
+    if (getUpdates === id) {
+      setGetUpdates(null);
       setIsDrawerOpen(false);
+      setSelectedId(null);
     } else {
       setSelectedId(itemId);
+      setGetUpdates(id);
+      const selected = record.find((rec) => rec.id === itemId);
+      setSelectedRecord(selected || null);
       setIsDrawerOpen(true);
     }
-    return isDrawerOpen;
   };
-  const handleCloseDrawer = () => setIsDrawerOpen(false);
-
-  console.log("selected records:", selectedRecord);
-  console.log("action on opening drawer:", isDrawerOpen);
-
-  const { id } = useParams();
 
   const navigate = useNavigate();
 
@@ -248,16 +109,15 @@ export default function Health({ client }: PropType) {
         `/serviceuser-healthsummaryrecord/${id}`
       );
       setRecord(res?.data);
-      setIsLoading(false);
-
-      const recordData = res?.data;
 
       if (selectedId) {
-        const specificRecord = recordData.find(
+        const specificRecord = res?.data?.find(
           (rec: any) => rec.id === selectedId
         );
         setSelectedRecord(specificRecord);
       }
+
+      setIsLoading(false);
     } catch (error) {
       console.error(error);
       setIsLoading(false);
@@ -935,8 +795,12 @@ export default function Health({ client }: PropType) {
                     <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                       <UpdateHealthRec
                         id={selectedId as string}
+                        getData={() =>
+                          handleGetData(`${item?.type}${index}`, item?.id)
+                        }
+                        refreshData={() => getHealthRecord()}
                         sickness={
-                          selectedRecord?.secondaryDiagnosis !== null
+                          selectedRecord?.secondaryDiagnosis
                             ? selectedRecord?.secondaryDiagnosis
                             : selectedRecord?.primaryDiagnosis
                         }

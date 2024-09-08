@@ -11,6 +11,10 @@ import { axiosInstance } from "../../../../Utils";
 import Swal from "sweetalert2";
 import { recordSchema } from "./schemas/healthRecord";
 import ReasoningModal from "./Components/resonsModal";
+import { useRecoilState } from "recoil";
+import { drawerState } from "../../../../atoms/drawerState";
+import { MdOutlineClosedCaptionDisabled } from "react-icons/md";
+import InputField from "../../../../components/InputField";
 
 type FormValues = {
   severity: string;
@@ -21,14 +25,13 @@ type FormValues = {
 };
 
 interface IProps {
-  open: boolean;
   id: string | undefined;
   sickness: string | undefined;
   severity: string | undefined;
   treatmentType: string | undefined;
   followUpPlans: string | undefined;
   treatmentStatus: string | undefined;
-  onClose: () => void;
+  getData: () => void;
   refreshData?: () => void;
 }
 
@@ -39,10 +42,11 @@ export const UpdateHealthRec: React.FC<IProps> = ({
   treatmentStatus,
   treatmentType,
   followUpPlans,
-  onClose,
+
+  getData,
   ...rest
 }) => {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [_, setIsDrawerOpen] = useRecoilState(drawerState);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [isReasoningModalOpen, setIsReasoningModalOpen] = useState(false);
@@ -56,8 +60,6 @@ export const UpdateHealthRec: React.FC<IProps> = ({
   } = useForm<FormValues>({
     resolver: joiResolver(recordSchema),
   });
-
-  const handleOpenDrawer = () => setIsDrawerOpen(true);
   const handleCloseDrawer = () => setIsDrawerOpen(false);
 
   const severityValue = useWatch({ control, name: "severity" });
@@ -97,20 +99,20 @@ export const UpdateHealthRec: React.FC<IProps> = ({
     }
   }, [severity, treatmentStatus, treatmentType, followUpPlans, setValue]);
 
-  useEffect(() => {
-    if (
-      treatmentStatusValue === "pending" ||
-      treatmentStatusValue === "cancelled" ||
-      treatmentStatusValue === "on_hold"
-    ) {
-      setIsReasoningModalOpen(true);
-    } else {
-      setIsReasoningModalOpen(false);
-    }
-  }, [treatmentStatusValue]);
+  // useEffect(() => {
+  //   if (
+  //     treatmentStatusValue === "pending" ||
+  //     treatmentStatusValue === "cancelled" ||
+  //     treatmentStatusValue === "on_hold"
+  //   ) {
+  //     setIsReasoningModalOpen(true);
+  //   } else {
+  //     setIsReasoningModalOpen(false);
+  //   }
+  // }, [treatmentStatusValue]);
 
   // useEffect(() => {
-  //   const getStatus = async () => {
+  //   const getStatusHistory = async () => {
   //     try {
   //       const res = await axiosInstance.get(
   //         `/serviceuser-record/status/history/${id}`
@@ -122,7 +124,7 @@ export const UpdateHealthRec: React.FC<IProps> = ({
   //   };
 
   //   if (id !== null || undefined) {
-  //     getStatus();
+  //     getStatusHistory();
   //   }
   // }, [id]);
 
@@ -141,6 +143,7 @@ export const UpdateHealthRec: React.FC<IProps> = ({
       );
       setIsSubmitting(true);
       handleCloseDrawer();
+      if (refreshData) refreshData();
       Swal.fire({
         icon: "success",
         title: "Record Updated",
@@ -182,9 +185,7 @@ export const UpdateHealthRec: React.FC<IProps> = ({
         }}
         isIcon={<EditIcon />}
         buttonText="Update"
-        open={isDrawerOpen}
-        onOpen={handleOpenDrawer}
-        onClose={() => setIsDrawerOpen(false)}
+        onOpen={getData}
       >
         <Box
           sx={{
@@ -198,7 +199,7 @@ export const UpdateHealthRec: React.FC<IProps> = ({
           <MoveBackComp
             title="Update health information"
             subTitle={rest.sickness || "loading..."}
-            onMovingBack={() => setIsDrawerOpen(false)}
+            onMovingBack={handleCloseDrawer}
           />
 
           <form
@@ -219,6 +220,7 @@ export const UpdateHealthRec: React.FC<IProps> = ({
               register={register("severity")}
               validationError={errors.severity}
             />
+
             <CustomSelect
               label="Treatment Status"
               name="treatmentStatus"
