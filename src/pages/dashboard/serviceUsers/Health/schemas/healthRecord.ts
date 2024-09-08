@@ -5,5 +5,5 @@ export const recordSchema = Joi.object({
   treatmentStatus: Joi.string().required().label("Treatment Status"),
   treatmentType: Joi.string().required().label("Treatment Type"),
   followUpPlans: Joi.string().required().label("Follow-Up Plan"),
-  notes: Joi.string().optional().allow("").label("Additional Notes"),
+  notesValue: Joi.string().optional().allow("").label("Additional Notes"),
 });

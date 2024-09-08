@@ -63,7 +63,7 @@ export default function Health({ client }: PropType) {
     null
   );
 
-  const [isDrawerOpen, setIsDrawerOpen] = useRecoilState(drawerState);
+  const [_, setIsDrawerOpen] = useRecoilState(drawerState);
 
   const handleGetData = (id: string, itemId: string) => {
     if (getUpdates === id) {
@@ -801,13 +801,14 @@ export default function Health({ client }: PropType) {
                         refreshData={() => getHealthRecord()}
                         sickness={
                           selectedRecord?.secondaryDiagnosis
-                            ? selectedRecord?.secondaryDiagnosis
-                            : selectedRecord?.primaryDiagnosis
+                          ? selectedRecord?.secondaryDiagnosis
+                          : selectedRecord?.primaryDiagnosis
                         }
-                        treatmentStatus={selectedRecord?.treatmentStatus}
-                        severity={selectedRecord?.severity}
-                        treatmentType={selectedRecord?.treatmentType}
-                        followUpPlans={selectedRecord?.followUpPlans}
+                          notes={selectedRecord?.notes}
+                          severity={selectedRecord?.severity}
+                          treatmentType={selectedRecord?.treatmentType}
+                          followUpPlans={selectedRecord?.followUpPlans}
+                          treatmentStatus={selectedRecord?.treatmentStatus}
                       />
 
                       <span>

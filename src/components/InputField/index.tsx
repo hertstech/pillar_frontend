@@ -2,6 +2,7 @@ import { Skeleton, Typography } from "@mui/material";
 import Styles from "./styles.module.css";
 import { useState } from "react";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
+import classNames from "classnames";
 
 interface TextProps {
   label: string;
@@ -38,7 +39,12 @@ export default function InputField({
           type={
             type === "password" ? (showPassword ? "text" : "password") : type
           }
-          className={Styles.input}
+          className={classNames(
+            Styles.input,
+            disabled &&
+              `text-neutral-400 border-neutral-200 bg-[#F0F2F5]
+               cursor-not-allowed text-[1rem] font-[500]`
+          )}
           name={name}
           value={value}
           onChange={onChange}

@@ -13,19 +13,20 @@ import { recordSchema } from "./schemas/healthRecord";
 import ReasoningModal from "./Components/resonsModal";
 import { useRecoilState } from "recoil";
 import { drawerState } from "../../../../atoms/drawerState";
-import { MdOutlineClosedCaptionDisabled } from "react-icons/md";
 import InputField from "../../../../components/InputField";
+import classNames from "classnames";
 
 type FormValues = {
   severity: string;
   treatmentStatus: string;
   treatmentType: string;
   followUpPlans: string;
-  notes: string;
+  notesValue: string;
 };
 
 interface IProps {
   id: string | undefined;
+  notes: string | undefined;
   sickness: string | undefined;
   severity: string | undefined;
   treatmentType: string | undefined;
@@ -42,7 +43,7 @@ export const UpdateHealthRec: React.FC<IProps> = ({
   treatmentStatus,
   treatmentType,
   followUpPlans,
-
+  notes,
   getData,
   ...rest
 }) => {
@@ -66,6 +67,7 @@ export const UpdateHealthRec: React.FC<IProps> = ({
   const treatmentStatusValue = useWatch({ control, name: "treatmentStatus" });
   const treatmentTypeValue = useWatch({ control, name: "treatmentType" });
   const followUpPlanValue = useWatch({ control, name: "followUpPlans" });
+  const notesValue = useWatch({ control, name: "notesValue" });
 
   console.log(rest.sickness);
   console.log(severity);
@@ -97,6 +99,7 @@ export const UpdateHealthRec: React.FC<IProps> = ({
     } else {
       setValue("followUpPlans", selectItems.followUpPlans[0].value);
     }
+    setValue("notesValue", notesValue);
   }, [severity, treatmentStatus, treatmentType, followUpPlans, setValue]);
 
   // useEffect(() => {
@@ -211,14 +214,13 @@ export const UpdateHealthRec: React.FC<IProps> = ({
             }}
             onSubmit={handleSubmit(onSubmit)}
           >
-            <CustomSelect
+            <InputField
+              type="text"
               label="Severity"
               name="severity"
-              selectItems={selectItems.severity}
               value={severityValue}
-              onChange={(value) => setValue("severity", value)}
-              register={register("severity")}
-              validationError={errors.severity}
+              disabled={true}
+              onChange={(value: any) => setValue("severity", value)}
             />
 
             <CustomSelect
@@ -262,29 +264,31 @@ export const UpdateHealthRec: React.FC<IProps> = ({
                     : "black",
               })}
             />
-            <CustomSelect
+
+            <InputField
+              type="text"
               label="Treatment Type"
               name="treatmentType"
-              selectItems={selectItems.treatmentType}
               value={treatmentTypeValue}
-              onChange={(value) => setValue("treatmentType", value)}
-              register={register("treatmentType")}
-              validationError={errors.treatmentType}
+              disabled={true}
+              onChange={(value: any) => setValue("treatmentType", value)}
             />
-            <CustomSelect
+            <InputField
+              type="text"
               label="Follow-Up Plan"
               name="followUpPlans"
-              selectItems={selectItems.followUpPlans}
               value={followUpPlanValue}
-              onChange={(value) => setValue("followUpPlans", value)}
-              register={register("followUpPlans")}
-              validationError={errors.followUpPlans}
+              disabled={true}
+              onChange={(value: any) => setValue("followUpPlans", value)}
             />
+
             <label htmlFor="notes" className="-mb-4">
               Add Notes
             </label>
             <textarea
-              {...register("notes")}
+              value={notesValue}
+              disabled={true}
+              {...register("notesValue")}
               rows={4}
               cols={50}
               style={{
@@ -293,13 +297,15 @@ export const UpdateHealthRec: React.FC<IProps> = ({
                 outline: "none",
                 minHeight: "100px",
                 borderRadius: "8px",
-                borderColor: errors.notes ? "red" : "#ccc",
+                borderColor: errors.notesValue ? "red" : "#e5e5e5",
+                color: "#a3a3a3",
+                backgroundColor: "#F0F2F5",
+                borderWidth: "1px",
+                borderStyle: "solid",
+                cursor: "not-allowed",
               }}
-              className="border-[1px]"
+              className={classNames("border-[1px]")}
             />
-            {errors.notes && (
-              <p style={{ color: "red" }}>{errors.notes.message}</p>
-            )}
 
             <Button
               type="submit"
