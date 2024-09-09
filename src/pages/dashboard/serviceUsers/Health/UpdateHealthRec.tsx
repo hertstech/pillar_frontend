@@ -1,15 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import DrawerComp from "../../../../components/Drawer";
 import { EditIcon } from "../../../../assets/icons";
 import { Box, Button } from "@mui/material";
 import { MoveBackComp } from "../../../../components/MoveBack";
 import { CustomSelect } from "../../../../components/Select";
+import { useForm, useWatch } from "react-hook-form";
+import { joiResolver } from "@hookform/resolvers/joi";
+import { selectItems } from "../../../../data/healthRecord";
+import Swal from "sweetalert2";
+import { recordSchema } from "./schemas/healthRecord";
+import ReasoningModal from "./Components/resonsModal";
 import { useRecoilState } from "recoil";
 import { drawerState } from "../../../../atoms/drawerState";
 import InputField from "../../../../components/InputField";
-import ReasoningModal from "./Components/resonsModal";
-import { selectItems } from "../../../../data/healthRecord";
-import { useHealthRecord } from "../../../../hooks/Health/updateTreatmentStatus";
+import { axiosInstance } from "../../../../Utils";
+import classNames from "classnames";
+
+type FormValues = {
+  severity: string;
+  treatmentStatus: string;
+  treatmentType: string;
+  followUpPlans: string;
+  notesValue: string;
+};
 
 interface IProps {
   id: string | undefined;
@@ -35,30 +48,130 @@ export const UpdateHealthRec: React.FC<IProps> = ({
   ...rest
 }) => {
   const [_, setIsDrawerOpen] = useRecoilState(drawerState);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isReasoningModalOpen, setIsReasoningModalOpen] = useState(false);
+
   const {
     handleSubmit,
-    onSubmit,
-    isSubmitting,
-    severityValue,
-    handleModalClose,
-    isReasoningModalOpen,
-    setIsReasoningModalOpen,
-    treatmentStatusValue,
-    treatmentTypeValue,
-    followUpPlanValue,
-    notesValue,
-    setValue,
     register,
-    errors,
-  } = useHealthRecord(
-    id,
+    formState: { errors },
+    setValue,
+    getValues,
+    control,
+  } = useForm<FormValues>({
+    resolver: joiResolver(recordSchema),
+  });
+
+  const severityValue = useWatch({ control, name: "severity" });
+  const treatmentStatusValue = useWatch({ control, name: "treatmentStatus" });
+  const treatmentTypeValue = useWatch({ control, name: "treatmentType" });
+  const followUpPlanValue = useWatch({ control, name: "followUpPlans" });
+  const notesValue = useWatch({ control, name: "notesValue" });
+
+  useEffect(() => {
+    setValue("severity", severity || selectItems.severity[0].value);
+    setValue(
+      "treatmentStatus",
+      treatmentStatus || selectItems.treatmentStatus[0].value
+    );
+
+    setValue(
+      "treatmentType",
+      treatmentType || selectItems.treatmentType[0].value
+    );
+    setValue(
+      "followUpPlans",
+      followUpPlans || selectItems.followUpPlans[0].value
+    );
+    setValue("notesValue", notes || "");
+  }, [
     severity,
     treatmentStatus,
     treatmentType,
     followUpPlans,
     notes,
-    refreshData
-  );
+    setValue,
+  ]);
+
+  // useEffect(() => {
+  //   const getStatusHistory = async () => {
+  //     try {
+  //       const res = await axiosInstance.get(
+  //         `/serviceuser-record/status/history/${id}`
+  //       );
+  //       console.log("record history:", res.data);
+  //     } catch (err) {
+  //       console.error("Error getting record:", err);
+  //     }
+  //   };
+
+  //   if (id !== null || undefined) {
+  //     getStatusHistory();
+  //   }
+  // }, [id]);
+
+  const onSubmit = async (data: FormValues) => {
+    setIsSubmitting(true);
+
+    const formValues = data;
+
+    console.log(formValues); // temporal value control
+
+    if (["pending", "cancelled", "on_hold"].includes(data.treatmentStatus)) {
+      setIsReasoningModalOpen(true);
+      return;
+    }
+
+    try {
+      await updateRecord(data, "I just wanna do it now");
+    } catch (error) {
+      handleError(error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleModalClose = async (reason_for_change: string) => {
+    setIsReasoningModalOpen(false);
+
+    const updatedData = { ...getValues(), reason_for_change };
+
+    try {
+      await updateRecord(updatedData, reason_for_change);
+    } catch (error) {
+      handleError(error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const updateRecord = async (data: FormValues, reason: string) => {
+    const response = await axiosInstance.put(
+      `/update-serviceuser-healthsummaryrecord/diagnosis/status/${id}`,
+      { ...data, reason_for_change: reason }
+    );
+
+    console.log(response); // temporal response control
+
+    handleCloseDrawer();
+    if (refreshData) refreshData();
+
+    Swal.fire({
+      icon: "success",
+      title: "Record Updated",
+      text: "The health record has been successfully updated.",
+    });
+  };
+
+  const handleError = (error: any) => {
+    Swal.fire({
+      icon: "error",
+      title: "Update Failed",
+      text:
+        error.response?.data?.message ||
+        "An error occurred while updating the record.",
+    });
+  };
 
   const handleCloseDrawer = () => setIsDrawerOpen(false);
 
@@ -133,29 +246,21 @@ export const UpdateHealthRec: React.FC<IProps> = ({
                 fontWeight: item.value === "" ? 400 : 600,
                 fontSize: item.value === "" ? "16px" : "12px",
                 backgroundColor:
-                  item.value === "pending"
-                    ? "#F2F4F7"
-                    : item.value === "active"
-                    ? "#E7F6EC"
-                    : item.value === "on_hold"
-                    ? "#FEF6E7"
-                    : item.value === "completed"
-                    ? "#EFF8FF"
-                    : item.value === "cancelled"
-                    ? "#FBEAE9"
-                    : "",
+                  {
+                    pending: "#F2F4F7",
+                    active: "#E7F6EC",
+                    on_hold: "#FEF6E7",
+                    completed: "#EFF8FF",
+                    cancelled: "#FBEAE9",
+                  }[item.value] || "",
                 color:
-                  item.value === "pending"
-                    ? "#475367"
-                    : item.value === "active"
-                    ? "#099137"
-                    : item.value === "on_hold"
-                    ? "#DD900D"
-                    : item.value === "completed"
-                    ? "#1570EF"
-                    : item.value === "cancelled"
-                    ? "#CB1A14"
-                    : "black",
+                  {
+                    pending: "#475367",
+                    active: "#099137",
+                    on_hold: "#DD900D",
+                    completed: "#1570EF",
+                    cancelled: "#CB1A14",
+                  }[item.value] || "black",
               })}
             />
 
@@ -166,7 +271,6 @@ export const UpdateHealthRec: React.FC<IProps> = ({
               value={treatmentTypeValue}
               disabled
             />
-
             <InputField
               type="text"
               label="Follow-Up Plan"
@@ -197,7 +301,7 @@ export const UpdateHealthRec: React.FC<IProps> = ({
                 borderStyle: "solid",
                 cursor: "not-allowed",
               }}
-              className="border-[1px]"
+              className={classNames("border-[1px]")}
             />
 
             <Button

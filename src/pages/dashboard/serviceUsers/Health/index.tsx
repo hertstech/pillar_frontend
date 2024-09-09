@@ -42,6 +42,7 @@ import categories from "../../../../../categories.json";
 import InputField from "../../../../components/InputField";
 import { drawerState } from "../../../../atoms/drawerState";
 import { Calendar } from "../../../../components/CalendarField";
+import { UpdateHistoryModal } from "./Components/updateHistory";
 
 const title = ["Dr.", "Mrs.", "Ms."];
 
@@ -54,6 +55,7 @@ export default function Health({ client }: PropType) {
 
   const [hide, setHide] = useState(false);
   const [show, setShow] = useState<string | null>(null);
+  const [openModal, setOpenModal] = useState<boolean>(false);
   const [getUpdates, setGetUpdates] = useState<string | null>(null);
   const [formField, setFormField] = useState<FormState[]>([]);
   const [record, setRecord] = useState<apiResponse[]>([]);
@@ -111,13 +113,6 @@ export default function Health({ client }: PropType) {
         `/serviceuser-healthsummaryrecord/${id}`
       );
       setRecord(res?.data);
-
-      // if (selectedId) {
-      //   const specificRecord = res?.data?.find(
-      //     (rec: any) => rec.id === selectedId
-      //   );
-      //   setSelectedRecord(specificRecord);
-      // }
 
       setIsLoading(false);
     } catch (error) {
@@ -1007,9 +1002,21 @@ export default function Health({ client }: PropType) {
                         >
                           🕒 ID: #{item.pillar_user_id_fk}
                         </Typography>
+
+                        {/* SHOW UPDATE HISTORY HERE -- WITH CONDITIONS*/}
+                        <button
+                          onClick={() => setOpenModal(true)}
+                          className="text-pri-600 mt-10 font-[600]"
+                        >
+                          view history
+                        </button>
                       </div>
                     </div>
                   )}
+                  <UpdateHistoryModal
+                    open={openModal}
+                    onClose={() => setOpenModal(false)}
+                  />
                 </Box>
               ))
             ) : (

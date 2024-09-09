@@ -8,6 +8,7 @@ interface PrimaryButtonProps {
   variant?: string;
   buttonName: string;
   disabled?: boolean;
+
   onClick?: () => void;
 }
 
@@ -23,12 +24,12 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
     <Button
       type={type}
       sx={{
-        color: "#F6FEF9",
+        // color: "#F6FEF9",
         outline: "none",
         fontSize: "1rem",
         fontWeight: 600,
-        background: "#2E90FA",
-        "&:hover": { backgroundColor: "#2E90FA" },
+        // background: "#2E90FA",
+        "&:hover": { backgroundColor: "#2E90FA", color: "white" },
         padding: "16px, 24px",
         borderRadius: 2,
         height: "3.5rem",
@@ -40,7 +41,12 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
       }}
       disabled={disabled}
       variant="outlined"
-      className={classNames("!capitalize")}
+      className={classNames(
+        "!capitalize",
+        variant === "light"
+          ? "text-pri-600 bg-[#D1E9FF]"
+          : "!text-[#F6FEF9] !bg-pri-600"
+      )}
       onClick={onClick}
     >
       {buttonName}

@@ -51,7 +51,7 @@ export const useHealthRecord = (
     setValue("severity", severity || selectItems.severity[0].value);
     setValue(
       "treatmentStatus",
-      treatmentStatus || selectItems.treatmentStatus[0].value
+      treatmentStatus || selectItems.treatmentStatus[1].value
     );
     setValue(
       "treatmentType",
@@ -70,6 +70,8 @@ export const useHealthRecord = (
     notes,
     setValue,
   ]);
+
+  console.log("initial status;", treatmentStatus);
 
   const updateRecord = async (data: FormValues, reason: string) => {
     try {
