@@ -31,6 +31,18 @@ const Modal: React.FC<AlertDialogSlideProps> = ({
       keepMounted
       onClose={handleClose}
       aria-describedby="alert-dialog-slide-description"
+      BackdropProps={{
+        style: {
+          backgroundColor: "rgba(0, 0, 0, 0.2)",
+          backdropFilter: "blur(0px)",
+        },
+      }}
+      PaperProps={{
+        elevation: 0,
+        style: {
+          boxShadow: "none",
+        },
+      }}
     >
       <DialogContent>{children}</DialogContent>
     </Dialog>
