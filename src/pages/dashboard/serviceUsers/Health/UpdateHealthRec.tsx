@@ -38,11 +38,11 @@ export const UpdateHealthRec: React.FC<IProps> = ({
   const {
     handleSubmit,
     onSubmit,
-    handleModalClose,
     isSubmitting,
+    severityValue,
+    handleModalClose,
     isReasoningModalOpen,
     setIsReasoningModalOpen,
-    severityValue,
     treatmentStatusValue,
     treatmentTypeValue,
     followUpPlanValue,
@@ -222,7 +222,7 @@ export const UpdateHealthRec: React.FC<IProps> = ({
               variant="outlined"
               className="!capitalize"
             >
-              {isSubmitting ? "Submitting..." : "Update"}
+              {isSubmitting ? "Submitting..." : "Update Record"}
             </Button>
           </form>
         </Box>

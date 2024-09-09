@@ -138,11 +138,11 @@ export const useHealthRecord = (
   return {
     handleSubmit,
     onSubmit,
-    handleModalClose,
     isSubmitting,
+    severityValue,
+    handleModalClose,
     isReasoningModalOpen,
     setIsReasoningModalOpen,
-    severityValue,
     treatmentStatusValue,
     treatmentTypeValue,
     followUpPlanValue,

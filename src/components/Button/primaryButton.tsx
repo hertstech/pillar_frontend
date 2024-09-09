@@ -1,9 +1,11 @@
 import React from "react";
 import { Button } from "@mui/material";
+import classNames from "classnames";
 
 interface PrimaryButtonProps {
   type?: "button" | "submit" | "reset";
   width?: string;
+  variant?: string;
   buttonName: string;
   disabled?: boolean;
   onClick?: () => void;
@@ -15,6 +17,7 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
   buttonName,
   disabled = false,
   onClick,
+  variant,
 }) => {
   return (
     <Button
@@ -37,7 +40,7 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
       }}
       disabled={disabled}
       variant="outlined"
-      className="!capitalize"
+      className={classNames("!capitalize")}
       onClick={onClick}
     >
       {buttonName}

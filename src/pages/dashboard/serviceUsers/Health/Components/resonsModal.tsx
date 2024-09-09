@@ -1,10 +1,10 @@
 import React, { Dispatch, SetStateAction } from "react";
 import { Box } from "@mui/material";
+import { useForm, FieldError } from "react-hook-form";
 import Modal from "../../../../../components/Modal";
 import { reasons } from "../../../../../data/statusChangeData";
 import { CustomSelect } from "../../../../../components/Select";
 import { PrimaryButton } from "../../../../../components/Button/primaryButton";
-import { useForm, FieldError } from "react-hook-form";
 
 interface ReasoningModalProps {
   open: boolean;
@@ -12,7 +12,7 @@ interface ReasoningModalProps {
   treatmentStatusValue: string;
   sickness: string | undefined;
   selectedId: string | any;
-  onClose: (reason: string) => void; // Passes selected reason on close
+  onClose: (reason: string) => void;
 }
 
 const ReasoningModal: React.FC<ReasoningModalProps> = ({
@@ -34,23 +34,19 @@ const ReasoningModal: React.FC<ReasoningModalProps> = ({
     },
   });
 
-  // Form submission handler
   const onSubmit = (data: any) => {
     if (!data.reasons) {
-      return; // Show validation error if no reason is selected
+      return;
     }
 
     console.log("Form submitted with data: ", data);
     console.log("Selected ID: ", selectedId);
 
-    // Pass selected reason to parent via onClose
     onClose(data.reasons);
 
-    // Close the modal
     setOpen(false);
   };
 
-  // Error handling for reasons field
   const validationError =
     errors.reasons instanceof Object && "message" in errors.reasons
       ? (errors.reasons as FieldError)
@@ -76,7 +72,7 @@ const ReasoningModal: React.FC<ReasoningModalProps> = ({
 
         <form
           className="flex flex-col justify-between"
-          onSubmit={handleSubmit(onSubmit)} // Handle form submission
+          onSubmit={handleSubmit(onSubmit)}
         >
           <CustomSelect
             label="Reasons for status change"
@@ -86,8 +82,8 @@ const ReasoningModal: React.FC<ReasoningModalProps> = ({
                 ? reasons.pending
                 : reasons.holdCancel
             }
-            value={getValues("reasons")} // Reflect the current selection
-            onChange={(value) => setValue("reasons", value)} // Update reason value
+            value={getValues("reasons")}
+            onChange={(value) => setValue("reasons", value)}
           />
           {validationError && (
             <p className="text-red-500 text-xs mt-1">
@@ -99,11 +95,11 @@ const ReasoningModal: React.FC<ReasoningModalProps> = ({
             <PrimaryButton
               type="button"
               width="10.7rem"
-              onClick={() => setOpen(false)} // Close modal on cancel
+              onClick={() => setOpen(false)}
               buttonName="Cancel"
             />
             <PrimaryButton
-              type="submit" // Submit the form
+              type="submit"
               width="10.7rem"
               buttonName="Confirm"
               disabled={false}
