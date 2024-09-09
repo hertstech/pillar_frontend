@@ -12,7 +12,7 @@ type ReusableDrawerProps = {
   children: React.ReactNode;
   drawerProps?: Partial<React.ComponentProps<typeof Drawer>>;
   buttonProps?: Partial<React.ComponentProps<typeof Button>> | any;
-  onOpen: () => void;
+  onOpen: (e: React.MouseEvent) => void;
 };
 
 const DrawerComp: React.FC<ReusableDrawerProps> = ({

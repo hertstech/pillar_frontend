@@ -1,28 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import DrawerComp from "../../../../components/Drawer";
 import { EditIcon } from "../../../../assets/icons";
 import { Box, Button } from "@mui/material";
 import { MoveBackComp } from "../../../../components/MoveBack";
 import { CustomSelect } from "../../../../components/Select";
-import { useForm, useWatch } from "react-hook-form";
-import { joiResolver } from "@hookform/resolvers/joi";
-import { selectItems } from "../../../../data/healthRecord";
-import { axiosInstance } from "../../../../Utils";
-import Swal from "sweetalert2";
-import { recordSchema } from "./schemas/healthRecord";
-import ReasoningModal from "./Components/resonsModal";
 import { useRecoilState } from "recoil";
 import { drawerState } from "../../../../atoms/drawerState";
 import InputField from "../../../../components/InputField";
-import classNames from "classnames";
-
-type FormValues = {
-  severity: string;
-  treatmentStatus: string;
-  treatmentType: string;
-  followUpPlans: string;
-  notesValue: string;
-};
+import ReasoningModal from "./Components/resonsModal";
+import { selectItems } from "../../../../data/healthRecord";
+import { useHealthRecord } from "../../../../hooks/Health/updateTreatmentStatus";
 
 interface IProps {
   id: string | undefined;
@@ -32,7 +19,7 @@ interface IProps {
   treatmentType: string | undefined;
   followUpPlans: string | undefined;
   treatmentStatus: string | undefined;
-  getData: () => void;
+  getData: (e: React.MouseEvent) => void;
   refreshData?: () => void;
 }
 
@@ -48,124 +35,32 @@ export const UpdateHealthRec: React.FC<IProps> = ({
   ...rest
 }) => {
   const [_, setIsDrawerOpen] = useRecoilState(drawerState);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const [isReasoningModalOpen, setIsReasoningModalOpen] = useState(false);
-
   const {
     handleSubmit,
-    register,
-    formState: { errors },
+    onSubmit,
+    handleModalClose,
+    isSubmitting,
+    isReasoningModalOpen,
+    setIsReasoningModalOpen,
+    severityValue,
+    treatmentStatusValue,
+    treatmentTypeValue,
+    followUpPlanValue,
+    notesValue,
     setValue,
-    control,
-  } = useForm<FormValues>({
-    resolver: joiResolver(recordSchema),
-  });
+    register,
+    errors,
+  } = useHealthRecord(
+    id,
+    severity,
+    treatmentStatus,
+    treatmentType,
+    followUpPlans,
+    notes,
+    refreshData
+  );
+
   const handleCloseDrawer = () => setIsDrawerOpen(false);
-
-  const severityValue = useWatch({ control, name: "severity" });
-  const treatmentStatusValue = useWatch({ control, name: "treatmentStatus" });
-  const treatmentTypeValue = useWatch({ control, name: "treatmentType" });
-  const followUpPlanValue = useWatch({ control, name: "followUpPlans" });
-  const notesValue = useWatch({ control, name: "notesValue" });
-
-  console.log(rest.sickness);
-  console.log(severity);
-  console.log(treatmentType);
-  console.log(followUpPlans);
-  console.log(treatmentStatus);
-
-  useEffect(() => {
-    if (severity) {
-      setValue("severity", severity);
-    } else {
-      setValue("severity", selectItems.severity[0].value);
-    }
-
-    if (treatmentStatus) {
-      setValue("treatmentStatus", treatmentStatus);
-    } else {
-      setValue("treatmentStatus", selectItems.treatmentStatus[0].value);
-    }
-
-    if (treatmentType) {
-      setValue("treatmentType", treatmentType);
-    } else {
-      setValue("treatmentType", selectItems.treatmentType[0].value);
-    }
-
-    if (followUpPlans) {
-      setValue("followUpPlans", followUpPlans);
-    } else {
-      setValue("followUpPlans", selectItems.followUpPlans[0].value);
-    }
-    setValue("notesValue", notesValue);
-  }, [severity, treatmentStatus, treatmentType, followUpPlans, setValue]);
-
-  // useEffect(() => {
-  //   if (
-  //     treatmentStatusValue === "pending" ||
-  //     treatmentStatusValue === "cancelled" ||
-  //     treatmentStatusValue === "on_hold"
-  //   ) {
-  //     setIsReasoningModalOpen(true);
-  //   } else {
-  //     setIsReasoningModalOpen(false);
-  //   }
-  // }, [treatmentStatusValue]);
-
-  // useEffect(() => {
-  //   const getStatusHistory = async () => {
-  //     try {
-  //       const res = await axiosInstance.get(
-  //         `/serviceuser-record/status/history/${id}`
-  //       );
-  //       console.log("record history:", res.data);
-  //     } catch (err) {
-  //       console.error("Error getting record:", err);
-  //     }
-  //   };
-
-  //   if (id !== null || undefined) {
-  //     getStatusHistory();
-  //   }
-  // }, [id]);
-
-  const onSubmit = async (data: FormValues) => {
-    setIsSubmitting(true);
-
-    const newData = {
-      ...data,
-      reason_for_change: "I just wanna do it now",
-    };
-
-    try {
-      const response = await axiosInstance.put(
-        `/update-serviceuser-healthsummaryrecord/diagnosis/status/${id}`,
-        newData
-      );
-      setIsSubmitting(true);
-      handleCloseDrawer();
-      if (refreshData) refreshData();
-      Swal.fire({
-        icon: "success",
-        title: "Record Updated",
-        text: "The health record has been successfully updated.",
-      });
-      console.log("this is the success msg:", response);
-    } catch (error: any) {
-      setIsSubmitting(false);
-      handleCloseDrawer();
-      Swal.fire({
-        icon: "error",
-        title: "Update Failed",
-        text:
-          error.response?.data?.message ||
-          "An error occurred while updating the record.",
-      });
-      console.error("Error updating record:", error);
-    }
-  };
 
   return (
     <>
@@ -219,8 +114,7 @@ export const UpdateHealthRec: React.FC<IProps> = ({
               label="Severity"
               name="severity"
               value={severityValue}
-              disabled={true}
-              onChange={(value: any) => setValue("severity", value)}
+              disabled
             />
 
             <CustomSelect
@@ -270,16 +164,15 @@ export const UpdateHealthRec: React.FC<IProps> = ({
               label="Treatment Type"
               name="treatmentType"
               value={treatmentTypeValue}
-              disabled={true}
-              onChange={(value: any) => setValue("treatmentType", value)}
+              disabled
             />
+
             <InputField
               type="text"
               label="Follow-Up Plan"
               name="followUpPlans"
               value={followUpPlanValue}
-              disabled={true}
-              onChange={(value: any) => setValue("followUpPlans", value)}
+              disabled
             />
 
             <label htmlFor="notes" className="-mb-4">
@@ -287,7 +180,7 @@ export const UpdateHealthRec: React.FC<IProps> = ({
             </label>
             <textarea
               value={notesValue}
-              disabled={true}
+              disabled
               {...register("notesValue")}
               rows={4}
               cols={50}
@@ -304,7 +197,7 @@ export const UpdateHealthRec: React.FC<IProps> = ({
                 borderStyle: "solid",
                 cursor: "not-allowed",
               }}
-              className={classNames("border-[1px]")}
+              className="border-[1px]"
             />
 
             <Button
@@ -329,15 +222,17 @@ export const UpdateHealthRec: React.FC<IProps> = ({
               variant="outlined"
               className="!capitalize"
             >
-              Update Record
+              {isSubmitting ? "Submitting..." : "Update"}
             </Button>
           </form>
         </Box>
       </DrawerComp>
 
       <ReasoningModal
+        sickness={rest.sickness}
         open={isReasoningModalOpen}
         setOpen={setIsReasoningModalOpen}
+        onClose={handleModalClose}
         treatmentStatusValue={treatmentStatusValue}
         selectedId={id}
       />

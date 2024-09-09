@@ -9,7 +9,7 @@ interface TextProps {
   name: string;
   value: string | number;
   type: string;
-  onChange: any;
+  onChange?: any;
   placeholder?: string;
   required?: boolean;
   disabled?: boolean;

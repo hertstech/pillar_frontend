@@ -65,7 +65,9 @@ export default function Health({ client }: PropType) {
 
   const [_, setIsDrawerOpen] = useRecoilState(drawerState);
 
-  const handleGetData = (id: string, itemId: string) => {
+  const handleGetData = (e: React.MouseEvent, id: string, itemId: string) => {
+    e.preventDefault();
+
     if (getUpdates === id) {
       setGetUpdates(null);
       setIsDrawerOpen(false);
@@ -110,12 +112,12 @@ export default function Health({ client }: PropType) {
       );
       setRecord(res?.data);
 
-      if (selectedId) {
-        const specificRecord = res?.data?.find(
-          (rec: any) => rec.id === selectedId
-        );
-        setSelectedRecord(specificRecord);
-      }
+      // if (selectedId) {
+      //   const specificRecord = res?.data?.find(
+      //     (rec: any) => rec.id === selectedId
+      //   );
+      //   setSelectedRecord(specificRecord);
+      // }
 
       setIsLoading(false);
     } catch (error) {
@@ -795,20 +797,20 @@ export default function Health({ client }: PropType) {
                     <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                       <UpdateHealthRec
                         id={selectedId as string}
-                        getData={() =>
-                          handleGetData(`${item?.type}${index}`, item?.id)
+                        getData={(e) =>
+                          handleGetData(e, `${item?.type}${index}`, item?.id)
                         }
                         refreshData={() => getHealthRecord()}
                         sickness={
                           selectedRecord?.secondaryDiagnosis
-                          ? selectedRecord?.secondaryDiagnosis
-                          : selectedRecord?.primaryDiagnosis
+                            ? selectedRecord?.secondaryDiagnosis
+                            : selectedRecord?.primaryDiagnosis
                         }
-                          notes={selectedRecord?.notes}
-                          severity={selectedRecord?.severity}
-                          treatmentType={selectedRecord?.treatmentType}
-                          followUpPlans={selectedRecord?.followUpPlans}
-                          treatmentStatus={selectedRecord?.treatmentStatus}
+                        notes={selectedRecord?.notes}
+                        severity={selectedRecord?.severity}
+                        treatmentType={selectedRecord?.treatmentType}
+                        followUpPlans={selectedRecord?.followUpPlans}
+                        treatmentStatus={selectedRecord?.treatmentStatus}
                       />
 
                       <span>

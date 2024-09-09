@@ -10,7 +10,6 @@ export const selectItems = {
     { id: "3", name: "Severe", value: "severe" },
   ],
   treatmentStatus: [
-    { id: "0", name: "Select a status", value: "" },
     { id: "1", name: "Pending", value: "pending" },
     { id: "2", name: "Active", value: "active" },
     { id: "3", name: "On hold", value: "on_hold" },
