@@ -49,6 +49,7 @@ export const UpdateHealthRec: React.FC<IProps> = ({
 }) => {
   const [_, setIsDrawerOpen] = useRecoilState(drawerState);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(true);
   const [isReasoningModalOpen, setIsReasoningModalOpen] = useState(false);
 
   const {
@@ -111,6 +112,7 @@ export const UpdateHealthRec: React.FC<IProps> = ({
   // }, [id]);
 
   const onSubmit = async (data: FormValues) => {
+    setIsDisabled(true);
     setIsSubmitting(true);
 
     const formValues = data;
@@ -127,7 +129,8 @@ export const UpdateHealthRec: React.FC<IProps> = ({
     } catch (error) {
       handleError(error);
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(true);
+      setIsDisabled(true);
     }
   };
 
@@ -141,7 +144,7 @@ export const UpdateHealthRec: React.FC<IProps> = ({
     } catch (error) {
       handleError(error);
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(true);
     }
   };
 
@@ -235,7 +238,10 @@ export const UpdateHealthRec: React.FC<IProps> = ({
               name="treatmentStatus"
               selectItems={selectItems.treatmentStatus}
               value={treatmentStatusValue}
-              onChange={(value) => setValue("treatmentStatus", value)}
+              onChange={(value) => {
+                setIsDisabled(false);
+                setValue("treatmentStatus", value);
+              }}
               register={register("treatmentStatus")}
               validationError={errors.treatmentStatus}
               itemStyle={(item) => ({
@@ -322,11 +328,15 @@ export const UpdateHealthRec: React.FC<IProps> = ({
                   color: "white",
                 },
               }}
-              disabled={isSubmitting}
+              disabled={isSubmitting || isDisabled}
               variant="outlined"
               className="!capitalize"
             >
-              {isSubmitting ? "Submitting..." : "Update Record"}
+              {isSubmitting
+                ? "Submitting..."
+                : isDisabled
+                ? "Update Record"
+                : "Update Record"}
             </Button>
           </form>
         </Box>
