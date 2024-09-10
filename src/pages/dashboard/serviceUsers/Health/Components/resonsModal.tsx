@@ -93,7 +93,6 @@ const ReasoningModal: React.FC<ReasoningModalProps> = ({
 
           <Box className="flex justify-between mt-8">
             <PrimaryButton
-              variant="light"
               type="button"
               width="10.7rem"
               onClick={() => setOpen(false)}

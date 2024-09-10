@@ -14,7 +14,7 @@ interface CustomSelectProps
   itemStyle?: (item: { id: string; name: string; value: string }) => any;
 }
 
-export const CustomSelect: React.FC<CustomSelectProps> = ({
+export const CustomSelect: React.FC<Partial<CustomSelectProps>> = ({
   label,
   name,
   selectItems,

@@ -5,7 +5,7 @@ import classNames from "classnames";
 interface PrimaryButtonProps {
   type?: "button" | "submit" | "reset";
   width?: string;
-  variant?: string;
+  variant?: "light" | "regular";
   buttonName: string;
   disabled?: boolean;
 
@@ -24,11 +24,9 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
     <Button
       type={type}
       sx={{
-        // color: "#F6FEF9",
         outline: "none",
         fontSize: "1rem",
         fontWeight: 600,
-        // background: "#2E90FA",
         "&:hover": { backgroundColor: "#2E90FA", color: "white" },
         padding: "16px, 24px",
         borderRadius: 2,
@@ -44,8 +42,8 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
       className={classNames(
         "!capitalize",
         variant === "light"
-          ? "text-pri-600 bg-[#D1E9FF]"
-          : "!text-[#F6FEF9] !bg-pri-600"
+          ? "text-pri-600 bg-[#F6FEF9]"
+          : "!text-[#F6FEF9] !bg-[#2E90FA] hover:!bg-[#F6FEF9] hover:!text-pri-600"
       )}
       onClick={onClick}
     >

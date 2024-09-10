@@ -792,6 +792,7 @@ export default function Health({ client }: PropType) {
                     <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                       <UpdateHealthRec
                         id={selectedId as string}
+                        disableDrawer={item.treatmentStatus === "completed"}
                         getData={(e) =>
                           handleGetData(e, `${item?.type}${index}`, item?.id)
                         }

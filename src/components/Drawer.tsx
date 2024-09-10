@@ -9,6 +9,7 @@ type ReusableDrawerProps = {
   sx?: any;
   isIcon?: any;
   buttonText: string;
+  disableDrawer?: boolean;
   children: React.ReactNode;
   drawerProps?: Partial<React.ComponentProps<typeof Drawer>>;
   buttonProps?: Partial<React.ComponentProps<typeof Button>> | any;
@@ -42,6 +43,7 @@ const DrawerComp: React.FC<ReusableDrawerProps> = ({
   return (
     <Box onClick={(e) => e.stopPropagation()}>
       <Button
+        disabled={rest.disableDrawer}
         className="flex h-full w-full items-center justify-center gap-2"
         sx={sx}
         onClick={onOpen}

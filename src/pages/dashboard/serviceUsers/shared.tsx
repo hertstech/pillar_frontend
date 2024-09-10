@@ -154,10 +154,10 @@ export const secondaryDiagnosis = [
 export const treatmentStatus = [
   "Pending",
   "Active",
-  "Completed",
-  "On Hold",
-  "Cancelled",
-  "Suspended",
+  // "Completed",
+  // "On Hold",
+  // "Cancelled",
+  // "Suspended",
 ];
 
 export const treatmentType = [
