@@ -298,7 +298,7 @@ export default function Allergies({ client }: PropType) {
                       handleFormChange(index, "severity", e.target.value)
                     }
                   >
-                    {severity.map((item, index) => (
+                    {severity.default.map((item, index) => (
                       <MenuItem key={index} value={item.value}>
                         {item.label}
                       </MenuItem>

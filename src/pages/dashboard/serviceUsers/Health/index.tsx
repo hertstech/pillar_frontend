@@ -33,6 +33,7 @@ import Styles from "../styles.module.css";
 import {
   apiResponse,
   client,
+  DiagnosisType,
   FormState,
 } from "../../../../types/serviceUserTypes/health";
 import { axiosInstance } from "../../../../Utils";
@@ -191,7 +192,7 @@ export default function Health({ client }: PropType) {
           </Stack>
         </div>
 
-        {formField.map((form: any, index: any) => (
+        {/* {formField.map((form: any, index: any) => (
           <form>
             <Card sx={{ p: 2 }}>
               <Box
@@ -227,7 +228,6 @@ export default function Health({ client }: PropType) {
                     ))}
                   </TextField>
                 </label>
-
                 <label htmlFor={`types${index}`} style={{ marginTop: "10px" }}>
                   Type
                   <TextField
@@ -249,7 +249,6 @@ export default function Health({ client }: PropType) {
                       ))}
                   </TextField>
                 </label>
-
                 {form.categories === "Vitals" &&
                   form.type === "Blood pressure" && (
                     <div style={{ marginTop: "5px", display: "flex", gap: 5 }}>
@@ -274,7 +273,6 @@ export default function Health({ client }: PropType) {
                       />
                     </div>
                   )}
-
                 {form.categories === "Vitals" && form.type === "Pulse Rate" && (
                   <div style={{ marginTop: "5px" }}>
                     <InputField
@@ -288,7 +286,6 @@ export default function Health({ client }: PropType) {
                     />
                   </div>
                 )}
-
                 {form.categories === "Vitals" &&
                   form.type === "Glucose Level" && (
                     <div style={{ marginTop: "5px" }}>
@@ -303,7 +300,6 @@ export default function Health({ client }: PropType) {
                       />
                     </div>
                   )}
-
                 {form.categories === "Vitals" &&
                   form.type === "Body Temperature" && (
                     <div style={{ marginTop: "5px", display: "flex", gap: 5 }}>
@@ -341,7 +337,6 @@ export default function Health({ client }: PropType) {
                       </label>
                     </div>
                   )}
-
                 {form.categories === "Genetic Information" &&
                   form.type === "Blood Group" && (
                     <label
@@ -367,7 +362,6 @@ export default function Health({ client }: PropType) {
                       </TextField>
                     </label>
                   )}
-
                 {form.categories === "Genetic Information" &&
                   form.type === "Genotype" && (
                     <label
@@ -392,7 +386,6 @@ export default function Health({ client }: PropType) {
                       </TextField>
                     </label>
                   )}
-
                 {form.categories === "Immunization" && (
                   <label
                     htmlFor={`manufacturer${index}`}
@@ -417,7 +410,6 @@ export default function Health({ client }: PropType) {
                     </TextField>
                   </label>
                 )}
-
                 {form.categories === "Immunization" && (
                   <div style={{ marginTop: "5px" }}>
                     <InputField
@@ -431,7 +423,6 @@ export default function Health({ client }: PropType) {
                     />
                   </div>
                 )}
-
                 {form.categories === "Immunization" && (
                   <Calendar
                     label="Administration Date"
@@ -446,7 +437,6 @@ export default function Health({ client }: PropType) {
                     }
                   />
                 )}
-
                 {form.categories === "Immunization" && (
                   <Calendar
                     label="Expiration Date"
@@ -461,7 +451,6 @@ export default function Health({ client }: PropType) {
                     }
                   />
                 )}
-
                 {form.categories === "Diagnosis" &&
                   form.type === "Primary Diagnosis" && (
                     <label
@@ -491,7 +480,6 @@ export default function Health({ client }: PropType) {
                       </TextField>
                     </label>
                   )}
-
                 {form.categories === "Diagnosis" &&
                   form.type === "Secondary Diagnosis" && (
                     <label
@@ -538,15 +526,17 @@ export default function Health({ client }: PropType) {
                         handleFormChange(index, "severity", e.target.value)
                       }
                     >
-                      {severity.map((item, index) => (
-                        <MenuItem key={index} value={item.value}>
+                      {(
+                        severity[form.type as DiagnosisType] ||
+                        severity.default
+                      ).map((item, idx) => (
+                        <MenuItem key={idx} value={item.value}>
                           {item.label}
                         </MenuItem>
                       ))}
                     </TextField>
                   </label>
                 )}
-
                 {form.categories === "Diagnosis" && (
                   <label
                     htmlFor={`treatmentStatus${index}`}
@@ -575,7 +565,6 @@ export default function Health({ client }: PropType) {
                     </TextField>
                   </label>
                 )}
-
                 {form.categories === "Diagnosis" && (
                   <label
                     htmlFor={`treatmentType${index}`}
@@ -600,7 +589,6 @@ export default function Health({ client }: PropType) {
                     </TextField>
                   </label>
                 )}
-
                 {form.categories === "Diagnosis" && (
                   <label
                     htmlFor={`followUpPlans${index}`}
@@ -723,7 +711,7 @@ export default function Health({ client }: PropType) {
               </Stack>
             </Card>
           </form>
-        ))}
+        ))} */}
 
         {isLoading ? (
           <SpinLoader />

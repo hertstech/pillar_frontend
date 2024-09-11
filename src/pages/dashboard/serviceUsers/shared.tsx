@@ -1,3 +1,4 @@
+
 export const medName = [
   { label: "Amoxicillin", value: "Amoxicillin" },
   { label: "Cinnarizine", value: "Cinnarizine" },
@@ -68,18 +69,61 @@ export const reaction = [
   { value: "Unknown", label: "Unknown" },
 ];
 
-export const severity = [
-  { value: "Mild", label: "Mild" },
-  { value: "Moderate", label: "Moderate" },
-  { value: "Severe", label: "Severe" },
-  { value: "Life-threatening", label: "Life-threatening" },
-  { value: "Fatal", label: "Fatal" },
-  { value: "Chronic", label: "Chronic" },
-  { value: "Acute", label: "Acute" },
-  { value: "Critical", label: "Critical" },
-  { value: "Stable", label: "Stable" },
-  { value: "Progressive", label: "Progressive" },
-];
+
+
+export const severity = {
+  Cancer: [
+    { value: "Stage I", label: "Stage I" },
+    { value: "Stage II", label: "Stage II" },
+    { value: "Stage III", label: "Stage III" },
+    { value: "Stage IV", label: "Stage IV" },
+    { value: "Stage V", label: "Stage V" },
+  ],
+  Diabetes: [
+    { value: "Mild", label: "Mild" },
+    { value: "Moderate", label: "Moderate" },
+    { value: "Severe", label: "Severe" },
+    { value: "Critical", label: "Critical" },
+    { value: "End-Stage", label: "End-Stage" },
+  ],
+  Asthma: [
+    { value: "Intermittent", label: "Intermittent" },
+    { value: "Mild", label: "Mild" },
+    { value: "Moderate", label: "Moderate" },
+    { value: "Severe", label: "Severe" },
+    { value: "Uncontrolled", label: "Uncontrolled" },
+  ],
+  Migraine: [
+    { value: "Prodrome", label: "Prodrome" },
+    { value: "Aura", label: "Aura" },
+    { value: "Headache", label: "Headache" },
+    { value: "Postdrome", label: "Postdrome" },
+    { value: "Status Migrainosus", label: "Status Migrainosus" },
+  ],
+  Hypertension: [
+    { value: "Normal blood pressure", label: "Normal blood pressure" },
+    { value: "Elevated blood pressure", label: "Elevated blood pressure" },
+    { value: "Hypertension Stage 1", label: "Hypertension Stage 1" },
+    { value: "Hypertension Stage 2", label: "Hypertension Stage 2" },
+    { value: "Hypertensive Crisis", label: "Hypertensive Crisis" },
+    {
+      value: "Isolated Systolic Hypertension",
+      label: "Isolated Systolic Hypertension",
+    },
+  ],
+  default: [
+    { value: "Mild", label: "Mild" },
+    { value: "Moderate", label: "Moderate" },
+    { value: "Severe", label: "Severe" },
+    { value: "Life-threatening", label: "Life-threatening" },
+    { value: "Fatal", label: "Fatal" },
+    { value: "Chronic", label: "Chronic" },
+    { value: "Acute", label: "Acute" },
+    { value: "Critical", label: "Critical" },
+    { value: "Stable", label: "Stable" },
+    { value: "Progressive", label: "Progressive" },
+  ],
+};
 
 export const certainty = [
   { value: "Speculated", label: "Speculated" },
@@ -126,30 +170,34 @@ export const bloodGroups = [
 ];
 
 export const primaryDiagnosis = [
-  "Pneumonia",
-  "Type 2 Diabetes Mellitus",
-  "Hypertension",
-  "Asthma",
-  "Coronary Artery Disease",
-  "Depression",
-  "Osteoarthritis",
-  "Urinary Tract Infection (UTI)",
-  "Migraine Headaches",
-  "Gastroesophageal Reflux Disease (GERD)",
-  "Cancer",
+  { value: "pneumonia", label: "Pneumonia" },
+  { value: "type_2_diabetes_mellitus", label: "Type 2 Diabetes Mellitus" },
+  { value: "hypertension", label: "Hypertension" },
+  { value: "asthma", label: "Asthma" },
+  { value: "coronary_artery_disease", label: "Coronary Artery Disease" },
+  { value: "depression", label: "Depression" },
+  { value: "osteoarthritis", label: "Osteoarthritis" },
+  { value: "urinary_tract_infection", label: "Urinary Tract Infection (UTI)" },
+  { value: "migraine_headaches", label: "Migraine Headaches" },
+  {
+    value: "gastroesophageal_reflux_disease",
+    label: "Gastroesophageal Reflux Disease (GERD)",
+  },
+  { value: "cancer", label: "Cancer" },
 ];
 
 export const secondaryDiagnosis = [
-  "Respiratory Failure",
-  "Hypoxemia",
-  "Sepsis",
-  "Peripheral Neuropathy",
-  "Hypertension",
-  "Retinopathy",
-  "Cardiogenic Shock",
-  "Arrhythmia",
-  "Coronary Artery Disease",
+  { value: "respiratory_failure", label: "Respiratory Failure" },
+  { value: "hypoxemia", label: "Hypoxemia" },
+  { value: "sepsis", label: "Sepsis" },
+  { value: "peripheral_neuropathy", label: "Peripheral Neuropathy" },
+  { value: "hypertension", label: "Hypertension" },
+  { value: "retinopathy", label: "Retinopathy" },
+  { value: "cardiogenic_shock", label: "Cardiogenic Shock" },
+  { value: "arrhythmia", label: "Arrhythmia" },
+  { value: "coronary_artery_disease", label: "Coronary Artery Disease" },
 ];
+
 
 export const treatmentStatus = [
   "Pending",
