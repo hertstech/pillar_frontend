@@ -14,7 +14,7 @@ interface CustomSelectProps
   itemStyle?: (item: { id: string; name: string; value: string }) => any;
 }
 
-export const CustomSelect: React.FC<Partial<CustomSelectProps>> = ({
+export const CustomSelect: React.FC<CustomSelectProps> = ({
   label,
   name,
   selectItems,
@@ -49,7 +49,8 @@ export const CustomSelect: React.FC<Partial<CustomSelectProps>> = ({
         name={register?.name}
         onChange={(e) => {
           e.preventDefault();
-          register?.onChange(e);
+
+          register?.onChange?.(e);
           onChange(e.target.value);
         }}
         onBlur={register?.onBlur}
