@@ -445,9 +445,7 @@ export default function HealthRecord() {
                     <MenuItem
                       key={index}
                       value={item.value}
-                      disabled={primaryDiagnosisStatus?.includes(
-                        item.value.toLowerCase()
-                      )}
+                      disabled={primaryDiagnosisStatus?.includes(item.value)}
                     >
                       {item.label}
                     </MenuItem>
@@ -474,9 +472,7 @@ export default function HealthRecord() {
                     <MenuItem
                       key={index}
                       value={item.value}
-                      disabled={secondaryDiagnosisStatus?.includes(
-                        item.value.toLowerCase()
-                      )}
+                      disabled={secondaryDiagnosisStatus?.includes(item.value)}
                     >
                       {item.label}
                     </MenuItem>

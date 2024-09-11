@@ -182,7 +182,7 @@ export default function AllergyRecord() {
               value={formField.severity}
               onChange={(e) => handleChange("severity", e.target.value)}
             >
-              {severity.map((item, index) => (
+              {severity.default.map((item, index) => (
                 <MenuItem key={index} value={item.value}>
                   {item.label}
                 </MenuItem>

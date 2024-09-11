@@ -72,58 +72,59 @@ export const reaction = [
 
 
 export const severity = {
-  Cancer: [
-    { value: "Stage I", label: "Stage I" },
-    { value: "Stage II", label: "Stage II" },
-    { value: "Stage III", label: "Stage III" },
-    { value: "Stage IV", label: "Stage IV" },
-    { value: "Stage V", label: "Stage V" },
+  cancer: [
+    { value: "stage_i", label: "Stage I" },
+    { value: "stage_ii", label: "Stage II" },
+    { value: "stage_iii", label: "Stage III" },
+    { value: "stage_iv", label: "Stage IV" },
+    { value: "stage_v", label: "Stage V" },
   ],
-  Diabetes: [
-    { value: "Mild", label: "Mild" },
-    { value: "Moderate", label: "Moderate" },
-    { value: "Severe", label: "Severe" },
-    { value: "Critical", label: "Critical" },
-    { value: "End-Stage", label: "End-Stage" },
+  type_2_diabetes_mellitus: [
+    { value: "mild", label: "Mild" },
+    { value: "moderate", label: "Moderate" },
+    { value: "severe", label: "Severe" },
+    { value: "critical", label: "Critical" },
+    { value: "end_stage", label: "End-Stage" },
   ],
-  Asthma: [
-    { value: "Intermittent", label: "Intermittent" },
-    { value: "Mild", label: "Mild" },
-    { value: "Moderate", label: "Moderate" },
-    { value: "Severe", label: "Severe" },
-    { value: "Uncontrolled", label: "Uncontrolled" },
+  asthma: [
+    { value: "intermittent", label: "Intermittent" },
+    { value: "mild", label: "Mild" },
+    { value: "moderate", label: "Moderate" },
+    { value: "severe", label: "Severe" },
+    { value: "uncontrolled", label: "Uncontrolled" },
   ],
-  Migraine: [
-    { value: "Prodrome", label: "Prodrome" },
-    { value: "Aura", label: "Aura" },
-    { value: "Headache", label: "Headache" },
-    { value: "Postdrome", label: "Postdrome" },
-    { value: "Status Migrainosus", label: "Status Migrainosus" },
+  migraine_headaches: [
+    { value: "prodrome", label: "Prodrome" },
+    { value: "aura", label: "Aura" },
+    { value: "headache", label: "Headache" },
+    { value: "postdrome", label: "Postdrome" },
+    { value: "status_migrainosus", label: "Status Migrainosus" },
   ],
-  Hypertension: [
-    { value: "Normal blood pressure", label: "Normal blood pressure" },
-    { value: "Elevated blood pressure", label: "Elevated blood pressure" },
-    { value: "Hypertension Stage 1", label: "Hypertension Stage 1" },
-    { value: "Hypertension Stage 2", label: "Hypertension Stage 2" },
-    { value: "Hypertensive Crisis", label: "Hypertensive Crisis" },
+  hypertension: [
+    { value: "normal_blood_pressure", label: "Normal blood pressure" },
+    { value: "elevated_blood_pressure", label: "Elevated blood pressure" },
+    { value: "hypertension_stage_1", label: "Hypertension Stage 1" },
+    { value: "hypertension_stage_2", label: "Hypertension Stage 2" },
+    { value: "hypertensive_crisis", label: "Hypertensive Crisis" },
     {
-      value: "Isolated Systolic Hypertension",
+      value: "isolated_systolic_hypertension",
       label: "Isolated Systolic Hypertension",
     },
   ],
   default: [
-    { value: "Mild", label: "Mild" },
-    { value: "Moderate", label: "Moderate" },
-    { value: "Severe", label: "Severe" },
-    { value: "Life-threatening", label: "Life-threatening" },
-    { value: "Fatal", label: "Fatal" },
-    { value: "Chronic", label: "Chronic" },
-    { value: "Acute", label: "Acute" },
-    { value: "Critical", label: "Critical" },
-    { value: "Stable", label: "Stable" },
-    { value: "Progressive", label: "Progressive" },
+    { value: "mild", label: "Mild" },
+    { value: "moderate", label: "Moderate" },
+    { value: "severe", label: "Severe" },
+    { value: "life_threatening", label: "Life-threatening" },
+    { value: "fatal", label: "Fatal" },
+    { value: "chronic", label: "Chronic" },
+    { value: "acute", label: "Acute" },
+    { value: "critical", label: "Critical" },
+    { value: "stable", label: "Stable" },
+    { value: "progressive", label: "Progressive" },
   ],
 };
+
 
 export const certainty = [
   { value: "Speculated", label: "Speculated" },

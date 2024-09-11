@@ -87,9 +87,9 @@ export interface client {
 }
 
 export type DiagnosisType =
-  | "Cancer"
-  | "Diabetes"
-  | "Asthma"
-  | "Migraine"
-  | "Hypertension"
+  | "cancer"
+  | "type_2_diabetes_mellitus"
+  | "asthma"
+  | "migraine_headaches"
+  | "hypertension"
   | "default";
