@@ -23,7 +23,6 @@ export interface FormState {
   followUpPlans: string;
   progressNote: string;
 }
-
 export interface apiResponse {
   systolic: string;
   diasttolic: string;
@@ -54,7 +53,6 @@ export interface apiResponse {
   serviceuser_id_fk: string;
   type: string;
 }
-
 export interface client {
   id: string;
   email: string;
@@ -87,3 +85,11 @@ export interface client {
   nokPhoneNumber: string;
   nokRelationship: string;
 }
+
+export type DiagnosisType =
+  | "cancer"
+  | "type_2_diabetes_mellitus"
+  | "asthma"
+  | "migraine_headaches"
+  | "hypertension"
+  | "default";

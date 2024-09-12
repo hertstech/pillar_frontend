@@ -49,7 +49,8 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
         name={register?.name}
         onChange={(e) => {
           e.preventDefault();
-          register?.onChange(e);
+
+          register?.onChange?.(e);
           onChange(e.target.value);
         }}
         onBlur={register?.onBlur}

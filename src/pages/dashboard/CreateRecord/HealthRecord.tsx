@@ -30,6 +30,7 @@ import Swal from "sweetalert2";
 import { axiosInstance } from "../../../Utils";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRecordStatus } from "../../../hooks/Health/healthRecordStatus";
+import { DiagnosisType } from "../../../types/serviceUserTypes/health";
 
 interface TextLabelProps {
   text: any;
@@ -443,10 +444,10 @@ export default function HealthRecord() {
                   {primaryDiagnosis.map((item, index) => (
                     <MenuItem
                       key={index}
-                      value={item}
-                      disabled={primaryDiagnosisStatus?.includes(item)}
+                      value={item.value}
+                      disabled={primaryDiagnosisStatus?.includes(item.value)}
                     >
-                      {item}
+                      {item.label}
                     </MenuItem>
                   ))}
                 </TextField>
@@ -470,10 +471,10 @@ export default function HealthRecord() {
                   {secondaryDiagnosis.map((item, index) => (
                     <MenuItem
                       key={index}
-                      value={item}
-                      disabled={secondaryDiagnosisStatus?.includes(item)}
+                      value={item.value}
+                      disabled={secondaryDiagnosisStatus?.includes(item.value)}
                     >
-                      {item}
+                      {item.label}
                     </MenuItem>
                   ))}
                 </TextField>
@@ -491,8 +492,13 @@ export default function HealthRecord() {
                 value={formField.severity}
                 onChange={(e) => handleChange("severity", e.target.value)}
               >
-                {severity.map((item, index) => (
-                  <MenuItem key={index} value={item.value}>
+                {(
+                  severity[
+                    (formField.primaryDiagnosis as DiagnosisType) ||
+                      (formField.secondaryDiagnosis as DiagnosisType)
+                  ] || severity.default
+                ).map((item, idx) => (
+                  <MenuItem key={idx} value={item.value}>
                     {item.label}
                   </MenuItem>
                 ))}

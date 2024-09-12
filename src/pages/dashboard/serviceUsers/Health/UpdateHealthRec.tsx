@@ -25,6 +25,7 @@ type FormValues = {
 };
 
 interface IProps {
+  disableDrawer:boolean;
   id: string | undefined;
   notes: string | undefined;
   sickness: string | undefined;
@@ -200,6 +201,7 @@ export const UpdateHealthRec: React.FC<IProps> = ({
         isIcon={<EditIcon />}
         buttonText="Update"
         onOpen={getData}
+        disableDrawer={rest.disableDrawer}
       >
         <Box
           sx={{
@@ -318,7 +320,7 @@ export const UpdateHealthRec: React.FC<IProps> = ({
                 fontSize: "1rem",
                 fontWeight: 600,
                 background: "#2E90FA",
-                "&:hover": { backgroundColor: "#2E90FA" },
+                "&:hover": { backgroundColor: "#F6FEF9", color: "#2E90FA" },
                 padding: "16px 24px",
                 borderRadius: 2,
                 height: "3.5rem",

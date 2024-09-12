@@ -427,8 +427,8 @@ export default function StepOne({ formData, handleChange }: any) {
                         }
                       >
                         {primaryDiagnosis.map((item, index) => (
-                          <MenuItem key={index} value={item}>
-                            {item}
+                          <MenuItem key={index} value={item.value}>
+                            {item.label}
                           </MenuItem>
                         ))}
                       </TextField>
@@ -451,8 +451,8 @@ export default function StepOne({ formData, handleChange }: any) {
                         }
                       >
                         {secondaryDiagnosis.map((item, index) => (
-                          <MenuItem key={index} value={item}>
-                            {item}
+                          <MenuItem key={index} value={item.value}>
+                            {item.label}
                           </MenuItem>
                         ))}
                       </TextField>
