@@ -180,7 +180,7 @@ export default function Health({ client }: PropType) {
                   >
                     <Box className="flex flex-col text-left">
                       <Box className="flex gap-2 items-center">
-                        <p className="text-[14px] font-[600] text-gray-500">
+                        <p className="text-[14px] font-[400] text-gray-500">
                           {item?.type}
                         </p>
 

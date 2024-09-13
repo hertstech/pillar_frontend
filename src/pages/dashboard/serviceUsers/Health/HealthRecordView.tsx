@@ -1,23 +1,23 @@
-import React, { useState } from "react";
-import { Box,  Typography } from "@mui/material";
-import { MoveBackComp } from "../../../../components/MoveBack";
-import { TextLabel } from "./Components/textLabel";
+import React from "react";
+import { Box, Stack } from "@mui/material";
 import moment from "moment";
+import classNames from "classnames";
+import { IoArrowBackCircleOutline } from "react-icons/io5";
+import Tabs from "./Components/tab";
+import { RecordDetails } from "./Components/recordDetails";
 
 interface IProps {
   data: any;
   id: string | undefined;
   disableDrawer: boolean;
   refreshData?: () => void;
-
+  handleCloseDrawer: () => void;
 }
 
 export const HealthRecordOverview: React.FC<IProps> = ({
-  
-  data: item
+  data: item,
+  handleCloseDrawer,
 }) => {
-  const [_, setIsDrawerOpen] = useState(false);
-
   console.log("health record here;", item);
 
   // useEffect(() => {
@@ -37,8 +37,6 @@ export const HealthRecordOverview: React.FC<IProps> = ({
   //   }
   // }, [id]);
 
-  const handleCloseDrawer = () => setIsDrawerOpen(false);
-
   return (
     <>
       <Box
@@ -50,166 +48,68 @@ export const HealthRecordOverview: React.FC<IProps> = ({
           borderRadius: "8px",
         }}
       >
-        <MoveBackComp
-          title={item?.primaryDiagnosis || "Sickness clicked here"}
-          subTitle="Health Information"
-          onMovingBack={handleCloseDrawer}
-        />
-
-        {/* {show === `${item?.type}${index}` && ( */}
-        <div style={{ padding: 6 }} className="mt-32">
-          <Box
-            sx={{
-              display: "grid",
-              columnGap: 1.5,
-              rowGap: 1.5,
-              gridTemplateColumns: {
-                xs: "repeat(1, 1fr)",
-                lg: "repeat(2, 1fr)",
-              },
-            }}
-          >
-            <TextLabel
-              label="Date Created"
-              text={moment(item.date_created).format("DD/MM/YYYY") || "None"}
-            />
-            <TextLabel label="Type" text={item.categories || "None"} />
-
-            {/* VITALS DATA VIEW*/}
-            {item.type === "blood pressure" && (
-              <TextLabel label="Systolic Reading" text={item.systolic} />
-            )}
-
-            {item.type === "blood pressure" && (
-              <TextLabel label="Diastolic Reading" text={item.diasttolic} />
-            )}
-
-            {item.type === "body temperature" && (
-              <TextLabel
-                label="Reading"
-                text={`${item.reading} ${item.degreeRating}` || "N/A"}
-              />
-            )}
-
-            {item.type === "pulse rate" && (
-              <TextLabel label="Beat Per Minute" text={item.bpm} />
-            )}
-
-            {item.type === "glucose level" && (
-              <TextLabel label="Glucose level" text={item.mgDl} />
-            )}
-
-            {/* GENETIC INFORMATION */}
-            {item.type === "blood group" && (
-              <TextLabel label="Blood Group" text={item.bloodGroup} />
-            )}
-
-            {item.type === "genotype" && (
-              <TextLabel label="Genotype" text={item.genotype || "N/A"} />
-            )}
-
-            {/* IMMUNIZATION DATA */}
-            {item.categories === "immunization" && (
-              <TextLabel
-                label="Manufacturer"
-                text={item.manufacturer || "N/A"}
-              />
-            )}
-
-            {item.categories === "immunization" && (
-              <TextLabel
-                label="Batch Number"
-                text={item.batchNumber || "N/A"}
-              />
-            )}
-
-            {item.categories === "immunization" && (
-              <TextLabel
-                label="Administration Date"
-                text={moment(item.administrationDate).format("DD/MM/YYYY")}
-              />
-            )}
-
-            {item.categories === "immunization" && (
-              <TextLabel
-                label="Expiration Date"
-                text={moment(item.expirationDate).format("DD/MM/YYYY")}
-              />
-            )}
-
-            {/* DIAGNOSIS DATA VIEW*/}
-            {item.type === "primary diagnosis" && (
-              <TextLabel
-                label="Primary Diagnosis"
-                text={item.primaryDiagnosis || "N/A"}
-              />
-            )}
-
-            {item.type === "secondary diagnosis" && (
-              <TextLabel
-                label="Secondary Diagnosis"
-                text={item.secondaryDiagnosis || "N/A"}
-              />
-            )}
-
-            {item.categories === "diagnosis" && (
-              <TextLabel label="Severity" text={item.severity || "N/A"} />
-            )}
-
-            {item.categories === "diagnosis" && (
-              <TextLabel
-                label="Treatment Status"
-                text={item.treatmentStatus || "N/A"}
-              />
-            )}
-
-            {item.categories === "diagnosis" && (
-              <TextLabel
-                label="Treatment type"
-                text={item.treatmentType || "N/A"}
-              />
-            )}
-
-            {item.categories === "diagnosis" && (
-              <TextLabel
-                label="Follow up Plans"
-                text={item.followUpPlans || "N/A"}
-              />
-            )}
-
-            {item.categories === "diagnosis" && (
-              <TextLabel
-                label="Prescribed by"
-                text={`${item.title} ${item.reading}` || "N/A"}
-              />
-            )}
-
-            {item.categories === "diagnosis" && (
-              <TextLabel label="Clinical notes" text={item.progressNote} />
-            )}
-          </Box>
-
-          <TextLabel label="Additional Notes" text={item.notes || "None"} />
-
-          <div
-            style={{
-              padding: "16px 0px",
-              color: "#101928",
-            }}
-          >
-            <Typography fontWeight={400} fontSize={12}>
-              Administered by
-            </Typography>
-            <Typography
-              fontWeight={400}
-              fontSize={14}
-              sx={{ display: "flex", gap: 1, alignItems: "center" }}
+        <Box className="flex flex-col gap-6">
+          <Stack sx={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+            <Box
+              className="flex gap-4 cursor-pointer text-neu-600"
+              onClick={handleCloseDrawer}
             >
-              🕒 ID: #{item.pillar_user_id_fk}
-            </Typography>
-          </div>
-        </div>
-        {/* )} */}
+              <IoArrowBackCircleOutline size={22} />
+              <Box sx={{ fontSize: "14px", fontWeight: 400 }}>
+                {"Health Information"}
+              </Box>
+            </Box>
+
+            <Box className="flex justify-between items-center w-full">
+              <Box className="flex items-center gap-2">
+                <p className="text-neu-700 font-[600] text-[1.125rem] capitalize">
+                  {item?.primaryDiagnosis ||
+                    item?.secondaryDiagnosis ||
+                    item.genotype ||
+                    "Sickness clicked here"}
+                </p>{" "}
+                <p
+                  className={classNames(
+                    "font-[600] text-[.75rem] py-1 px-3 rounded-[600px] capitalize",
+                    item.treatmentStatus?.toLowerCase() === "pending"
+                      ? "text-[#475367] "
+                      : item.treatmentStatus?.toLowerCase() === "active"
+                      ? "text-[#099137]"
+                      : item.treatmentStatus?.toLowerCase() === "on_hold"
+                      ? "text-[#DD900D] bg-warn-100"
+                      : item.treatmentStatus?.toLowerCase() === "completed"
+                      ? "text-[#1570EF]"
+                      : item.treatmentStatus?.toLowerCase() === "cancelled"
+                      ? "text-[#CB1A14]"
+                      : ""
+                  )}
+                >
+                  {(item.treatmentStatus === "on_hold" && "On Hold") ||
+                    item?.treatmentStatus}
+                </p>
+              </Box>
+              <p className="text-[.875rem] font-[700]">
+                {moment(item.date_created).format("Do MMM, YYYY") || ""}
+              </p>
+            </Box>
+          </Stack>
+          <Tabs
+            tabs={[
+              {
+                label: "Details",
+                content: <RecordDetails item={item} />,
+              },
+              {
+                label: "Clinical Notes",
+                content: <div>Clinical notes here</div>,
+              },
+              {
+                label: "Activity",
+                content: <div>Logs here</div>,
+              },
+            ]}
+          />
+        </Box>
       </Box>
     </>
   );
