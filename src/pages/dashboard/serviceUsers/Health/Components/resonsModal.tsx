@@ -26,7 +26,7 @@ const ReasoningModal: React.FC<ReasoningModalProps> = ({
   const {
     handleSubmit,
     setValue,
-    getValues,
+    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -51,6 +51,8 @@ const ReasoningModal: React.FC<ReasoningModalProps> = ({
     errors.reasons instanceof Object && "message" in errors.reasons
       ? (errors.reasons as FieldError)
       : undefined;
+
+  const reasonsValue = watch("reasons");
 
   return (
     <Modal open={open} handleClose={() => setOpen(false)}>
@@ -82,8 +84,10 @@ const ReasoningModal: React.FC<ReasoningModalProps> = ({
                 ? reasons.pending
                 : reasons.holdCancel
             }
-            value={getValues("reasons")}
-            onChange={(value) => setValue("reasons", value)}
+            value={reasonsValue}
+            onChange={(value) => {
+              setValue("reasons", value);
+            }}
           />
           {validationError && (
             <p className="text-red-500 text-xs mt-1">

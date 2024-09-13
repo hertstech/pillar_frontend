@@ -5,7 +5,7 @@ import { LuDot } from "react-icons/lu";
 import { useRecoilState } from "recoil";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { LiaAngleUpSolid, LiaAngleDownSolid } from "react-icons/lia";
+import { LiaAngleRightSolid } from "react-icons/lia";
 import NoResultIllustration, {
   SpinLoader,
 } from "../../../../components/NoResult";
@@ -14,7 +14,8 @@ import { axiosInstance } from "../../../../Utils";
 import { TextLabel } from "./Components/textLabel";
 import { UpdateHealthRec } from "./UpdateHealthRec";
 import { drawerState } from "../../../../atoms/drawerState";
-import { UpdateHistoryModal } from "./Components/updateHistory";
+import { HealthRecordOverview } from "./HealthRecordView";
+import DrawerComp from "../../../../components/Drawer";
 
 interface PropType {
   client: client;
@@ -24,8 +25,7 @@ export default function Health({ client }: PropType) {
   const { id } = useParams();
 
   const [hide, setHide] = useState(false);
-  const [show, setShow] = useState<string | null>(null);
-  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [getUpdates, setGetUpdates] = useState<string | null>(null);
   const [record, setRecord] = useState<apiResponse[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -36,9 +36,32 @@ export default function Health({ client }: PropType) {
 
   const [_, setIsDrawerOpen] = useRecoilState(drawerState);
 
-  const handleGetData = (e: React.MouseEvent, id: string, itemId: string) => {
-    e.preventDefault();
+  // const handleGetData = (e: React.MouseEvent, id: string, itemId: string) => {
+  //   e.preventDefault();
+  //   if (getUpdates === id) {
+  //     setGetUpdates(null);
+  //     setSelectedId(null);
+  //   } else {
+  //     setGetUpdates(id);
+  //     setSelectedId(itemId);
+  //     const selected = record.find((rec) => rec.id === itemId);
+  //     setSelectedRecord(selected || null);
+  //   }
+  // };
 
+  const handleToggle = (itemId: string) => {
+    setSelectedId(itemId);
+    const selected = record.find((rec) => rec.id === itemId);
+    setSelectedRecord(selected || null);
+    setOpenDrawer(!openDrawer);
+  };
+
+  const handleGetDataForUpdate = (
+    e: React.MouseEvent,
+    id: string,
+    itemId: string
+  ) => {
+    e.preventDefault();
     if (getUpdates === id) {
       setGetUpdates(null);
       setIsDrawerOpen(false);
@@ -53,14 +76,6 @@ export default function Health({ client }: PropType) {
   };
 
   const navigate = useNavigate();
-
-  const handleToggle = (id: string) => {
-    if (show === id) {
-      setShow(null);
-    } else {
-      setShow(id);
-    }
-  };
 
   const navToUpdateHealth = () => {
     navigate(`/dashboard/user/${id}/update/1`);
@@ -158,10 +173,10 @@ export default function Health({ client }: PropType) {
                       justifyContent: "space-between",
                       border: "1px #E4E7EC solid",
                       textTransform: "capitalize",
-                      // color: "#099250",
+                      borderRadius: "12px",
                     }}
                     fullWidth
-                    onClick={() => handleToggle(`${item?.type}${index}`)}
+                    onClick={() => handleToggle(item.id)}
                   >
                     <Box className="flex flex-col text-left">
                       <Box className="flex gap-2 items-center">
@@ -206,234 +221,48 @@ export default function Health({ client }: PropType) {
                     </Box>
 
                     <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                      <UpdateHealthRec
-                        id={selectedId as string}
-                        disableDrawer={item.treatmentStatus === "completed"}
-                        getData={(e) =>
-                          handleGetData(e, `${item?.type}${index}`, item?.id)
-                        }
-                        refreshData={() => getHealthRecord()}
-                        sickness={
-                          selectedRecord?.secondaryDiagnosis
-                            ? selectedRecord?.secondaryDiagnosis
-                            : selectedRecord?.primaryDiagnosis
-                        }
-                        notes={selectedRecord?.notes}
-                        severity={selectedRecord?.severity}
-                        treatmentType={selectedRecord?.treatmentType}
-                        followUpPlans={selectedRecord?.followUpPlans}
-                        treatmentStatus={selectedRecord?.treatmentStatus}
-                      />
-
+                      {item.type === "primary diagnosis" ||
+                      item.type === "secondary diagnosis" ? (
+                        <UpdateHealthRec
+                          id={selectedId as string}
+                          disableDrawer={item.treatmentStatus === "completed"}
+                          getData={(e) =>
+                            handleGetDataForUpdate(
+                              e,
+                              `${item?.type}${index}`,
+                              item?.id
+                            )
+                          }
+                          refreshData={() => getHealthRecord()}
+                          sickness={
+                            selectedRecord?.secondaryDiagnosis
+                              ? selectedRecord?.secondaryDiagnosis
+                              : selectedRecord?.primaryDiagnosis
+                          }
+                          notes={selectedRecord?.notes}
+                          severity={selectedRecord?.severity}
+                          treatmentType={selectedRecord?.treatmentType}
+                          followUpPlans={selectedRecord?.followUpPlans}
+                          treatmentStatus={selectedRecord?.treatmentStatus}
+                        />
+                      ) : null}
                       <span>
-                        {show === `${item?.type}${index}` ? (
-                          <LiaAngleUpSolid color="black" />
-                        ) : (
-                          <LiaAngleDownSolid color="black" />
-                        )}
+                        <LiaAngleRightSolid color="black" />
                       </span>
                     </Box>
                   </Button>
 
-                  {show === `${item?.type}${index}` && (
-                    <div style={{ padding: 6 }}>
-                      <Box
-                        sx={{
-                          display: "grid",
-                          columnGap: 1.5,
-                          rowGap: 1.5,
-                          gridTemplateColumns: {
-                            xs: "repeat(1, 1fr)",
-                            lg: "repeat(3, 1fr)",
-                          },
-                        }}
-                      >
-                        <TextLabel
-                          label="Date Created"
-                          text={
-                            moment(item.date_created).format("DD/MM/YYYY") ||
-                            "None"
-                          }
-                        />
-                        <TextLabel
-                          label="Type"
-                          text={item.categories || "None"}
-                        />
-
-                        {/* VITALS DATA VIEW*/}
-                        {item.type === "blood pressure" && (
-                          <TextLabel
-                            label="Systolic Reading"
-                            text={item.systolic}
-                          />
-                        )}
-
-                        {item.type === "blood pressure" && (
-                          <TextLabel
-                            label="Diastolic Reading"
-                            text={item.diasttolic}
-                          />
-                        )}
-
-                        {item.type === "body temperature" && (
-                          <TextLabel
-                            label="Reading"
-                            text={
-                              `${item.reading} ${item.degreeRating}` || "N/A"
-                            }
-                          />
-                        )}
-
-                        {item.type === "pulse rate" && (
-                          <TextLabel label="Beat Per Minute" text={item.bpm} />
-                        )}
-
-                        {item.type === "glucose level" && (
-                          <TextLabel label="Glucose level" text={item.mgDl} />
-                        )}
-
-                        {/* GENETIC INFORMATION */}
-                        {item.type === "blood group" && (
-                          <TextLabel
-                            label="Blood Group"
-                            text={item.bloodGroup}
-                          />
-                        )}
-
-                        {item.type === "genotype" && (
-                          <TextLabel
-                            label="Genotype"
-                            text={item.genotype || "N/A"}
-                          />
-                        )}
-
-                        {/* IMMUNIZATION DATA */}
-                        {item.categories === "immunization" && (
-                          <TextLabel
-                            label="Manufacturer"
-                            text={item.manufacturer || "N/A"}
-                          />
-                        )}
-
-                        {item.categories === "immunization" && (
-                          <TextLabel
-                            label="Batch Number"
-                            text={item.batchNumber || "N/A"}
-                          />
-                        )}
-
-                        {item.categories === "immunization" && (
-                          <TextLabel
-                            label="Administration Date"
-                            text={moment(item.administrationDate).format(
-                              "DD/MM/YYYY"
-                            )}
-                          />
-                        )}
-
-                        {item.categories === "immunization" && (
-                          <TextLabel
-                            label="Expiration Date"
-                            text={moment(item.expirationDate).format(
-                              "DD/MM/YYYY"
-                            )}
-                          />
-                        )}
-
-                        {/* DIAGNOSIS DATA VIEW*/}
-                        {item.type === "primary diagnosis" && (
-                          <TextLabel
-                            label="Primary Diagnosis"
-                            text={item.primaryDiagnosis || "N/A"}
-                          />
-                        )}
-
-                        {item.type === "secondary diagnosis" && (
-                          <TextLabel
-                            label="Secondary Diagnosis"
-                            text={item.secondaryDiagnosis || "N/A"}
-                          />
-                        )}
-
-                        {item.categories === "diagnosis" && (
-                          <TextLabel
-                            label="Severity"
-                            text={item.severity || "N/A"}
-                          />
-                        )}
-
-                        {item.categories === "diagnosis" && (
-                          <TextLabel
-                            label="Treatment Status"
-                            text={item.treatmentStatus || "N/A"}
-                          />
-                        )}
-
-                        {item.categories === "diagnosis" && (
-                          <TextLabel
-                            label="Treatment type"
-                            text={item.treatmentType || "N/A"}
-                          />
-                        )}
-
-                        {item.categories === "diagnosis" && (
-                          <TextLabel
-                            label="Follow up Plans"
-                            text={item.followUpPlans || "N/A"}
-                          />
-                        )}
-
-                        {item.categories === "diagnosis" && (
-                          <TextLabel
-                            label="Prescribed by"
-                            text={`${item.title} ${item.reading}` || "N/A"}
-                          />
-                        )}
-
-                        {item.categories === "diagnosis" && (
-                          <TextLabel
-                            label="Clinical notes"
-                            text={item.progressNote}
-                          />
-                        )}
-                      </Box>
-
-                      <TextLabel
-                        label="Additional Notes"
-                        text={item.notes || "None"}
-                      />
-
-                      <div
-                        style={{
-                          padding: "16px 0px",
-                          color: "#101928",
-                        }}
-                      >
-                        <Typography fontWeight={400} fontSize={12}>
-                          Administered by
-                        </Typography>
-                        <Typography
-                          fontWeight={400}
-                          fontSize={14}
-                          sx={{ display: "flex", gap: 1, alignItems: "center" }}
-                        >
-                          🕒 ID: #{item.pillar_user_id_fk}
-                        </Typography>
-
-                        {/* SHOW UPDATE HISTORY HERE -- WITH CONDITIONS*/}
-                        <button
-                          onClick={() => setOpenModal(true)}
-                          className="text-pri-600 mt-10 font-[600]"
-                        >
-                          view history
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                  <UpdateHistoryModal
-                    open={openModal}
-                    onClose={() => setOpenModal(false)}
-                  />
+                  <DrawerComp
+                    variant="plain"
+                    openDrawer={openDrawer && selectedId === item.id}
+                    onCloseDrawer={() => setOpenDrawer(false)}
+                  >
+                    <HealthRecordOverview
+                      data={selectedRecord}
+                      disableDrawer={false}
+                      id={selectedId as string}
+                    />
+                  </DrawerComp>
                 </Box>
               ))
             ) : (

@@ -8,15 +8,18 @@ import { drawerState } from "../atoms/drawerState";
 type ReusableDrawerProps = {
   sx?: any;
   isIcon?: any;
+  variant?: "plain";
   buttonText: string;
+  openDrawer?: boolean;
   disableDrawer?: boolean;
   children: React.ReactNode;
   drawerProps?: Partial<React.ComponentProps<typeof Drawer>>;
   buttonProps?: Partial<React.ComponentProps<typeof Button>> | any;
   onOpen: (e: React.MouseEvent) => void;
+  onCloseDrawer: (e: React.MouseEvent) => void;
 };
 
-const DrawerComp: React.FC<ReusableDrawerProps> = ({
+const DrawerComp: React.FC<Partial<ReusableDrawerProps>> = ({
   sx,
   children,
   buttonText,
@@ -39,23 +42,24 @@ const DrawerComp: React.FC<ReusableDrawerProps> = ({
       }
       setOpenDrawer(action);
     };
-
   return (
     <Box onClick={(e) => e.stopPropagation()}>
-      <Button
-        disabled={rest.disableDrawer}
-        className="flex h-full w-full items-center justify-center gap-2"
-        sx={sx}
-        onClick={onOpen}
-        {...buttonProps}
-      >
-        <>{buttonText}</>
-        {rest.isIcon && <> {rest.isIcon}</>}
-      </Button>
+      {rest.variant !== "plain" && (
+        <Button
+          disabled={rest.disableDrawer}
+          className="flex h-full w-full items-center justify-center gap-2"
+          sx={sx}
+          onClick={onOpen}
+          {...buttonProps}
+        >
+          <>{buttonText}</>
+          {rest.isIcon && <> {rest.isIcon}</>}
+        </Button>
+      )}
       <Drawer
-        open={openDrawer}
+        open={rest.variant === "plain" ? rest.openDrawer : openDrawer}
         anchor={"right"}
-        onClose={toggleDrawer(false)}
+        onClose={rest.variant === "plain" ? rest.onCloseDrawer:toggleDrawer(false)}
         sx={{
           "& .MuiDrawer-paper": {
             borderRadius: "16px 0px 0px 16px",
