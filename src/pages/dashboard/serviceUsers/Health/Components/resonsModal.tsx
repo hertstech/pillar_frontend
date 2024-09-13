@@ -26,7 +26,7 @@ const ReasoningModal: React.FC<ReasoningModalProps> = ({
   const {
     handleSubmit,
     setValue,
-    getValues,
+    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -52,11 +52,13 @@ const ReasoningModal: React.FC<ReasoningModalProps> = ({
       ? (errors.reasons as FieldError)
       : undefined;
 
+  const reasonsValue = watch("reasons");
+
   return (
     <Modal open={open} handleClose={() => setOpen(false)}>
       <Box className="flex flex-col justify-between h-[268px] w-[390px]">
         <Box className="flex justify-between items-center">
-          <h2 className="text-[.875rem] font-[400] leading-5">
+          <h2 className="text-[.875rem] font-[400] text-neu-600 leading-5">
             {sickness || "Sickness name here"}
           </h2>
           <p
@@ -82,8 +84,10 @@ const ReasoningModal: React.FC<ReasoningModalProps> = ({
                 ? reasons.pending
                 : reasons.holdCancel
             }
-            value={getValues("reasons")}
-            onChange={(value) => setValue("reasons", value)}
+            value={reasonsValue}
+            onChange={(value) => {
+              setValue("reasons", value);
+            }}
           />
           {validationError && (
             <p className="text-red-500 text-xs mt-1">
@@ -93,6 +97,7 @@ const ReasoningModal: React.FC<ReasoningModalProps> = ({
 
           <Box className="flex justify-between mt-8">
             <PrimaryButton
+            variant="light"
               type="button"
               width="10.7rem"
               onClick={() => setOpen(false)}
