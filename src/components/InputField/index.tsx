@@ -33,7 +33,7 @@ export default function InputField({
 
   return (
     <div className={Styles.wrapper}>
-      <label htmlFor={name} style={{ color: "black" }}>
+      <label htmlFor={name}  className="text-neu-700 font-[600] text-[.875rem] ">
         {label}
         <input
           type={

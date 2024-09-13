@@ -204,7 +204,9 @@ export default function Health({ client }: PropType) {
                               : ""
                           )}
                         >
-                          {item?.treatmentStatus}
+                          {item?.treatmentStatus === "on_hold"
+                            ? "On Hold"
+                            : item.treatmentStatus}
                         </p>
                       </Box>
                       <span className="text-[1rem] font-[600] text-[#090816]">

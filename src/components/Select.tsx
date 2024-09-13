@@ -26,7 +26,7 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
   ...textFieldProps
 }) => {
   return (
-    <label htmlFor={name} className="!font-900">
+    <label htmlFor={name} className="font-600 text-neu-700">
       {label}
       <TextField
         select
@@ -37,7 +37,7 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
           "& .MuiOutlinedInput-root": {
             color: "#101928",
             fontSize: "16px",
-            fontWeight: 500,
+            fontWeight: 400,
             border: "0px solid #E7E9FB",
             borderRadius: "8px",
             width: "auto",
