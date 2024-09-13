@@ -258,9 +258,10 @@ export default function Health({ client }: PropType) {
                     onCloseDrawer={() => setOpenDrawer(false)}
                   >
                     <HealthRecordOverview
+                      id={selectedId as string}
                       data={selectedRecord}
                       disableDrawer={false}
-                      id={selectedId as string}
+                      handleCloseDrawer={() => setOpenDrawer(false)}
                     />
                   </DrawerComp>
                 </Box>
