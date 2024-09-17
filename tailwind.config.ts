@@ -32,6 +32,7 @@ const config: Config = {
         warn: {
           100: "#FDEAD7",
         },
+        bg: "#F7F7F7;",
       },
     },
   },
