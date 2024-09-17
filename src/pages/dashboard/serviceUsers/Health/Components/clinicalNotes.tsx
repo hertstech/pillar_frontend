@@ -5,6 +5,7 @@ import { FaAngleDown } from "react-icons/fa";
 import { IoEllipsisHorizontalCircleOutline } from "react-icons/io5";
 import { LuDot } from "react-icons/lu";
 import { getStatusColor } from "../../../../../Utils/getStatusColor";
+import AddClinicalNotes from "./addClinicalNotes";
 
 interface IProps {
   item: any;
@@ -12,6 +13,7 @@ interface IProps {
 
 export const ClinicalNoteComp = ({ item }: IProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -19,6 +21,14 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleModalOpen = () => {
+    setModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
   };
 
   const open = Boolean(anchorEl);
@@ -84,7 +94,7 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
         <button
           className="border-none bg-transparent capitalize text-pri-600
            text-[1rem] leading-6 font-semibold outline-none"
-          onClick={() => null}
+          onClick={handleModalOpen} 
         >
           add notes
         </button>
@@ -144,6 +154,13 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
           </Box>
         </Box>
       </Box>
+
+      <AddClinicalNotes
+        open={modalOpen}
+        setOpen={setModalOpen}
+        onClose={handleModalClose}
+        selectedId={item.id}
+      />
     </Box>
   );
 };

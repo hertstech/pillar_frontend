@@ -15,12 +15,14 @@ interface AlertDialogSlideProps {
   open: boolean;
   handleClose: () => void;
   children: React.ReactNode;
+  width?: string | number;
 }
 
 const Modal: React.FC<AlertDialogSlideProps> = ({
   open,
   handleClose,
   children,
+  width = "500px",
 }) => {
   const handleDialogClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -36,7 +38,7 @@ const Modal: React.FC<AlertDialogSlideProps> = ({
       onClick={handleDialogClick}
       BackdropProps={{
         style: {
-          backgroundColor: "rgba(0, 0, 0, 0.2)",
+          backgroundColor: "rgba(0, 0, 0, 0.4)",
           backdropFilter: "blur(0px)",
         },
       }}
@@ -44,6 +46,7 @@ const Modal: React.FC<AlertDialogSlideProps> = ({
         elevation: 0,
         style: {
           boxShadow: "none",
+          width: width,
         },
       }}
     >
