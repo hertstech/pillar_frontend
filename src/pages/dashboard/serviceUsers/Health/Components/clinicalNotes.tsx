@@ -4,6 +4,7 @@ import { useState } from "react";
 import { FaAngleDown } from "react-icons/fa";
 import { IoEllipsisHorizontalCircleOutline } from "react-icons/io5";
 import { LuDot } from "react-icons/lu";
+import { getStatusColor } from "../../../../../Utils/getStatusColor";
 
 interface IProps {
   item: any;
@@ -23,6 +24,21 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
 
+  const getDiagnosisText = () => {
+    switch (item?.type) {
+      case "primary diagnosis":
+        return item?.primaryDiagnosis;
+      case "secondary diagnosis":
+        return item?.secondaryDiagnosis;
+      case "genotype":
+        return item?.genotype;
+      case "blood group":
+        return item?.bloodGroup;
+      default:
+        return null;
+    }
+  };
+
   return (
     <Box className="w-full">
       <Box className="flex items-center justify-between h-14">
@@ -32,7 +48,7 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
           </Typography>
           <Button
             className="!capitalize !text-[.725rem] !text-neu-500 h-fit border-[4px]"
-            onClick={(event: any) => handleClick(event)}
+            onClick={handleClick}
           >
             All Notes <FaAngleDown className="mx-2 font-[400]" />
           </Button>
@@ -57,7 +73,6 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
                 border: "1px #F2F4F7 solid",
                 borderRadius: 2,
                 width: "80px",
-
                 p: 1,
               }}
             >
@@ -67,8 +82,8 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
         </Box>
 
         <button
-          className="border-none bg-transparent capitalize text-pri-600 text-[1rem]
-          leading-6 font-semibold outline-none "
+          className="border-none bg-transparent capitalize text-pri-600
+           text-[1rem] leading-6 font-semibold outline-none"
           onClick={() => null}
         >
           add notes
@@ -78,36 +93,12 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
       <Box className="min-h-[208px] max-w-[582px] p-4 bg-bg rounded-lg mt-4">
         <Box className="flex items-center justify-between">
           <Box className="flex items-center text-[.825rem] capitalize">
-            <p className="font-[600] leading-4 text-gray-800 ">
-              {" "}
-              {item.type === "primary diagnosis"
-                ? item.primaryDiagnosis
-                : item.type === "secondary diagnosis"
-                ? item.secondaryDiagnosis
-                : item.type === "genotype"
-                ? item.genotype
-                : item.type === "blood group"
-                ? item.bloodGroup
-                : null}
+            <p className="font-[600] leading-4 text-gray-800">
+              {getDiagnosisText()}
             </p>
 
-            {item.treatmentStatus !== null && <LuDot />}
-            <p
-              className={classNames(
-                "font-[600]",
-                item.treatmentStatus?.toLowerCase() === "pending"
-                  ? "text-[#475367]"
-                  : item.treatmentStatus?.toLowerCase() === "active"
-                  ? "text-[#099137]"
-                  : item.treatmentStatus?.toLowerCase() === "on_hold"
-                  ? "text-[#DD900D]"
-                  : item.treatmentStatus?.toLowerCase() === "completed"
-                  ? "text-[#1570EF]"
-                  : item.treatmentStatus?.toLowerCase() === "cancelled"
-                  ? "text-[#CB1A14]"
-                  : ""
-              )}
-            >
+            {item?.treatmentStatus && <LuDot />}
+            <p className={classNames("font-[600]", getStatusColor(item))}>
               {item?.treatmentStatus === "on_hold"
                 ? "On Hold"
                 : item.treatmentStatus}
@@ -131,11 +122,12 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
                 className="w-8 h-8"
               />
               <Box>
-                <p className=" text-neu-900 text-[.85rem] ">Dr Olu Sani</p>
+                <p className=" text-neu-900 text-[.85rem]">Dr Olu Sani</p>
                 <p className="text-[.75rem] leading-4 -mt-1">12/03/2019</p>
               </Box>
             </Box>
           </Box>
+
           <Box className="col-span-1 flex flex-col font-[400] gap-[2px] leading-5 text-neu-500">
             <h4 className="text-[.75rem]">Approved By</h4>
             <Box className="flex gap-1 items-center">
@@ -145,12 +137,11 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
                 className="w-8 h-8"
               />
               <Box>
-                <p className=" text-neu-900 text-[.85rem] ">Dr Ayochike</p>
+                <p className=" text-neu-900 text-[.85rem]">Dr Ayochike</p>
                 <p className="text-[.75rem] leading-4 -mt-1">12/03/2019</p>
               </Box>
             </Box>
           </Box>
-          
         </Box>
       </Box>
     </Box>
