@@ -68,7 +68,7 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
   );
 
   return (
-    <Box className="w-full">
+    <Box className="w-full ">
       <Box className="flex items-center justify-between h-14">
         <Box className="flex items-center gap-2 h-8">
           <Typography className="!text-[.85rem] !font-[500] !leading-5">
@@ -111,38 +111,43 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
         </button>
       </Box>
 
-      {notesData.map((note, index) => (
-        <Box
-          key={index}
-          className="min-h-[208px] max-w-[582px] p-4 bg-bg rounded-lg mt-4"
-        >
-          <Box className="flex items-center justify-between">
-            <Box className="flex items-center text-[.825rem] capitalize">
-              <p className="font-[600] leading-4 text-gray-800">
-                {getDiagnosisText()}
-              </p>
-              {item?.treatmentStatus && <LuDot />}
-              <p className={getStatusColor(item)}>
-                {item?.treatmentStatus === "on_hold"
-                  ? "On Hold"
-                  : item.treatmentStatus}
-              </p>
+      <Box
+        className="max-h-[670px] overflow-y-auto scrollbar-hide"
+        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+      >
+        {notesData.map((note, index) => (
+          <Box
+            key={index}
+            className="min-h-[208px] max-w-[582px] p-4 bg-bg rounded-lg mt-4"
+          >
+            <Box className="flex items-center justify-between">
+              <Box className="flex items-center text-[.825rem] capitalize">
+                <p className="font-[600] leading-4 text-gray-800">
+                  {getDiagnosisText()}
+                </p>
+                {item?.treatmentStatus && <LuDot />}
+                <p className={getStatusColor(item)}>
+                  {item?.treatmentStatus === "on_hold"
+                    ? "On Hold"
+                    : item.treatmentStatus}
+                </p>
+              </Box>
+              <IoEllipsisHorizontalCircleOutline className="text-neu-500 cursor-pointer" />
             </Box>
-            <IoEllipsisHorizontalCircleOutline className="text-neu-500 cursor-pointer"/>
+            <p className="text-[.825rem] font-[400] leading-5 !my-4 text-neu-500 min-h-[65px]">
+              {note.noteText}
+            </p>
+            <Box className="grid grid-cols-2 mt-4">
+              {renderPersonInfo("Created By", note.createdBy, note.createdDate)}
+              {renderPersonInfo(
+                "Approved By",
+                note.approvedBy,
+                note.approvedDate
+              )}
+            </Box>
           </Box>
-          <p className="text-[.825rem] font-[400] leading-5 !my-4 text-neu-500 min-h-[65px]">
-            {note.noteText}
-          </p>
-          <Box className="grid grid-cols-2 mt-4">
-            {renderPersonInfo("Created By", note.createdBy, note.createdDate)}
-            {renderPersonInfo(
-              "Approved By",
-              note.approvedBy,
-              note.approvedDate
-            )}
-          </Box>
-        </Box>
-      ))}
+        ))}
+      </Box>
 
       <AddClinicalNotes
         open={modalOpen}

@@ -50,7 +50,7 @@ export const HealthRecordOverview: React.FC<IProps> = ({
           borderRadius: "8px",
         }}
       >
-        <Box className="flex flex-col gap-6">
+        <Box className="flex flex-col gap-6 relative">
           <Stack sx={{ display: "flex", flexDirection: "column", gap: "24px" }}>
             <Box
               className="flex gap-4 cursor-pointer text-neu-600"

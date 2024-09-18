@@ -65,6 +65,14 @@ export const notesData = [
       "Patient reports mild fatigue and occasional blurred vision. Denies any chest pain or dizziness. He has been compliant with metformin but has missed doses twice in the past month. No recent episodes of hypoglycemia.",
   },
   {
+    createdBy: "Dr Olu Sani",
+    createdDate: "12/03/2019",
+    approvedBy: "Dr Ayochike",
+    approvedDate: "12/03/2019",
+    noteText:
+      "Patient reports mild fatigue and occasional blurred vision. Denies any chest pain or dizziness. He has been compliant with metformin but has missed doses twice in the past month. No recent episodes of hypoglycemia.",
+  },
+  {
     createdBy: "Dr Bisi Ade",
     createdDate: "13/04/2020",
     approvedBy: "Dr Yemi Adamu",
