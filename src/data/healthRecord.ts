@@ -55,3 +55,29 @@ export const logData = [
   },
 ];
 
+export const notesData = [
+  {
+    createdBy: "Dr Olu Sani",
+    createdDate: "12/03/2019",
+    approvedBy: "Dr Ayochike",
+    approvedDate: "12/03/2019",
+    noteText:
+      "Patient reports mild fatigue and occasional blurred vision. Denies any chest pain or dizziness. He has been compliant with metformin but has missed doses twice in the past month. No recent episodes of hypoglycemia.",
+  },
+  {
+    createdBy: "Dr Bisi Ade",
+    createdDate: "13/04/2020",
+    approvedBy: "Dr Yemi Adamu",
+    approvedDate: "14/04/2020",
+    noteText:
+      "Patient mentions occasional shortness of breath. Denies any chest pain or severe dizziness. He has been consistent with the medication but reports missed doses due to travel.",
+  },
+  {
+    createdBy: "Dr Yomi Talese",
+    createdDate: "13/04/2020",
+    approvedBy: "Dr Tinubu Gonzalez",
+    approvedDate: "14/04/2020",
+    noteText:
+      "Patient mentions occasional shortness of breath. Denies any chest pain or severe dizziness. He has been consistent with the medication but reports missed doses due to travel.",
+  },
+];

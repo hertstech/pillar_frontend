@@ -1,38 +1,39 @@
 import { Box, Button, Popover, Typography } from "@mui/material";
-import classNames from "classnames";
-import { useState } from "react";
+import { useState, MouseEvent } from "react";
 import { FaAngleDown } from "react-icons/fa";
 import { IoEllipsisHorizontalCircleOutline } from "react-icons/io5";
 import { LuDot } from "react-icons/lu";
 import { getStatusColor } from "../../../../../Utils/getStatusColor";
 import AddClinicalNotes from "./addClinicalNotes";
+import { notesData } from "../../../../../data/healthRecord";
 
 interface IProps {
-  item: any;
+  item: {
+    id: string;
+    type: string;
+    primaryDiagnosis?: string;
+    secondaryDiagnosis?: string;
+    genotype?: string;
+    bloodGroup?: string;
+    treatmentStatus?: string;
+  };
 }
 
 export const ClinicalNoteComp = ({ item }: IProps) => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const handleClose = () => setAnchorEl(null);
 
-  const handleModalOpen = () => {
-    setModalOpen(true);
-  };
-
-  const handleModalClose = () => {
-    setModalOpen(false);
-  };
+  const handleModalOpen = () => setModalOpen(true);
+  const handleModalClose = () => setModalOpen(false);
 
   const open = Boolean(anchorEl);
-  const id = open ? "simple-popover" : undefined;
+  const popoverId = open ? "simple-popover" : undefined;
 
   const getDiagnosisText = () => {
     switch (item?.type) {
@@ -49,6 +50,23 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
     }
   };
 
+  const renderPersonInfo = (title: string, name: string, date: string) => (
+    <Box className="col-span-1 flex flex-col font-[400] gap-[2px] leading-5 text-neu-500">
+      <h4 className="text-[.75rem]">{title}</h4>
+      <Box className="flex gap-1 items-center">
+        <img
+          src={"/src/assets/docAvater.png"}
+          alt="author photograph"
+          className="w-8 h-8"
+        />
+        <Box>
+          <p className="text-neu-900 text-[.85rem]">{name}</p>
+          <p className="text-[.75rem] leading-4 -mt-1">{date}</p>
+        </Box>
+      </Box>
+    </Box>
+  );
+
   return (
     <Box className="w-full">
       <Box className="flex items-center justify-between h-14">
@@ -63,18 +81,12 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
             All Notes <FaAngleDown className="mx-2 font-[400]" />
           </Button>
           <Popover
-            id={id}
+            id={popoverId}
             open={open}
             anchorEl={anchorEl}
             onClose={handleClose}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
-            }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            transformOrigin={{ vertical: "top", horizontal: "right" }}
           >
             <Box
               sx={{
@@ -92,68 +104,45 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
         </Box>
 
         <button
-          className="border-none bg-transparent capitalize text-pri-600
-           text-[1rem] leading-6 font-semibold outline-none"
-          onClick={handleModalOpen} 
+          className="border-none bg-transparent capitalize text-pri-600 text-[1rem] leading-6 font-semibold outline-none"
+          onClick={handleModalOpen}
         >
-          add notes
+          Add Notes
         </button>
       </Box>
 
-      <Box className="min-h-[208px] max-w-[582px] p-4 bg-bg rounded-lg mt-4">
-        <Box className="flex items-center justify-between">
-          <Box className="flex items-center text-[.825rem] capitalize">
-            <p className="font-[600] leading-4 text-gray-800">
-              {getDiagnosisText()}
-            </p>
-
-            {item?.treatmentStatus && <LuDot />}
-            <p className={classNames("font-[600]", getStatusColor(item))}>
-              {item?.treatmentStatus === "on_hold"
-                ? "On Hold"
-                : item.treatmentStatus}
-            </p>
-          </Box>
-          <IoEllipsisHorizontalCircleOutline className="text-neu-500" />
-        </Box>
-        <p className="text-[.825rem] font-[400] leading-5 !my-4 text-neu-500 min-h-[65px]">
-          Patient reports mild fatigue and occasional blurred vision. Denies any
-          chest pain or dizziness. He has been compliant with metformin but has
-          missed doses twice in the past month. No recent episodes of
-          hypoglycemia.
-        </p>
-        <Box className="grid grid-cols-2 mt-4">
-          <Box className="col-span-1 flex flex-col font-[400] gap-[2px] leading-5 text-neu-500">
-            <h4 className="text-[.75rem]">Created By</h4>
-            <Box className="flex gap-1 items-center">
-              <img
-                src={"/src/assets/docAvater.png"}
-                alt="author photograph"
-                className="w-8 h-8"
-              />
-              <Box>
-                <p className=" text-neu-900 text-[.85rem]">Dr Olu Sani</p>
-                <p className="text-[.75rem] leading-4 -mt-1">12/03/2019</p>
-              </Box>
+      {notesData.map((note, index) => (
+        <Box
+          key={index}
+          className="min-h-[208px] max-w-[582px] p-4 bg-bg rounded-lg mt-4"
+        >
+          <Box className="flex items-center justify-between">
+            <Box className="flex items-center text-[.825rem] capitalize">
+              <p className="font-[600] leading-4 text-gray-800">
+                {getDiagnosisText()}
+              </p>
+              {item?.treatmentStatus && <LuDot />}
+              <p className={getStatusColor(item)}>
+                {item?.treatmentStatus === "on_hold"
+                  ? "On Hold"
+                  : item.treatmentStatus}
+              </p>
             </Box>
+            <IoEllipsisHorizontalCircleOutline className="text-neu-500 cursor-pointer"/>
           </Box>
-
-          <Box className="col-span-1 flex flex-col font-[400] gap-[2px] leading-5 text-neu-500">
-            <h4 className="text-[.75rem]">Approved By</h4>
-            <Box className="flex gap-1 items-center">
-              <img
-                src={"/src/assets/docAvater.png"}
-                alt="author photograph"
-                className="w-8 h-8"
-              />
-              <Box>
-                <p className=" text-neu-900 text-[.85rem]">Dr Ayochike</p>
-                <p className="text-[.75rem] leading-4 -mt-1">12/03/2019</p>
-              </Box>
-            </Box>
+          <p className="text-[.825rem] font-[400] leading-5 !my-4 text-neu-500 min-h-[65px]">
+            {note.noteText}
+          </p>
+          <Box className="grid grid-cols-2 mt-4">
+            {renderPersonInfo("Created By", note.createdBy, note.createdDate)}
+            {renderPersonInfo(
+              "Approved By",
+              note.approvedBy,
+              note.approvedDate
+            )}
           </Box>
         </Box>
-      </Box>
+      ))}
 
       <AddClinicalNotes
         open={modalOpen}
