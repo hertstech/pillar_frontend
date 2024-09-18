@@ -6,6 +6,7 @@ import { IoArrowBackCircleOutline } from "react-icons/io5";
 import Tabs from "./Components/tab";
 import { RecordDetails } from "./Components/recordDetails";
 import { ClinicalNoteComp } from "./Components/clinicalNotes";
+import { RecordActivityLog } from "./Components/activityLog";
 
 interface IProps {
   data: any;
@@ -104,9 +105,9 @@ export const HealthRecordOverview: React.FC<IProps> = ({
                 label: "Clinical Notes",
                 content: <ClinicalNoteComp item={item} />,
               },
-              { 
+              {
                 label: "Activity",
-                content: <div>Logs here</div>,
+                content: <RecordActivityLog item={item} />,
               },
             ]}
           />
