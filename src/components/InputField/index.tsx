@@ -7,14 +7,20 @@ import classNames from "classnames";
 interface TextProps {
   label: string;
   name: string;
-  value: string | number;
-  type: string;
-  onChange?: any;
+  rows?: number;
+  value?: string | number;
+  type?: string;
+  errors?: any;
+  register?: any;
   placeholder?: string;
   required?: boolean;
   disabled?: boolean;
   pattern?: string;
-  onWheel?: any;
+  onChange?: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
+  onWheel?: (e: React.WheelEvent) => void;
+  textarea?: boolean;
 }
 
 export default function InputField({
@@ -23,37 +29,71 @@ export default function InputField({
   onChange,
   label,
   placeholder,
-  type,
+  type = "text",
   required,
   disabled,
   pattern,
+  register,
   onWheel,
+  textarea = false,
+  errors,
+  ...rest
 }: TextProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
     <div className={Styles.wrapper}>
-      <label htmlFor={name}  className="text-neu-700 font-[600] text-[.875rem] ">
+      <label htmlFor={name} className="text-neu-700 font-[600] text-[.875rem]">
         {label}
-        <input
-          type={
-            type === "password" ? (showPassword ? "text" : "password") : type
-          }
-          className={classNames(
-            Styles.input,
-            disabled &&
-              `text-neutral-400 border-neutral-200 bg-[#F0F2F5]
-               cursor-not-allowed text-[1rem] font-[500]`
-          )}
-          name={name}
-          value={value}
-          onChange={onChange}
-          placeholder={placeholder}
-          required={required}
-          disabled={disabled}
-          pattern={pattern}
-          onWheel={onWheel}
-        />
+        {textarea ? (
+          <textarea
+            name={name}
+            value={value}
+            onChange={onChange}
+            {...(register && register(name, { required }))}
+            cols={50}
+            rows={rest.rows ? rest.rows : 4}
+            placeholder={placeholder}
+            disabled={disabled}
+            className={classNames(
+              "border-[1px] mt-2 !font-[400] text-[1rem] placeholder:text-neu-400",
+              {
+                "border-red-500 !border-[1px] ": errors?.[name],
+                "bg-[#F0F2F5] cursor-not-allowed": disabled,
+              }
+            )}
+            style={{
+              width: "100%",
+              padding: "8px",
+              outline: "none",
+              minHeight: "100px",
+              borderRadius: "8px",
+              borderColor: errors?.[name] ? "red" : "#e5e5e5",
+            }}
+          />
+        ) : (
+          <input
+            type={
+              type === "password" ? (showPassword ? "text" : "password") : type
+            }
+            className={classNames(
+              Styles.input,
+              disabled &&
+                "text-neutral-400 border-neutral-200 bg-[#F0F2F5] cursor-not-allowed",
+              errors?.[name] && "border-red-500 !border-[1px]",
+              "!font-[400] !text-[1rem] placeholder:text-neu-400"
+            )}
+            name={name}
+            value={value}
+            onChange={onChange}
+            placeholder={placeholder}
+            required={required}
+            disabled={disabled}
+            pattern={pattern}
+            onWheel={onWheel}
+            {...(register && register(name, { required }))}
+          />
+        )}
         {type === "password" && (
           <div
             className={Styles.icon}
@@ -62,7 +102,11 @@ export default function InputField({
             {showPassword ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
           </div>
         )}
-
+        {errors?.[name] && (
+          <p className="text-red-500 text-sm italic !font-[400]">
+            {errors[name]?.message || "This field is required"}
+          </p>
+        )}
         {name === "bpm" && (
           <div className={Styles.adorn}>
             <span

@@ -23,6 +23,7 @@ const config: Config = {
         neu: {
           75: "#F7F7FA",
           100: "#F5F5F5",
+          400: "#98A2B3",
           500: "#667085",
           600: "#475367",
           700: "#2A2D32",
@@ -32,6 +33,7 @@ const config: Config = {
         warn: {
           100: "#FDEAD7",
         },
+        bg: "#F7F7F7;",
       },
     },
   },
