@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction } from "react";
 import { Box } from "@mui/material";
 import { useForm, FieldError } from "react-hook-form";
-import Modal from "../../../../../components/Modal";
+import { ModalMain } from "../../../../../components/Modals";
 import { reasons } from "../../../../../data/statusChangeData";
 import { CustomSelect } from "../../../../../components/Select";
 import { PrimaryButton } from "../../../../../components/Button/primaryButton";
@@ -55,7 +55,7 @@ const ReasoningModal: React.FC<ReasoningModalProps> = ({
   const reasonsValue = watch("reasons");
 
   return (
-    <Modal open={open} handleClose={() => setOpen(false)}>
+    <ModalMain open={open} handleClose={() => setOpen(false)}>
       <Box className="flex flex-col justify-between h-[268px] w-[390px]">
         <Box className="flex justify-between items-center">
           <h2 className="text-[.875rem] font-[400] text-neu-600 leading-5">
@@ -97,7 +97,7 @@ const ReasoningModal: React.FC<ReasoningModalProps> = ({
 
           <Box className="flex justify-between mt-8">
             <PrimaryButton
-            variant="light"
+              variant="light"
               type="button"
               width="10.7rem"
               onClick={() => setOpen(false)}
@@ -112,7 +112,7 @@ const ReasoningModal: React.FC<ReasoningModalProps> = ({
           </Box>
         </form>
       </Box>
-    </Modal>
+    </ModalMain>
   );
 };
 

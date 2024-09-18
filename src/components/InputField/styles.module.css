@@ -13,14 +13,11 @@
   width: 100%;
   border-radius: 6px;
   margin-top: 5px;
-  font-size: 16px;
   /* color: #6671858a; */
   color: #101928;
 }
 
 .input::placeholder {
-  color: #98a2b3;
-  font-size: 14px;
   font-weight: normal;
 }
 
