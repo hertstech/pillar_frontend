@@ -1,9 +1,10 @@
 import { Box } from "@mui/material";
 import { LuDot } from "react-icons/lu";
 import { logData } from "../../../../../data/healthRecord";
+import { useGetHealthHistoryLog } from "../../../../../api/HealthServiceUser/clinicalNotes";
 
 interface IProps {
-  item: any[];
+  id: string | undefined;
 }
 
 interface LogEntryProps {
@@ -29,8 +30,10 @@ const LogEntry = ({ date, time, title, author }: LogEntryProps) => (
   </Box>
 );
 
-export const RecordActivityLog = ({ item }: IProps) => {
-  console.log("item clicked", item);
+export const RecordActivityLog = ({ id }: IProps) => {
+  const { data } = useGetHealthHistoryLog(id as string);
+  console.log("history data", data);
+  console.log("items passed", data);
 
   return (
     <Box className="bg-neu-100 rounded-lg px-4 min-h-56">

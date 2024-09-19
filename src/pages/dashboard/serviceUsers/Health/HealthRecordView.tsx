@@ -17,27 +17,11 @@ interface IProps {
 }
 
 export const HealthRecordOverview: React.FC<IProps> = ({
+  id,
   data: item,
   handleCloseDrawer,
 }) => {
-  console.log("health record here;", item);
-
-  // useEffect(() => {
-  //   const getStatusHistory = async () => {
-  //     try {
-  //       const res = await axiosInstance.get(
-  //         `/serviceuser-record/status/history/${id}`
-  //       );
-  //       console.log("record history:", res.data);
-  //     } catch (err) {
-  //       console.error("Error getting record:", err);
-  //     }
-  //   };
-
-  //   if (id !== null || undefined) {
-  //     getStatusHistory();
-  //   }
-  // }, [id]);
+  console.log("selected record id", id);
 
   return (
     <>
@@ -107,7 +91,7 @@ export const HealthRecordOverview: React.FC<IProps> = ({
               },
               {
                 label: "Activity",
-                content: <RecordActivityLog item={item} />,
+                content: <RecordActivityLog id={id as string} />,
               },
             ]}
           />

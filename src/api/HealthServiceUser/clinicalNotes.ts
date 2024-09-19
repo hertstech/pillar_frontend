@@ -18,7 +18,9 @@ export const useCreateClinicalNote = () => {
       );
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["clinicalNotes"] });
+      queryClient.invalidateQueries({
+        queryKey: ["clinicalNotes", "activityLog"],
+      });
     },
   });
 };
@@ -29,6 +31,17 @@ export const useGetClinicalNote = (selectedId: string) => {
     queryFn: () => {
       return axiosInstance.get(
         `/serviceuser-record/clinical-notes/${selectedId}`
+      );
+    },
+  });
+};
+
+export const useGetHealthHistoryLog = (selectedId: string) => {
+  return useQuery({
+    queryKey: ["activityLog", selectedId],
+    queryFn: () => {
+      return axiosInstance.get(
+        `/serviceuser-record/history/${selectedId}`
       );
     },
   });
