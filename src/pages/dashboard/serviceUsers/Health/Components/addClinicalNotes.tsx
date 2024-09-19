@@ -6,7 +6,7 @@ import { PrimaryButton } from "../../../../../components/Button/primaryButton";
 import InputField from "../../../../../components/InputField";
 import { ModalAlt } from "../../../../../components/Modals";
 import { schema } from "../schemas/clinicalNotes";
-import { useCreateClinicalNote } from "../../../../../api/HealthServiceUser/createClinicalNotes";
+import { useCreateClinicalNote } from "../../../../../api/HealthServiceUser/clinicalNotes";
 import { useAlert } from "../../../../../Utils/useAlert";
 
 interface ReasoningModalProps {
@@ -53,11 +53,6 @@ const AddClinicalNotes: React.FC<ReasoningModalProps> = ({
       { selectedId, subject: data.subject, notes: data.notes },
       {
         onSuccess: () => {
-          useAlert({
-            icon: "success",
-            title: "Success",
-            text: "Clinical note created successfully",
-          });
           onClose(data.notes);
           setOpen(false);
           reset();
