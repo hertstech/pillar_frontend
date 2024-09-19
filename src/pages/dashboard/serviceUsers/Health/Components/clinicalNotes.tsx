@@ -20,19 +20,27 @@ interface IProps {
 }
 
 export const ClinicalNoteComp = ({ item }: IProps) => {
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [anchorEls, setAnchorEls] = useState<{
+    [key: number]: HTMLElement | null;
+  }>({});
   const [modalOpen, setModalOpen] = useState(false);
 
-  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
+  const handleEllipsisClick = (
+    event: MouseEvent<HTMLElement>,
+    index: number
+  ) => {
+    setAnchorEls((prev) => ({ ...prev, [index]: event.currentTarget }));
   };
 
-  const handleClose = () => setAnchorEl(null);
+  const handlePopoverClose = (index: number) => {
+    setAnchorEls((prev) => ({ ...prev, [index]: null }));
+  };
 
   const handleModalOpen = () => setModalOpen(true);
   const handleModalClose = () => setModalOpen(false);
 
-  const open = Boolean(anchorEl);
+  const openPopover = (index: number) => Boolean(anchorEls[index]);
+  const open = Boolean(anchorEls);
   const popoverId = open ? "simple-popover" : undefined;
 
   const getDiagnosisText = () => {
@@ -76,28 +84,19 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
           </Typography>
           <Button
             className="!capitalize !text-[.725rem] !text-neu-500 h-fit border-[4px]"
-            onClick={handleClick}
+            onClick={(e: any) => handleEllipsisClick(e, 100)}
           >
             All Notes <FaAngleDown className="mx-2 font-[400]" />
           </Button>
           <Popover
             id={popoverId}
-            open={open}
-            anchorEl={anchorEl}
-            onClose={handleClose}
-            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-            transformOrigin={{ vertical: "top", horizontal: "right" }}
+            open={openPopover(100)}
+            anchorEl={anchorEls[100]}
+            onClose={() => handlePopoverClose(100)}
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+            transformOrigin={{ vertical: "top", horizontal: "center" }}
           >
-            <Box
-              sx={{
-                zIndex: 1,
-                background: "white",
-                border: "1px #F2F4F7 solid",
-                borderRadius: 2,
-                width: "80px",
-                p: 1,
-              }}
-            >
+            <Box p={2} className="flex flex-col gap-2 text-xs">
               now
             </Box>
           </Popover>
@@ -132,7 +131,24 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
                     : item.treatmentStatus}
                 </p>
               </Box>
-              <IoEllipsisHorizontalCircleOutline className="text-neu-500 cursor-pointer" />
+              <IoEllipsisHorizontalCircleOutline
+                className="text-neu-500 cursor-pointer"
+                onClick={(e: any) => handleEllipsisClick(e, index)}
+              />
+              <Popover
+                id={`popover-${index}`}
+                open={openPopover(index)}
+                anchorEl={anchorEls[index]}
+                onClose={() => handlePopoverClose(index)}
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                transformOrigin={{ vertical: "top", horizontal: "right" }}
+              >
+                <Box p={2} className="flex flex-col gap-2 text-xs">
+                  <p>mark as approve</p>
+                  <p>edit note</p>
+                  <p>delete</p>
+                </Box>
+              </Popover>
             </Box>
             <p className="text-[.825rem] font-[400] leading-5 !my-4 text-neu-500 min-h-[65px]">
               {note.noteText}

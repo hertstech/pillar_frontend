@@ -6,6 +6,8 @@ import { PrimaryButton } from "../../../../../components/Button/primaryButton";
 import InputField from "../../../../../components/InputField";
 import { ModalAlt } from "../../../../../components/Modals";
 import { schema } from "../schemas/clinicalNotes";
+import { useCreateClinicalNote } from "../../../../../api/HealthServiceUser/createClinicalNotes";
+import { useAlert } from "../../../../../Utils/useAlert";
 
 interface ReasoningModalProps {
   open: boolean;
@@ -20,6 +22,8 @@ const AddClinicalNotes: React.FC<ReasoningModalProps> = ({
   onClose,
   selectedId,
 }) => {
+  const { mutate, isPending, isError } = useCreateClinicalNote();
+
   const methods = useForm({
     resolver: joiResolver(schema),
     defaultValues: {
@@ -29,19 +33,45 @@ const AddClinicalNotes: React.FC<ReasoningModalProps> = ({
   });
 
   const {
+    reset,
     handleSubmit,
     formState: { errors },
   } = methods;
+
+  if (isPending) {
+    console.log("data is submitting...", isPending);
+  } else {
+    console.log("we was wrong:", isError);
+  }
 
   const onSubmit = (data: any) => {
     if (!data.subject || !data.notes) {
       console.error("Subject or notes are missing");
       return;
     }
-    console.log("Form submitted with data: ", data);
-    console.log("Selected ID: ", selectedId);
-    onClose(data.notes);
-    setOpen(false);
+    mutate(
+      { selectedId, subject: data.subject, notes: data.notes },
+      {
+        onSuccess: () => {
+          useAlert({
+            icon: "success",
+            title: "Success",
+            text: "Clinical note created successfully",
+          });
+          onClose(data.notes);
+          setOpen(false);
+          reset();
+        },
+        onError: (error) => {
+          useAlert({
+            icon: "error",
+            title: "Failure",
+            text: error?.message || "Clinical not created",
+          });
+          reset();
+        },
+      }
+    );
   };
 
   return (
