@@ -18,7 +18,7 @@ export const useCreateClinicalNote = () => {
       );
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["clinicalNotes"]);
+      queryClient.invalidateQueries({ queryKey: ["clinicalNotes"] });
     },
   });
 };
