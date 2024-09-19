@@ -6,6 +6,7 @@ import { IoArrowBackCircleOutline } from "react-icons/io5";
 import Tabs from "./Components/tab";
 import { RecordDetails } from "./Components/recordDetails";
 import { ClinicalNoteComp } from "./Components/clinicalNotes";
+import { RecordActivityLog } from "./Components/activityLog";
 
 interface IProps {
   data: any;
@@ -16,27 +17,11 @@ interface IProps {
 }
 
 export const HealthRecordOverview: React.FC<IProps> = ({
+  id,
   data: item,
   handleCloseDrawer,
 }) => {
-  console.log("health record here;", item);
-
-  // useEffect(() => {
-  //   const getStatusHistory = async () => {
-  //     try {
-  //       const res = await axiosInstance.get(
-  //         `/serviceuser-record/status/history/${id}`
-  //       );
-  //       console.log("record history:", res.data);
-  //     } catch (err) {
-  //       console.error("Error getting record:", err);
-  //     }
-  //   };
-
-  //   if (id !== null || undefined) {
-  //     getStatusHistory();
-  //   }
-  // }, [id]);
+  console.log("selected record id", id);
 
   return (
     <>
@@ -49,7 +34,7 @@ export const HealthRecordOverview: React.FC<IProps> = ({
           borderRadius: "8px",
         }}
       >
-        <Box className="flex flex-col gap-6">
+        <Box className="flex flex-col gap-6 relative">
           <Stack sx={{ display: "flex", flexDirection: "column", gap: "24px" }}>
             <Box
               className="flex gap-4 cursor-pointer text-neu-600"
@@ -104,9 +89,9 @@ export const HealthRecordOverview: React.FC<IProps> = ({
                 label: "Clinical Notes",
                 content: <ClinicalNoteComp item={item} />,
               },
-              { 
+              {
                 label: "Activity",
-                content: <div>Logs here</div>,
+                content: <RecordActivityLog id={id as string} />,
               },
             ]}
           />

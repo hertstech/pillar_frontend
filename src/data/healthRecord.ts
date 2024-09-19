@@ -27,3 +27,65 @@ export const selectItems = {
     { id: "3", name: "Annually", value: "annually" },
   ],
 };
+
+export const logData = [
+  {
+    date: "5th Nov., 2023",
+    time: "5:30 AM",
+    title: "Updated Type 2 Diabetes",
+    author: "Chinaza Ibrahim Edidiong",
+  },
+  {
+    date: "6th Nov., 2023",
+    time: "8:45 AM",
+    title: "Reviewed Blood Pressure Record",
+    author: "John Doe",
+  },
+  {
+    date: "7th Nov., 2023",
+    time: "12:15 PM",
+    title: "Added New Medication",
+    author: "Jane Smith",
+  },
+  {
+    date: "8th Nov., 2023",
+    time: "9:00 AM",
+    title: "Updated Patient's Allergy List",
+    author: "Sarah Connor",
+  },
+];
+
+export const notesData = [
+  {
+    createdBy: "Dr Olu Sani",
+    createdDate: "12/03/2019",
+    approvedBy: "Dr Ayochike",
+    approvedDate: "12/03/2019",
+    noteText:
+      "Patient reports mild fatigue and occasional blurred vision. Denies any chest pain or dizziness. He has been compliant with metformin but has missed doses twice in the past month. No recent episodes of hypoglycemia.",
+  },
+  {
+    createdBy: "Dr Olu Sani",
+    createdDate: "12/03/2019",
+    approvedBy: "Dr Ayochike",
+    approvedDate: "12/03/2019",
+    noteText:
+      "Patient reports mild fatigue and occasional blurred vision. Denies any chest pain or dizziness. He has been compliant with metformin but has missed doses twice in the past month. No recent episodes of hypoglycemia.",
+  },
+  {
+    createdBy: "Dr Bisi Ade",
+    createdDate: "13/04/2020",
+    approvedBy: "Dr Yemi Adamu",
+    approvedDate: "14/04/2020",
+    noteText:
+      "Patient mentions occasional shortness of breath. Denies any chest pain or severe dizziness. He has been consistent with the medication but reports missed doses due to travel.",
+  },
+  {
+    createdBy: "Dr Yomi Talese",
+    createdDate: "13/04/2020",
+    approvedBy: "Dr Tinubu Gonzalez",
+    approvedDate: "14/04/2020",
+    noteText:
+      "Patient mentions occasional shortness of breath. Denies any chest pain or severe dizziness. He has been consistent with the medication but reports missed doses due to travel.",
+  },
+];

@@ -36,18 +36,7 @@ export default function Health({ client }: PropType) {
 
   const [_, setIsDrawerOpen] = useRecoilState(drawerState);
 
-  // const handleGetData = (e: React.MouseEvent, id: string, itemId: string) => {
-  //   e.preventDefault();
-  //   if (getUpdates === id) {
-  //     setGetUpdates(null);
-  //     setSelectedId(null);
-  //   } else {
-  //     setGetUpdates(id);
-  //     setSelectedId(itemId);
-  //     const selected = record.find((rec) => rec.id === itemId);
-  //     setSelectedRecord(selected || null);
-  //   }
-  // };
+ 
 
   const handleToggle = (itemId: string) => {
     setSelectedId(itemId);
