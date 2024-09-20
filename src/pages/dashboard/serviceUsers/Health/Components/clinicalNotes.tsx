@@ -11,10 +11,11 @@ import { useFormatDate } from "../../../../../Utils/dateToText";
 
 type NotesType = {
   approved_by_name: string;
-  author: string;
   date_created: string;
-  id: string;
+  subject: string;
+  author: string;
   notes: string;
+  id: string;
 };
 
 interface IProps {
@@ -60,6 +61,7 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
   const clinicalNotes =
     data?.data.map((el: NotesType) => ({
       id: el.id,
+      subject: el.subject,
       createdBy: el.author,
       createdDate: el.date_created,
       approvedBy: el.approved_by_name,
@@ -162,7 +164,7 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
               <Box className="flex items-center justify-between">
                 <Box className="flex items-center text-[.825rem] capitalize">
                   <p className="font-[600] leading-4 text-gray-800">
-                    {getDiagnosisText()}
+                    {note?.subject || getDiagnosisText()}
                   </p>
                   {item?.treatmentStatus && <LuDot />}
                   <p className={getStatusColor(item)}>

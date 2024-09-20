@@ -7,6 +7,7 @@ import Tabs from "./Components/tab";
 import { RecordDetails } from "./Components/recordDetails";
 import { ClinicalNoteComp } from "./Components/clinicalNotes";
 import { RecordActivityLog } from "./Components/activityLog";
+// import { UpdateHealthRec } from "./UpdateHealthRec";
 
 interface IProps {
   data: any;
@@ -34,16 +35,39 @@ export const HealthRecordOverview: React.FC<IProps> = ({
           borderRadius: "8px",
         }}
       >
-        <Box className="flex flex-col gap-6 relative">
+        <Box className="flex flex-col gap-6 relative overflow-y-auto scrollbar-hide">
           <Stack sx={{ display: "flex", flexDirection: "column", gap: "24px" }}>
-            <Box
-              className="flex gap-4 cursor-pointer text-neu-600"
-              onClick={handleCloseDrawer}
-            >
-              <IoArrowBackCircleOutline size={22} />
-              <Box sx={{ fontSize: "14px", fontWeight: 400 }}>
-                {"Health Information"}
+            <Box className="flex items-center justify-between">
+              <Box
+                className="flex gap-4 cursor-pointer text-neu-600"
+                onClick={handleCloseDrawer}
+              >
+                <IoArrowBackCircleOutline size={22} />
+                <Box sx={{ fontSize: "14px", fontWeight: 400 }}>
+                  {"Health Information"}
+                </Box>
               </Box>
+              {/* <Box className="">
+                {" "}
+                <UpdateHealthRec
+                  id={item.id as string}
+                  disableDrawer={item.treatmentStatus === "completed"}
+                  // getData={(e) =>
+                  //   handleGetDataForUpdate(e, `${item?.type}${index}`, item?.id)
+                  // }
+                  // refreshData={() => getHealthRecord()}
+                  sickness={
+                    item?.secondaryDiagnosis
+                      ? item?.secondaryDiagnosis
+                      : item?.primaryDiagnosis
+                  }
+                  notes={item?.notes}
+                  severity={item?.severity}
+                  treatmentType={item?.treatmentType}
+                  followUpPlans={item?.followUpPlans}
+                  treatmentStatus={item?.treatmentStatus}
+                />
+              </Box> */}
             </Box>
 
             <Box className="flex justify-between items-center w-full">
