@@ -1,10 +1,12 @@
 import { Box, Typography } from "@mui/material";
-import { TextLabel } from "./textLabel";
+import { TextLabel } from "./Components/textLabel";
 import moment from "moment";
 
-interface IProps{item:any}
+interface IProps {
+  item: any;
+}
 
-export const RecordDetails = ({item}:IProps) => {
+export const RecordDetails = ({ item }: IProps) => {
   return (
     <Box sx={{ padding: "24px" }} className=" bg-neu-100 rounded-lg">
       <Box
@@ -154,4 +156,4 @@ export const RecordDetails = ({item}:IProps) => {
       </div>
     </Box>
   );
-}
+};

@@ -3,11 +3,11 @@ import { useState, MouseEvent, useEffect } from "react";
 import { FaAngleDown } from "react-icons/fa";
 import { IoEllipsisHorizontalCircleOutline } from "react-icons/io5";
 import { LuDot } from "react-icons/lu";
-import { getStatusColor } from "../../../../../Utils/getStatusColor";
-import AddClinicalNotes from "./addClinicalNotes";
+import { getStatusColor } from "../../../../Utils/getStatusColor";
+import AddClinicalNotes from "./Components/addClinicalNoteModal";
 import classNames from "classnames";
-import { useGetClinicalNote } from "../../../../../api/HealthServiceUser/clinicalNotes";
-import { useFormatDate } from "../../../../../Utils/dateToText";
+import { useGetClinicalNote } from "../../../../api/HealthServiceUser/clinicalNotes";
+import { useFormatDate } from "../../../../Utils/dateToText";
 
 type NotesType = {
   approved_by_name: string;
@@ -112,7 +112,7 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
 
   return (
     <Box className="w-full">
-      <Box className="flex items-center justify-between h-14">
+      <Box className="flex items-center justify-between">
         <Box className="flex items-center gap-2 h-8">
           <Typography className="!text-[.85rem] !font-[500] !leading-5">
             Sort by

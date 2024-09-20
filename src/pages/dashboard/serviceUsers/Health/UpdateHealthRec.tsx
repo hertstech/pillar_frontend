@@ -33,7 +33,7 @@ interface IProps {
   treatmentType: string | undefined;
   followUpPlans: string | undefined;
   treatmentStatus: string | undefined;
-  getData?: (e: React.MouseEvent) => void;
+  getData: (e?: React.MouseEvent) => void;
   refreshData?: () => void;
 }
 
