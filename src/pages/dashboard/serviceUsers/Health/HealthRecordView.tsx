@@ -22,8 +22,6 @@ export const HealthRecordOverview: React.FC<IProps> = ({
   data: item,
   handleCloseDrawer,
 }) => {
-  console.log("selected record id", id);
-
   return (
     <>
       <Box

@@ -22,7 +22,7 @@ const AddClinicalNotes: React.FC<ReasoningModalProps> = ({
   onClose,
   selectedId,
 }) => {
-  const { mutate, isPending, isError } = useCreateClinicalNote();
+  const { mutate } = useCreateClinicalNote();
 
   const methods = useForm({
     resolver: joiResolver(schema),
@@ -37,12 +37,6 @@ const AddClinicalNotes: React.FC<ReasoningModalProps> = ({
     handleSubmit,
     formState: { errors },
   } = methods;
-
-  if (isPending) {
-    console.log("data is submitting...", isPending);
-  } else {
-    console.log("we was wrong:", isError);
-  }
 
   const onSubmit = (data: any) => {
     if (!data.subject || !data.notes) {

@@ -39,7 +39,6 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
 
   const { data, isLoading } = useGetClinicalNote(item.id);
 
-  console.log("clinical notes here:", data?.data);
   const handleEllipsisClick = (
     event: MouseEvent<HTMLElement>,
     index: number

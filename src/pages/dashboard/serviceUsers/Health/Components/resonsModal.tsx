@@ -11,7 +11,7 @@ interface ReasoningModalProps {
   setOpen: Dispatch<SetStateAction<boolean>>;
   treatmentStatusValue: string;
   sickness: string | undefined;
-  selectedId: string | any;
+  selectedId?: string | any;
   onClose: (reason: string) => void;
 }
 
@@ -21,7 +21,6 @@ const ReasoningModal: React.FC<ReasoningModalProps> = ({
   onClose,
   treatmentStatusValue,
   sickness,
-  selectedId,
 }) => {
   const {
     handleSubmit,
@@ -38,9 +37,6 @@ const ReasoningModal: React.FC<ReasoningModalProps> = ({
     if (!data.reasons) {
       return;
     }
-
-    console.log("Form submitted with data: ", data);
-    console.log("Selected ID: ", selectedId);
 
     onClose(data.reasons);
 
