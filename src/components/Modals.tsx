@@ -27,7 +27,7 @@ export const ModalMain: React.FC<AlertDialogSlideProps> = ({
   open,
   handleClose,
   children,
-  width = "500px",
+  width 
 }) => {
   const handleDialogClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -51,7 +51,7 @@ export const ModalMain: React.FC<AlertDialogSlideProps> = ({
         elevation: 0,
         style: {
           boxShadow: "none",
-          width: width,
+          width: width ? width : "500px",
         },
       }}
     >

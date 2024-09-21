@@ -11,7 +11,7 @@ interface ReasoningModalProps {
   setOpen: Dispatch<SetStateAction<boolean>>;
   treatmentStatusValue: string;
   sickness: string | undefined;
-  selectedId: string | any;
+  selectedId?: string | any;
   onClose: (reason: string) => void;
 }
 
@@ -21,7 +21,6 @@ const ReasoningModal: React.FC<ReasoningModalProps> = ({
   onClose,
   treatmentStatusValue,
   sickness,
-  selectedId,
 }) => {
   const {
     handleSubmit,
@@ -39,9 +38,6 @@ const ReasoningModal: React.FC<ReasoningModalProps> = ({
       return;
     }
 
-    console.log("Form submitted with data: ", data);
-    console.log("Selected ID: ", selectedId);
-
     onClose(data.reasons);
 
     setOpen(false);
@@ -56,7 +52,7 @@ const ReasoningModal: React.FC<ReasoningModalProps> = ({
 
   return (
     <ModalMain open={open} handleClose={() => setOpen(false)}>
-      <Box className="flex flex-col justify-between h-[268px] w-[390px]">
+      <Box className="flex flex-col justify-between h-[268px] ">
         <Box className="flex justify-between items-center">
           <h2 className="text-[.875rem] font-[400] text-neu-600 leading-5">
             {sickness || "Sickness name here"}

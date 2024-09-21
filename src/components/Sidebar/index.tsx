@@ -84,8 +84,12 @@ export default function Sidebar() {
       <nav>
         <div className={Styles.logoWrapper}>
           <div className=""></div>
-          <img src="/assets/logo.svg" alt="" style={{ width: 40 }} />
-          <h6 className={Styles.logoText}>Pillar</h6>
+          <img
+            src="/src/assets/blueLogo.svg"
+            alt="pillar log"
+            style={{ width: 40 }}
+          />
+          <h6 className={Styles.logoText}>Herts</h6>
         </div>
 
         <ul>

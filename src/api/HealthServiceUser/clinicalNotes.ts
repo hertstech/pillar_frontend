@@ -19,7 +19,7 @@ export const useCreateClinicalNote = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["clinicalNotes", "activityLog"],
+        queryKey: ["clinicalNotes"],
       });
     },
   });
@@ -40,9 +40,7 @@ export const useGetHealthHistoryLog = (selectedId: string) => {
   return useQuery({
     queryKey: ["activityLog", selectedId],
     queryFn: () => {
-      return axiosInstance.get(
-        `/serviceuser-record/history/${selectedId}`
-      );
+      return axiosInstance.get(`/serviceuser-record/history/${selectedId}`);
     },
   });
 };

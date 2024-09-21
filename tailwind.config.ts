@@ -13,6 +13,7 @@ const config: Config = {
         pri: {
           1: "",
           50: "#EFF8FF",
+          200: "#B2DDFF",
           500: "#2E90FA",
           600: "#1570EF",
         },

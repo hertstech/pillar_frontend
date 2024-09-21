@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { LuDot } from "react-icons/lu";
-import { logData } from "../../../../../data/healthRecord";
 import { useGetHealthHistoryLog } from "../../../../../api/HealthServiceUser/clinicalNotes";
+import { useFormatDate } from "../../../../../Utils/dateToText";
 
 interface IProps {
   id: string | undefined;
@@ -9,15 +9,16 @@ interface IProps {
 
 interface LogEntryProps {
   date: string;
-  time: string;
+
   title: string;
   author: string;
 }
 
-const LogEntry = ({ date, time, title, author }: LogEntryProps) => (
+const LogEntry = ({ date, title, author }: LogEntryProps) => (
   <Box className="border-l-[1px] border-l-neu-300 h-full first:pt-4 pb-6 mx-2 px-3 text-left">
     <p className="text-xs font-normal text-neu-400 pb-1">
-      {date} • {time}
+      {useFormatDate({ date })}
+      {/* • {time} */}
     </p>
     <Box className="relative text-base font-semibold text-neu-900">
       <LuDot className="text-neu-400 absolute -left-[27px]" size={28} />
@@ -31,21 +32,31 @@ const LogEntry = ({ date, time, title, author }: LogEntryProps) => (
 );
 
 export const RecordActivityLog = ({ id }: IProps) => {
-  const { data } = useGetHealthHistoryLog(id as string);
-  console.log("history data", data);
-  console.log("items passed", data);
+  const { data, isLoading } = useGetHealthHistoryLog(id as string);
+
+  const logHistoryData =
+    data?.data?.map((el: any) => ({
+      date: el?.date_created,
+      title: el?.logged_message,
+      author: el?.pillar_tenet_name,
+    })) || [];
 
   return (
     <Box className="bg-neu-100 rounded-lg px-4 min-h-56">
-      {logData.map((log, index) => (
-        <LogEntry
-          key={index}
-          date={log.date}
-          time={log.time}
-          title={log.title}
-          author={log.author}
-        />
-      ))}
+      {logHistoryData.length > 0 ? (
+        logHistoryData.map((log: any, index: number) => (
+          <LogEntry
+            key={index}
+            date={log.date}
+            title={log.title}
+            author={log.author}
+          />
+        ))
+      ) : isLoading ? (
+        <p className="text-center">Fetching History...</p>
+      ) : (
+        <p className="text-center">No activity recorded!</p>
+      )}
     </Box>
   );
 };

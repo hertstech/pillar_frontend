@@ -7,7 +7,6 @@ import { CustomSelect } from "../../../../components/Select";
 import { useForm, useWatch } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { selectItems } from "../../../../data/healthRecord";
-import Swal from "sweetalert2";
 import { recordSchema } from "./schemas/healthRecord";
 import ReasoningModal from "./Components/resonsModal";
 import { useRecoilState } from "recoil";
@@ -15,6 +14,7 @@ import { drawerState } from "../../../../atoms/drawerState";
 import InputField from "../../../../components/InputField";
 import { axiosInstance } from "../../../../Utils";
 import classNames from "classnames";
+import { useAlert } from "../../../../Utils/useAlert";
 
 type FormValues = {
   severity: string;
@@ -25,7 +25,7 @@ type FormValues = {
 };
 
 interface IProps {
-  disableDrawer:boolean;
+  disableDrawer: boolean;
   id: string | undefined;
   notes: string | undefined;
   sickness: string | undefined;
@@ -33,7 +33,7 @@ interface IProps {
   treatmentType: string | undefined;
   followUpPlans: string | undefined;
   treatmentStatus: string | undefined;
-  getData: (e: React.MouseEvent) => void;
+  getData?: (e: React.MouseEvent) => void;
   refreshData?: () => void;
 }
 
@@ -95,23 +95,6 @@ export const UpdateHealthRec: React.FC<IProps> = ({
     setValue,
   ]);
 
-  // useEffect(() => {
-  //   const getStatusHistory = async () => {
-  //     try {
-  //       const res = await axiosInstance.get(
-  //         `/serviceuser-record/status/history/${id}`
-  //       );
-  //       console.log("record history:", res.data);
-  //     } catch (err) {
-  //       console.error("Error getting record:", err);
-  //     }
-  //   };
-
-  //   if (id !== null || undefined) {
-  //     getStatusHistory();
-  //   }
-  // }, [id]);
-
   const onSubmit = async (data: FormValues) => {
     setIsDisabled(true);
     setIsSubmitting(true);
@@ -138,7 +121,7 @@ export const UpdateHealthRec: React.FC<IProps> = ({
   const handleModalClose = async (reason_for_change: string) => {
     setIsReasoningModalOpen(false);
 
-    const updatedData = { ...getValues(), reason_for_change };
+    const updatedData = { ...getValues?.(), reason_for_change };
 
     try {
       await updateRecord(updatedData, reason_for_change);
@@ -160,7 +143,7 @@ export const UpdateHealthRec: React.FC<IProps> = ({
     handleCloseDrawer();
     if (refreshData) refreshData();
 
-    Swal.fire({
+    useAlert({
       icon: "success",
       title: "Record Updated",
       text: "The health record has been successfully updated.",
@@ -168,7 +151,7 @@ export const UpdateHealthRec: React.FC<IProps> = ({
   };
 
   const handleError = (error: any) => {
-    Swal.fire({
+    useAlert({
       icon: "error",
       title: "Update Failed",
       text:
