@@ -7,9 +7,9 @@ import Tabs from "./Components/tab";
 import { RecordDetails } from "./RecordDetails";
 import { ClinicalNoteComp } from "./ClinicalNotes";
 import { RecordActivityLog } from "./ActivityLog";
-import { UpdateHealthRec } from "./UpdateHealthRec";
-import { useRecoilState } from "recoil";
-import { drawerState } from "../../../../atoms/drawerState";
+// import { UpdateHealthRec } from "./UpdateHealthRec";
+// import { useRecoilState } from "recoil";
+// import { drawerState } from "../../../../atoms/drawerState";
 
 interface IProps {
   data: any;
@@ -24,7 +24,7 @@ export const HealthRecordOverview: React.FC<IProps> = ({
   data: item,
   handleCloseDrawer,
 }) => {
-  const [_, setOpen] = useRecoilState(drawerState);
+  // const [_, setOpen] = useRecoilState(drawerState);
   return (
     <>
       <Box
