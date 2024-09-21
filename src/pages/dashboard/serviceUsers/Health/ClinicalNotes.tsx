@@ -3,11 +3,12 @@ import { useState, MouseEvent, useEffect } from "react";
 import { FaAngleDown } from "react-icons/fa";
 import { IoEllipsisHorizontalCircleOutline } from "react-icons/io5";
 import { LuDot } from "react-icons/lu";
-import { getStatusColor } from "../../../../../Utils/getStatusColor";
-import AddClinicalNotes from "./addClinicalNotes";
+import { getStatusColor } from "../../../../Utils/getStatusColor";
+import AddClinicalNotes from "./Components/addClinicalNoteModal";
 import classNames from "classnames";
-import { useGetClinicalNote } from "../../../../../api/HealthServiceUser/clinicalNotes";
-import { useFormatDate } from "../../../../../Utils/dateToText";
+import { useGetClinicalNote } from "../../../../api/HealthServiceUser/clinicalNotes";
+import { useFormatDate } from "../../../../Utils/dateToText";
+import { FemaleAvatar } from "../../../../assets/icons";
 
 type NotesType = {
   approved_by_name: string;
@@ -95,11 +96,7 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
     <Box className="col-span-1 flex flex-col font-[400] gap-[2px] leading-5 text-neu-500">
       <h4 className="text-[.75rem]">{title}</h4>
       <Box className="flex gap-1 items-center">
-        <img
-          src={"/src/assets/docAvater.png"}
-          alt="author photograph"
-          className="w-8 h-8"
-        />
+        <FemaleAvatar />
         <Box>
           <p className="text-neu-900 text-[.85rem] capitalize">{name}</p>
           <p className="text-[.75rem] leading-4 -mt-1">
@@ -112,7 +109,7 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
 
   return (
     <Box className="w-full">
-      <Box className="flex items-center justify-between h-14">
+      <Box className="flex items-center justify-between">
         <Box className="flex items-center gap-2 h-8">
           <Typography className="!text-[.85rem] !font-[500] !leading-5">
             Sort by

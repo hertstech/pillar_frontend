@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { LuDot } from "react-icons/lu";
-import { useGetHealthHistoryLog } from "../../../../../api/HealthServiceUser/clinicalNotes";
-import { useFormatDate } from "../../../../../Utils/dateToText";
+import { useGetHealthHistoryLog } from "../../../../api/HealthServiceUser/clinicalNotes";
+import { useFormatDate } from "../../../../Utils/dateToText";
 
 interface IProps {
   id: string | undefined;
