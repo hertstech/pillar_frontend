@@ -7,9 +7,9 @@ import Tabs from "./Components/tab";
 import { RecordDetails } from "./RecordDetails";
 import { ClinicalNoteComp } from "./ClinicalNotes";
 import { RecordActivityLog } from "./ActivityLog";
-// import { UpdateHealthRec } from "./UpdateHealthRec";
-// import { useRecoilState } from "recoil";
-// import { drawerState } from "../../../../atoms/drawerState";
+import { UpdateHealthRec } from "./UpdateHealthRec";
+import { useRecoilState } from "recoil";
+import { drawerState } from "../../../../atoms/drawerState";
 
 interface IProps {
   data: any;
@@ -24,7 +24,7 @@ export const HealthRecordOverview: React.FC<IProps> = ({
   data: item,
   handleCloseDrawer,
 }) => {
-  // const [_, setOpen] = useRecoilState(drawerState);
+  const [_, setOpen] = useRecoilState(drawerState);
   return (
     <>
       <Box
@@ -36,7 +36,7 @@ export const HealthRecordOverview: React.FC<IProps> = ({
           borderRadius: "8px",
         }}
       >
-        <Box className="flex flex-col gap-6">
+        <Box className="flex flex-col gap-6 ">
           <Stack sx={{ display: "flex", flexDirection: "column", gap: "24px" }}>
             <Box className="flex items-center justify-between">
               <Box
@@ -49,7 +49,7 @@ export const HealthRecordOverview: React.FC<IProps> = ({
                 </Box>
               </Box>
 
-              {/* <UpdateHealthRec
+              <UpdateHealthRec
                 id={item.id as string}
                 disableDrawer={item.treatmentStatus === "completed"}
                 getData={() => setOpen(true)}
@@ -64,7 +64,7 @@ export const HealthRecordOverview: React.FC<IProps> = ({
                 treatmentType={item?.treatmentType}
                 followUpPlans={item?.followUpPlans}
                 treatmentStatus={item?.treatmentStatus}
-              /> */}
+              />
             </Box>
 
             <Box className="flex justify-between items-center w-full">

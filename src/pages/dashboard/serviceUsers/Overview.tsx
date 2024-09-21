@@ -268,7 +268,16 @@ export default function Overview({ client }: PropType) {
                     width: "40%",
                   }}
                 >
-                  <Avatar sx={{ height: "100px", width: "100px" }} />
+                  <Avatar
+                    sx={{
+                      height: "100px",
+                      width: "100px",
+                      fontSize: "3rem",
+                      bgcolor: "#B2DDFF",
+                    }}
+                  >
+                    {client?.firstName.slice(0, 1)}
+                  </Avatar>
 
                   <Typography
                     sx={{
