@@ -8,6 +8,7 @@ import AddClinicalNotes from "./Components/addClinicalNoteModal";
 import classNames from "classnames";
 import { useGetClinicalNote } from "../../../../api/HealthServiceUser/clinicalNotes";
 import { useFormatDate } from "../../../../Utils/dateToText";
+import { FemaleAvatar } from "../../../../assets/icons";
 
 type NotesType = {
   approved_by_name: string;
@@ -95,11 +96,7 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
     <Box className="col-span-1 flex flex-col font-[400] gap-[2px] leading-5 text-neu-500">
       <h4 className="text-[.75rem]">{title}</h4>
       <Box className="flex gap-1 items-center">
-        <img
-          src={"/src/assets/docAvater.png"}
-          alt="author photograph"
-          className="w-8 h-8"
-        />
+        <FemaleAvatar />
         <Box>
           <p className="text-neu-900 text-[.85rem] capitalize">{name}</p>
           <p className="text-[.75rem] leading-4 -mt-1">

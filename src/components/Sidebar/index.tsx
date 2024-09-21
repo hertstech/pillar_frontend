@@ -14,6 +14,7 @@ import { FaWpforms } from "react-icons/fa";
 import { MdOutlineSettings } from "react-icons/md";
 import { useState } from "react";
 import { axiosInstance } from "../../Utils";
+import { AppLogo } from "../../assets/icons";
 
 // HOME, dashboard, Monitoring, Form, Files, Settings, Support
 
@@ -84,11 +85,7 @@ export default function Sidebar() {
       <nav>
         <div className={Styles.logoWrapper}>
           <div className=""></div>
-          <img
-            src="/src/assets/blueLogo.svg"
-            alt="pillar log"
-            style={{ width: 40 }}
-          />
+          <AppLogo />
           <h6 className={Styles.logoText}>Herts</h6>
         </div>
 

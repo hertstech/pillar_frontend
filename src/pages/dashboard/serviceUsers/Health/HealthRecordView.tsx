@@ -49,11 +49,11 @@ export const HealthRecordOverview: React.FC<IProps> = ({
                 </Box>
               </Box>
 
-              <UpdateHealthRec
+              {/* <UpdateHealthRec
                 id={item.id as string}
                 disableDrawer={item.treatmentStatus === "completed"}
                 getData={() => setOpen(true)}
-                // refreshData={() => getHealthRecord()}
+                
                 sickness={
                   item?.secondaryDiagnosis
                     ? item?.secondaryDiagnosis
@@ -64,7 +64,7 @@ export const HealthRecordOverview: React.FC<IProps> = ({
                 treatmentType={item?.treatmentType}
                 followUpPlans={item?.followUpPlans}
                 treatmentStatus={item?.treatmentStatus}
-              />
+              /> */}
             </Box>
 
             <Box className="flex justify-between items-center w-full">
