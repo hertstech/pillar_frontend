@@ -36,8 +36,6 @@ export default function Health({ client }: PropType) {
 
   const [_, setIsDrawerOpen] = useRecoilState(drawerState);
 
- 
-
   const handleToggle = (itemId: string) => {
     setSelectedId(itemId);
     const selected = record.find((rec) => rec.id === itemId);
@@ -217,7 +215,7 @@ export default function Health({ client }: PropType) {
                         <UpdateHealthRec
                           id={selectedId as string}
                           disableDrawer={item.treatmentStatus === "completed"}
-                          getData={(e) =>
+                          getData={(e: any) =>
                             handleGetDataForUpdate(
                               e,
                               `${item?.type}${index}`,
