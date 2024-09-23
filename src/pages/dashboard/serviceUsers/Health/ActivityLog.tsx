@@ -42,7 +42,7 @@ export const RecordActivityLog = ({ id }: IProps) => {
     })) || [];
 
   return (
-    <Box className="bg-neu-100 rounded-lg px-4 min-h-56">
+    <Box className="bg-neu-100 rounded-lg px-4 min-h-56 max-h-[73vh] overflow-y-auto scrollbar-hide">
       {logHistoryData.length > 0 ? (
         logHistoryData.map((log: any, index: number) => (
           <LogEntry

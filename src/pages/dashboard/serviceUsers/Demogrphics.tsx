@@ -133,10 +133,9 @@ export default function Demogrphics({ client }: PropType) {
               fontWeight={600}
               fontSize={18}
             >
-              <Avatar
-              // alt="User image"
-              // src="https://via.placeholder.com/43x43"
-              />
+              <Avatar sx={{ bgcolor: "#B2DDFF" }}>
+                {client?.firstName.slice(0, 1)}
+              </Avatar>
               Personal Information
             </Typography>
 

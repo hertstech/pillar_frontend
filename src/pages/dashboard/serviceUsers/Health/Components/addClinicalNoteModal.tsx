@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useEffect } from "react";
 import { Box } from "@mui/material";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { useForm, FormProvider } from "react-hook-form";
@@ -6,13 +6,17 @@ import { PrimaryButton } from "../../../../../components/Button/primaryButton";
 import InputField from "../../../../../components/InputField";
 import { ModalAlt } from "../../../../../components/Modals";
 import { schema } from "../schemas/clinicalNotes";
-import { useCreateClinicalNote } from "../../../../../api/HealthServiceUser/clinicalNotes";
+import {
+  useCreateClinicalNote,
+  useUpdateClinicalNote,
+} from "../../../../../api/HealthServiceUser/clinicalNotes";
 import { useAlert } from "../../../../../Utils/useAlert";
 
 interface ReasoningModalProps {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  selectedId: string | any;
+  selectedId: string;
+  noteData?: any;
   onClose: (reason: string) => void;
 }
 
@@ -21,14 +25,18 @@ const AddClinicalNotes: React.FC<ReasoningModalProps> = ({
   setOpen,
   onClose,
   selectedId,
+  noteData,
 }) => {
-  const { mutate } = useCreateClinicalNote();
+
+  console.log(noteData)
+  const createNote = useCreateClinicalNote();
+  const updateNote = useUpdateClinicalNote();
 
   const methods = useForm({
     resolver: joiResolver(schema),
     defaultValues: {
-      subject: "",
-      notes: "",
+      subject: noteData?.subject || "",
+      notes: noteData?.noteText || "",
     },
   });
 
@@ -36,16 +44,50 @@ const AddClinicalNotes: React.FC<ReasoningModalProps> = ({
     reset,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = methods;
+
+  useEffect(() => {
+    if (noteData) {
+      setValue("subject", noteData.subject);
+      setValue("notes", noteData.noteText);
+    }
+  }, [noteData, setValue]);
 
   const onSubmit = (data: any) => {
     if (!data.subject || !data.notes) {
       console.error("Subject or notes are missing");
       return;
     }
-    mutate(
-      { selectedId, subject: data.subject, notes: data.notes },
-      {
+
+    const payload: {
+      subject: string;
+      notes: string;
+    } = {
+      subject: data.subject,
+      notes: data.notes,
+    };
+
+    if (selectedId) {
+      const updatePayload = { ...payload, selectedId };
+      updateNote.mutate(updatePayload, {
+        onSuccess: () => {
+          onClose(data.notes);
+          setOpen(false);
+          reset();
+        },
+        onError: (error: any) => {
+          useAlert({
+            icon: "error",
+            title: "Failure",
+            text: error?.message || "Clinical note update failed",
+          });
+          reset();
+        },
+      });
+    } else {
+      const createPayload = { ...payload, selectedId };
+      createNote.mutate(createPayload, {
         onSuccess: () => {
           onClose(data.notes);
           setOpen(false);
@@ -55,12 +97,12 @@ const AddClinicalNotes: React.FC<ReasoningModalProps> = ({
           useAlert({
             icon: "error",
             title: "Failure",
-            text: error?.message || "Clinical not created",
+            text: error?.message || "Clinical note creation failed",
           });
           reset();
         },
-      }
-    );
+      });
+    }
   };
 
   return (
@@ -68,7 +110,7 @@ const AddClinicalNotes: React.FC<ReasoningModalProps> = ({
       <Box className="flex flex-col min-h-[515px] w-[808px]">
         <Box className="flex justify-between items-center">
           <h2 className="text-[1.175rem] font-[600] text-neu-900 leading-6">
-            New Clinical Note
+            {selectedId ? "Update Clinical Note" : "New Clinical Note"}
           </h2>
           <p
             onClick={() => setOpen(false)}
@@ -105,7 +147,7 @@ const AddClinicalNotes: React.FC<ReasoningModalProps> = ({
               <PrimaryButton
                 type="submit"
                 width="10.7rem"
-                buttonName="Submit"
+                buttonName={selectedId ? "Update" : "Submit"}
                 disabled={false}
               />
             </Box>

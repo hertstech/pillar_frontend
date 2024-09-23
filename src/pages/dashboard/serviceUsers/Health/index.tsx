@@ -278,7 +278,7 @@ export default function Health({ client }: PropType) {
             pb: 4,
           }}
         >
-          <Avatar />
+          <Avatar sx={{ bgcolor:'#B2DDFF' }}>{client?.firstName.slice(0, 1)}</Avatar>
           <div className="">
             <Typography
               sx={{

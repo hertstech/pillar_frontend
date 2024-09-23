@@ -15,6 +15,7 @@ import InputField from "../../../../components/InputField";
 import { axiosInstance } from "../../../../Utils";
 import classNames from "classnames";
 import { useAlert } from "../../../../Utils/useAlert";
+import { useFilterEmptyFields } from "../../../../Utils/filterStrings";
 
 type FormValues = {
   severity: string;
@@ -133,9 +134,13 @@ export const UpdateHealthRec: React.FC<IProps> = ({
   };
 
   const updateRecord = async (data: FormValues, reason: string) => {
+    const newData = { ...data, reason_for_change: reason };
+
+    const filteredFormField = useFilterEmptyFields(newData);
+
     const response = await axiosInstance.put(
       `/update-serviceuser-healthsummaryrecord/diagnosis/status/${id}`,
-      { ...data, reason_for_change: reason }
+      filteredFormField
     );
 
     console.log(response); // temporal response control
@@ -143,11 +148,11 @@ export const UpdateHealthRec: React.FC<IProps> = ({
     handleCloseDrawer();
     if (refreshData) refreshData();
 
-    useAlert({
-      icon: "success",
-      title: "Record Updated",
-      text: "The health record has been successfully updated.",
-    });
+    // useAlert({
+    //   icon: "success",
+    //   title: "Record Updated",
+    //   text: "The health record has been successfully updated.",
+    // });
   };
 
   const handleError = (error: any) => {

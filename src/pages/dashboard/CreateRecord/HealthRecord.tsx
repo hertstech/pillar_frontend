@@ -31,6 +31,7 @@ import { axiosInstance } from "../../../Utils";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRecordStatus } from "../../../hooks/Health/healthRecordStatus";
 import { DiagnosisType } from "../../../types/serviceUserTypes/health";
+import { useFilterEmptyFields } from "../../../Utils/filterStrings";
 
 interface TextLabelProps {
   text: any;
@@ -73,8 +74,6 @@ const TextLabel = ({ text, label, isLoading }: TextLabelProps) => (
   </label>
 );
 
-const title = ["Dr.", "Mrs.", "Ms."];
-
 export default function HealthRecord() {
   const { id } = useParams();
 
@@ -95,7 +94,7 @@ export default function HealthRecord() {
     systolic: "",
     diasttolic: "",
     bpm: "",
-    title: "",
+    subject: "",
     mgDl: "",
     degreeRating: "",
     primaryDiagnosis: "",
@@ -127,17 +126,18 @@ export default function HealthRecord() {
     formField.type === "Body Temperature" && formField.degreeRating === "";
 
   const handleSubmit = async () => {
+    const filteredFormField = useFilterEmptyFields(formField);
+
     setIsLoading(true);
     const isCategoriesAndTypeEmpty =
-      formField.categories === "" || formField.type === "";
+      filteredFormField.categories === "" || filteredFormField.type === "";
 
     if (isCategoriesAndTypeEmpty) {
       setIsLoading(false);
-
       setIsOpen(false);
       return Swal.fire({
         icon: "info",
-        text: `You can not submit an empty form!`,
+        text: `You cannot submit an empty form!`,
         confirmButtonColor: "#2E90FA",
       });
     }
@@ -145,7 +145,7 @@ export default function HealthRecord() {
     try {
       const res = await axiosInstance.post(
         `/create-serviceuser-healthsummary/${id}`,
-        formField
+        filteredFormField
       );
 
       setIsOpen(false);
@@ -160,7 +160,7 @@ export default function HealthRecord() {
     } catch (error: any) {
       setIsLoading(false);
       setIsOpen(!isOpen);
-      // console.error("creation of report failed:", error.message);
+
       if (error.response.status === 400) {
         Swal.fire({
           icon: "error",
@@ -570,30 +570,12 @@ export default function HealthRecord() {
 
           {formField.categories === "Diagnosis" && (
             <div style={{ display: "flex", gap: 5, alignItems: "flex-end" }}>
-              <label htmlFor={`title`}>
-                Title
-                <TextField
-                  select
-                  sx={{ marginTop: "5px", width: "100px" }}
-                  fullWidth
-                  name="title"
-                  value={formField.title}
-                  onChange={(e) => handleChange("title", e.target.value)}
-                >
-                  {title.map((item, index) => (
-                    <MenuItem key={index} value={item}>
-                      {item}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </label>
-
               <InputField
                 type="text"
-                label="Name"
-                name={`reading_`}
-                value={formField.reading}
-                onChange={(e: any) => handleChange("reading", e.target.value)}
+                label="Clinical Note Subject"
+                name={`subject`}
+                value={formField.subject}
+                onChange={(e: any) => handleChange("subject", e.target.value)}
               />
             </div>
           )}
@@ -800,13 +782,19 @@ export default function HealthRecord() {
                 {formField.categories === "Diagnosis" && (
                   <TextLabel
                     label="Prescribed by"
-                    text={`${formField.title} ${formField.reading}` || "N/A"}
+                    text={`${formField.subject} ${formField.reading}` || "N/A"}
                   />
                 )}
 
                 {formField.categories === "Diagnosis" && (
                   <TextLabel
-                    label="Clinical notes"
+                    label="Clinical Notes Subject"
+                    text={formField.subject}
+                  />
+                )}
+                {formField.categories === "Diagnosis" && (
+                  <TextLabel
+                    label="Clinical Notes"
                     text={formField.progressNote}
                   />
                 )}
