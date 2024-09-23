@@ -1,5 +1,5 @@
-import { Box, Button, Popover, Typography } from "@mui/material";
 import { useState, MouseEvent, useEffect } from "react";
+import { Box, Button, Popover, Typography } from "@mui/material";
 import { FaAngleDown } from "react-icons/fa";
 import { IoEllipsisHorizontalCircleOutline } from "react-icons/io5";
 import { LuDot } from "react-icons/lu";
@@ -37,7 +37,8 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
     [key: number]: HTMLElement | null;
   }>({});
   const [showDelete, setShowDelete] = useState(false);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string>();
+  const [selectedNote, setSelectedNote] = useState();
   const [disabled, setDisabled] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -56,6 +57,12 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
 
   const handleModalOpen = () => setModalOpen(true);
   const handleModalClose = () => setModalOpen(false);
+
+  const handleEditNote = (note: any) => {
+    setSelectedId(note.id);
+    setSelectedNote(note);
+    handleModalOpen();
+  };
 
   const handleCloseDelete = () => setShowDelete(false);
   const handleOpenDelete = (noteId: string) => {
@@ -197,7 +204,10 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
                     <button className="capitalize outline-none w-full text-left">
                       mark as approved
                     </button>
-                    <button className="capitalize outline-none w-full text-left">
+                    <button
+                      onClick={() => handleEditNote(note)}
+                      className="capitalize outline-none w-full text-left"
+                    >
                       edit note
                     </button>
                     <button
@@ -238,7 +248,7 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
       </Box>
 
       <DeleteClinicalNote
-        id={selectedId}
+        id={selectedId as string}
         showModal={showDelete}
         closeModal={handleCloseDelete}
       />
@@ -247,7 +257,8 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
         open={modalOpen}
         setOpen={setModalOpen}
         onClose={handleModalClose}
-        selectedId={item.id}
+        selectedId={selectedId as string}
+        noteData={selectedNote}
       />
     </Box>
   );

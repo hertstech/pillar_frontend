@@ -7,13 +7,15 @@ type NotesType = {
   notes: string;
 };
 
+const clinicalNotesBaseUrl = "/create-serviceuser-healthsummary/clinical-notes";
+
 export const useCreateClinicalNote = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data: NotesType) => {
       const { selectedId, subject, notes } = data;
       return axiosInstance.post(
-        `/create-serviceuser-healthsummary/clinical-notes/${selectedId}`,
+        `${clinicalNotesBaseUrl}/${selectedId}`,
         { subject, notes }
       );
     },
@@ -24,13 +26,28 @@ export const useCreateClinicalNote = () => {
     },
   });
 };
-export const useDeleteClinicalNote = () => {
+
+export const useUpdateClinicalNote = () => {
   const queryClient = useQueryClient();
   return useMutation({
+    mutationFn: (data: any) => {
+      const { selectedId, subject, note } = data;
+      return axiosInstance.put(`${clinicalNotesBaseUrl}/${selectedId}`, {
+        subject,
+        note,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["clinicalNotes"] });
+    },
+  });
+};
+
+export const useDeleteClinicalNote = () => {
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, string>({
     mutationFn: (selectedId: string) => {
-      return axiosInstance.delete(
-        `/create-serviceuser-healthsummary/clinical-notes/${selectedId}`
-      );
+      return axiosInstance.delete(`${clinicalNotesBaseUrl}/${selectedId}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({

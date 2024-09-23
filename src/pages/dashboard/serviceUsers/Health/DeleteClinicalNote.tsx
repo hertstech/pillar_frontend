@@ -2,10 +2,9 @@ import { Box, Button } from "@mui/material";
 import { ModalAlt } from "../../../../components/Modals";
 import { InfoIcon } from "../../../../assets/icons";
 import { useDeleteClinicalNote } from "../../../../api/HealthServiceUser/clinicalNotes";
-// import { useAlert } from "../../../../Utils/useAlert";
 
 interface IProps {
-  id: string | null;
+  id: string;
   showModal: boolean;
   closeModal: () => void;
 }
@@ -14,7 +13,7 @@ export const DeleteClinicalNote = ({ id, showModal, closeModal }: IProps) => {
   const { mutate } = useDeleteClinicalNote();
 
   const handleDelete = () => {
-    mutate(id as string, {
+    mutate(id, {
       onSuccess: () => {
         closeModal();
       },
@@ -59,7 +58,6 @@ export const DeleteClinicalNote = ({ id, showModal, closeModal }: IProps) => {
               borderRadius: "6px",
             }}
             onClick={handleDelete}
-            // disabled={isLoading}
           >
             Delete
           </Button>
