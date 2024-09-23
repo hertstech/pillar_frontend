@@ -55,7 +55,7 @@ const AddClinicalNotes: React.FC<ReasoningModalProps> = ({
           useAlert({
             icon: "error",
             title: "Failure",
-            text: error?.message || "Clinical not created",
+            text: error?.message || "Clinical note not created",
           });
           reset();
         },

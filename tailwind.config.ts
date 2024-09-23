@@ -31,7 +31,7 @@ const config: Config = {
           700: "#2A2D32",
           900: "#101928",
         },
-        err: "",
+        err: "#D42620",
         warn: {
           100: "#FDEAD7",
         },

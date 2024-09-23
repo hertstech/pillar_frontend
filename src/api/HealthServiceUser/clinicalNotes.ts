@@ -24,6 +24,21 @@ export const useCreateClinicalNote = () => {
     },
   });
 };
+export const useDeleteClinicalNote = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (selectedId: string) => {
+      return axiosInstance.delete(
+        `/create-serviceuser-healthsummary/clinical-notes/${selectedId}`
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["clinicalNotes"],
+      });
+    },
+  });
+};
 
 export const useGetClinicalNote = (selectedId: string) => {
   return useQuery({

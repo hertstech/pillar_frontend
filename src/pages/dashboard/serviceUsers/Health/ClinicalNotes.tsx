@@ -9,6 +9,7 @@ import classNames from "classnames";
 import { useGetClinicalNote } from "../../../../api/HealthServiceUser/clinicalNotes";
 import { useFormatDate } from "../../../../Utils/dateToText";
 import { FemaleAvatar } from "../../../../assets/icons";
+import { DeleteClinicalNote } from "./DeleteClinicalNote";
 
 type NotesType = {
   approved_by_name: string;
@@ -35,6 +36,8 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
   const [anchorEls, setAnchorEls] = useState<{
     [key: number]: HTMLElement | null;
   }>({});
+  const [showDelete, setShowDelete] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [disabled, setDisabled] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -53,6 +56,12 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
 
   const handleModalOpen = () => setModalOpen(true);
   const handleModalClose = () => setModalOpen(false);
+
+  const handleCloseDelete = () => setShowDelete(false);
+  const handleOpenDelete = (noteId: string) => {
+    setSelectedId(noteId);
+    setShowDelete(true);
+  };
 
   const openPopover = (index: number) => Boolean(anchorEls[index]);
   const open = Boolean(anchorEls);
@@ -181,10 +190,22 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
                   anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                   transformOrigin={{ vertical: "top", horizontal: "right" }}
                 >
-                  <Box p={2} className="flex flex-col gap-2 text-xs">
-                    <p>mark as approved</p>
-                    <p>edit note</p>
-                    <p>delete</p>
+                  <Box
+                    p={2}
+                    className="flex flex-col gap-3 text-xs !font-medium"
+                  >
+                    <button className="capitalize outline-none w-full text-left">
+                      mark as approved
+                    </button>
+                    <button className="capitalize outline-none w-full text-left">
+                      edit note
+                    </button>
+                    <button
+                      onClick={() => handleOpenDelete(note.id)}
+                      className="capitalize outline-none w-full text-left !text-err"
+                    >
+                      delete note
+                    </button>
                   </Box>
                 </Popover>
               </Box>
@@ -215,6 +236,12 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
           </p>
         )}
       </Box>
+
+      <DeleteClinicalNote
+        id={selectedId}
+        showModal={showDelete}
+        closeModal={handleCloseDelete}
+      />
 
       <AddClinicalNotes
         open={modalOpen}
