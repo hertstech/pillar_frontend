@@ -5,10 +5,11 @@ import { IoEllipsisHorizontalCircleOutline } from "react-icons/io5";
 import { LuDot } from "react-icons/lu";
 import { getStatusColor } from "../../../../Utils/getStatusColor";
 import AddClinicalNotes from "./Components/addClinicalNoteModal";
+import UpdateClinicalNotes from "./Components/addClinicalNoteModal";
 import classNames from "classnames";
 import { useGetClinicalNote } from "../../../../api/HealthServiceUser/clinicalNotes";
 import { useFormatDate } from "../../../../Utils/dateToText";
-import { FemaleAvatar } from "../../../../assets/icons";
+import { FemaleAvatar } from "../../../../assets/Icons";
 import { DeleteClinicalNote } from "./DeleteClinicalNote";
 
 type NotesType = {
@@ -41,6 +42,7 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
   const [selectedNote, setSelectedNote] = useState();
   const [disabled, setDisabled] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [updateModalOpen, setUpdateModalOpen] = useState(false);
 
   const { data, isLoading } = useGetClinicalNote(item.id);
 
@@ -56,12 +58,16 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
   };
 
   const handleModalOpen = () => setModalOpen(true);
-  const handleModalClose = () => setModalOpen(false);
+
+  const handleModalClose = () => {
+    setUpdateModalOpen(false);
+    setModalOpen(false);
+  };
 
   const handleEditNote = (note: any) => {
     setSelectedId(note.id);
     setSelectedNote(note);
-    handleModalOpen();
+    setUpdateModalOpen(true);
   };
 
   const handleCloseDelete = () => setShowDelete(false);
@@ -242,7 +248,7 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
           </p>
         ) : (
           <p className="flex justify-center items-center h-full">
-            No clinical notes creted.
+            No clinical notes created.
           </p>
         )}
       </Box>
@@ -256,6 +262,12 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
       <AddClinicalNotes
         open={modalOpen}
         setOpen={setModalOpen}
+        onClose={handleModalClose}
+        selectedId={selectedId as string}
+      />
+      <UpdateClinicalNotes
+        open={updateModalOpen}
+        setOpen={setUpdateModalOpen}
         onClose={handleModalClose}
         selectedId={selectedId as string}
         noteData={selectedNote}

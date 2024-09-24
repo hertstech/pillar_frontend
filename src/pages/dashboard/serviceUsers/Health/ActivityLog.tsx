@@ -2,6 +2,7 @@ import { Box } from "@mui/material";
 import { LuDot } from "react-icons/lu";
 import { useGetHealthHistoryLog } from "../../../../api/HealthServiceUser/clinicalNotes";
 import { useFormatDate } from "../../../../Utils/dateToText";
+import classNames from "classnames";
 
 interface IProps {
   id: string | undefined;
@@ -9,19 +10,33 @@ interface IProps {
 
 interface LogEntryProps {
   date: string;
-
+  isDashboard?: boolean;
   title: string;
   author: string;
 }
 
-const LogEntry = ({ date, title, author }: LogEntryProps) => (
-  <Box className="border-l-[1px] border-l-neu-300 h-full first:pt-4 pb-6 mx-2 px-3 text-left">
+export const LogEntry = ({ date, title, author, ...rest }: LogEntryProps) => (
+  <Box
+    className={classNames(
+      rest.isDashboard
+        ? " py-3 border-b-[1px] border-b-neu-50 first:pt-0 last:border-none"
+        : "border-l-[1px] border-l-neu-300 h-full first:pt-4 mx-2 pb-6 px-3 text-left"
+    )}
+  >
     <p className="text-xs font-normal text-neu-400 pb-1">
-      {useFormatDate({ date })}
-      {/* • {time} */}
+      {useFormatDate({ date }) === "Invalid date"
+        ? date
+        : useFormatDate({ date })}
     </p>
-    <Box className="relative text-base font-semibold text-neu-900">
-      <LuDot className="text-neu-400 absolute -left-[27px]" size={28} />
+    <Box
+      className={classNames(
+        "text-neu-900 font-semibold",
+        rest.isDashboard ? "text-[.875rem]" : "relative text-base"
+      )}
+    >
+      {!rest.isDashboard && (
+        <LuDot className="text-neu-400 absolute -left-[27px]" size={28} />
+      )}
       <p>{title}</p>
     </Box>
     <Box className="text-sm font-normal text-neu-700 flex items-center gap-1">

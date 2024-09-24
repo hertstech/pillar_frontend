@@ -28,7 +28,32 @@ export const selectItems = {
   ],
 };
 
-
+export const logData = [
+  {
+    date: "5th Nov., 2023",
+    time: "5:30 AM",
+    title: "Updated Type 2 Diabetes",
+    author: "Chinaza Ibrahim Edidiong",
+  },
+  {
+    date: "6th Nov., 2023",
+    time: "8:45 AM",
+    title: "Reviewed Blood Pressure Record",
+    author: "John Doe",
+  },
+  {
+    date: "7th Nov., 2023",
+    time: "12:15 PM",
+    title: "Added New Medication",
+    author: "Jane Smith",
+  },
+  {
+    date: "8th Nov., 2023",
+    time: "9:00 AM",
+    title: "Updated Patient's Allergy List",
+    author: "Sarah Connor",
+  },
+];
 
 export const notesData = [
   {

@@ -10,7 +10,7 @@ import NoResultIllustration, { SpinLoader } from "../../../components/NoResult";
 import ChartComponent from "../monitor/ChartComponent";
 import { IoEllipsisVertical } from "react-icons/io5";
 import { FaTrash } from "react-icons/fa";
-import { PinIcon } from "../../../assets/icons";
+import { PinIcon } from "../../../assets/Icons";
 import { useChartData, useMonitoringData } from "../../../hooks/monitoring";
 
 export default function Analytics() {
@@ -101,15 +101,7 @@ export default function Analytics() {
                     background: "white",
                   }}
                 >
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "row",
-                      gap: 1,
-                      justifyContent: "space-between",
-                      p: 2,
-                    }}
-                  >
+                  <Box className="flex justify-between p-4">
                     <Typography fontWeight={600} fontSize={18} color="#090816">
                       {chart.title}
                     </Typography>
@@ -117,8 +109,6 @@ export default function Analytics() {
                     <Button
                       sx={{
                         borderRadius: "50%",
-                        height: "36px",
-                        minWidth: "36px",
                       }}
                       onClick={(event) => handleClick(event, chart.id)}
                     >

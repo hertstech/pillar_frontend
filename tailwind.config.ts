@@ -22,6 +22,7 @@ const config: Config = {
           600: "#099250",
         },
         neu: {
+          50: "#E7E9FB",
           75: "#F7F7FA",
           100: "#F5F5F5",
           300: "#D0D5DD",

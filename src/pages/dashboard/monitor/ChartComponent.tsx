@@ -84,6 +84,9 @@ export default function ChartComponent({
         ticks: {
           stepSize: 1,
         },
+        grid: {
+          display: false,
+        },
         beginAtZero: true,
         grace: 1,
       },
@@ -92,6 +95,9 @@ export default function ChartComponent({
         ticks: {
           stepSize: 1,
           crossAlign: "start",
+        },
+        grid: {
+          display: false, 
         },
         beginAtZero: true,
         grace: 1,
@@ -127,8 +133,8 @@ export default function ChartComponent({
           backgroundColor: colors[colorIndex],
           barPercentage: 1.5,
           barThickness: 30,
-          maxBarThickness: 20,
-          borderRadius: 5,
+          maxBarThickness: 40,
+          borderRadius: 3,
         });
       }
       colorIndex = (colorIndex + 1) % colors.length;
