@@ -4,7 +4,6 @@ import {
   Chip,
   MenuItem,
   Select,
-  Stack,
   Table,
   TableBody,
   TableCell,
@@ -14,10 +13,13 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import moment from "moment";
 import InputField from "../../../components/InputField";
 import { TableLoader } from "../../../components/NoResult";
+import { SearchIcon } from "../../../assets/Icons";
+import { IoSettings } from "react-icons/io5";
+import ActivityPinModal from "./Components/activityPinModal";
 
 const TABLE_HEAD = [
   { id: "user", label: "User", align: "left" },
@@ -30,35 +32,61 @@ const TABLE_HEAD = [
 ];
 
 export default function Activity({ data, isLoading }: any) {
-  const [search, setSearch] = React.useState("");
+  const [search, setSearch] = useState("");
+  const [openActivityModal, setOpenActivityModal] = useState(false);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const [page, setPage] = React.useState(0);
-
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
-  const handleChangePage = (_event: unknown, newPage: number) => {
+  const handleChangePage = (_event: unknown, newPage: number) =>
     setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event: any) => {
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
 
-  React.useEffect(() => {
-    setPage(0);
-  }, []);
+  useEffect(() => setPage(0), []);
+
+  const renderSelect = (
+    label: string,
+    defaultValue: string,
+    options: string[]
+  ) => (
+    <label
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 10,
+        color: "#232426",
+        fontWeight: 500,
+        fontSize: 14,
+        fontFamily: "fontBold",
+      }}
+    >
+      {label}
+      <Select
+        defaultValue={defaultValue}
+        sx={{
+          minWidth: 110,
+          color: "#2A2D32",
+          fontWeight: 500,
+          ".MuiOutlinedInput-input": { px: 2, py: 1 },
+        }}
+      >
+        {options.map((option) => (
+          <MenuItem key={option} value={option}>
+            {option}
+          </MenuItem>
+        ))}
+      </Select>
+    </label>
+  );
 
   return (
     <Box>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <div style={{ position: "relative", display: "flex" }}>
+      <Box className="flex items-center justify-between">
+        <Box sx={{ position: "relative", display: "flex" }}>
           <InputField
             label=""
             type="text"
@@ -70,96 +98,41 @@ export default function Activity({ data, isLoading }: any) {
           <Button
             sx={{
               position: "absolute",
-              right: "0rem",
+              right: 0,
               top: "13px",
               p: 2,
             }}
           >
-            <svg
-              width="24"
-              height="23"
-              viewBox="0 0 24 23"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g id="Search 1">
-                <path
-                  id="Vector"
-                  d="M19.0304 17.4698C18.7375 17.1769 18.2626 17.1769 17.9697 17.4698C17.6768 17.7626 17.6768 18.2375 17.9697 18.5304L19.0304 17.4698ZM21.9696 22.5304C22.2625 22.8233 22.7374 22.8233 23.0303 22.5304C23.3232 22.2375 23.3232 21.7626 23.0303 21.4697L21.9696 22.5304ZM8.83512 4.80232C9.24423 4.73752 9.52336 4.35334 9.45856 3.94423C9.39376 3.53511 9.00958 3.25599 8.60047 3.32079L8.83512 4.80232ZM3.82076 8.1005C3.75596 8.50961 4.03508 8.89379 4.4442 8.95859C4.85331 9.02339 5.23749 8.74426 5.30229 8.33515L3.82076 8.1005ZM17.9697 18.5304L21.9696 22.5304L23.0303 21.4697L19.0304 17.4698L17.9697 18.5304ZM10.5 18.25C5.94365 18.25 2.25 14.5563 2.25 10H0.75C0.75 15.3848 5.11522 19.75 10.5 19.75V18.25ZM18.75 10C18.75 14.5563 15.0563 18.25 10.5 18.25V19.75C15.8848 19.75 20.25 15.3848 20.25 10H18.75ZM10.5 1.75C15.0563 1.75 18.75 5.44365 18.75 10H20.25C20.25 4.61522 15.8848 0.25 10.5 0.25V1.75ZM10.5 0.25C5.11522 0.25 0.75 4.61522 0.75 10H2.25C2.25 5.44365 5.94365 1.75 10.5 1.75V0.25ZM8.60047 3.32079C6.14008 3.71047 4.21044 5.64012 3.82076 8.1005L5.30229 8.33515C5.59032 6.51661 7.01658 5.09035 8.83512 4.80232L8.60047 3.32079Z"
-                  fill="#667185"
-                />
-              </g>
-            </svg>
+            <SearchIcon />
           </Button>
-        </div>
+        </Box>
 
-        <Stack
-          direction="row"
-          justifyContent="flex-end"
-          spacing={2}
-          alignItems="baseline"
-          width={"60%"}
-        >
-          <label
-            htmlFor=""
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              color: "#232426",
-              fontWeight: 500,
-              fontSize: 14,
-              fontFamily: "fontBold",
-            }}
-          >
-            View as
-            <Select
-              defaultValue={"Recent"}
-              sx={{
-                minWidth: 110,
-                color: "#2A2D32",
-                fontWeight: 500,
-                ".css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input":
-                  { px: 2, py: 1 },
-              }}
-            >
-              <MenuItem value="Recent">Recent</MenuItem>
-              <MenuItem value="Older">Older</MenuItem>
-              <MenuItem value="From z-A">From z-A</MenuItem>
-              <MenuItem value="From A-Z">From A-Z</MenuItem>
-              <MenuItem value="Successful">Successful</MenuItem>
-              <MenuItem value="Unsuccessful">Unsuccessful</MenuItem>
-            </Select>
-          </label>
-
-          <label
-            htmlFor=""
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              color: "#232426",
-              fontWeight: 500,
-              fontSize: 14,
-              fontFamily: "fontBold",
-            }}
-          >
-            Filter By
-            <Select
-              defaultValue={"All Activities"}
-              sx={{
-                minWidth: 110,
-                color: "#2A2D32",
-                fontWeight: 500,
-                ".css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input":
-                  { px: 2, py: 1 },
-              }}
-            >
-              <MenuItem value="All Activities">All Activities</MenuItem>
-              <MenuItem value="My Activities">My Activities</MenuItem>
-            </Select>
-          </label>
-        </Stack>
+        <Box className="flex items-center gap-4 mt-3">
+          {renderSelect("View as", "Recent", [
+            "Recent",
+            "Older",
+            "From z-A",
+            "From A-Z",
+            "Successful",
+            "Unsuccessful",
+          ])}
+          {renderSelect("Filter By", "All Activities", [
+            "All Activities",
+            "My Activities",
+          ])}
+          <Box className="rounded-full bg-neu-200 p-2">
+            <IoSettings
+              className="text-neu-500 cursor-pointer"
+              size={28}
+              onClick={() => setOpenActivityModal(true)}
+            />
+          </Box>
+          <ActivityPinModal
+            open={openActivityModal}
+            setOpen={setOpenActivityModal}
+            data={data}
+          />
+        </Box>
       </Box>
 
       <Box marginTop={2}>
@@ -170,7 +143,7 @@ export default function Activity({ data, isLoading }: any) {
             <TableHead sx={{ background: "#FCFCFD", fontSize: 12 }}>
               <TableRow>
                 {TABLE_HEAD.map((item) => (
-                  <TableCell sx={{ color: "#344054" }} key={item.id}>
+                  <TableCell key={item.id} sx={{ color: "#344054" }}>
                     {item.label}
                   </TableCell>
                 ))}
@@ -181,84 +154,67 @@ export default function Activity({ data, isLoading }: any) {
               {isLoading ? (
                 <TableLoader />
               ) : (
-                <>
-                  {data
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((item: any) => (
-                      <TableRow
-                        hover
-                        key={item.id}
-                        sx={{
-                          "&:nth-of-type(odd)": {
-                            background: "white",
-                          },
-                          "&:nth-of-type(even)": {
-                            background: "#FCFCFD",
-                          },
-                          position: "relative",
-                        }}
-                      >
-                        <TableCell>
-                          <Typography
-                            sx={{
-                              display: "flex",
-                              flexDirection: "column",
-                              textTransform: "capitalize",
-                            }}
-                            variant="subtitle2"
-                            noWrap
-                          >
-                            {item.tenet_name}
-                            {/* <span>IT Support</span> */}
-                          </Typography>
-                        </TableCell>
-
-                        <TableCell>
-                          <span>{item.activity_info}</span>
-                        </TableCell>
-
-                        <TableCell>
-                          <Chip
-                            sx={{
-                              background:
-                                item.status === "Successful"
-                                  ? "#E7F6EC"
-                                  : "#FBEAE9",
-                              textTransform: "capitalize",
-                              fontWeight: "fontBold",
-                              color:
-                                item.status === "Successful"
-                                  ? "#099137"
-                                  : "#D42620",
-                            }}
-                            label={item.status}
-                          />
-                        </TableCell>
-
-                        <TableCell>
-                          <span>{item.ip_address}</span>
-                        </TableCell>
-
-                        <TableCell>
-                          <span>
-                            {moment(item.start_date).format("DD-MM-YY")}{" "}
-                            {moment(item.start_date).format("LT")}
-                          </span>
-                        </TableCell>
-
-                        <TableCell>
-                          <span>
-                            {moment(item.end_date).format("DD-MM-YY")}{" "}
-                            {moment(item.end_date).format("LT")}
-                          </span>
-                        </TableCell>
-
-                        <TableCell>
-                          <span>{item.location}</span>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                </>
+                data
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((item: any) => (
+                    <TableRow
+                      key={item.id}
+                      hover
+                      sx={{
+                        "&:nth-of-type(odd)": { background: "white" },
+                        "&:nth-of-type(even)": { background: "#FCFCFD" },
+                        position: "relative",
+                      }}
+                    >
+                      <TableCell>
+                        <Typography
+                          variant="subtitle2"
+                          noWrap
+                          sx={{ textTransform: "capitalize" }}
+                        >
+                          {item.tenet_name}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        {" "}
+                        <span>{item.activity_info}</span>
+                      </TableCell>
+                      <TableCell>
+                        <Chip
+                          sx={{
+                            background:
+                              item.status === "Successful"
+                                ? "#E7F6EC"
+                                : "#FBEAE9",
+                            color:
+                              item.status === "Successful"
+                                ? "#099137"
+                                : "#D42620",
+                            fontWeight: "fontBold",
+                            textTransform: "capitalize",
+                          }}
+                          label={item.status}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        {" "}
+                        <span>{item.ip_address}</span>
+                      </TableCell>
+                      <TableCell>
+                        <span>
+                          {moment(item.start_date).format("DD-MM-YY LT")}
+                        </span>
+                      </TableCell>
+                      <TableCell>
+                        <span>
+                          {moment(item.end_date).format("DD-MM-YY LT")}
+                        </span>
+                      </TableCell>
+                      <TableCell>
+                        <span>{item.location}</span>
+                      </TableCell>
+                    </TableRow>
+                  ))
               )}
             </TableBody>
           </Table>
