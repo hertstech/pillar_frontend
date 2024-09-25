@@ -28,6 +28,10 @@ const ActivityPinModal: React.FC<ActivityPinModalProps> = ({
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
+  
+  const handleDeselectAll = () => {
+    setTempSelectedIds([]);
+  };
 
   const handleSaveChanges = () => {
     setSelectedIds(tempSelectedIds);
@@ -40,10 +44,6 @@ const ActivityPinModal: React.FC<ActivityPinModalProps> = ({
       });
       navigate("/dashboard/home");
     }
-  };
-
-  const handleDeselectAll = () => {
-    setTempSelectedIds([]);
   };
 
   return (
