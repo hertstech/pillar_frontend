@@ -148,15 +148,17 @@ export const UpdateHealthRec: React.FC<IProps> = ({
     handleCloseDrawer();
     if (refreshData) refreshData();
 
-    // useAlert({
-    //   icon: "success",
-    //   title: "Record Updated",
-    //   text: "The health record has been successfully updated.",
-    // });
+    useAlert({
+      timer: 2000,
+      icon: "success",
+      title: "Record Updated",
+      text: "The health record has been successfully updated.",
+    });
   };
 
   const handleError = (error: any) => {
     useAlert({
+      timer: 2000,
       icon: "error",
       title: "Update Failed",
       text:

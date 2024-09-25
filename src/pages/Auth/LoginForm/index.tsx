@@ -7,7 +7,7 @@ import InputField from "../../../components/InputField";
 import Button from "../../../components/Button";
 import { dispatchUserLogin } from "../../../redux/userSlice";
 import { axiosInstance } from "../../../Utils";
-import Swal from "sweetalert2";
+import { useAlert } from "../../../Utils/useAlert";
 
 export default function LoginPage() {
   const [isLoadingButton, setIsLoadingButton] = useState(false);
@@ -54,19 +54,17 @@ export default function LoginPage() {
 
       navigate("/dashboard", { replace: true });
 
-      return Swal.fire({
+      return useAlert({
         icon: "success",
         title: `${response.data.message}`,
         text: `Welcome ${response.data.firstName}`,
-        confirmButtonColor: "#2E90FA",
       });
     } catch (error: any) {
       setIsLoadingButton(false);
-      Swal.fire({
+      useAlert({
         icon: "error",
         title: "Login Error",
         text: `Authentication failed!!!`,
-        confirmButtonColor: "#2E90FA",
       });
     }
   };

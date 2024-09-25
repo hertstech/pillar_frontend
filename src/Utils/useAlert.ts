@@ -13,7 +13,7 @@ export const useAlert = ({ icon, title, text, ...rest }: IProps) => {
     icon: icon,
     title: title,
     text: text,
-    timer: rest.timer,
+    timer: rest.timer || 3000,
     showConfirmButton: rest.showButton || false,
     timerProgressBar: true,
   });
