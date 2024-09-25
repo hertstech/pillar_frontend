@@ -3,6 +3,10 @@ import { Box, Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 import { ModalMain } from "../../../../components/Modals";
 import { PrimaryButton } from "../../../../components/Button/primaryButton";
 import { LuListChecks } from "react-icons/lu";
+import { useRecoilState } from "recoil";
+import { selectedLogIdsState } from "../../../../atoms/monitoring/charts";
+import { useNavigate } from "react-router-dom";
+import { useAlert } from "../../../../Utils/useAlert";
 
 interface ActivityPinModalProps {
   open: boolean;
@@ -15,16 +19,31 @@ const ActivityPinModal: React.FC<ActivityPinModalProps> = ({
   setOpen,
   data,
 }) => {
-  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const navigate = useNavigate();
+  const [selectedIds, setSelectedIds] = useRecoilState(selectedLogIdsState);
+  const [tempSelectedIds, setTempSelectedIds] = useState<number[]>(selectedIds);
 
   const handleSelect = (id: number) => {
-    setSelectedIds((prev) =>
+    setTempSelectedIds((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
 
+  const handleSaveChanges = () => {
+    setSelectedIds(tempSelectedIds);
+
+    if (tempSelectedIds.length < 11) {
+      useAlert({
+        icon: "success",
+        title: "Logs pinned successfully",
+        timer: 3000,
+      });
+      navigate("/dashboard/home");
+    }
+  };
+
   const handleDeselectAll = () => {
-    setSelectedIds([]);
+    setTempSelectedIds([]);
   };
 
   return (
@@ -48,8 +67,8 @@ const ActivityPinModal: React.FC<ActivityPinModalProps> = ({
         </Box>
 
         <Box className="flex items-center justify-between gap-6 text-sm">
-          <p>{selectedIds.length} selected</p>
-          {selectedIds.length > 1 && (
+          <p>{tempSelectedIds.length} selected</p>
+          {tempSelectedIds.length > 1 && (
             <p
               onClick={handleDeselectAll}
               className="text-pri-600 flex items-center gap-1 font-semibold cursor-pointer"
@@ -66,7 +85,7 @@ const ActivityPinModal: React.FC<ActivityPinModalProps> = ({
                 control={
                   <Checkbox
                     color="success"
-                    checked={selectedIds.includes(item.id)}
+                    checked={tempSelectedIds.includes(item.id)}
                     onChange={() => handleSelect(item.id)}
                   />
                 }
@@ -75,10 +94,7 @@ const ActivityPinModal: React.FC<ActivityPinModalProps> = ({
                     <span className="truncate overflow-hidden max-w-[350px]">
                       {item.activity_info}
                     </span>{" "}
-                    by{" "}
-                    <b>
-                      {item.tenet_name}
-                    </b>
+                    by <b>{item.tenet_name}</b>
                   </Box>
                 }
               />
@@ -87,10 +103,10 @@ const ActivityPinModal: React.FC<ActivityPinModalProps> = ({
         </FormGroup>
 
         <PrimaryButton
-          type="submit"
+          onClick={handleSaveChanges}
           width="45%"
           buttonName="Update settings"
-          disabled={selectedIds.length === 0}
+          disabled={tempSelectedIds.length > 10}
         />
       </Box>
     </ModalMain>

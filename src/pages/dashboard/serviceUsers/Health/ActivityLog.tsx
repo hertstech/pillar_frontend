@@ -30,14 +30,14 @@ export const LogEntry = ({ date, title, author, ...rest }: LogEntryProps) => (
     </p>
     <Box
       className={classNames(
-        "text-neu-900 font-semibold",
+        "text-neu-900 font-semibold break-words",
         rest.isDashboard ? "text-[.875rem]" : "relative text-base"
       )}
     >
       {!rest.isDashboard && (
         <LuDot className="text-neu-400 absolute -left-[27px]" size={28} />
       )}
-      <p>{title}</p>
+      <p className="break-before-all">{title}</p>
     </Box>
     <Box className="text-sm font-normal text-neu-700 flex items-center gap-1">
       <img src="/src/assets/avi.png" alt="" className="w-4 h-4" />

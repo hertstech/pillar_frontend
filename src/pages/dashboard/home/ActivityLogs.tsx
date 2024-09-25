@@ -2,12 +2,34 @@ import { Box } from "@mui/material";
 import { EmptyPinnedIcon } from "../../../assets/Icons/emptyState";
 import { Link } from "react-router-dom";
 import { LogEntry } from "../serviceUsers/Health/ActivityLog";
-import { logData } from "../../../data/healthRecord";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Spinner } from "../../../components/Spinner";
+import { useRecoilState } from "recoil";
+import {
+  dataState,
+  selectedLogIdsState,
+} from "../../../atoms/monitoring/charts";
 
 export const PinnedActivityLogs = () => {
-  const [isLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [selectedIds] = useRecoilState(selectedLogIdsState);
+  const [logDataState] = useRecoilState(dataState);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setIsLoading(false);
+    }, 3000);
+
+    return () => clearTimeout(timeout);
+  }, []);
+
+  const filteredLogData = logDataState.filter((log: any) =>
+    selectedIds.includes(log.id)
+  );
+
+  console.log("all filtered chart data:", filteredLogData);
+
   return (
     <Box className="w-[282px] min-h-[228px] rounded-xl border-neu-50 border-[1px] mt-4">
       <h2
@@ -16,19 +38,21 @@ export const PinnedActivityLogs = () => {
       >
         Pinned Activities
       </h2>
-      <Box className="p-4">
-        {logData.length > 0 ? (
-          logData.map((log: any, index: number) => (
+      <Box className="p-4 overflow-auto max-h-[750px] scrollbar-hide">
+        {filteredLogData.length > 0 ? (
+          filteredLogData.map((log: any, index: number) => (
             <LogEntry
               key={index}
               date={log.date}
-              title={log.title}
-              author={log.author}
+              title={log.activity_info}
+              author={log.tenet_name}
               isDashboard
             />
           ))
         ) : isLoading ? (
-          <p className="text-center"><Spinner title='Fetching Logs...'/></p>
+          <p className="text-center">
+            <Spinner title="Fetching Logs..." />
+          </p>
         ) : (
           <EmptyPinnedState />
         )}
