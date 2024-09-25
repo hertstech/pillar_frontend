@@ -1,6 +1,6 @@
 import { Box, Button } from "@mui/material";
 import { ModalAlt } from "../../../../components/Modals";
-import { InfoIcon } from "../../../../assets/icons";
+import { InfoIcon } from "../../../../assets/Icons";
 import { useDeleteClinicalNote } from "../../../../api/HealthServiceUser/clinicalNotes";
 
 interface IProps {

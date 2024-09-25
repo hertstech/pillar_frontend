@@ -24,7 +24,7 @@ import ChartComponent from "../ChartComponent";
 import { TableHeadCustom } from "../../../../components/UserTable/TableHeadCustom";
 import { LuLayoutGrid } from "react-icons/lu";
 import { FaListUl, FaPlus, FaTrash } from "react-icons/fa";
-import { PinIcon, SearchIcon } from "../../../../assets/icons";
+import { PinIcon, SearchIcon } from "../../../../assets/Icons";
 import { FaEllipsis } from "react-icons/fa6";
 import { useChartApi } from "../../../../hooks/monitoring/chartsAction";
 

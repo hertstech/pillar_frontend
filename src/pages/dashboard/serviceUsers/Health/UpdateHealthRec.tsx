@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import DrawerComp from "../../../../components/Drawer";
-import { EditIcon } from "../../../../assets/icons";
+import { EditIcon } from "../../../../assets/Icons";
 import { Box, Button } from "@mui/material";
 import { MoveBackComp } from "../../../../components/MoveBack";
 import { CustomSelect } from "../../../../components/Select";
