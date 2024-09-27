@@ -99,7 +99,11 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
       approved: el.approved,
     })) || [];
 
-  const handleApproval = (noteId: string, noteState: boolean) => {
+  const handleApproval = (
+    noteId: string,
+    noteState: boolean,
+    index: number = 100
+  ) => {
     const newApproval = !noteState;
 
     mutate(
@@ -114,6 +118,8 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
               newApproval ? "Approved" : "Disapproved"
             } successfully`,
           });
+          setAnchorEls({});
+          handlePopoverClose(index);
         },
         onError: () => {
           useAlert({
@@ -124,6 +130,9 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
               newApproval ? "Approval" : "Disapproval"
             } unsuccessful`,
           });
+          setAnchorEls({});
+
+          handlePopoverClose(index);
         },
       }
     );
