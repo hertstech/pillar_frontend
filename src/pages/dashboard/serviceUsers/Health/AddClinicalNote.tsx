@@ -113,7 +113,7 @@ const AddClinicalNotes: React.FC<ReasoningModalProps> = ({
                 type="submit"
                 width="10.7rem"
                 buttonName="Submit"
-                disabled={false}
+                disabled={selectedId === undefined}
               />
             </Box>
           </form>

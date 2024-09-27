@@ -42,14 +42,20 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
     event: MouseEvent<HTMLElement>,
     index: number
   ) => {
-    setAnchorEls((prev) => ({ ...prev, [index]: event.currentTarget }));
+    setAnchorEls((prev) => ({
+      ...prev,
+      [index]: prev[index] ? null : event.currentTarget,
+    }));
   };
 
   const handlePopoverClose = (index: number) => {
     setAnchorEls((prev) => ({ ...prev, [index]: null }));
   };
 
-  const handleModalOpen = () => setModalOpen(true);
+  const handleModalOpen = () => {
+    setModalOpen(true);
+    setAnchorEls({});
+  };
 
   const handleModalClose = () => {
     setUpdateModalOpen(false);
@@ -60,12 +66,16 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
     setSelectedId(note.id);
     setSelectedNote(note);
     setUpdateModalOpen(true);
+    setAnchorEls({});
   };
 
-  const handleCloseDelete = () => setShowDelete(false);
+  const handleCloseDelete = () => {
+    setShowDelete(false);
+  };
   const handleOpenDelete = (noteId: string) => {
     setSelectedId(noteId);
     setShowDelete(true);
+    setAnchorEls({});
   };
 
   const openPopover = (index: number) => Boolean(anchorEls[index]);
@@ -81,6 +91,7 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
       approvedBy: el.approved_by_name,
       approvedDate: el.date_created,
       notes: el.notes,
+      approved: false,
     })) || [];
 
   useEffect(() => {
@@ -177,10 +188,13 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
                     {note?.subject || getDiagnosisText()}
                   </p>
                   {item?.treatmentStatus && <LuDot />}
-                  <p className={getStatusColor(item)}>
-                    {item?.treatmentStatus === "on_hold"
-                      ? "On Hold"
-                      : item.treatmentStatus}
+
+                  <p
+                    className={classNames(
+                      getStatusColor(note.approved ? "approved" : "on_hold")
+                    )}
+                  >
+                    {note?.approved ? "Approved" : "Pending Approval"}
                   </p>
                 </Box>
                 <IoEllipsisHorizontalCircleOutline
@@ -193,8 +207,8 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
                   open={openPopover(index)}
                   anchorEl={anchorEls[index]}
                   onClose={() => handlePopoverClose(index)}
-                  // anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                  // transformOrigin={{ vertical: "top", horizontal: "right" }}
+                  anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                  transformOrigin={{ vertical: "top", horizontal: "right" }}
                 >
                   <Box
                     p={2}
@@ -256,7 +270,7 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
         open={modalOpen}
         setOpen={setModalOpen}
         onClose={handleModalClose}
-        selectedId={selectedId as string}
+        selectedId={item.id}
       />
       <UpdateClinicalNotes
         open={updateModalOpen}
