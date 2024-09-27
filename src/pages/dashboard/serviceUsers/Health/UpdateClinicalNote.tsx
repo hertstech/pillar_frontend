@@ -2,41 +2,36 @@ import React, { Dispatch, SetStateAction, useEffect } from "react";
 import { Box } from "@mui/material";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { useForm, FormProvider } from "react-hook-form";
-import { PrimaryButton } from "../../../../../components/Button/primaryButton";
-import InputField from "../../../../../components/InputField";
-import { ModalAlt } from "../../../../../components/Modals";
-import { schema } from "../schemas/clinicalNotes";
-import {
-  useCreateClinicalNote,
-  useUpdateClinicalNote,
-} from "../../../../../api/HealthServiceUser/clinicalNotes";
-import { useAlert } from "../../../../../Utils/useAlert";
+import { PrimaryButton } from "../../../../components/Button/primaryButton";
+import InputField from "../../../../components/InputField";
+import { ModalAlt } from "../../../../components/Modals";
+import { clinicalNoteSchema } from "./schemas/clinicalNotes";
+import { useUpdateClinicalNote } from "../../../../api/HealthServiceUser/clinicalNotes";
+import { useAlert } from "../../../../Utils/useAlert";
+import { IoReturnDownBack } from "react-icons/io5";
 
 interface ReasoningModalProps {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  selectedId: string;
-  noteData?: any;
+  selectedId: string | any;
+  clinicalNoteData: any;
   onClose: (reason: string) => void;
 }
 
-const AddClinicalNotes: React.FC<ReasoningModalProps> = ({
+const UpdateClinicalNotes: React.FC<ReasoningModalProps> = ({
   open,
   setOpen,
   onClose,
   selectedId,
-  noteData,
+  clinicalNoteData,
 }) => {
-
-  console.log(noteData)
-  const createNote = useCreateClinicalNote();
-  const updateNote = useUpdateClinicalNote();
+  const { mutate } = useUpdateClinicalNote();
 
   const methods = useForm({
-    resolver: joiResolver(schema),
+    resolver: joiResolver(clinicalNoteSchema),
     defaultValues: {
-      subject: noteData?.subject || "",
-      notes: noteData?.noteText || "",
+      subject: "",
+      notes: "",
     },
   });
 
@@ -44,34 +39,32 @@ const AddClinicalNotes: React.FC<ReasoningModalProps> = ({
     reset,
     handleSubmit,
     formState: { errors },
-    setValue,
   } = methods;
 
   useEffect(() => {
-    if (noteData) {
-      setValue("subject", noteData.subject);
-      setValue("notes", noteData.noteText);
+    if (open && clinicalNoteData) {
+      reset({
+        subject: clinicalNoteData.subject || "",
+        notes: clinicalNoteData.notes || "",
+      });
     }
-  }, [noteData, setValue]);
+  }, [open, clinicalNoteData, reset]);
 
   const onSubmit = (data: any) => {
+    
     if (!data.subject || !data.notes) {
       console.error("Subject or notes are missing");
       return;
     }
-
-    const payload: {
-      subject: string;
-      notes: string;
-    } = {
-      subject: data.subject,
-      notes: data.notes,
-    };
-
-    if (selectedId) {
-      const updatePayload = { ...payload, selectedId };
-      updateNote.mutate(updatePayload, {
+    mutate(
+      { selectedId, ...data },
+      {
         onSuccess: () => {
+          useAlert({
+            icon: "success",
+            title: "Success",
+            text: "Clinical note updated successfully",
+          });
           onClose(data.notes);
           setOpen(false);
           reset();
@@ -80,29 +73,12 @@ const AddClinicalNotes: React.FC<ReasoningModalProps> = ({
           useAlert({
             icon: "error",
             title: "Failure",
-            text: error?.message || "Clinical note update failed",
+            text: error?.message || "Clinical note not updated",
           });
           reset();
         },
-      });
-    } else {
-      const createPayload = { ...payload, selectedId };
-      createNote.mutate(createPayload, {
-        onSuccess: () => {
-          onClose(data.notes);
-          setOpen(false);
-          reset();
-        },
-        onError: (error) => {
-          useAlert({
-            icon: "error",
-            title: "Failure",
-            text: error?.message || "Clinical note creation failed",
-          });
-          reset();
-        },
-      });
-    }
+      }
+    );
   };
 
   return (
@@ -110,7 +86,7 @@ const AddClinicalNotes: React.FC<ReasoningModalProps> = ({
       <Box className="flex flex-col min-h-[515px] w-[808px]">
         <Box className="flex justify-between items-center">
           <h2 className="text-[1.175rem] font-[600] text-neu-900 leading-6">
-            {selectedId ? "Update Clinical Note" : "New Clinical Note"}
+            Update Clinical Note
           </h2>
           <p
             onClick={() => setOpen(false)}
@@ -147,7 +123,7 @@ const AddClinicalNotes: React.FC<ReasoningModalProps> = ({
               <PrimaryButton
                 type="submit"
                 width="10.7rem"
-                buttonName={selectedId ? "Update" : "Submit"}
+                buttonName="Update note"
                 disabled={false}
               />
             </Box>
@@ -158,4 +134,4 @@ const AddClinicalNotes: React.FC<ReasoningModalProps> = ({
   );
 };
 
-export default AddClinicalNotes;
+export default UpdateClinicalNotes;

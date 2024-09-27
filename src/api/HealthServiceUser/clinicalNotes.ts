@@ -7,17 +7,15 @@ type NotesType = {
   notes: string;
 };
 
-const clinicalNotesBaseUrl = "/create-serviceuser-healthsummary/clinical-notes";
-
 export const useCreateClinicalNote = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data: NotesType) => {
       const { selectedId, subject, notes } = data;
-      return axiosInstance.post(`${clinicalNotesBaseUrl}/${selectedId}`, {
-        subject,
-        notes,
-      });
+      return axiosInstance.post(
+        `/create-serviceuser-healthsummary/clinical-notes/${selectedId}`,
+        { subject, notes }
+      );
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -31,11 +29,14 @@ export const useUpdateClinicalNote = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data: any) => {
-      const { selectedId, subject, note } = data;
-      return axiosInstance.put(`${clinicalNotesBaseUrl}/${selectedId}`, {
-        subject,
-        note,
-      });
+      const { selectedId, subject, notes } = data;
+      return axiosInstance.patch(
+        `/update-serviceuser-healthsummaryrecord/diagnosis/clinical_notes/${selectedId}`,
+        {
+          notes,
+          subject,
+        }
+      );
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["clinicalNotes"] });

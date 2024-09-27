@@ -1,31 +1,17 @@
 import { useState, MouseEvent, useEffect } from "react";
-import {
-  Box,
-  Button,
-  ClickAwayListener,
-  Popover,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Popover, Typography } from "@mui/material";
 import { FaAngleDown } from "react-icons/fa";
 import { IoEllipsisHorizontalCircleOutline } from "react-icons/io5";
 import { LuDot } from "react-icons/lu";
 import { getStatusColor } from "../../../../Utils/getStatusColor";
-import AddClinicalNotes from "./Components/addClinicalNoteModal";
-import UpdateClinicalNotes from "./Components/addClinicalNoteModal";
+import AddClinicalNotes from "./AddClinicalNote";
 import classNames from "classnames";
-import { useGetClinicalNote } from "../../../../api/HealthServiceUser/clinicalNotes";
 import { useFormatDate } from "../../../../Utils/dateToText";
-import { FemaleAvatar } from "../../../../assets/Icons";
 import { DeleteClinicalNote } from "./DeleteClinicalNote";
-
-type NotesType = {
-  approved_by_name: string;
-  date_created: string;
-  subject: string;
-  author: string;
-  notes: string;
-  id: string;
-};
+import { FemaleAvatar } from "../../../../assets/Icons";
+import UpdateClinicalNotes from "./UpdateClinicalNote";
+import { NotesType } from "../../../../types/serviceUserTypes/clinicalNotes";
+import { useGetClinicalNote } from "../../../../api/HealthServiceUser/clinicalNotes";
 
 interface IProps {
   item: {
@@ -94,7 +80,7 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
       createdDate: el.date_created,
       approvedBy: el.approved_by_name,
       approvedDate: el.date_created,
-      noteText: el.notes,
+      notes: el.notes,
     })) || [];
 
   useEffect(() => {
@@ -233,7 +219,7 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
                 </Popover>
               </Box>
               <p className="text-[.825rem] font-[400] leading-5 !my-4 text-neu-500 min-h-[65px]">
-                {note?.noteText}
+                {note?.notes}
               </p>
               <Box className="grid grid-cols-2 mt-4">
                 {renderPersonInfo(
@@ -277,7 +263,7 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
         setOpen={setUpdateModalOpen}
         onClose={handleModalClose}
         selectedId={selectedId as string}
-        noteData={selectedNote}
+        clinicalNoteData={selectedNote}
       />
     </Box>
   );
