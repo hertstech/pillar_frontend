@@ -14,10 +14,10 @@ export const useCreateClinicalNote = () => {
   return useMutation({
     mutationFn: (data: NotesType) => {
       const { selectedId, subject, notes } = data;
-      return axiosInstance.post(
-        `${clinicalNotesBaseUrl}/${selectedId}`,
-        { subject, notes }
-      );
+      return axiosInstance.post(`${clinicalNotesBaseUrl}/${selectedId}`, {
+        subject,
+        notes,
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -47,7 +47,9 @@ export const useDeleteClinicalNote = () => {
   const queryClient = useQueryClient();
   return useMutation<void, Error, string>({
     mutationFn: (selectedId: string) => {
-      return axiosInstance.delete(`${clinicalNotesBaseUrl}/${selectedId}`);
+      return axiosInstance.delete(
+        `delete-serviceuser-healthsummaryrecord/diagnosis/clinical_notes/${selectedId}`
+      );
     },
     onSuccess: () => {
       queryClient.invalidateQueries({

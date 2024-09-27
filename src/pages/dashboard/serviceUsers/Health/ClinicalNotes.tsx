@@ -1,5 +1,11 @@
 import { useState, MouseEvent, useEffect } from "react";
-import { Box, Button, Popover, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  ClickAwayListener,
+  Popover,
+  Typography,
+} from "@mui/material";
 import { FaAngleDown } from "react-icons/fa";
 import { IoEllipsisHorizontalCircleOutline } from "react-icons/io5";
 import { LuDot } from "react-icons/lu";
@@ -179,7 +185,7 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
               key={note.id}
               className="max-h-[208px] h-auto max-w-[582px] p-4 bg-bg rounded-lg mt-4"
             >
-              <Box className="flex items-center justify-between">
+              <Box className="flex items-center justify-between relative">
                 <Box className="flex items-center text-[.825rem] capitalize">
                   <p className="font-[600] leading-4 text-gray-800">
                     {note?.subject || getDiagnosisText()}
@@ -195,13 +201,14 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
                   className="text-neu-500 cursor-pointer"
                   onClick={(e: any) => handleEllipsisClick(e, index)}
                 />
+
                 <Popover
                   id={`popover-${index}`}
                   open={openPopover(index)}
                   anchorEl={anchorEls[index]}
                   onClose={() => handlePopoverClose(index)}
-                  anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                  transformOrigin={{ vertical: "top", horizontal: "right" }}
+                  // anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                  // transformOrigin={{ vertical: "top", horizontal: "right" }}
                 >
                   <Box
                     p={2}

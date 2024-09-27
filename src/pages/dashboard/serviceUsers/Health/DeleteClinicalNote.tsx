@@ -2,6 +2,7 @@ import { Box, Button } from "@mui/material";
 import { ModalAlt } from "../../../../components/Modals";
 import { InfoIcon } from "../../../../assets/Icons";
 import { useDeleteClinicalNote } from "../../../../api/HealthServiceUser/clinicalNotes";
+import { useAlert } from "../../../../Utils/useAlert";
 
 interface IProps {
   id: string;
@@ -15,9 +16,20 @@ export const DeleteClinicalNote = ({ id, showModal, closeModal }: IProps) => {
   const handleDelete = () => {
     mutate(id, {
       onSuccess: () => {
+        useAlert({
+          icon: "success",
+          title: "Clinical note deleted successfully",
+          timer: 2000,
+        });
         closeModal();
       },
       onError: () => {
+        useAlert({
+          icon: "error",
+          title: "Failed operation",
+          text: "Something went wrong try again",
+          showButton: true,
+        });
         closeModal();
       },
     });
