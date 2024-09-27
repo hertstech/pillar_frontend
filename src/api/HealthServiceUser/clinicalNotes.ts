@@ -7,6 +7,11 @@ type NotesType = {
   notes: string;
 };
 
+type ApprovalType = {
+  selectedId: string;
+  approved: boolean;
+};
+
 export const useCreateClinicalNote = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -76,6 +81,24 @@ export const useGetHealthHistoryLog = (selectedId: string) => {
     queryKey: ["activityLog", selectedId],
     queryFn: () => {
       return axiosInstance.get(`/serviceuser-record/history/${selectedId}`);
+    },
+  });
+};
+
+export const useApproveClinicalNote = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: ApprovalType) => {
+      const { selectedId, approved } = data;
+      return axiosInstance.put(
+        `/approve-serviceuser-healthsummaryrecord/diagnosis/clinical_notes/${selectedId}`,
+        {
+          approved,
+        }
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["clinicalNotes"] });
     },
   });
 };

@@ -11,7 +11,11 @@ import { DeleteClinicalNote } from "./DeleteClinicalNote";
 import { FemaleAvatar } from "../../../../assets/Icons";
 import UpdateClinicalNotes from "./UpdateClinicalNote";
 import { NotesType } from "../../../../types/serviceUserTypes/clinicalNotes";
-import { useGetClinicalNote } from "../../../../api/HealthServiceUser/clinicalNotes";
+import {
+  useApproveClinicalNote,
+  useGetClinicalNote,
+} from "../../../../api/HealthServiceUser/clinicalNotes";
+import { useAlert } from "../../../../Utils/useAlert";
 
 interface IProps {
   item: {
@@ -37,13 +41,13 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
 
   const { data, isLoading } = useGetClinicalNote(item.id);
+  const { mutate } = useApproveClinicalNote();
 
   const handleEllipsisClick = (
     event: MouseEvent<HTMLElement>,
     index: number
   ) => {
     setAnchorEls((prev) => ({
-      ...prev,
       [index]: prev[index] ? null : event.currentTarget,
     }));
   };
@@ -72,6 +76,7 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
   const handleCloseDelete = () => {
     setShowDelete(false);
   };
+
   const handleOpenDelete = (noteId: string) => {
     setSelectedId(noteId);
     setShowDelete(true);
@@ -91,8 +96,38 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
       approvedBy: el.approved_by_name,
       approvedDate: el.date_created,
       notes: el.notes,
-      approved: false,
+      approved: el.approved,
     })) || [];
+
+  const handleApproval = (noteId: string, noteState: boolean) => {
+    const newApproval = !noteState;
+
+    mutate(
+      { selectedId: noteId, approved: newApproval },
+      {
+        onSuccess: () => {
+          useAlert({
+            isToast: true,
+            icon: "success",
+            position: "top-start",
+            title: `Notes ${
+              newApproval ? "Approved" : "Disapproved"
+            } successfully`,
+          });
+        },
+        onError: () => {
+          useAlert({
+            isToast: true,
+            icon: "error",
+            position: "top-start",
+            title: `Notes ${
+              newApproval ? "Approval" : "Disapproval"
+            } unsuccessful`,
+          });
+        },
+      }
+    );
+  };
 
   useEffect(() => {
     if (item.treatmentStatus === "completed") {
@@ -188,7 +223,6 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
                     {note?.subject || getDiagnosisText()}
                   </p>
                   {item?.treatmentStatus && <LuDot />}
-
                   <p
                     className={classNames(
                       getStatusColor(note.approved ? "approved" : "on_hold")
@@ -201,7 +235,6 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
                   className="text-neu-500 cursor-pointer"
                   onClick={(e: any) => handleEllipsisClick(e, index)}
                 />
-
                 <Popover
                   id={`popover-${index}`}
                   open={openPopover(index)}
@@ -214,8 +247,11 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
                     p={2}
                     className="flex flex-col gap-3 text-xs !font-medium"
                   >
-                    <button className="capitalize outline-none w-full text-left">
-                      mark as approved
+                    <button
+                      onClick={() => handleApproval(note.id, note.approved)}
+                      className="capitalize outline-none w-full text-left"
+                    >
+                      {note.approved ? "Disapprove note" : "mark as approved"}
                     </button>
                     <button
                       onClick={() => handleEditNote(note)}
@@ -237,15 +273,16 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
               </p>
               <Box className="grid grid-cols-2 mt-4">
                 {renderPersonInfo(
-                  "Created By",
-                  note?.createdBy,
-                  note?.createdDate
+                  "Created by",
+                  note.createdBy,
+                  note.createdDate
                 )}
-                {renderPersonInfo(
-                  "Approved By",
-                  note?.approvedBy,
-                  note?.approvedDate
-                )}
+                {note.approved &&
+                  renderPersonInfo(
+                    "Approved by",
+                    note.approvedBy,
+                    note.approvedDate
+                  )}
               </Box>
             </Box>
           ))
