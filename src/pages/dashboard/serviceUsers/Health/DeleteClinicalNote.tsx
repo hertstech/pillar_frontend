@@ -17,7 +17,9 @@ export const DeleteClinicalNote = ({ id, showModal, closeModal }: IProps) => {
     mutate(id, {
       onSuccess: () => {
         useAlert({
+          isToast: true,
           icon: "success",
+          position: "top-start",
           title: "Clinical note deleted successfully",
           timer: 2000,
         });
@@ -25,9 +27,10 @@ export const DeleteClinicalNote = ({ id, showModal, closeModal }: IProps) => {
       },
       onError: () => {
         useAlert({
+          isToast: true,
           icon: "error",
-          title: "Failed operation",
-          text: "Something went wrong try again",
+          position: "top-start",
+          title: "Unable to delete note, please wait!",
           showButton: true,
         });
         closeModal();

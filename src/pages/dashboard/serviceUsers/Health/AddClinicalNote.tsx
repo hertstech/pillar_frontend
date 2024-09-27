@@ -48,19 +48,21 @@ const AddClinicalNotes: React.FC<ReasoningModalProps> = ({
       {
         onSuccess: () => {
           useAlert({
+            isToast: true,
             icon: "success",
-            title: "Success",
-            text: "Clinical note created successfully",
+            position: "top-start",
+            title: "Clinical note created successfully",
           });
           onClose(data.notes);
           setOpen(false);
           reset();
         },
-        onError: (error: any) => {
+        onError: () => {
           useAlert({
+            isToast: true,
             icon: "error",
-            title: "Failure",
-            text: error?.message || "Clinical not created",
+            position: "top-start",
+            title: "Clinical not created",
           });
           reset();
         },

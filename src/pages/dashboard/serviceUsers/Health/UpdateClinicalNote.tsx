@@ -8,7 +8,6 @@ import { ModalAlt } from "../../../../components/Modals";
 import { clinicalNoteSchema } from "./schemas/clinicalNotes";
 import { useUpdateClinicalNote } from "../../../../api/HealthServiceUser/clinicalNotes";
 import { useAlert } from "../../../../Utils/useAlert";
-import { IoReturnDownBack } from "react-icons/io5";
 
 interface ReasoningModalProps {
   open: boolean;
@@ -51,7 +50,6 @@ const UpdateClinicalNotes: React.FC<ReasoningModalProps> = ({
   }, [open, clinicalNoteData, reset]);
 
   const onSubmit = (data: any) => {
-    
     if (!data.subject || !data.notes) {
       console.error("Subject or notes are missing");
       return;
@@ -61,19 +59,21 @@ const UpdateClinicalNotes: React.FC<ReasoningModalProps> = ({
       {
         onSuccess: () => {
           useAlert({
+            isToast: true,
             icon: "success",
-            title: "Success",
-            text: "Clinical note updated successfully",
+            title: "Clinical note updated successfully",
+            position: "top-start",
           });
           onClose(data.notes);
           setOpen(false);
           reset();
         },
-        onError: (error: any) => {
+        onError: () => {
           useAlert({
             icon: "error",
-            title: "Failure",
-            text: error?.message || "Clinical note not updated",
+            isToast: true,
+            position: "top-start",
+            title: "Clinical note not updated",
           });
           reset();
         },
