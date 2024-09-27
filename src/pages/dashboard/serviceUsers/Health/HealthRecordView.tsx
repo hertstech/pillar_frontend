@@ -10,6 +10,7 @@ import { RecordActivityLog } from "./ActivityLog";
 import { UpdateHealthRec } from "./UpdateHealthRec";
 import { useRecoilState } from "recoil";
 import { drawerState } from "../../../../atoms/drawerState";
+import { getStatusColor } from "../../../../Utils/getStatusColor";
 
 interface IProps {
   data: any;
@@ -53,7 +54,6 @@ export const HealthRecordOverview: React.FC<IProps> = ({
                 id={item.id as string}
                 disableDrawer={item.treatmentStatus === "completed"}
                 getData={() => setOpen(true)}
-                
                 sickness={
                   item?.secondaryDiagnosis
                     ? item?.secondaryDiagnosis
@@ -78,17 +78,7 @@ export const HealthRecordOverview: React.FC<IProps> = ({
                 <p
                   className={classNames(
                     "font-[600] text-[.75rem] py-1 px-3 rounded-[600px] capitalize",
-                    item.treatmentStatus?.toLowerCase() === "pending"
-                      ? "text-[#475367] "
-                      : item.treatmentStatus?.toLowerCase() === "active"
-                      ? "text-[#099137]"
-                      : item.treatmentStatus?.toLowerCase() === "on_hold"
-                      ? "text-[#DD900D] bg-warn-100"
-                      : item.treatmentStatus?.toLowerCase() === "completed"
-                      ? "text-[#1570EF]"
-                      : item.treatmentStatus?.toLowerCase() === "cancelled"
-                      ? "text-[#CB1A14]"
-                      : ""
+                    getStatusColor(item, true)
                   )}
                 >
                   {(item.treatmentStatus === "on_hold" && "On Hold") ||

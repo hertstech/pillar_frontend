@@ -4,22 +4,18 @@ import { FaAngleDown } from "react-icons/fa";
 import { IoEllipsisHorizontalCircleOutline } from "react-icons/io5";
 import { LuDot } from "react-icons/lu";
 import { getStatusColor } from "../../../../Utils/getStatusColor";
-import AddClinicalNotes from "./Components/addClinicalNoteModal";
-import UpdateClinicalNotes from "./Components/addClinicalNoteModal";
+import AddClinicalNotes from "./AddClinicalNote";
 import classNames from "classnames";
-import { useGetClinicalNote } from "../../../../api/HealthServiceUser/clinicalNotes";
 import { useFormatDate } from "../../../../Utils/dateToText";
-import { FemaleAvatar } from "../../../../assets/Icons";
 import { DeleteClinicalNote } from "./DeleteClinicalNote";
-
-type NotesType = {
-  approved_by_name: string;
-  date_created: string;
-  subject: string;
-  author: string;
-  notes: string;
-  id: string;
-};
+import { FemaleAvatar } from "../../../../assets/Icons";
+import UpdateClinicalNotes from "./UpdateClinicalNote";
+import { NotesType } from "../../../../types/serviceUserTypes/clinicalNotes";
+import {
+  useApproveClinicalNote,
+  useGetClinicalNote,
+} from "../../../../api/HealthServiceUser/clinicalNotes";
+import { useAlert } from "../../../../Utils/useAlert";
 
 interface IProps {
   item: {
@@ -45,19 +41,25 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
 
   const { data, isLoading } = useGetClinicalNote(item.id);
+  const { mutate } = useApproveClinicalNote();
 
   const handleEllipsisClick = (
     event: MouseEvent<HTMLElement>,
     index: number
   ) => {
-    setAnchorEls((prev) => ({ ...prev, [index]: event.currentTarget }));
+    setAnchorEls((prev) => ({
+      [index]: prev[index] ? null : event.currentTarget,
+    }));
   };
 
   const handlePopoverClose = (index: number) => {
     setAnchorEls((prev) => ({ ...prev, [index]: null }));
   };
 
-  const handleModalOpen = () => setModalOpen(true);
+  const handleModalOpen = () => {
+    setModalOpen(true);
+    setAnchorEls({});
+  };
 
   const handleModalClose = () => {
     setUpdateModalOpen(false);
@@ -68,12 +70,17 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
     setSelectedId(note.id);
     setSelectedNote(note);
     setUpdateModalOpen(true);
+    setAnchorEls({});
   };
 
-  const handleCloseDelete = () => setShowDelete(false);
+  const handleCloseDelete = () => {
+    setShowDelete(false);
+  };
+
   const handleOpenDelete = (noteId: string) => {
     setSelectedId(noteId);
     setShowDelete(true);
+    setAnchorEls({});
   };
 
   const openPopover = (index: number) => Boolean(anchorEls[index]);
@@ -88,8 +95,39 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
       createdDate: el.date_created,
       approvedBy: el.approved_by_name,
       approvedDate: el.date_created,
-      noteText: el.notes,
+      notes: el.notes,
+      approved: el.approved,
     })) || [];
+
+  const handleApproval = (noteId: string, noteState: boolean) => {
+    const newApproval = !noteState;
+
+    mutate(
+      { selectedId: noteId, approved: newApproval },
+      {
+        onSuccess: () => {
+          useAlert({
+            isToast: true,
+            icon: "success",
+            position: "top-start",
+            title: `Notes ${
+              newApproval ? "Approved" : "Disapproved"
+            } successfully`,
+          });
+        },
+        onError: () => {
+          useAlert({
+            isToast: true,
+            icon: "error",
+            position: "top-start",
+            title: `Notes ${
+              newApproval ? "Approval" : "Disapproval"
+            } unsuccessful`,
+          });
+        },
+      }
+    );
+  };
 
   useEffect(() => {
     if (item.treatmentStatus === "completed") {
@@ -179,16 +217,18 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
               key={note.id}
               className="max-h-[208px] h-auto max-w-[582px] p-4 bg-bg rounded-lg mt-4"
             >
-              <Box className="flex items-center justify-between">
+              <Box className="flex items-center justify-between relative">
                 <Box className="flex items-center text-[.825rem] capitalize">
                   <p className="font-[600] leading-4 text-gray-800">
                     {note?.subject || getDiagnosisText()}
                   </p>
                   {item?.treatmentStatus && <LuDot />}
-                  <p className={getStatusColor(item)}>
-                    {item?.treatmentStatus === "on_hold"
-                      ? "On Hold"
-                      : item.treatmentStatus}
+                  <p
+                    className={classNames(
+                      getStatusColor(note.approved ? "approved" : "on_hold")
+                    )}
+                  >
+                    {note?.approved ? "Approved" : "Pending Approval"}
                   </p>
                 </Box>
                 <IoEllipsisHorizontalCircleOutline
@@ -207,8 +247,11 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
                     p={2}
                     className="flex flex-col gap-3 text-xs !font-medium"
                   >
-                    <button className="capitalize outline-none w-full text-left">
-                      mark as approved
+                    <button
+                      onClick={() => handleApproval(note.id, note.approved)}
+                      className="capitalize outline-none w-full text-left"
+                    >
+                      {note.approved ? "Disapprove note" : "mark as approved"}
                     </button>
                     <button
                       onClick={() => handleEditNote(note)}
@@ -226,19 +269,20 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
                 </Popover>
               </Box>
               <p className="text-[.825rem] font-[400] leading-5 !my-4 text-neu-500 min-h-[65px]">
-                {note?.noteText}
+                {note?.notes}
               </p>
               <Box className="grid grid-cols-2 mt-4">
                 {renderPersonInfo(
-                  "Created By",
-                  note?.createdBy,
-                  note?.createdDate
+                  "Created by",
+                  note.createdBy,
+                  note.createdDate
                 )}
-                {renderPersonInfo(
-                  "Approved By",
-                  note?.approvedBy,
-                  note?.approvedDate
-                )}
+                {note.approved &&
+                  renderPersonInfo(
+                    "Approved by",
+                    note.approvedBy,
+                    note.approvedDate
+                  )}
               </Box>
             </Box>
           ))
@@ -263,14 +307,14 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
         open={modalOpen}
         setOpen={setModalOpen}
         onClose={handleModalClose}
-        selectedId={selectedId as string}
+        selectedId={item.id}
       />
       <UpdateClinicalNotes
         open={updateModalOpen}
         setOpen={setUpdateModalOpen}
         onClose={handleModalClose}
         selectedId={selectedId as string}
-        noteData={selectedNote}
+        clinicalNoteData={selectedNote}
       />
     </Box>
   );

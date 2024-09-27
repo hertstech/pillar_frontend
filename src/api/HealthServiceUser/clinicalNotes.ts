@@ -7,7 +7,10 @@ type NotesType = {
   notes: string;
 };
 
-const clinicalNotesBaseUrl = "/create-serviceuser-healthsummary/clinical-notes";
+type ApprovalType = {
+  selectedId: string;
+  approved: boolean;
+};
 
 export const useCreateClinicalNote = () => {
   const queryClient = useQueryClient();
@@ -15,7 +18,7 @@ export const useCreateClinicalNote = () => {
     mutationFn: (data: NotesType) => {
       const { selectedId, subject, notes } = data;
       return axiosInstance.post(
-        `${clinicalNotesBaseUrl}/${selectedId}`,
+        `/create-serviceuser-healthsummary/clinical-notes/${selectedId}`,
         { subject, notes }
       );
     },
@@ -31,11 +34,14 @@ export const useUpdateClinicalNote = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data: any) => {
-      const { selectedId, subject, note } = data;
-      return axiosInstance.put(`${clinicalNotesBaseUrl}/${selectedId}`, {
-        subject,
-        note,
-      });
+      const { selectedId, subject, notes } = data;
+      return axiosInstance.patch(
+        `/update-serviceuser-healthsummaryrecord/diagnosis/clinical_notes/${selectedId}`,
+        {
+          notes,
+          subject,
+        }
+      );
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["clinicalNotes"] });
@@ -47,7 +53,9 @@ export const useDeleteClinicalNote = () => {
   const queryClient = useQueryClient();
   return useMutation<void, Error, string>({
     mutationFn: (selectedId: string) => {
-      return axiosInstance.delete(`${clinicalNotesBaseUrl}/${selectedId}`);
+      return axiosInstance.delete(
+        `delete-serviceuser-healthsummaryrecord/diagnosis/clinical_notes/${selectedId}`
+      );
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -73,6 +81,24 @@ export const useGetHealthHistoryLog = (selectedId: string) => {
     queryKey: ["activityLog", selectedId],
     queryFn: () => {
       return axiosInstance.get(`/serviceuser-record/history/${selectedId}`);
+    },
+  });
+};
+
+export const useApproveClinicalNote = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: ApprovalType) => {
+      const { selectedId, approved } = data;
+      return axiosInstance.put(
+        `/approve-serviceuser-healthsummaryrecord/diagnosis/clinical_notes/${selectedId}`,
+        {
+          approved,
+        }
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["clinicalNotes"] });
     },
   });
 };

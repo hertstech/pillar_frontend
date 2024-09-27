@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-export const schema = Joi.object({
+export const clinicalNoteSchema = Joi.object({
   subject: Joi.string().required().messages({
     "string.empty": "Subject is required",
   }),

@@ -1,22 +1,18 @@
-import React, { Dispatch, SetStateAction, useEffect } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { Box } from "@mui/material";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { useForm, FormProvider } from "react-hook-form";
-import { PrimaryButton } from "../../../../../components/Button/primaryButton";
-import InputField from "../../../../../components/InputField";
-import { ModalAlt } from "../../../../../components/Modals";
-import { schema } from "../schemas/clinicalNotes";
-import {
-  useCreateClinicalNote,
-  useUpdateClinicalNote,
-} from "../../../../../api/HealthServiceUser/clinicalNotes";
-import { useAlert } from "../../../../../Utils/useAlert";
+import { PrimaryButton } from "../../../../components/Button/primaryButton";
+import InputField from "../../../../components/InputField";
+import { ModalAlt } from "../../../../components/Modals";
+import { clinicalNoteSchema } from "./schemas/clinicalNotes";
+import { useCreateClinicalNote } from "../../../../api/HealthServiceUser/clinicalNotes";
+import { useAlert } from "../../../../Utils/useAlert";
 
 interface ReasoningModalProps {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  selectedId: string;
-  noteData?: any;
+  selectedId: string | any;
   onClose: (reason: string) => void;
 }
 
@@ -25,18 +21,14 @@ const AddClinicalNotes: React.FC<ReasoningModalProps> = ({
   setOpen,
   onClose,
   selectedId,
-  noteData,
 }) => {
-
-  console.log(noteData)
-  const createNote = useCreateClinicalNote();
-  const updateNote = useUpdateClinicalNote();
+  const { mutate } = useCreateClinicalNote();
 
   const methods = useForm({
-    resolver: joiResolver(schema),
+    resolver: joiResolver(clinicalNoteSchema),
     defaultValues: {
-      subject: noteData?.subject || "",
-      notes: noteData?.noteText || "",
+      subject: "",
+      notes: "",
     },
   });
 
@@ -44,65 +36,38 @@ const AddClinicalNotes: React.FC<ReasoningModalProps> = ({
     reset,
     handleSubmit,
     formState: { errors },
-    setValue,
   } = methods;
-
-  useEffect(() => {
-    if (noteData) {
-      setValue("subject", noteData.subject);
-      setValue("notes", noteData.noteText);
-    }
-  }, [noteData, setValue]);
 
   const onSubmit = (data: any) => {
     if (!data.subject || !data.notes) {
       console.error("Subject or notes are missing");
       return;
     }
-
-    const payload: {
-      subject: string;
-      notes: string;
-    } = {
-      subject: data.subject,
-      notes: data.notes,
-    };
-
-    if (selectedId) {
-      const updatePayload = { ...payload, selectedId };
-      updateNote.mutate(updatePayload, {
+    mutate(
+      { selectedId, subject: data.subject, notes: data.notes },
+      {
         onSuccess: () => {
+          useAlert({
+            isToast: true,
+            icon: "success",
+            position: "top-start",
+            title: "Clinical note created successfully",
+          });
           onClose(data.notes);
           setOpen(false);
           reset();
         },
-        onError: (error: any) => {
+        onError: () => {
           useAlert({
+            isToast: true,
             icon: "error",
-            title: "Failure",
-            text: error?.message || "Clinical note update failed",
+            position: "top-start",
+            title: "Clinical not created",
           });
           reset();
         },
-      });
-    } else {
-      const createPayload = { ...payload, selectedId };
-      createNote.mutate(createPayload, {
-        onSuccess: () => {
-          onClose(data.notes);
-          setOpen(false);
-          reset();
-        },
-        onError: (error) => {
-          useAlert({
-            icon: "error",
-            title: "Failure",
-            text: error?.message || "Clinical note creation failed",
-          });
-          reset();
-        },
-      });
-    }
+      }
+    );
   };
 
   return (
@@ -110,7 +75,7 @@ const AddClinicalNotes: React.FC<ReasoningModalProps> = ({
       <Box className="flex flex-col min-h-[515px] w-[808px]">
         <Box className="flex justify-between items-center">
           <h2 className="text-[1.175rem] font-[600] text-neu-900 leading-6">
-            {selectedId ? "Update Clinical Note" : "New Clinical Note"}
+            New Clinical Note
           </h2>
           <p
             onClick={() => setOpen(false)}
@@ -147,8 +112,8 @@ const AddClinicalNotes: React.FC<ReasoningModalProps> = ({
               <PrimaryButton
                 type="submit"
                 width="10.7rem"
-                buttonName={selectedId ? "Update" : "Submit"}
-                disabled={false}
+                buttonName="Submit"
+                disabled={selectedId === undefined}
               />
             </Box>
           </form>
