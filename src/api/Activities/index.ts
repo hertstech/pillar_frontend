@@ -7,7 +7,7 @@ export const useGetPinnedLog = () => {
     queryFn: () => {
       return axiosInstance.get("/hcp/tenet/pinned/activity/logs");
     },
-    refetchInterval: 60000 / 2,
+    refetchInterval: 60000 * 5,
     refetchIntervalInBackground: true,
   });
 };
