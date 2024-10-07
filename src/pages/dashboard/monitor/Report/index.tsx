@@ -50,6 +50,11 @@ export default function Report({
   const [page, setPage] = useState(0);
   const [isGrid, setIsGrid] = useState(true);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const [pinnedStatus, setPinnedStatus] = useState<{ [key: string]: boolean }>(
+    {}
+  );
+
   const {
     showAlert,
     message,
@@ -73,11 +78,33 @@ export default function Report({
 
   const dataFiltered = applySortFilter({ chartId, search });
 
+  // const onPinHandler = async (id: string) => {
+  //   const success = await handlePin(id);
+  //   handleClose();
+  //   if (success) {
+  //     setTimeout(() => {
+  //       setShowAlert(false);
+  //       if (location.pathname === "/dashboard/home") {
+  //         setActiveTab(0);
+  //         triggerRefresh();
+  //         console.log(true);
+  //       } else {
+  //         navigate("/dashboard/home");
+  //       }
+  //     }, 3000);
+  //   }
+  // };
+
   const onPinHandler = async (id: string) => {
     const success = await handlePin(id);
-    handleClose();
     if (success) {
+      setPinnedStatus((prev) => ({
+        ...prev,
+        [id]: true,
+      }));
+
       setTimeout(() => {
+        handleClose();
         setShowAlert(false);
         if (location.pathname === "/dashboard/home") {
           setActiveTab(0);
@@ -90,10 +117,25 @@ export default function Report({
     }
   };
 
+  // const onUnPinHandler = async (id: string) => {
+  //   const success = await handleUnPin(id);
+  //   handleClose();
+  //   if (success) {
+  //     setTimeout(() => {
+  //       setShowAlert(false);
+  //       triggerRefresh();
+  //     }, 3000);
+  //   }
+  // };
+
   const onUnPinHandler = async (id: string) => {
     const success = await handleUnPin(id);
-    handleClose();
     if (success) {
+      setPinnedStatus((prev) => ({
+        ...prev,
+        [id]: false,
+      }));
+      handleClose();
       setTimeout(() => {
         setShowAlert(false);
         triggerRefresh();
@@ -111,6 +153,9 @@ export default function Report({
     }
   };
 
+  // const handleToggle = (id: any) => {
+  // setShow((prevIndex) => (prevIndex === id ? null : id));
+
   const handleClick = (
     event: React.MouseEvent<HTMLButtonElement>,
     chartId: number
@@ -125,6 +170,14 @@ export default function Report({
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
+
+  useEffect(() => {
+    const initialPinnedStatus = chartId.reduce((acc: any, chart: any) => {
+      acc[chart.id] = chart.chartData.status;
+      return acc;
+    }, {});
+    setPinnedStatus(initialPinnedStatus);
+  }, [chartId]);
 
   return (
     <Box>
@@ -309,97 +362,112 @@ export default function Report({
                     )
                     .map((row: any) => (
                       <TableRow hover key={row.id}>
+                        {/* {console.log("all filtered", !row.chartData.status)} */}
                         <TableCell>{row.chartData.title}</TableCell>
                         <TableCell>{row.chartData.reportType}</TableCell>
                         <TableCell>
                           {moment(row.date_created).format("DD/MM/YYYY")}
                         </TableCell>
-                        <TableCell align="left">
-                          <Button
-                            sx={{
-                              borderRadius: "50%",
-                              height: "36px",
-                              minWidth: "36px",
-                            }}
-                            onClick={(e) => handleClick(e, row.id)}
-                          >
-                            <FaEllipsis />
-                          </Button>
 
-                          <Popover
-                            id={id}
-                            open={open}
-                            anchorEl={anchorEl}
-                            onClose={handleClose}
-                            anchorOrigin={{
-                              vertical: "bottom",
-                              horizontal: "left",
-                            }}
-                            transformOrigin={{
-                              vertical: "top",
-                              horizontal: "right",
-                            }}
-                          >
-                            <Box
-                              sx={{
-                                zIndex: 1,
-                                background: "white",
-                                border: "1px #F2F4F7 solid",
-                                borderRadius: 2,
-                                right: "50px",
-
-                                width: "160px",
-                                p: 1,
-                              }}
-                            >
-                              {row.chartData.status === true ? (
-                                <Button
-                                  onClick={() => onUnPinHandler(row.id)}
-                                  sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    textTransform: "none",
-                                    color: "#2E90FA",
-                                    width: "100%",
-                                    justifyContent: "start",
-                                  }}
-                                  startIcon={<PinIcon />}
-                                >
-                                  Unpin
-                                </Button>
-                              ) : (
-                                <Button
-                                  onClick={() => onPinHandler(row.id)}
-                                  sx={{
-                                    display: "flex",
-                                    textTransform: "none",
-                                    color: "#2E90FA",
-                                    width: "100%",
-                                    justifyContent: "flex-start",
-                                  }}
-                                  startIcon={<PinIcon />}
-                                >
-                                  Pin
-                                </Button>
-                              )}
-
+                          <TableCell align="left">
+                            <>
                               <Button
                                 sx={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  textTransform: "none",
-                                  color: "#CB1A14",
-                                  justifyContent: "flex-start",
-                                  width: "100%",
+                                  borderRadius: "50%",
+                                  height: "36px",
+                                  minWidth: "36px",
                                 }}
-                                startIcon={<FaTrash />}
-                                onClick={() => onDeleteHandler(row.id)}
+                                onClick={(e) => handleClick(e, row.id)}
                               >
-                                Delete
+                                <FaEllipsis />
                               </Button>
-                            </Box>
-                          </Popover>
-                        </TableCell>
+
+                              <Popover
+                                id={id}
+                                open={open && currentChartId === row.id}
+                                anchorEl={anchorEl}
+                                onClose={handleClose}
+                                anchorOrigin={{
+                                  vertical: "bottom",
+                                  horizontal: "left",
+                                }}
+                                transformOrigin={{
+                                  vertical: "top",
+                                  horizontal: "right",
+                                }}
+                              >
+                                <Box
+                                  sx={{
+                                    zIndex: 1,
+                                    background: "white",
+                                    border: "1px #F2F4F7 solid",
+                                    borderRadius: 2,
+                                    right: "50px",
+                                    width: "160px",
+                                    p: 1,
+                                  }}
+                                >
+                                  {/* <Button
+                                onClick={() => {
+                                  if (row.chartData.status === false) {
+                                    onUnPinHandler(row.id);
+                                  } else {
+                                    onPinHandler(row.id);
+                                  }
+                                }}
+                                sx={{
+                                  display: "flex",
+                                  textTransform: "none",
+                                  color: "#2E90FA",
+                                  width: "100%",
+                                  justifyContent: "flex-start",
+                                }}
+                                startIcon={<PinIcon />}
+                              >
+                                {row.chartData.status === true
+                                  ? "Unpin"
+                                  : "Pin"}
+                              </Button> */}
+
+                                  <Button
+                                    onClick={() => {
+                                      if (pinnedStatus[row?.id]) {
+                                        onUnPinHandler(row?.id);
+                                      } else {
+                                        onPinHandler(row?.id);
+                                      }
+                                    }}
+                                    sx={{
+                                      display: "flex",
+                                      textTransform: "none",
+                                      color: "#2E90FA",
+                                      width: "100%",
+                                      justifyContent: "flex-start",
+                                    }}
+                                    startIcon={<PinIcon />}
+                                  >
+                                    {pinnedStatus[row?.id] ? "Unpin" : "Pin"}
+                                  </Button>
+
+                                  <Button
+                                    sx={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                      textTransform: "none",
+                                      color: "#CB1A14",
+                                      justifyContent: "flex-start",
+                                      width: "100%",
+                                    }}
+                                    startIcon={<FaTrash />}
+                                    onClick={() => onDeleteHandler(row.id)}
+                                  >
+                                    Delete
+                                  </Button>
+                                </Box>
+                              </Popover>
+                            </>
+                          </TableCell>
+                        
                       </TableRow>
                     ))
                 ) : (

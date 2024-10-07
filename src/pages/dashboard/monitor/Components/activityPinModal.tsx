@@ -1,11 +1,20 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
-import { Box, Checkbox, FormControlLabel, FormGroup } from "@mui/material";
+import {
+  Box,
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
+  Radio,
+  RadioGroup,
+  FormControl,
+  FormLabel,
+} from "@mui/material";
 import { ModalMain } from "../../../../components/Modals";
 import { PrimaryButton } from "../../../../components/Button/primaryButton";
 import { LuListChecks } from "react-icons/lu";
 import { useRecoilState } from "recoil";
 import { selectedLogIdsState } from "../../../../atoms/monitoring/charts";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { useAlert } from "../../../../Utils/useAlert";
 
 interface ActivityPinModalProps {
@@ -19,16 +28,24 @@ const ActivityPinModal: React.FC<ActivityPinModalProps> = ({
   setOpen,
   data,
 }) => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [selectedIds, setSelectedIds] = useRecoilState(selectedLogIdsState);
   const [tempSelectedIds, setTempSelectedIds] = useState<number[]>(selectedIds);
+  const [selectedActivityType, setSelectedActivityType] =
+    useState<string>("Login");
+
+  const filteredLoggingData = data.filter((item) =>
+    selectedActivityType === "Login"
+      ? item.activity_info === "Login Successful"
+      : item.activity_info === "Logout"
+  );
 
   const handleSelect = (id: number) => {
     setTempSelectedIds((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
-  
+
   const handleDeselectAll = () => {
     setTempSelectedIds([]);
   };
@@ -42,13 +59,13 @@ const ActivityPinModal: React.FC<ActivityPinModalProps> = ({
         title: "Logs pinned successfully",
         timer: 3000,
       });
-      navigate("/dashboard/home");
+      // navigate("/dashboard/home");
     }
   };
 
   return (
     <ModalMain width={"620px"} open={open} handleClose={() => setOpen(false)}>
-      <Box className="flex flex-col justify-between h-[436px]">
+      <Box className="flex flex-col justify-between h-[500px]">
         <Box>
           <Box className="flex justify-between items-center">
             <h1 className="text-[1.25rem] font-[600] leading-6">
@@ -66,6 +83,22 @@ const ActivityPinModal: React.FC<ActivityPinModalProps> = ({
           </h2>
         </Box>
 
+        <FormControl component="fieldset">
+          <FormLabel component="legend">Select Activity Type</FormLabel>
+          <RadioGroup
+            row
+            value={selectedActivityType}
+            onChange={(e) => setSelectedActivityType(e.target.value)}
+          >
+            <FormControlLabel value="Login" control={<Radio />} label="Login" />
+            <FormControlLabel
+              value="Logout"
+              control={<Radio />}
+              label="Logout"
+            />
+          </RadioGroup>
+        </FormControl>
+
         <Box className="flex items-center justify-between gap-6 text-sm">
           <p>{tempSelectedIds.length} selected</p>
           {tempSelectedIds.length > 1 && (
@@ -77,9 +110,10 @@ const ActivityPinModal: React.FC<ActivityPinModalProps> = ({
             </p>
           )}
         </Box>
+
         <FormGroup>
           <Box className="flex flex-col overflow-y-auto h-[200px] scrollbar-hide">
-            {data.map((item) => (
+            {filteredLoggingData.map((item) => (
               <FormControlLabel
                 key={item.id}
                 control={

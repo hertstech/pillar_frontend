@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { LuDot } from "react-icons/lu";
-import { useGetHealthHistoryLog } from "../../../../api/HealthServiceUser/clinicalNotes";
+import { useGetHealthHistoryLog } from "../../../../api/Activities/index";
 import { useFormatDate } from "../../../../Utils/dateToText";
 import classNames from "classnames";
 

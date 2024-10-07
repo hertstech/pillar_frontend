@@ -4,17 +4,12 @@ import { Link } from "react-router-dom";
 import { LogEntry } from "../serviceUsers/Health/ActivityLog";
 import { useEffect, useState } from "react";
 import { Spinner } from "../../../components/Spinner";
-import { useRecoilState } from "recoil";
-import {
-  dataState,
-  selectedLogIdsState,
-} from "../../../atoms/monitoring/charts";
+import { useGetPinnedLog } from "../../../api/Activities";
 
 export const PinnedActivityLogs = () => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const [selectedIds] = useRecoilState(selectedLogIdsState);
-  const [logDataState] = useRecoilState(dataState);
+  const { data } = useGetPinnedLog();
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -24,11 +19,11 @@ export const PinnedActivityLogs = () => {
     return () => clearTimeout(timeout);
   }, []);
 
-  const filteredLogData = logDataState.filter((log: any) =>
-    selectedIds.includes(log.id)
+  const filteredLogData = data?.data?.filter(
+    (log: any) => log === "Logging Successful" || log === "Logout" || []
   );
 
-  console.log("all filtered chart data:", filteredLogData);
+  console.log("all pinned data:", data?.data);
 
   return (
     <Box className="w-[282px] min-h-[228px] rounded-xl border-neu-50 border-[1px] mt-4">
@@ -39,12 +34,18 @@ export const PinnedActivityLogs = () => {
         Pinned Activities
       </h2>
       <Box className="p-4 overflow-auto max-h-[750px] scrollbar-hide">
-        {filteredLogData.length > 0 ? (
+        {filteredLogData?.length > 0 ? (
           filteredLogData.map((log: any, index: number) => (
             <LogEntry
               key={index}
               date={log.date}
-              title={log.activity_info}
+              title={
+                log.activity_info.includes("Login Successful")
+                  ? "Successful logging by"
+                  : log.activity_info.includes("Logout")
+                  ? "Logout completed by"
+                  : log.activity_info
+              }
               author={log.tenet_name}
               isDashboard
             />
