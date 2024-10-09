@@ -13,6 +13,7 @@ import { useRecoilState } from "recoil";
 import { selectedLogTypeState } from "../../../../atoms/monitoring/charts";
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "../../../../Utils/useAlert";
+import { LuListChecks } from "react-icons/lu";
 
 interface ActivityPinModalProps {
   open: boolean;
@@ -37,14 +38,18 @@ const ActivityPinModal: React.FC<ActivityPinModalProps> = ({
         : [...prev, activityType]
     );
   };
+  const handleDeselectAll = () => {
+    setSelectedTypes([]);
+    setTempSelectedTypes([]);
+  };
 
   const handleSaveChanges = () => {
     setSelectedTypes(tempSelectedTypes);
 
-    if (tempSelectedTypes.length < 3) {
+    if (tempSelectedTypes.length < 4) {
       useAlert({
         icon: "success",
-        title: "Log types pinned successfully",
+        title: "Types pinned successfully",
         timer: 3000,
       });
       navigate("/dashboard/home");
@@ -72,7 +77,21 @@ const ActivityPinModal: React.FC<ActivityPinModalProps> = ({
         </Box>
 
         <FormControl component="fieldset">
-          <FormLabel component="legend">Select Activity Types </FormLabel>
+          <FormLabel
+            component="legend"
+            className="w-full flex items-center justify-between gap-6 mb-4"
+          >
+            <p>Select Activity Types</p>
+            {tempSelectedTypes.length > 1 && (
+              <p
+                onClick={handleDeselectAll}
+                className="text-pri-600 flex items-center gap-1 font-semibold cursor-pointer text-sm"
+              >
+                Deselect All <LuListChecks />
+              </p>
+            )}
+          </FormLabel>
+
           <FormGroup>
             <FormControlLabel
               control={
@@ -82,17 +101,17 @@ const ActivityPinModal: React.FC<ActivityPinModalProps> = ({
                   onChange={() => handleSelect("Login Successful")}
                 />
               }
-              label="Login Successful"
+              label="Successful Login"
             />
             <FormControlLabel
               control={
                 <Checkbox
                   color="success"
-                  checked={tempSelectedTypes.includes("Login Unsuccessful")}
-                  onChange={() => handleSelect("Login Unsuccessful")}
+                  checked={tempSelectedTypes.includes("Login unsuccessful")}
+                  onChange={() => handleSelect("Login unsuccessful")}
                 />
               }
-              label="Login Unsuccessful"
+              label="Unsuccessful Login"
             />
             <FormControlLabel
               control={
@@ -112,7 +131,7 @@ const ActivityPinModal: React.FC<ActivityPinModalProps> = ({
           onClick={handleSaveChanges}
           width="45%"
           buttonName="Update settings"
-          disabled={tempSelectedTypes.length === 0}
+          disabled={tempSelectedTypes.length > 3}
         />
       </Box>
     </ModalMain>

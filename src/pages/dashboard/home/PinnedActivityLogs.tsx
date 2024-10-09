@@ -5,10 +5,14 @@ import { LogEntry } from "../serviceUsers/Health/ActivityLog";
 import { useEffect, useState } from "react";
 import { Spinner } from "../../../components/Spinner";
 import { useGetPinnedLog } from "../../../api/Activities";
+import { useRecoilState } from "recoil";
+import { selectedLogTypeState } from "../../../atoms/monitoring/charts";
 
 export const PinnedActivityLogs = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [validLogTypes] = useRecoilState(selectedLogTypeState);
 
+  console.log(validLogTypes);
   const { data } = useGetPinnedLog();
 
   useEffect(() => {
@@ -20,16 +24,21 @@ export const PinnedActivityLogs = () => {
   }, []);
 
   const filteredLogData = data?.data
-    ?.filter(
-      (log: any) =>
-        log === "Logging Successful" ||
-        log === "Logout" ||
-        "Logging Successful" ||
-        []
-    )
+    ?.filter((log: any) => validLogTypes.includes(log.activity_info))
     .slice(0, 11);
 
-  console.log("all pinned data:", filteredLogData);
+  const getLogDescription = (activityInfo: string) => {
+    switch (true) {
+      case activityInfo.includes("Login Successful"):
+        return "Successful logging by";
+      case activityInfo.includes("Logout"):
+        return "Logout completed by";
+      case activityInfo.includes("Login unsuccessful"):
+        return "Failed attempt to log in by";
+      default:
+        return activityInfo;
+    }
+  };
 
   return (
     <Box className="w-[282px] min-h-[228px] rounded-xl border-neu-50 border-[1px] mt-4">
@@ -45,15 +54,7 @@ export const PinnedActivityLogs = () => {
             <LogEntry
               key={index}
               date={log.date}
-              title={
-                log.activity_info.includes("Login Successful")
-                  ? "Successful logging by"
-                  : log.activity_info.includes("Logout")
-                  ? "Logout completed by"
-                  : log.activity_info.includes("Login unsuccessful")
-                  ? "Failed attempt to log in by"
-                  : log.activity_info
-              }
+              title={getLogDescription(log.activity_info)}
               author={log.tenet_name}
               isDashboard
             />
