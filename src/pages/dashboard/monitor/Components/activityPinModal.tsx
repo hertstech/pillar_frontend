@@ -4,17 +4,14 @@ import {
   Checkbox,
   FormControlLabel,
   FormGroup,
-  Radio,
-  RadioGroup,
   FormControl,
   FormLabel,
 } from "@mui/material";
 import { ModalMain } from "../../../../components/Modals";
 import { PrimaryButton } from "../../../../components/Button/primaryButton";
-import { LuListChecks } from "react-icons/lu";
 import { useRecoilState } from "recoil";
-import { selectedLogIdsState } from "../../../../atoms/monitoring/charts";
-// import { useNavigate } from "react-router-dom";
+import { selectedLogTypeState } from "../../../../atoms/monitoring/charts";
+import { useNavigate } from "react-router-dom";
 import { useAlert } from "../../../../Utils/useAlert";
 
 interface ActivityPinModalProps {
@@ -26,46 +23,37 @@ interface ActivityPinModalProps {
 const ActivityPinModal: React.FC<ActivityPinModalProps> = ({
   open,
   setOpen,
-  data,
 }) => {
-  // const navigate = useNavigate();
-  const [selectedIds, setSelectedIds] = useRecoilState(selectedLogIdsState);
-  const [tempSelectedIds, setTempSelectedIds] = useState<number[]>(selectedIds);
-  const [selectedActivityType, setSelectedActivityType] =
-    useState<string>("Login");
+  const navigate = useNavigate();
+  const [selectedTypes, setSelectedTypes] =
+    useRecoilState<string[]>(selectedLogTypeState);
+  const [tempSelectedTypes, setTempSelectedTypes] =
+    useState<string[]>(selectedTypes);
 
-  const filteredLoggingData = data.filter((item) =>
-    selectedActivityType === "Login"
-      ? item.activity_info === "Login Successful"
-      : item.activity_info === "Logout"
-  );
-
-  const handleSelect = (id: number) => {
-    setTempSelectedIds((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+  const handleSelect = (activityType: string) => {
+    setTempSelectedTypes((prev) =>
+      prev.includes(activityType)
+        ? prev.filter((item) => item !== activityType)
+        : [...prev, activityType]
     );
   };
 
-  const handleDeselectAll = () => {
-    setTempSelectedIds([]);
-  };
-
   const handleSaveChanges = () => {
-    setSelectedIds(tempSelectedIds);
+    setSelectedTypes(tempSelectedTypes);
 
-    if (tempSelectedIds.length < 11) {
+    if (tempSelectedTypes.length < 3) {
       useAlert({
         icon: "success",
-        title: "Logs pinned successfully",
+        title: "Log types pinned successfully",
         timer: 3000,
       });
-      // navigate("/dashboard/home");
+      navigate("/dashboard/home");
     }
   };
 
   return (
     <ModalMain width={"620px"} open={open} handleClose={() => setOpen(false)}>
-      <Box className="flex flex-col justify-between h-[500px]">
+      <Box className="flex flex-col justify-between h-[350px]">
         <Box>
           <Box className="flex justify-between items-center">
             <h1 className="text-[1.25rem] font-[600] leading-6">
@@ -84,63 +72,47 @@ const ActivityPinModal: React.FC<ActivityPinModalProps> = ({
         </Box>
 
         <FormControl component="fieldset">
-          <FormLabel component="legend">Select Activity Type</FormLabel>
-          <RadioGroup
-            row
-            value={selectedActivityType}
-            onChange={(e) => setSelectedActivityType(e.target.value)}
-          >
-            <FormControlLabel value="Login" control={<Radio />} label="Login" />
+          <FormLabel component="legend">Select Activity Types </FormLabel>
+          <FormGroup>
             <FormControlLabel
-              value="Logout"
-              control={<Radio />}
+              control={
+                <Checkbox
+                  color="success"
+                  checked={tempSelectedTypes.includes("Login Successful")}
+                  onChange={() => handleSelect("Login Successful")}
+                />
+              }
+              label="Login Successful"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  color="success"
+                  checked={tempSelectedTypes.includes("Login Unsuccessful")}
+                  onChange={() => handleSelect("Login Unsuccessful")}
+                />
+              }
+              label="Login Unsuccessful"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  color="success"
+                  checked={tempSelectedTypes.includes("Logout")}
+                  onChange={() => handleSelect("Logout")}
+                />
+              }
               label="Logout"
             />
-          </RadioGroup>
+          </FormGroup>
         </FormControl>
 
-        <Box className="flex items-center justify-between gap-6 text-sm">
-          <p>{tempSelectedIds.length} selected</p>
-          {tempSelectedIds.length > 1 && (
-            <p
-              onClick={handleDeselectAll}
-              className="text-pri-600 flex items-center gap-1 font-semibold cursor-pointer"
-            >
-              Deselect All <LuListChecks />
-            </p>
-          )}
-        </Box>
-
-        <FormGroup>
-          <Box className="flex flex-col overflow-y-auto h-[200px] scrollbar-hide">
-            {filteredLoggingData.map((item) => (
-              <FormControlLabel
-                key={item.id}
-                control={
-                  <Checkbox
-                    color="success"
-                    checked={tempSelectedIds.includes(item.id)}
-                    onChange={() => handleSelect(item.id)}
-                  />
-                }
-                label={
-                  <Box className="flex gap-2 truncate overflow-hidden max-w-[530px]">
-                    <span className="truncate overflow-hidden max-w-[350px]">
-                      {item.activity_info}
-                    </span>{" "}
-                    by <b>{item.tenet_name}</b>
-                  </Box>
-                }
-              />
-            ))}
-          </Box>
-        </FormGroup>
-
+        {/* Save Button */}
         <PrimaryButton
           onClick={handleSaveChanges}
           width="45%"
           buttonName="Update settings"
-          disabled={tempSelectedIds.length > 10}
+          disabled={tempSelectedTypes.length === 0}
         />
       </Box>
     </ModalMain>

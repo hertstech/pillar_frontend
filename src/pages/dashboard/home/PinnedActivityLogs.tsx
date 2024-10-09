@@ -19,11 +19,17 @@ export const PinnedActivityLogs = () => {
     return () => clearTimeout(timeout);
   }, []);
 
-  const filteredLogData = data?.data?.filter(
-    (log: any) => log === "Logging Successful" || log === "Logout" || []
-  );
+  const filteredLogData = data?.data
+    ?.filter(
+      (log: any) =>
+        log === "Logging Successful" ||
+        log === "Logout" ||
+        "Logging Successful" ||
+        []
+    )
+    .slice(0, 11);
 
-  console.log("all pinned data:", data?.data);
+  console.log("all pinned data:", filteredLogData);
 
   return (
     <Box className="w-[282px] min-h-[228px] rounded-xl border-neu-50 border-[1px] mt-4">
@@ -44,6 +50,8 @@ export const PinnedActivityLogs = () => {
                   ? "Successful logging by"
                   : log.activity_info.includes("Logout")
                   ? "Logout completed by"
+                  : log.activity_info.includes("Login unsuccessful")
+                  ? "Failed attempt to log in by"
                   : log.activity_info
               }
               author={log.tenet_name}

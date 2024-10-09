@@ -35,8 +35,8 @@ export const pinnedChartsState = selector({
 });
 
 // Activity log pinning
-export const selectedLogIdsState = atom<number[]>({
-  key: "selectedLogIdsState",
+export const selectedLogTypeState = atom<string[]>({
+  key: "selectedLogTypeState",
   default: [],
   effects_UNSTABLE: [persistAtom],
 });
