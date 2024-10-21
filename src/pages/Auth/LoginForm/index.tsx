@@ -40,7 +40,7 @@ export default function LoginPage() {
     if (!isValidEmail(formData.email)) {
       setError("Email is Invalid");
       return;
-    }
+    } 
 
     try {
       const response = await axiosInstance.post("/auth/login", formData);

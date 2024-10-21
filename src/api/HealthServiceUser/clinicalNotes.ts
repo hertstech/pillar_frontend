@@ -76,15 +76,6 @@ export const useGetClinicalNote = (selectedId: string) => {
   });
 };
 
-export const useGetHealthHistoryLog = (selectedId: string) => {
-  return useQuery({
-    queryKey: ["activityLog", selectedId],
-    queryFn: () => {
-      return axiosInstance.get(`/serviceuser-record/history/${selectedId}`);
-    },
-  });
-};
-
 export const useApproveClinicalNote = () => {
   const queryClient = useQueryClient();
   return useMutation({

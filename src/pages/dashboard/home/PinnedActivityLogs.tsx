@@ -4,17 +4,16 @@ import { Link } from "react-router-dom";
 import { LogEntry } from "../serviceUsers/Health/ActivityLog";
 import { useEffect, useState } from "react";
 import { Spinner } from "../../../components/Spinner";
+import { useGetPinnedLog } from "../../../api/Activities";
 import { useRecoilState } from "recoil";
-import {
-  dataState,
-  selectedLogIdsState,
-} from "../../../atoms/monitoring/charts";
+import { selectedLogTypeState } from "../../../atoms/monitoring/charts";
 
 export const PinnedActivityLogs = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [validLogTypes] = useRecoilState(selectedLogTypeState);
 
-  const [selectedIds] = useRecoilState(selectedLogIdsState);
-  const [logDataState] = useRecoilState(dataState);
+  console.log(validLogTypes);
+  const { data } = useGetPinnedLog();
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -24,11 +23,22 @@ export const PinnedActivityLogs = () => {
     return () => clearTimeout(timeout);
   }, []);
 
-  const filteredLogData = logDataState.filter((log: any) =>
-    selectedIds.includes(log.id)
-  );
+  const filteredLogData = data?.data
+    ?.filter((log: any) => validLogTypes.includes(log.activity_info))
+    .slice(0, 11);
 
-  console.log("all filtered chart data:", filteredLogData);
+  const getLogDescription = (activityInfo: string) => {
+    switch (true) {
+      case activityInfo.includes("Login Successful"):
+        return "Successful logging by";
+      case activityInfo.includes("Logout"):
+        return "Logout completed by";
+      case activityInfo.includes("Login unsuccessful"):
+        return "Failed attempt to log in by";
+      default:
+        return activityInfo;
+    }
+  };
 
   return (
     <Box className="w-[282px] min-h-[228px] rounded-xl border-neu-50 border-[1px] mt-4">
@@ -39,12 +49,12 @@ export const PinnedActivityLogs = () => {
         Pinned Activities
       </h2>
       <Box className="p-4 overflow-auto max-h-[750px] scrollbar-hide">
-        {filteredLogData.length > 0 ? (
+        {filteredLogData?.length > 0 ? (
           filteredLogData.map((log: any, index: number) => (
             <LogEntry
               key={index}
               date={log.date}
-              title={log.activity_info}
+              title={getLogDescription(log.activity_info)}
               author={log.tenet_name}
               isDashboard
             />

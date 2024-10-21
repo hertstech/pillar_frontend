@@ -4,7 +4,7 @@ import Page from "../../../components/PageWrapper";
 import { useChartData, useMonitoringData } from "../../../hooks/monitoring";
 import { useSelector } from "react-redux";
 import Analytics from "./Analytics";
-import { PinnedActivityLogs } from "./ActivityLogs";
+import { PinnedActivityLogs } from "./PinnedActivityLogs";
 
 export default function Home() {
   const user = useSelector((state: any) => state.user.user);

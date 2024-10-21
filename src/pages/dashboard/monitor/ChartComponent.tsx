@@ -33,12 +33,12 @@ interface Dataset {
 }
 
 const colors = [
-  "#560BAD",
-  "#F72585",
-  "#32DDFF",
-  "#17ACB5",
-  "#3F37C9",
-  "#0003EB",
+  "#6172F3",
+  "#8098F9",
+  "#A4BCFD",
+  "#C7D7FE",
+  "#E0EAFF",
+  "#EEF4FF",
 ];
 
 export default function ChartComponent({
@@ -80,7 +80,7 @@ export default function ChartComponent({
     },
     scales: {
       x: {
-        stacked: chart?.chartType === "STACKED" ? true : false,
+        stacked: chart?.chartType === "STACKED" ,
         ticks: {
           stepSize: 1,
         },
@@ -91,7 +91,7 @@ export default function ChartComponent({
         grace: 1,
       },
       y: {
-        stacked: chart?.chartType === "STACKED" ? true : false,
+        stacked: chart?.chartType === "STACKED" ,
         ticks: {
           stepSize: 1,
           crossAlign: "start",
