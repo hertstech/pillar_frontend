@@ -119,7 +119,7 @@ export default function StepThree({ data }: any) {
           }}
         >
           <Link
-            href="/dashboard"
+            href="/dashboard/home"
             fontWeight={500}
             color="#FFF"
             underline="none"
