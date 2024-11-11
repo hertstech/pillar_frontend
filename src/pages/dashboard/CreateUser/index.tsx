@@ -125,8 +125,8 @@ export default function CreateUser() {
 
   const steps = [
     {
-      label: "Demographics",
-      description: "Basic demographic information",
+      label: "Profile",
+      description: "Basic profile information",
       content: <StepOne formData={formData} handleChange={handleChange} />,
     },
     {

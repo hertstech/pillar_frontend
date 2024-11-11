@@ -158,7 +158,7 @@ export default function StepOne({ formData, handleChange }: any) {
             <MenuItem disabled value="Choose report type">
               Choose report type
             </MenuItem>
-            <MenuItem value="Demographics">Demographics</MenuItem>
+            <MenuItem value="Profile">Profile</MenuItem>
             <MenuItem value="Health Information">Health Information</MenuItem>
             <MenuItem value="Medication">Medication</MenuItem>
           </TextField>
@@ -234,7 +234,7 @@ export default function StepOne({ formData, handleChange }: any) {
 
           <label htmlFor="demographics" style={{ marginTop: "20px" }}>
             Field 2
-            {formData.reportType === "Demographics" && (
+            {formData.reportType === "Profile" && (
               <div style={{ display: "flex", gap: 10 }}>
                 <div style={{ width: "50%" }}>
                   <Select

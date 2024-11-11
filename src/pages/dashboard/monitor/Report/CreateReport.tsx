@@ -460,7 +460,7 @@ export default function CreateReport() {
 
                 {activeStep > 0 && activeStep <= 1 && (
                   <>
-                    {formData.reportType === "Demographics" && (
+                    {formData.reportType === "Profile" && (
                       <Buttons
                         loading={isLoading}
                         onClick={handleSubmitDemographicChart}

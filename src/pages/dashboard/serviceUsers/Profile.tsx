@@ -39,13 +39,13 @@ interface PropType {
   client: client;
 }
 
-export default function Demogrphics({ client }: PropType) {
+export default function Profile({ client }: PropType) {
   const { id } = useParams();
 
   const navigate = useNavigate();
 
-  const navToUpdateDemographics = () => {
-    navigate(`/dashboard/user/${id}/update/0`);
+  const navToUpdateProfile = () => {
+    navigate(`/dashboard/user/${id}/update`);
   };
 
   const formattedValue = (value: string) => {
@@ -81,7 +81,7 @@ export default function Demogrphics({ client }: PropType) {
                 "&:hover": { backgroundColor: "#FFF" },
                 gap: 1,
               }}
-              onClick={navToUpdateDemographics}
+              onClick={navToUpdateProfile}
             >
               <svg
                 width="18"

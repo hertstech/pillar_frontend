@@ -20,7 +20,7 @@ import { axiosInstance } from "../../../Utils";
 import { dispatchClient } from "../../../redux/clientSlice";
 import { relations } from "../serviceUsers/shared";
 
-export default function Demographics() {
+export default function Profile() {
   const client = useSelector((state: any) => state.client.clients.tab1[0]);
 
   const user = useSelector((state: any) => state.user.user);
@@ -114,7 +114,7 @@ export default function Demographics() {
     <Box>
       <div style={{ textAlign: "center", marginBottom: 25 }}>
         <Typography fontWeight={700} color={"#101928"} fontSize={32}>
-          Update Demographics
+          Update Profile
         </Typography>
       </div>
 

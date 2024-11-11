@@ -9,7 +9,7 @@ import {
 import { useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import HeaderTabs from "../../../components/HeaderTabs";
-import Demogrphics from "./Demogrphics";
+import Profile from "./Profile";
 import Health from "./Health";
 import Assessment from "./Medication";
 import Allergies from "./Allergies";
@@ -48,8 +48,8 @@ export default function Singleuser() {
       content: <Overview client={client} />,
     },
     {
-      label: "Demographics",
-      content: <Demogrphics client={client} />,
+      label: "Profile",
+      content: <Profile client={client} />,
     },
     {
       label: "Health Information",
@@ -82,7 +82,7 @@ export default function Singleuser() {
     if (user.role === "admin" || user.role === "superadmin") {
       return true;
     } else {
-      return tab.label === "Demographics" || tab.label === "Messages";
+      return tab.label === "Profile" || tab.label === "Messages";
     }
   });
 

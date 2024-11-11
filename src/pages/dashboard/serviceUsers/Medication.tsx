@@ -623,7 +623,7 @@ export default function Assessment({ client }: PropType) {
             color={"#101928"}
             sx={{ py: 2 }}
           >
-            Demographics
+            Profile
           </Typography>
           <Divider />
 
