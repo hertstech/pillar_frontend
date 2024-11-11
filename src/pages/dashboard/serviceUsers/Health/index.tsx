@@ -278,7 +278,9 @@ export default function Health({ client }: PropType) {
             pb: 4,
           }}
         >
-          <Avatar sx={{ bgcolor:'#B2DDFF' }}>{client?.firstName.slice(0, 1)}</Avatar>
+          <Avatar sx={{ bgcolor: "#B2DDFF" }}>
+            {client?.firstName.slice(0, 1)}
+          </Avatar>
           <div className="">
             <Typography
               sx={{
@@ -314,7 +316,7 @@ export default function Health({ client }: PropType) {
             color={"#101928"}
             sx={{ py: 2 }}
           >
-            Demographics
+            Profile
           </Typography>
           <Divider />
 

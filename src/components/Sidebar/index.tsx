@@ -80,6 +80,8 @@ export default function Sidebar() {
       setIsLoading(false);
     }
   };
+  const disabledNavItems = [3, 4, 6, 7];
+
   return (
     <aside className={Styles.container}>
       <nav>
@@ -97,6 +99,12 @@ export default function Sidebar() {
               className={({ isActive }) =>
                 isActive ? `${Styles.activeLink}` : `${Styles.notActiveLink}`
               }
+              style={{
+                pointerEvents: disabledNavItems.includes(item.id)
+                  ? "none"
+                  : "auto",
+                opacity: disabledNavItems.includes(item.id) ? 0.5 : 1,
+              }}
             >
               <span
                 style={{

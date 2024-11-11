@@ -522,7 +522,6 @@ export default function Allergies({ client }: PropType) {
             )}
           </>
         )}
-
       </Box>
 
       <Box
@@ -577,7 +576,7 @@ export default function Allergies({ client }: PropType) {
             color={"#101928"}
             sx={{ py: 2 }}
           >
-            Demographics
+            Profile
           </Typography>
           <Divider />
 

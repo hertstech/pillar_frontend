@@ -1,8 +1,7 @@
 import { Box, Tab, Tabs, Typography } from "@mui/material";
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { SpinLoader } from "../NoResult";
-import { useParams } from "react-router-dom";
-
 interface LinkItem {
   label: string;
   icon?: React.ReactElement;
@@ -25,15 +24,15 @@ export default function HeaderTabs({
   setActiveTab,
 }: TabProps) {
   const [value, setValue] = React.useState(0);
-
-  const { tabID } = useParams();
+  const { search } = useLocation();
+  const tabID = new URLSearchParams(search).get("tabID");
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
     setActiveTab?.(newValue);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     setValue(tabID ? parseInt(tabID, 10) : 0);
   }, [tabID]);
 
@@ -68,7 +67,6 @@ export default function HeaderTabs({
                   fontWeight: value === index ? 600 : 400,
                   fontFamily: "fontBold",
                 }}
-                // iconProps={style:{color:'inherit',fill:'inherit}'}
                 key={index}
                 label={tab.label}
                 icon={tab.icon}
@@ -82,7 +80,6 @@ export default function HeaderTabs({
             ))}
           </Tabs>
 
-          {/* Display the content of the selected tab */}
           <Box
             sx={{
               p: "20px",

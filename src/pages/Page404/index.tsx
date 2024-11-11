@@ -24,7 +24,7 @@ export default function Page404() {
         </Typography>
 
         <Button
-          to="/dashboard"
+          to="/dashboard/home"
           color="success"
           size="large"
           variant="contained"
