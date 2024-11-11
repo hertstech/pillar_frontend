@@ -63,7 +63,7 @@ export const list = [
       </svg>
     ),
     title: "birth record",
-    to: "/",
+    to: "#",
   },
   {
     icon: (
@@ -85,6 +85,6 @@ export const list = [
       </svg>
     ),
     title: "death record",
-    to: "/",
+    to: "#",
   },
 ];

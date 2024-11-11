@@ -80,7 +80,7 @@ export default function ChartComponent({
     },
     scales: {
       x: {
-        stacked: chart?.chartType === "STACKED" ,
+        stacked: chart?.chartType === "STACKED",
         ticks: {
           stepSize: 1,
         },
@@ -91,13 +91,13 @@ export default function ChartComponent({
         grace: 1,
       },
       y: {
-        stacked: chart?.chartType === "STACKED" ,
+        stacked: chart?.chartType === "STACKED",
         ticks: {
           stepSize: 1,
           crossAlign: "start",
         },
         grid: {
-          display: false, 
+          display: false,
         },
         beginAtZero: true,
         grace: 1,
@@ -110,6 +110,7 @@ export default function ChartComponent({
   const datasets: Dataset[] = [];
 
   const labels = Object?.keys(chartResponse);
+
   const dataz = labels?.map((state) =>
     Object?.values(chartResponse[state]).reduce(
       (acc: any, val: any) => acc + val,
@@ -118,17 +119,19 @@ export default function ChartComponent({
   );
   const backgroundColors = colors.slice(0, labels.length);
 
+  const uniqueLabels = new Set();
   Object.keys(chartResponse).forEach((state, index) => {
     let colorIndex = index % colors.length;
+
     Object.entries(chartResponse[state]).forEach(([label, value]: any) => {
-      const existingDataset = datasets.find(
-        (dataset) => dataset.label === label
-      );
-      if (existingDataset) {
-        existingDataset.data.push(value);
-      } else {
+      const capitalizedLabel =
+        label.charAt(0).toUpperCase() + label.slice(1).toLowerCase();
+
+      if (!uniqueLabels.has(capitalizedLabel)) {
+        uniqueLabels.add(capitalizedLabel);
+
         datasets.push({
-          label: label,
+          label: capitalizedLabel,
           data: [value],
           backgroundColor: colors[colorIndex],
           barPercentage: 1.5,
@@ -136,7 +139,15 @@ export default function ChartComponent({
           maxBarThickness: 40,
           borderRadius: 3,
         });
+      } else {
+        const existingDataset = datasets.find(
+          (dataset) => dataset.label === capitalizedLabel
+        );
+        if (existingDataset) {
+          existingDataset.data.push(value);
+        }
       }
+
       colorIndex = (colorIndex + 1) % colors.length;
     });
   });
