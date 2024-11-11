@@ -52,7 +52,7 @@ export default function LoginPage() {
         })
       );
 
-      navigate("/dashboard", { replace: true });
+      navigate("/dashboard/home", { replace: true });
 
       return useAlert({
         icon: "success",

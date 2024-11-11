@@ -20,7 +20,7 @@ import { axiosInstance } from "../../../Utils";
 import { dispatchClient } from "../../../redux/clientSlice";
 import { relations } from "../serviceUsers/shared";
 
-export default function Demographics() {
+export default function Profile() {
   const client = useSelector((state: any) => state.client.clients.tab1[0]);
 
   const user = useSelector((state: any) => state.user.user);
@@ -45,8 +45,8 @@ export default function Demographics() {
     address: client?.address || "",
     state: client?.state || "",
     lga: client?.lga || "",
-    height: client?.height || "",
-    weight: client?.weight || "",
+    height: client?.height ? parseFloat(client.height) : 0,
+    weight: client?.weight ? parseFloat(client.weight) : 0,
     parentOne: client?.parentOne || "",
     parentOneNumber: client?.parentOneNumber || "",
     parentOneNHR_ID: client?.parentOneNHR_ID || "",
@@ -67,7 +67,8 @@ export default function Demographics() {
   const handleChange = (name: string, value: any) => {
     setEditForm({
       ...editForm,
-      [name || ""]: value,
+      [name]:
+        name === "height" || name === "weight" ? parseFloat(value) : value,
     });
   };
 
@@ -96,9 +97,9 @@ export default function Demographics() {
 
       // console.log(res.data);
       if (user.role === "superadmin" || user.role === "admin") {
-        navigate(`/dashboard/user/${id}/1`);
+        navigate(`/dashboard/user/${id}?tabId=1`);
       } else {
-        navigate(`/dashboard/user/${id}/0`);
+        navigate(`/dashboard/user/${id}`);
       }
     } catch (error) {
       setIsLoad(false);
@@ -114,7 +115,7 @@ export default function Demographics() {
     <Box>
       <div style={{ textAlign: "center", marginBottom: 25 }}>
         <Typography fontWeight={700} color={"#101928"} fontSize={32}>
-          Update Demographics
+          Update Profile
         </Typography>
       </div>
 

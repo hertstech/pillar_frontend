@@ -586,7 +586,7 @@ export default function Referral({ client }: PropType) {
             color={"#101928"}
             sx={{ py: 2 }}
           >
-            Demographics
+            Profile
           </Typography>
           <Divider />
 

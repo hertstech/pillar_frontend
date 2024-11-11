@@ -80,7 +80,7 @@ function EmptyPinnedState() {
           No pinned activity yet
         </p>
         <Link
-          to={"/dashboard/monitoring"}
+          to={"/dashboard/monitoring?tabID=1"}
           className="text-pri-600 text-base leading-6 font-semibold"
         >
           Got to Activity Log

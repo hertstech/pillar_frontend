@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Card, Grid, Stack, Tab, Tabs } from "@mui/material";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import Demographics from "./Demographics";
+import Profile from "./Profile";
 import HealthRecord from "./HealthRecord";
 import MedicationRecord from "./MedicationRecord";
 import AllergyRecord from "./AllergyRecord";
@@ -42,7 +42,7 @@ export default function CreateRecord() {
 
   const tabs = [
     {
-      label: "Demographics",
+      label: "Profile",
       icon: (
         <svg
           width="42"
@@ -67,7 +67,7 @@ export default function CreateRecord() {
           />
         </svg>
       ),
-      content: <Demographics />,
+      content: <Profile />,
     },
     {
       label: "Health Information",
@@ -233,7 +233,7 @@ export default function CreateRecord() {
     if (user.role === "admin" || user.role === "superadmin") {
       return true;
     } else {
-      return tab.label === "Demographics";
+      return tab.label === "Profile";
     }
   });
 

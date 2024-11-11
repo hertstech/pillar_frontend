@@ -51,13 +51,13 @@ axiosInstance.interceptors.response.use(
       error?.response.data.detail === "access-token expired"
     ) {
       try {
-        console.log("Token expired. Refreshing...");
+        // console.log("Token expired. Refreshing...");
 
         const stored = store.getState();
         const refreshToken = stored.user.user.refresh_token;
-        console.log("refresh token ;", refreshToken);
+        // console.log("refresh token ;", refreshToken);
         const oldAccessToken = stored.user.access_token;
-        console.log("old access token state;", oldAccessToken);
+        // console.log("old access token state;", oldAccessToken);
 
         // Send both refresh token and old access token
         const response = await axiosInstance.post(
