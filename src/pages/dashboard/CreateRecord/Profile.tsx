@@ -45,8 +45,8 @@ export default function Profile() {
     address: client?.address || "",
     state: client?.state || "",
     lga: client?.lga || "",
-    height: client?.height || "",
-    weight: client?.weight || "",
+    height: client?.height ? parseFloat(client.height) : 0,
+    weight: client?.weight ? parseFloat(client.weight) : 0,
     parentOne: client?.parentOne || "",
     parentOneNumber: client?.parentOneNumber || "",
     parentOneNHR_ID: client?.parentOneNHR_ID || "",
@@ -67,7 +67,8 @@ export default function Profile() {
   const handleChange = (name: string, value: any) => {
     setEditForm({
       ...editForm,
-      [name || ""]: value,
+      [name]:
+        name === "height" || name === "weight" ? parseFloat(value) : value,
     });
   };
 
@@ -96,9 +97,9 @@ export default function Profile() {
 
       // console.log(res.data);
       if (user.role === "superadmin" || user.role === "admin") {
-        navigate(`/dashboard/user/${id}/1`);
+        navigate(`/dashboard/user/${id}?tabId=1`);
       } else {
-        navigate(`/dashboard/user/${id}/0`);
+        navigate(`/dashboard/user/${id}`);
       }
     } catch (error) {
       setIsLoad(false);
