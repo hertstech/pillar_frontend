@@ -486,10 +486,10 @@
   dependencies:
     "@hapi/hoek" "^9.0.0"
 
-"@hookform/resolvers@^3.9.0":
-  version "3.9.0"
-  resolved "https://registry.yarnpkg.com/@hookform/resolvers/-/resolvers-3.9.0.tgz#cf540ac21c6c0cd24a40cf53d8e6d64391fb753d"
-  integrity sha512-bU0Gr4EepJ/EQsH/IwEzYLsT/PEj5C0ynLQ4m+GSHS+xKH4TfSelhluTgOaoc4kA5s7eCsQbM4wvZLzELmWzUg==
+"@hookform/resolvers@^3.9.1":
+  version "3.9.1"
+  resolved "https://registry.yarnpkg.com/@hookform/resolvers/-/resolvers-3.9.1.tgz#a23883c40bfd449cb6c6ab5a0fa0729184c950ff"
+  integrity sha512-ud2HqmGBM0P0IABqoskKWI6PEf6ZDDBZkFqe2Vnl+mTHCEHzr3ISjjZyCwTjC/qpL25JC9aIDkloQejvMeq0ug==
 
 "@humanwhocodes/config-array@^0.11.14":
   version "0.11.14"
@@ -1987,6 +1987,11 @@ lodash.startswith@^4.2.1:
   resolved "https://registry.yarnpkg.com/lodash.startswith/-/lodash.startswith-4.2.1.tgz#c598c4adce188a27e53145731cdc6c0e7177600c"
   integrity sha512-XClYR1h4/fJ7H+mmCKppbiBmljN/nGs73iq2SjCT9SF4CBPoUHzLvWmH1GtZMhMBZSiRkHXfeA2RY1eIlJ75ww==
 
+lodash@^4.17.21:
+  version "4.17.21"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
+  integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
+
 loose-envify@^1.0.0, loose-envify@^1.1.0, loose-envify@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/loose-envify/-/loose-envify-1.4.0.tgz#71ee51fa7be4caec1a63839f7e682d8132d30caf"
@@ -2361,10 +2366,10 @@ react-helmet-async@^2.0.4:
     react-fast-compare "^3.2.2"
     shallowequal "^1.1.0"
 
-react-hook-form@^7.53.0:
-  version "7.53.0"
-  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.53.0.tgz#3cf70951bf41fa95207b34486203ebefbd3a05ab"
-  integrity sha512-M1n3HhqCww6S2hxLxciEXy2oISPnAzxY7gvwVPrtlczTM/1dDadXgUxDpHMrMTblDOcm/AXtXxHwZ3jpg1mqKQ==
+react-hook-form@^7.53.2:
+  version "7.53.2"
+  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.53.2.tgz#6fa37ae27330af81089baadd7f322cc987b8e2ac"
+  integrity sha512-YVel6fW5sOeedd1524pltpHX+jgU2u3DSDtXEaBORNdqiNrsX/nUI/iGXONegttg0mJVnfrIkiV0cmTU6Oo2xw==
 
 react-icons@^4.12.0:
   version "4.12.0"

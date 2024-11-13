@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import StepOne from "./StepOne";
 import StepTwo from "./StepTwo";
+import StepThree from "./StepThree";
 import StepFour from "./StepFour";
 import Buttons from "../../../components/Button";
 import {
@@ -22,7 +23,6 @@ import { axiosInstance } from "../../../Utils";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { NeedHelp } from "../../../components/CalendarField";
-import StepThree from "./StepThree";
 
 export default function CreateUser() {
   const [activeStep, setActiveStep] = useState(2);
@@ -126,14 +126,14 @@ export default function CreateUser() {
       ),
     },
     {
-      label: "Consent information",
-      description: "Choose medical and data sharing choices",
-      content: <StepThree isLoading={isLoading} />,
-    },
-    {
       label: "Generate NHR ID",
       description: "New ID for your client",
-      content: <StepFour data={data} />,
+      content: <StepThree data={data} />,
+    },
+    {
+      label: "Consent information",
+      description: "Choose medical and data sharing choices",
+      content: <StepFour isLoading={isLoading} />,
     },
   ];
 
@@ -401,7 +401,7 @@ export default function CreateUser() {
               {steps[activeStep].content}
 
               <Stack direction="row" gap={3} alignItems="center" sx={{ mt: 2 }}>
-                {activeStep >= 0 && activeStep <= 1 && (
+                {activeStep >= 0 && activeStep <= 2 && (
                   <Button
                     fullWidth
                     size="large"
@@ -424,6 +424,9 @@ export default function CreateUser() {
                 )}
 
                 {activeStep <= 0 && (
+                  <Buttons onClick={handleNext} title={"Next"} />
+                )}
+                {activeStep === 2 && (
                   <Buttons onClick={handleNext} title={"Next"} />
                 )}
 
