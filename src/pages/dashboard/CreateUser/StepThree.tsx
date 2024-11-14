@@ -1,4 +1,4 @@
-import { Box, Link, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
@@ -118,7 +118,7 @@ export default function StepThree({ data }: any) {
             marginTop: "auto",
           }}
         >
-          <Link
+          {/* <Link
             href="/dashboard/home"
             fontWeight={500}
             color="#FFF"
@@ -133,7 +133,7 @@ export default function StepThree({ data }: any) {
             }}
           >
             Go to Dashboard
-          </Link>
+          </Link> */}
         </div>
       </Box>
     </>
