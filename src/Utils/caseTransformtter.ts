@@ -1,11 +1,13 @@
 import { snakeCase } from "lodash";
 
-export const transformToSnakeCase = (obj) => {
+type SnakeCasedObject = { [key: string]: any };
+
+export const transformToSnakeCase = (obj: any): any => {
   if (Array.isArray(obj)) {
     return obj.map(transformToSnakeCase);
   } else if (typeof obj === "object" && obj !== null) {
-    return Object.keys(obj).reduce((acc, key) => {
-      const snakeKey = snakeCase(key); 
+    return Object.keys(obj).reduce<SnakeCasedObject>((acc, key) => {
+      const snakeKey = snakeCase(key);
       acc[snakeKey] = transformToSnakeCase(obj[key]);
       return acc;
     }, {});

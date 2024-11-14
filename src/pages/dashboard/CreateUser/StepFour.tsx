@@ -11,7 +11,6 @@ import {
 } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
-import { SpinLoader } from "../../../components/NoResult";
 import { allConsentData } from "../../../data/consentData";
 import InputField from "../../../components/InputField";
 import BaseButton from "../../../components/Button";
@@ -26,7 +25,7 @@ import { useAlert } from "../../../Utils/useAlert";
 import { useNavigate } from "react-router-dom";
 
 interface StepFourProps {
-  isLoading: boolean;
+  NHRID: number;
 }
 
 type VaccineOptionKey = "fluShot" | "covid19" | "hepatitisB";
@@ -70,16 +69,17 @@ const ConsentQuestion = ({
   </Box>
 );
 
-export default function StepFour({ isLoading }: StepFourProps) {
+export default function StepFour({ NHRID }: StepFourProps) {
   const navigate = useNavigate();
 
   const [showVaccineOptions, setShowVaccineOptions] = useState(false);
   const [showShareWithFamily, setShowShareWithFamily] = useState(false);
 
   const { mutate } = useUpdateUserConsent();
-  const { data } = useGetUserConsent("368321916817");
+  const { data } = useGetUserConsent(NHRID);
 
   console.log("consent data;", data?.data);
+  console.log("idsss;", typeof NHRID);
 
   const {
     handleSubmit,
@@ -157,25 +157,28 @@ export default function StepFour({ isLoading }: StepFourProps) {
   console.log("submission errors:", errors);
   const onSubmit = (data: ConsentData) => {
     const newData = transformToSnakeCase(data);
-    mutate(newData, {
-      onSuccess: () => {
-        useAlert({
-          isToast: true,
-          icon: "success",
-          position: "top-start",
-          title: "Consent successfully set",
-        });
-        navigate("/dashboard/home");
-      },
-      onError: () => {
-        useAlert({
-          isToast: true,
-          icon: "error",
-          position: "top-start",
-          title: "Consent not set",
-        });
-      },
-    });
+    mutate(
+      { data: newData, NHRID },
+      {
+        onSuccess: () => {
+          useAlert({
+            isToast: true,
+            icon: "success",
+            position: "top-start",
+            title: "Consent successfully set",
+          });
+          navigate("/dashboard/home");
+        },
+        onError: () => {
+          useAlert({
+            isToast: true,
+            icon: "error",
+            position: "top-start",
+            title: "Consent not set",
+          });
+        },
+      }
+    );
   };
 
   return (
@@ -188,138 +191,129 @@ export default function StepFour({ isLoading }: StepFourProps) {
         padding: 2,
       }}
     >
-      {isLoading ? (
-        <SpinLoader />
-      ) : (
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="lg:max-w-[600px] xl:max-w-full"
-        >
-          {allConsentData.map((section, index) => (
-            <Box key={index}>
-              <h1 className="font-bold text-lg py-4">{section.title}</h1>
-              <Box className="p-4 rounded-xl bg-bg2">
-                <FormGroup>
-                  <Box
-                    sx={{ display: "flex", flexDirection: "column", gap: 4 }}
-                  >
-                    {section.questions.map((question) => (
-                      <Box key={question.key}>
-                        <ConsentQuestion
-                          questionText={question.text}
-                          checked={
-                            question.key === "vaccineConsent"
-                              ? showVaccineOptions
-                              : question.key === "familySharing"
-                              ? showShareWithFamily
-                              : !!consentData[question.key as keyof ConsentData]
-                          }
-                          onToggle={() =>
-                            handleChange(question.key as keyof ConsentData)
-                          }
-                        />
-                        {question.key === "familySharing" &&
-                          showShareWithFamily && (
-                            <Box sx={{ mt: 2 }}>
-                              {consentData.familySharing.map(
-                                (familyMember, idx) => (
-                                  <Box
-                                    key={idx}
-                                    sx={{ display: "flex", gap: 2 }}
-                                  >
-                                    <InputField
-                                      label="First Name"
-                                      name={`familySharing[${idx}].firstName`}
-                                      value={familyMember.firstName || ""}
-                                      placeholder="Sadam"
-                                      onChange={(e) =>
-                                        setValue(
-                                          `familySharing.${idx}.firstName` as const,
-                                          e.target.value || null
-                                        )
-                                      }
-                                    />
-                                    <InputField
-                                      label="Last Name"
-                                      name={`familySharing[${idx}].lastName`}
-                                      value={familyMember.lastName || ""}
-                                      placeholder="Ekanka"
-                                      onChange={(e) =>
-                                        setValue(
-                                          `familySharing.${idx}.lastName` as const,
-                                          e.target.value || null
-                                        )
-                                      }
-                                    />
-                                  </Box>
-                                )
-                              )}
-                            </Box>
-                          )}
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="lg:max-w-[600px] xl:max-w-full"
+      >
+        {allConsentData.map((section, index) => (
+          <Box key={index}>
+            <h1 className="font-bold text-lg py-4">{section.title}</h1>
+            <Box className="p-4 rounded-xl bg-bg2">
+              <FormGroup>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                  {section.questions.map((question) => (
+                    <Box key={question.key}>
+                      <ConsentQuestion
+                        questionText={question.text}
+                        checked={
+                          question.key === "vaccineConsent"
+                            ? showVaccineOptions
+                            : question.key === "familySharing"
+                            ? showShareWithFamily
+                            : !!consentData[question.key as keyof ConsentData]
+                        }
+                        onToggle={() =>
+                          handleChange(question.key as keyof ConsentData)
+                        }
+                      />
+                      {question.key === "familySharing" &&
+                        showShareWithFamily && (
+                          <Box sx={{ mt: 2 }}>
+                            {consentData.familySharing.map(
+                              (familyMember, idx) => (
+                                <Box key={idx} sx={{ display: "flex", gap: 2 }}>
+                                  <InputField
+                                    label="First Name"
+                                    name={`familySharing[${idx}].firstName`}
+                                    value={familyMember.firstName || ""}
+                                    placeholder="Sadam"
+                                    onChange={(e) =>
+                                      setValue(
+                                        `familySharing.${idx}.firstName` as const,
+                                        e.target.value || null
+                                      )
+                                    }
+                                  />
+                                  <InputField
+                                    label="Last Name"
+                                    name={`familySharing[${idx}].lastName`}
+                                    value={familyMember.lastName || ""}
+                                    placeholder="Ekanka"
+                                    onChange={(e) =>
+                                      setValue(
+                                        `familySharing.${idx}.lastName` as const,
+                                        e.target.value || null
+                                      )
+                                    }
+                                  />
+                                </Box>
+                              )
+                            )}
+                          </Box>
+                        )}
 
-                        {question.key === "vaccineConsent" &&
-                          showVaccineOptions && (
-                            <Box sx={{ ml: 4 }}>
-                              <FormGroup>
+                      {question.key === "vaccineConsent" &&
+                        showVaccineOptions && (
+                          <Box sx={{ ml: 4 }}>
+                            <FormGroup>
+                              <FormControlLabel
+                                sx={{ fontSize: "0.75rem !important" }}
+                                control={
+                                  <Checkbox
+                                    size="small"
+                                    color="success"
+                                    checked={
+                                      consentData.vaccineConsent.length ===
+                                      vaccineOptions.length
+                                    }
+                                    onChange={handleConsentToAll}
+                                  />
+                                }
+                                label="Consent to all"
+                              />
+                              {vaccineOptions.map((option) => (
                                 <FormControlLabel
                                   sx={{ fontSize: "0.75rem !important" }}
+                                  key={option.key}
                                   control={
                                     <Checkbox
                                       size="small"
                                       color="success"
-                                      checked={
-                                        consentData.vaccineConsent.length ===
-                                        vaccineOptions.length
+                                      checked={consentData.vaccineConsent.includes(
+                                        option.key
+                                      )}
+                                      onChange={() =>
+                                        toggleVaccineOption(option.key)
                                       }
-                                      onChange={handleConsentToAll}
                                     />
                                   }
-                                  label="Consent to all"
+                                  label={option.text}
                                 />
-                                {vaccineOptions.map((option) => (
-                                  <FormControlLabel
-                                    sx={{ fontSize: "0.75rem !important" }}
-                                    key={option.key}
-                                    control={
-                                      <Checkbox
-                                        size="small"
-                                        color="success"
-                                        checked={consentData.vaccineConsent.includes(
-                                          option.key
-                                        )}
-                                        onChange={() =>
-                                          toggleVaccineOption(option.key)
-                                        }
-                                      />
-                                    }
-                                    label={option.text}
-                                  />
-                                ))}
-                              </FormGroup>
-                            </Box>
-                          )}
-                      </Box>
-                    ))}
-                  </Box>
-                </FormGroup>
-              </Box>
+                              ))}
+                            </FormGroup>
+                          </Box>
+                        )}
+                    </Box>
+                  ))}
+                </Box>
+              </FormGroup>
             </Box>
-          ))}
-          <Box className="flex items-center justify-center mt-8 gap-4">
-            <Link
-              href="/dashboard/home"
-              fontWeight={500}
-              color="#2E90FA"
-              underline="none"
-              variant="body2"
-              width="100%"
-            >
-              Cancel
-            </Link>
-            <BaseButton title="Save & Continue" type="submit" />
           </Box>
-        </form>
-      )}
+        ))}
+        <Box className="flex items-center justify-center mt-8 gap-4">
+          <Link
+            href="/dashboard/home"
+            fontWeight={500}
+            color="#2E90FA"
+            underline="none"
+            variant="body2"
+            width="100%"
+          >
+            Cancel
+          </Link>
+          <BaseButton title="Save & Continue" type="submit" />
+        </Box>
+      </form>
     </Box>
   );
 }

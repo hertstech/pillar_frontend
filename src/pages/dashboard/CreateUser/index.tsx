@@ -25,7 +25,7 @@ import Swal from "sweetalert2";
 import { NeedHelp } from "../../../components/CalendarField";
 
 export default function CreateUser() {
-  const [activeStep, setActiveStep] = useState(2);
+  const [activeStep, setActiveStep] = useState(0);
   const [result, setResult] = useState("");
   const [data, setData] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -79,24 +79,6 @@ export default function CreateUser() {
     // STEP THREE
   });
 
-  // function isUserOnline() {
-  //   return navigator.onLine;
-  // }
-
-  // window.addEventListener("offline", () => {
-  //   Toast.fire({
-  //     icon: "error",
-  //     title: "Network not available",
-  //   });
-  // });
-
-  // window.addEventListener("online", () => {
-  //   Toast.fire({
-  //     icon: "success",
-  //     title: "Network is now available",
-  //   });
-  // });
-
   useEffect(() => {
     localStorage.setItem("formData", JSON.stringify(formData));
   }, [formData]);
@@ -133,7 +115,8 @@ export default function CreateUser() {
     {
       label: "Consent information",
       description: "Choose medical and data sharing choices",
-      content: <StepFour isLoading={isLoading} />,
+      // @ts-ignore
+      content: <StepFour NHRID={data?.NHRID as number} />,
     },
   ];
 

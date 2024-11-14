@@ -2,14 +2,16 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../../Utils";
 import { ConsentData } from "../../types/serviceUserTypes/consent";
 
+type CType = {
+  NHRID: number;
+  data: ConsentData;
+};
+
 export const useUpdateUserConsent = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: ConsentData) => {
-      return axiosInstance.put(
-        `/update-serviceiuser-profile/368321916817`,
-        data
-      );
+    mutationFn: ({ NHRID, data }: CType) => {
+      return axiosInstance.put(`/update-serviceiuser-profile/${NHRID}`, data);
       data;
     },
     onSuccess: () => {
@@ -20,11 +22,12 @@ export const useUpdateUserConsent = () => {
   });
 };
 
-export const useGetUserConsent = (NHRID: string) => {
+export const useGetUserConsent = (NHRID: number) => {
   return useQuery({
     queryKey: ["userConsent", NHRID],
-    queryFn: () => {
-      return axiosInstance.get(`/api/v1/consents/${NHRID}`);
+    queryFn: async () => {
+      const response = await axiosInstance.get(`/api/v1/consents/${NHRID}`);
+      return response;
     },
   });
 };
