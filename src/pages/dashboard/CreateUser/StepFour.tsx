@@ -9,7 +9,7 @@ import {
   Typography,
   Link,
 } from "@mui/material";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { SpinLoader } from "../../../components/NoResult";
 import { allConsentData } from "../../../data/consentData";
@@ -17,26 +17,17 @@ import InputField from "../../../components/InputField";
 import BaseButton from "../../../components/Button";
 import { consentSchema } from "../../../schemas/createUserSchema";
 import { transformToSnakeCase } from "../../../Utils/caseTransformtter";
+import { ConsentData } from "../../../types/serviceUserTypes/consent";
+import {
+  useGetUserConsent,
+  useUpdateUserConsent,
+} from "../../../api/HealthServiceUser/consent";
+import { useAlert } from "../../../Utils/useAlert";
+import { useNavigate } from "react-router-dom";
 
 interface StepFourProps {
   isLoading: boolean;
 }
-
-type ConsentData = {
-  treatmentConsent: boolean;
-  transfusionConsent: boolean;
-  alternateTreatmentConsent: boolean;
-  vaccineConsent: string[];
-  geneticTestingConsent?: boolean;
-  medicalRecordSharing?: boolean;
-  providerSharing?: boolean;
-  mentalHealthRecordSharing?: boolean;
-  familySharing: { firstName: string | null; lastName: string | null }[];
-  researchConsent?: boolean;
-  organDonation?: boolean;
-  researchOrganDonation?: boolean;
-  marketingConsent?: boolean;
-};
 
 type VaccineOptionKey = "fluShot" | "covid19" | "hepatitisB";
 
@@ -80,8 +71,15 @@ const ConsentQuestion = ({
 );
 
 export default function StepFour({ isLoading }: StepFourProps) {
+  const navigate = useNavigate();
+
   const [showVaccineOptions, setShowVaccineOptions] = useState(false);
   const [showShareWithFamily, setShowShareWithFamily] = useState(false);
+
+  const { mutate } = useUpdateUserConsent();
+  const { data } = useGetUserConsent("368321916817");
+
+  console.log("consent data;", data?.data);
 
   const {
     handleSubmit,
@@ -92,19 +90,23 @@ export default function StepFour({ isLoading }: StepFourProps) {
   } = useForm<ConsentData>({
     resolver: joiResolver(consentSchema),
     defaultValues: {
-      familySharing: [{ firstName: null, lastName: null }],
-      treatmentConsent: false,
-      transfusionConsent: false,
-      alternateTreatmentConsent: false,
-      vaccineConsent: [],
-      geneticTestingConsent: false,
-      medicalRecordSharing: false,
-      providerSharing: false,
-      mentalHealthRecordSharing: false,
-      researchConsent: false,
-      organDonation: false,
-      researchOrganDonation: false,
-      marketingConsent: false,
+      treatmentConsent: data?.data.treatment_consent ?? false,
+      alternateTreatmentConsent:
+        data?.data.alternate_treatment_consent ?? false,
+      vaccineConsent: data?.data.vaccine_consent ?? [],
+      providerSharing: data?.data.provide_sharing ?? false,
+      mentalHealthRecordSharing:
+        data?.data.mental_health_recording_sharing ?? false,
+      familySharing: data?.data.family_sharing ?? [
+        { firstName: null, lastName: null },
+      ],
+      geneticTestingConsent: data?.data.genetic_testing_consent ?? false,
+      medicalRecordSharing: data?.data.medical_record_sharing ?? false,
+      organDonation: data?.data.organ_donation ?? false,
+      marketingConsent: data?.data.market_consent ?? false,
+      researchOrganDonation: data?.data.research_organ_donation ?? false,
+      researchConsent: data?.data.research_consent ?? false,
+      transfusionConsent: data?.data.transfusion_consent ?? false,
     },
   });
 
@@ -120,8 +122,10 @@ export default function StepFour({ isLoading }: StepFourProps) {
       );
     } else if (key === "vaccineConsent") {
       setShowVaccineOptions(!showVaccineOptions);
+
+      setValue("vaccineConsent", consentData.vaccineConsent || []);
     } else {
-      setValue(key, !consentData[key]);
+      setValue(key, !(consentData[key] as boolean));
     }
   };
 
@@ -150,7 +154,29 @@ export default function StepFour({ isLoading }: StepFourProps) {
     setValue("vaccineConsent", newConsent);
   };
 
-  console.log(errors);
+  console.log("submission errors:", errors);
+  const onSubmit = (data: ConsentData) => {
+    const newData = transformToSnakeCase(data);
+    mutate(newData, {
+      onSuccess: () => {
+        useAlert({
+          isToast: true,
+          icon: "success",
+          position: "top-start",
+          title: "Consent successfully set",
+        });
+        navigate("/dashboard/home");
+      },
+      onError: () => {
+        useAlert({
+          isToast: true,
+          icon: "error",
+          position: "top-start",
+          title: "Consent not set",
+        });
+      },
+    });
+  };
 
   return (
     <Box
@@ -166,9 +192,7 @@ export default function StepFour({ isLoading }: StepFourProps) {
         <SpinLoader />
       ) : (
         <form
-          onSubmit={handleSubmit((data) =>
-            console.log("Consent Data:", transformToSnakeCase(data))
-          )}
+          onSubmit={handleSubmit(onSubmit)}
           className="lg:max-w-[600px] xl:max-w-full"
         >
           {allConsentData.map((section, index) => (
@@ -205,28 +229,24 @@ export default function StepFour({ isLoading }: StepFourProps) {
                                   >
                                     <InputField
                                       label="First Name"
-                                      name={
-                                        `familySharing[${idx}].firstName` as keyof ConsentData
-                                      }
+                                      name={`familySharing[${idx}].firstName`}
                                       value={familyMember.firstName || ""}
                                       placeholder="Sadam"
                                       onChange={(e) =>
                                         setValue(
-                                          `familySharing[${idx}].firstName` as keyof ConsentData,
+                                          `familySharing.${idx}.firstName` as const,
                                           e.target.value || null
                                         )
                                       }
                                     />
                                     <InputField
                                       label="Last Name"
-                                      name={
-                                        `familySharing[${idx}].lastName` as keyof ConsentData
-                                      }
+                                      name={`familySharing[${idx}].lastName`}
                                       value={familyMember.lastName || ""}
                                       placeholder="Ekanka"
                                       onChange={(e) =>
                                         setValue(
-                                          `familySharing[${idx}].lastName` as keyof ConsentData,
+                                          `familySharing.${idx}.lastName` as const,
                                           e.target.value || null
                                         )
                                       }

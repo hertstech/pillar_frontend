@@ -368,7 +368,7 @@ export default function CreateUser() {
                 boxShadow: "none",
               }}
             >
-              {!steps[2] ? (
+              {(steps[activeStep].label as string) !== "Consent information" ? (
                 <div style={{ textAlign: "center", marginBottom: 25 }}>
                   <Typography fontWeight={700} color={"#101928"} fontSize={32}>
                     Create Service User
