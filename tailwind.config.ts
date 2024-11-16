@@ -38,6 +38,7 @@ const config: Config = {
           100: "#FDEAD7",
         },
         bg: "#F7F7F7;",
+        bg2: "#F9FAFB",
       },
     },
   },

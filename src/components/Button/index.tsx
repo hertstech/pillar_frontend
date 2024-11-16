@@ -1,5 +1,6 @@
 interface ButtonProps {
   title: string;
+  type?: "submit" | "button";
   onClick?: any;
   loading?: boolean;
   disabled?: boolean;
@@ -10,6 +11,7 @@ export default function Button({
   onClick,
   loading,
   disabled,
+  type,
 }: ButtonProps) {
   return (
     <button
@@ -33,6 +35,7 @@ export default function Button({
         // cursor: loading || disabled ? "not-allowed" : "pointer",
         cursor: loading ? "not-allowed" : disabled ? "not-allowed" : "pointer",
       }}
+      type={type ? type : "button"}
       disabled={loading || disabled}
     >
       {loading && <div className="animateSpin"></div>}

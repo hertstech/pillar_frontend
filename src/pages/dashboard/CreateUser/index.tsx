@@ -13,6 +13,7 @@ import {
 import StepOne from "./StepOne";
 import StepTwo from "./StepTwo";
 import StepThree from "./StepThree";
+import StepFour from "./StepFour";
 import Buttons from "../../../components/Button";
 import {
   //  useDispatch,
@@ -22,7 +23,6 @@ import { axiosInstance } from "../../../Utils";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { NeedHelp } from "../../../components/CalendarField";
-// import { clearNewSlice } from "../../../redux/createServiceUserSlice";
 
 export default function CreateUser() {
   const [activeStep, setActiveStep] = useState(0);
@@ -30,25 +30,9 @@ export default function CreateUser() {
   const [data, setData] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  // const Toast = Swal.mixin({
-  //   toast: true,
-  //   position: "top-end",
-  //   showConfirmButton: false,
-  //   timer: 3000,
-  //   timerProgressBar: true,
-  //   didOpen: (toast) => {
-  //     toast.addEventListener("mouseenter", Swal.stopTimer);
-  //     toast.addEventListener("mouseleave", Swal.resumeTimer);
-  //   },
-  // });
-
   const token = useSelector((state: any) => state.user.access_token);
 
-  // const createData = useSelector((state: any) => state.createNewUser);
-
   const navigate = useNavigate();
-
-  // const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
     // STEP ONE
@@ -95,24 +79,6 @@ export default function CreateUser() {
     // STEP THREE
   });
 
-  // function isUserOnline() {
-  //   return navigator.onLine;
-  // }
-
-  // window.addEventListener("offline", () => {
-  //   Toast.fire({
-  //     icon: "error",
-  //     title: "Network not available",
-  //   });
-  // });
-
-  // window.addEventListener("online", () => {
-  //   Toast.fire({
-  //     icon: "success",
-  //     title: "Network is now available",
-  //   });
-  // });
-
   useEffect(() => {
     localStorage.setItem("formData", JSON.stringify(formData));
   }, [formData]);
@@ -145,6 +111,12 @@ export default function CreateUser() {
       label: "Generate NHR ID",
       description: "New ID for your client",
       content: <StepThree data={data} />,
+    },
+    {
+      label: "Consent information",
+      description: "Choose medical and data sharing choices",
+      // @ts-ignore
+      content: <StepFour NHRID={data?.NHRID as number} />,
     },
   ];
 
@@ -189,8 +161,6 @@ export default function CreateUser() {
   const createUser = async () => {
     setIsLoading(true);
     try {
-      // if (isUserOnline()) {
-      // }
       const res = await axiosInstance.post(
         "/create-serviceuser-profile",
         formData,
@@ -205,8 +175,6 @@ export default function CreateUser() {
 
       setIsLoading(false);
 
-      // dispatch(clearNewSlice());
-
       handleNext();
     } catch (error: any) {
       Swal.fire({
@@ -215,7 +183,7 @@ export default function CreateUser() {
         text: `${error.response.data.detail}`,
         confirmButtonColor: "#2E90FA",
       });
-      // dispatch(clearNewSlice());
+
       setIsLoading(false);
     }
   };
@@ -383,24 +351,40 @@ export default function CreateUser() {
                 boxShadow: "none",
               }}
             >
-              <div style={{ textAlign: "center", marginBottom: 25 }}>
-                <Typography fontWeight={700} color={"#101928"} fontSize={32}>
-                  Create Service User
-                </Typography>
-                <span
-                  style={{
-                    color: "#101928",
-                    fontWeight: 400,
-                  }}
-                >
-                  Enter demographics information below
-                </span>
-              </div>
+              {(steps[activeStep].label as string) !== "Consent information" ? (
+                <div style={{ textAlign: "center", marginBottom: 25 }}>
+                  <Typography fontWeight={700} color={"#101928"} fontSize={32}>
+                    Create Service User
+                  </Typography>
+                  <span
+                    style={{
+                      color: "#101928",
+                      fontWeight: 400,
+                    }}
+                  >
+                    Enter profile information below
+                  </span>
+                </div>
+              ) : (
+                <div style={{ textAlign: "center", marginBottom: 25 }}>
+                  <Typography fontWeight={700} color={"#101928"} fontSize={32}>
+                    Consent information
+                  </Typography>
+                  <span
+                    style={{
+                      color: "#101928",
+                      fontWeight: 400,
+                    }}
+                  >
+                    Customize client’s consent preferences here
+                  </span>
+                </div>
+              )}
 
               {steps[activeStep].content}
 
               <Stack direction="row" gap={3} alignItems="center" sx={{ mt: 2 }}>
-                {activeStep >= 0 && activeStep <= 1 && (
+                {activeStep >= 0 && activeStep <= 2 && (
                   <Button
                     fullWidth
                     size="large"
@@ -423,6 +407,9 @@ export default function CreateUser() {
                 )}
 
                 {activeStep <= 0 && (
+                  <Buttons onClick={handleNext} title={"Next"} />
+                )}
+                {activeStep === 2 && (
                   <Buttons onClick={handleNext} title={"Next"} />
                 )}
 
