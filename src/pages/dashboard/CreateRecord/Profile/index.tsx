@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   Box,
   Button,
@@ -8,15 +8,16 @@ import {
   Typography,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import Swal from "sweetalert2";
 import { useNavigate, useParams } from "react-router-dom";
 import { axiosInstance } from "../../../../Utils";
 import { dispatchClient } from "../../../../redux/clientSlice";
 import { UpdateConsent } from "./updateConsent";
 import { ProfileForm } from "./profile";
+import { useAlert } from "../../../../Utils/useAlert";
 
 export default function Profile() {
   const user = useSelector((state: any) => state.user.user);
+
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -26,19 +27,37 @@ export default function Profile() {
   const [activeStep, setActiveStep] = useState(0);
   const [profileData, setProfileData] = useState({});
   const [consentData, setConsentData] = useState({});
+  const [submitting, setSubmitting] = useState(false);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
   const steps = ["Profile Information", "Consent Form"];
 
   const profileRef = useRef<any>(null);
   const consentRef = useRef<any>(null);
 
-  const handleNext = async () => {
+  const handleNext = () => {
     if (activeStep === 0 && profileRef.current) {
       profileRef.current.submitForm();
+      if (Object.keys(profileData).length === 0) {
+        useAlert({
+          icon: "warning",
+          title: "Incomplete Profile",
+          text: "Please make changes to the profile before proceeding.",
+        });
+        return;
+      }
     } else if (activeStep === 1 && consentRef.current) {
       consentRef.current.submitForm();
-    } else {
-      setActiveStep((prevStep) => prevStep + 1);
+      if (Object.keys(consentData).length === 0) {
+        useAlert({
+          icon: "warning",
+          title: "Incomplete Consent",
+          text: "Please make changes to the consent form before submission.",
+        });
+        return;
+      }
     }
+    setActiveStep((prevStep) => prevStep + 1);
   };
 
   const handleBack = () => {
@@ -56,40 +75,57 @@ export default function Profile() {
     updateUser();
   };
 
-  const updateUser = async () => {
-    console.log("updated data for sub;",{ ...profileData, ...consentData });
-    return;
-    try {
-      const res = await axiosInstance.put(
-        `/update-serviceiuser-profile/${id}`,
-        {
-          ...profileData,
-          ...consentData,
-        }
-      );
-      const responseArray = [res.data];
-      dispatch(dispatchClient({ tabId: "tab1", client: responseArray }));
-
-      Swal.fire({
-        icon: "success",
-        title: `Successful`,
-        text: "Record Successfully Updated",
-        confirmButtonColor: "#2E90FA",
-      });
-
-      if (user.role === "superadmin" || user.role === "admin") {
-        navigate(`/dashboard/user/${id}?tabId=1`);
-      } else {
-        navigate(`/dashboard/user/${id}`);
-      }
-    } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        confirmButtonColor: "#2E90FA",
-      });
-    }
+  const retryDataLoad = () => {
+    setTimeout(() => {
+      setRetryCount((prev) => prev + 1);
+    }, 1000);
   };
+
+  useEffect(() => {
+    const profileKeys = Object.keys(profileData).length;
+    const consentKeys = Object.keys(consentData).length;
+
+    if (profileKeys && consentKeys) {
+      setIsDataLoaded(true);
+    } else {
+      retryDataLoad();
+    }
+  }, [profileData, consentData, retryCount]);
+
+
+ const updateUser = async () => {
+   if (!isDataLoaded) {
+     return;
+   }
+
+   setSubmitting(true);
+   try {
+     const res = await axiosInstance.put(`/update-serviceiuser-profile/${id}`, {
+       ...profileData,
+       ...consentData,
+     });
+     dispatch(dispatchClient({ tabId: "tab1", client: [res.data] }));
+     setSubmitting(false);
+     useAlert({
+       icon: "success",
+       title: "Successful",
+       text: "Record Successfully Updated",
+     });
+
+     if (user.role === "superadmin" || user.role === "admin") {
+       navigate(`/dashboard/user/${id}?tabId=1`);
+     } else {
+       navigate(`/dashboard/user/${id}`);
+     }
+   } catch (error) {
+     setSubmitting(false);
+     useAlert({
+       icon: "error",
+       title: "Error",
+       text: "Something went wrong, try again!",
+     });
+   }
+ };
 
   return (
     <Box>
@@ -137,6 +173,7 @@ export default function Profile() {
               Back
             </Button>
             <Button
+              disabled={submitting}
               variant="contained"
               onClick={handleNext}
               sx={{ width: "100%" }}

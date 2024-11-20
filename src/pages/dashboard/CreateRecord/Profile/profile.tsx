@@ -14,8 +14,9 @@ import StatesData from "../../../../../states.json";
 import { relations } from "../../serviceUsers/shared";
 import moment from "moment";
 import { useSelector } from "react-redux";
-import React, { forwardRef, useImperativeHandle } from "react";
+import React, { forwardRef, useImperativeHandle, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useAlert } from "../../../../Utils/useAlert";
 
 export const ProfileForm = forwardRef(({ onSubmit }: any, ref) => {
   const client = useSelector((state: any) => state.client.clients.tab1[0]);
@@ -54,9 +55,27 @@ export const ProfileForm = forwardRef(({ onSubmit }: any, ref) => {
     registeredDoctor: client?.registeredDoctor || "",
   });
 
+  const [isDirty, setIsDirty] = useState(false);
+
   const handleChange = (name: string, value: any) => {
     setEditForm((prev) => ({ ...prev, [name]: value }));
+    setIsDirty(true);
   };
+
+  useImperativeHandle(ref, () => ({
+    submitForm: () => {
+      if (!isDirty) {
+        useAlert({
+          position: "top-start",
+          icon: "warning",
+          title: "No Changes Detected",
+          text: "Please update the profile before proceeding.",
+        });
+        return;
+      }
+      onSubmit(editForm);
+    },
+  }));
 
   const submitForm = () => {
     onSubmit(editForm);
@@ -66,10 +85,6 @@ export const ProfileForm = forwardRef(({ onSubmit }: any, ref) => {
     e.preventDefault();
     submitForm();
   };
-
-  useImperativeHandle(ref, () => ({
-    submitForm,
-  }));
 
   return (
     <form onSubmit={handleSubmit}>

@@ -6,6 +6,7 @@ import {
   FormLabel,
   Switch,
   Checkbox,
+  Button,
   Typography,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
@@ -16,6 +17,7 @@ import { consentSchema } from "../../../../schemas/createUserSchema";
 import { transformToSnakeCase } from "../../../../Utils/caseTransformtter";
 import { ConsentData } from "../../../../types/serviceUserTypes/consent";
 import { useGetUserConsent } from "../../../../api/HealthServiceUser/consent";
+import { useAlert } from "../../../../Utils/useAlert";
 
 interface StepFourProps {
   NHRID: number;
@@ -67,6 +69,8 @@ export const UpdateConsent = forwardRef(
     const [showVaccineOptions, setShowVaccineOptions] = useState(false);
     const [showShareWithFamily, setShowShareWithFamily] = useState(false);
 
+    const [isDirty, setIsDirty] = useState(false);
+    
     const { data } = useGetUserConsent(NHRID);
 
     console.log("consent data;", data?.data);
@@ -132,6 +136,10 @@ export const UpdateConsent = forwardRef(
       }
     }, [data, reset]);
 
+    useEffect(() => {
+      console.log("Consent data updated:", watch());
+    }, [watch()]);
+
     const consentData = watch();
 
     const handleChange = (key: keyof ConsentData) => {
@@ -176,17 +184,31 @@ export const UpdateConsent = forwardRef(
       setValue("vaccineConsent", newConsent);
     };
 
-    console.error(errors, "pos err");
-    // const onSubmit = (data: ConsentData) => {
-    //   const newData = transformToSnakeCase(data);
-    //   onNext(newData);
-    //   console.log(newData);
-    // };
+
+    useEffect(() => {
+      const subscription = watch(() => setIsDirty(true));
+      return () => subscription.unsubscribe();
+    }, [watch]);
 
     useImperativeHandle(ref, () => ({
-      submitForm: () =>
-        handleSubmit((data) => onNext(transformToSnakeCase(data)))(),
+      submitForm: () => {
+        if (!isDirty) {
+          useAlert({
+            icon: "warning",
+            position: "top-start",
+            title: "No Changes Detected",
+            text: "Please update the consent form before submission.",
+          });
+          return;
+        }
+        handleSubmit((data) => {
+          const transformedData = transformToSnakeCase(data);
+          onNext(transformedData);
+        })();
+      },
     }));
+
+    console.error("pos form err;", errors);
 
     return (
       <Box
@@ -312,12 +334,15 @@ export const UpdateConsent = forwardRef(
               </Box>
             </Box>
           ))}
-
-          
-            <button type="submit" className="hidden">
-              Continue
-            </button>
-          
+          <Box>
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{ width: "100%", color: "white", visibility: "hidden" }}
+            >
+              Update profile
+            </Button>
+          </Box>
         </form>
       </Box>
     );
