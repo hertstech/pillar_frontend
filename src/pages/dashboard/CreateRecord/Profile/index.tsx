@@ -57,7 +57,7 @@ export default function Profile() {
         return;
       }
     }
-    setActiveStep((prevStep) => prevStep + 1);
+    setActiveStep(1);
   };
 
   const handleBack = () => {
@@ -92,40 +92,42 @@ export default function Profile() {
     }
   }, [profileData, consentData, retryCount]);
 
+  const updateUser = async () => {
+    if (!isDataLoaded) {
+      return;
+    }
 
- const updateUser = async () => {
-   if (!isDataLoaded) {
-     return;
-   }
+    setSubmitting(true);
+    try {
+      const res = await axiosInstance.put(
+        `/update-serviceiuser-profile/${id}`,
+        {
+          ...profileData,
+          ...consentData,
+        }
+      );
+      dispatch(dispatchClient({ tabId: "tab1", client: [res.data] }));
+      setSubmitting(false);
+      useAlert({
+        icon: "success",
+        title: "Successful",
+        text: "Record Successfully Updated",
+      });
 
-   setSubmitting(true);
-   try {
-     const res = await axiosInstance.put(`/update-serviceiuser-profile/${id}`, {
-       ...profileData,
-       ...consentData,
-     });
-     dispatch(dispatchClient({ tabId: "tab1", client: [res.data] }));
-     setSubmitting(false);
-     useAlert({
-       icon: "success",
-       title: "Successful",
-       text: "Record Successfully Updated",
-     });
-
-     if (user.role === "superadmin" || user.role === "admin") {
-       navigate(`/dashboard/user/${id}?tabId=1`);
-     } else {
-       navigate(`/dashboard/user/${id}`);
-     }
-   } catch (error) {
-     setSubmitting(false);
-     useAlert({
-       icon: "error",
-       title: "Error",
-       text: "Something went wrong, try again!",
-     });
-   }
- };
+      if (user.role === "superadmin" || user.role === "admin") {
+        navigate(`/dashboard/user/${id}?tabId=1`);
+      } else {
+        navigate(`/dashboard/user/${id}`);
+      }
+    } catch (error) {
+      setSubmitting(false);
+      useAlert({
+        icon: "error",
+        title: "Error",
+        text: "Something went wrong, try again!",
+      });
+    }
+  };
 
   return (
     <Box>
