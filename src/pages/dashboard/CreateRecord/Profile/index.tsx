@@ -39,9 +39,9 @@ export default function Profile() {
     religion: client?.religion,
     dateOfBirth: client?.dateOfBirth,
     tribalMarks: client?.tribalMarks,
+    phoneNumber: client?.phoneNumber || "",
     email: client?.email,
     id: id,
-    phoneNumber: client?.phoneNumber || "",
     address: client?.address || "",
     state: client?.state || "",
     lga: client?.lga || "",
@@ -78,7 +78,7 @@ export default function Profile() {
     setIsLoad(true);
 
     try {
-      const res = await axiosInstance.put(
+      const res = await axiosInstance.patch(
         `/update-serviceiuser-profile/${id}`,
         editForm
       );
