@@ -1,190 +1,530 @@
-import { useState, useRef, useEffect } from "react";
+import React from "react";
 import {
   Box,
   Button,
-  Stepper,
-  Step,
-  StepLabel,
+  InputAdornment,
+  MenuItem,
+  OutlinedInput,
+  Stack,
+  TextField,
   Typography,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
+import moment from "moment";
+import InputField from "../../../../components/InputField";
+import PhoneField from "../../../../components/PhoneInput";
+import StatesData from "../../../../../states.json";
 import { useNavigate, useParams } from "react-router-dom";
 import { axiosInstance } from "../../../../Utils";
 import { dispatchClient } from "../../../../redux/clientSlice";
-import { UpdateConsent } from "./updateConsent";
-import { ProfileForm } from "./profile";
+import { relations } from "../../serviceUsers/shared";
 import { useAlert } from "../../../../Utils/useAlert";
 
 export default function Profile() {
+  const client = useSelector((state: any) => state.client.clients.tab1[0]);
+
   const user = useSelector((state: any) => state.user.user);
 
   const { id } = useParams();
+
   const navigate = useNavigate();
+
   const dispatch = useDispatch();
 
-  const newId = parseInt(id as string);
+  const [editForm, setEditForm] = React.useState({
+    firstName: client?.firstName,
+    middleName: client?.middleName,
+    lastName: client?.lastName,
+    gender: client?.gender,
+    religion: client?.religion,
+    dateOfBirth: client?.dateOfBirth,
+    tribalMarks: client?.tribalMarks,
+    email: client?.email,
+    id: id,
+    phoneNumber: client?.phoneNumber || "",
+    address: client?.address || "",
+    state: client?.state || "",
+    lga: client?.lga || "",
+    height: client?.height ? parseFloat(client.height) : 0,
+    weight: client?.weight ? parseFloat(client.weight) : 0,
+    parentOne: client?.parentOne || "",
+    parentOneNumber: client?.parentOneNumber || "",
+    parentOneNHR_ID: client?.parentOneNHR_ID || "",
+    parentOneRelationship: client?.parentOneRelationship || "",
+    parentTwo: client?.parentTwo || "",
+    parentTwoNumber: client?.parentTwoNumber || "",
+    parentTwoNHR_ID: client?.parentTwoNHR_ID || "",
+    parentTwoRelationship: client?.parentTwoRelationship || "",
+    nokFullName: client?.nokFullName || "",
+    nokPhoneNumber: client?.nokPhoneNumber || "",
+    nokNHR_ID: client?.nokNHR_ID || "",
+    nokRelationship: client?.nokRelationship || "",
+    HMOPlan: client?.HMOPlan || "",
+    nominatedPharmarcy: client?.nominatedPharmarcy || "",
+    registeredDoctor: client?.registeredDoctor || "",
+  });
 
-  const [activeStep, setActiveStep] = useState(0);
-  const [profileData, setProfileData] = useState({});
-  const [consentData, setConsentData] = useState({});
-  const [submitting, setSubmitting] = useState(false);
-  const [isDataLoaded, setIsDataLoaded] = useState(false);
-  const [retryCount, setRetryCount] = useState(0);
-  const steps = ["Profile Information", "Consent Form"];
-
-  const profileRef = useRef<any>(null);
-  const consentRef = useRef<any>(null);
-
-  const handleNext = () => {
-    if (activeStep === 0 && profileRef.current) {
-      profileRef.current.submitForm();
-      if (Object.keys(profileData).length === 0) {
-        useAlert({
-          icon: "warning",
-          title: "Incomplete Profile",
-          text: "Please make changes to the profile before proceeding.",
-        });
-        return;
-      }
-    } else if (activeStep === 1 && consentRef.current) {
-      consentRef.current.submitForm();
-      if (Object.keys(consentData).length === 0) {
-        useAlert({
-          icon: "warning",
-          title: "Incomplete Consent",
-          text: "Please make changes to the consent form before submission.",
-        });
-        return;
-      }
-    }
-    setActiveStep(1);
+  const handleChange = (name: string, value: any) => {
+    setEditForm({
+      ...editForm,
+      [name]:
+        name === "height" || name === "weight" ? parseFloat(value) : value,
+    });
   };
 
-  const handleBack = () => {
-    setActiveStep((prevStep) => prevStep - 1);
-  };
-
-  const handleFormSubmit = (formData: any) => {
-    setProfileData(formData);
-    console.log("Updated Form Data:", formData);
-    setActiveStep((prevStep) => prevStep + 1);
-  };
-
-  const handleConsentSubmit = (formData: any) => {
-    setConsentData(formData);
-    updateUser();
-  };
-
-  const retryDataLoad = () => {
-    setTimeout(() => {
-      setRetryCount((prev) => prev + 1);
-    }, 1000);
-  };
-
-  useEffect(() => {
-    const profileKeys = Object.keys(profileData).length;
-    const consentKeys = Object.keys(consentData).length;
-
-    if (profileKeys && consentKeys) {
-      setIsDataLoaded(true);
-    } else {
-      retryDataLoad();
-    }
-  }, [profileData, consentData, retryCount]);
+  const [isLoad, setIsLoad] = React.useState(false);
 
   const updateUser = async () => {
-    if (!isDataLoaded) {
-      return;
-    }
+    setIsLoad(true);
 
-    setSubmitting(true);
     try {
       const res = await axiosInstance.put(
         `/update-serviceiuser-profile/${id}`,
-        {
-          ...profileData,
-          ...consentData,
-        }
+        editForm
       );
-      dispatch(dispatchClient({ tabId: "tab1", client: [res.data] }));
-      setSubmitting(false);
+
+      const responseArray = [res.data];
+
+      dispatch(dispatchClient({ tabId: "tab1", client: responseArray }));
+
+      setIsLoad(false);
       useAlert({
+        isToast: true,
         icon: "success",
-        title: "Successful",
-        text: "Record Successfully Updated",
+        position: "top-start",
+        title: "Record Successfully Updated",
       });
 
+      // console.log(res.data);
       if (user.role === "superadmin" || user.role === "admin") {
         navigate(`/dashboard/user/${id}?tabId=1`);
       } else {
         navigate(`/dashboard/user/${id}`);
       }
     } catch (error) {
-      setSubmitting(false);
+      setIsLoad(false);
       useAlert({
+        isToast: true,
         icon: "error",
-        title: "Error",
-        text: "Something went wrong, try again!",
+        position: "top-start",
+        title: "Something went wrong try again shortly",
       });
     }
   };
 
   return (
     <Box>
-      <Typography fontWeight={700} color="#101928" fontSize={32} align="center">
-        Update Profile
-      </Typography>
-
-      <Stepper activeStep={activeStep} alternativeLabel>
-        {steps.map((label, index) => (
-          <Step key={index}>
-            <StepLabel>{label}</StepLabel>
-          </Step>
-        ))}
-      </Stepper>
-
-      <div className="mt-8">
-        {activeStep === 0 && (
-          <ProfileForm ref={profileRef} onSubmit={handleFormSubmit} />
-        )}
-
-        {activeStep === 1 && (
-          <Box sx={{ marginTop: 2 }}>
-            <Typography variant="h6">Consent Form</Typography>
-            <UpdateConsent
-              ref={consentRef}
-              NHRID={newId}
-              onNext={handleConsentSubmit}
-            />
-          </Box>
-        )}
-        {activeStep === 1 && (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              gap: 4,
-              marginTop: 3,
-            }}
-          >
-            <Button
-              variant="outlined"
-              onClick={handleBack}
-              sx={{ width: "100%" }}
-            >
-              Back
-            </Button>
-            <Button
-              disabled={submitting}
-              variant="contained"
-              onClick={handleNext}
-              sx={{ width: "100%" }}
-            >
-              {activeStep === 1 ? "Update profile" : "Continue"}
-            </Button>
-          </Box>
-        )}
+      <div style={{ textAlign: "center", marginBottom: 25 }}>
+        <Typography fontWeight={700} color={"#101928"} fontSize={32}>
+          Update Profile
+        </Typography>
       </div>
+
+      <form>
+        <div>
+          <Box>
+            <Typography
+              sx={{ color: "#090816" }}
+              fontWeight={600}
+              fontSize={20}
+            >
+              Contact Details
+            </Typography>
+
+            <div style={{ marginTop: 8 }}>
+              <PhoneField
+                name="phoneNumber"
+                value={editForm.phoneNumber}
+                onChange={(value: any) => handleChange("phoneNumber", value)}
+              />
+            </div>
+
+            <InputField
+              type="text"
+              label="Address"
+              name="address"
+              value={editForm.address}
+              onChange={(e: any) => handleChange("address", e.target.value)}
+            />
+
+            <label htmlFor="state" style={{ marginTop: 8 }}>
+              State
+              <TextField
+                select
+                sx={{ marginTop: "5px", fontFamily: "fontNormal" }}
+                fullWidth
+                name="state"
+                defaultValue={editForm.state}
+                onChange={(e: any) => handleChange("state", e.target.value)}
+              >
+                {StatesData.map((state, index) => (
+                  <MenuItem
+                    sx={{ fontFamily: "fontNormal" }}
+                    key={index}
+                    value={state.name}
+                  >
+                    {state.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </label>
+
+            <label htmlFor="LGA" style={{ marginTop: 8 }}>
+              L.G.A
+              <TextField
+                select
+                sx={{ marginTop: "5px", fontFamily: "fontNormal" }}
+                fullWidth
+                name="lga"
+                value={editForm.lga}
+                onChange={(e: any) => handleChange("lga", e.target.value)}
+              >
+                {StatesData?.find(
+                  (state) => state.name === editForm.state
+                )?.lgas.map((lga, index) => (
+                  <MenuItem
+                    sx={{ fontFamily: "fontNormal" }}
+                    key={index}
+                    value={lga}
+                  >
+                    {lga ? lga : ""}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </label>
+
+            <label htmlFor="height" style={{ marginTop: 10 }}>
+              Height
+              <OutlinedInput
+                sx={{ marginTop: "5px", fontFamily: "fontNormal" }}
+                fullWidth
+                name="height"
+                value={editForm.height}
+                endAdornment={
+                  <InputAdornment position="end">cm</InputAdornment>
+                }
+                inputProps={{
+                  max: 999,
+                  type: "number",
+                  min: 0,
+                  step: 0,
+                }}
+                onChange={(e: any) => handleChange("height", e.target.value)}
+                onWheel={(e: any) => e.target.blur()}
+              />
+            </label>
+
+            <label style={{ marginTop: 10 }}>
+              Weight
+              <TextField
+                type="number"
+                sx={{ marginTop: "5px", fontFamily: "fontNormal" }}
+                fullWidth
+                name="weight"
+                value={editForm.weight}
+                inputProps={{
+                  max: 999,
+                  type: "number",
+                  min: 0,
+                  step: 0,
+                }}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">kg</InputAdornment>
+                  ),
+                }}
+                onChange={(e: any) => handleChange("weight", e.target.value)}
+                onWheel={(e: any) => e.target.blur()}
+              />
+            </label>
+          </Box>
+        </div>
+
+        <div style={{ marginTop: 16 }}>
+          <Typography sx={{ color: "#090816" }} fontWeight={600} fontSize={20}>
+            Emergency Contact
+          </Typography>
+
+          <Box>
+            {/* PARENT ONE EDIT SECTION */}
+            {moment(new Date()).diff(client?.dateOfBirth, "years") < 18 && (
+              <>
+                <Typography
+                  sx={{
+                    mt: "15px",
+                    fontWeight: "fontBold ",
+                  }}
+                  fontWeight="fontBold"
+                  fontSize={16}
+                  color={"#101928"}
+                >
+                  Legal Guardian One
+                </Typography>
+                <div>
+                  <InputField
+                    type="text"
+                    label="Full Name"
+                    name="parentOne"
+                    value={editForm.parentOne}
+                    onChange={(e: any) =>
+                      handleChange("parentOne", e.target.value)
+                    }
+                  />
+
+                  <div style={{ marginTop: 8 }}>
+                    <PhoneField
+                      name="parentOneNumber"
+                      value={editForm.parentOneNumber}
+                      onChange={(value: any) =>
+                        handleChange("parentOneNumber", value)
+                      }
+                    />
+                  </div>
+
+                  <InputField
+                    type="text"
+                    label="NHR ID"
+                    name="parentOneNHRID"
+                    value={editForm.parentOneNHR_ID}
+                    onChange={(e: any) =>
+                      handleChange("parentOneNHRID", e.target.value)
+                    }
+                  />
+
+                  <label
+                    htmlFor="parentOneRelationship"
+                    style={{ marginTop: 10 }}
+                  >
+                    Relationship
+                    <TextField
+                      select
+                      sx={{ marginTop: "5px" }}
+                      fullWidth
+                      name="parentOneRelationship"
+                      value={editForm.parentOneRelationship}
+                      onChange={(e: any) =>
+                        handleChange("parentOneRelationship", e.target.value)
+                      }
+                    >
+                      {relations.map((item, index) => (
+                        <MenuItem
+                          sx={{ fontFamily: "fontNormal" }}
+                          key={index}
+                          value={item.value}
+                        >
+                          {item.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </label>
+                </div>
+              </>
+            )}
+
+            {/* PARENT TWO EDIT SECTION */}
+            {moment(new Date()).diff(client?.dateOfBirth, "years") < 18 && (
+              <>
+                <Typography
+                  sx={{
+                    mt: "15px",
+                    fontWeight: "fontBold ",
+                  }}
+                  fontWeight="fontBold"
+                  fontSize={16}
+                  color={"#101928"}
+                >
+                  Legal Guardian Two
+                </Typography>
+                <div>
+                  <InputField
+                    type="text"
+                    label="Full Name"
+                    name="parentTwo"
+                    value={editForm.parentTwo}
+                    onChange={(e: any) =>
+                      handleChange("parentTwo", e.target.value)
+                    }
+                  />
+                  <div style={{ marginTop: 8 }}>
+                    <PhoneField
+                      name="parentTwoNumber"
+                      value={editForm.parentTwoNumber}
+                      onChange={(value: any) =>
+                        handleChange("parentTwoNumber", value)
+                      }
+                    />
+                  </div>
+
+                  <InputField
+                    type="text"
+                    label="NHR ID"
+                    name="parentTwoNHRID"
+                    value={editForm.parentTwoNHR_ID}
+                    onChange={(e: any) =>
+                      handleChange("parentTwoNHRID", e.target.value)
+                    }
+                  />
+
+                  <label
+                    htmlFor="parentOneRelationship"
+                    style={{ marginTop: 10 }}
+                  >
+                    Relationship
+                    <TextField
+                      select
+                      sx={{ marginTop: "5px", fontFamily: "fontNormal" }}
+                      fullWidth
+                      name="parentTwoRelationship"
+                      value={editForm.parentTwoRelationship}
+                      onChange={(e: any) =>
+                        handleChange("parentTwoRelationship", e.target.value)
+                      }
+                    >
+                      {relations.map((item, index) => (
+                        <MenuItem
+                          sx={{ fontFamily: "fontNormal" }}
+                          key={index}
+                          value={item.value}
+                        >
+                          {item.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </label>
+                </div>
+              </>
+            )}
+
+            {/* NEXT OF KIN EDIT SECTION */}
+            {moment(new Date()).diff(client?.dateOfBirth, "years") >= 18 && (
+              <>
+                <Typography
+                  sx={{
+                    mt: "10px",
+                    fontWeight: "fontBold ",
+                  }}
+                  fontWeight="fontBold"
+                  fontSize={16}
+                  color={"#101928"}
+                >
+                  Next Of Kin
+                </Typography>
+                <div>
+                  <InputField
+                    type="text"
+                    label="Full Name"
+                    name="nokFullName"
+                    value={editForm.nokFullName}
+                    onChange={(e: any) =>
+                      handleChange("nokFullName", e.target.value)
+                    }
+                  />
+                  <div style={{ marginTop: 8 }}>
+                    <PhoneField
+                      name="nokPhoneNumber"
+                      value={editForm.nokPhoneNumber}
+                      onChange={(value: any) =>
+                        handleChange("nokPhoneNumber", value)
+                      }
+                    />
+                  </div>
+
+                  <InputField
+                    type="text"
+                    label="NHR ID"
+                    name="nokNHR_ID"
+                    value={editForm.nokNHR_ID}
+                    onChange={(e: any) =>
+                      handleChange("nokNHR_ID", e.target.value)
+                    }
+                  />
+
+                  <label htmlFor="nokRelationship" style={{ marginTop: 10 }}>
+                    Relationship
+                    <TextField
+                      select
+                      sx={{ marginTop: "5px", fontFamily: "fontNormal" }}
+                      fullWidth
+                      name="nokRelationship"
+                      value={editForm.nokRelationship}
+                      onChange={(e: any) =>
+                        handleChange("nokRelationship", e.target.value)
+                      }
+                    >
+                      {relations.map((item, index) => (
+                        <MenuItem
+                          sx={{ fontFamily: "fontNormal" }}
+                          key={index}
+                          value={item.value}
+                        >
+                          {item.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </label>
+                </div>
+              </>
+            )}
+
+            <Box sx={{ mt: 3 }}>
+              <Typography
+                sx={{ color: "#090816" }}
+                fontWeight={600}
+                fontSize={20}
+              >
+                Health Plan Information
+              </Typography>
+              <InputField
+                type="text"
+                label="HMO Name"
+                name="HMOPlan"
+                value={editForm.HMOPlan}
+                onChange={(e: any) => handleChange("HMOPlan", e.target.value)}
+              />
+
+              <InputField
+                type="text"
+                label="Nominated Pharmacy"
+                name="nominatedPharmarcy"
+                value={editForm.nominatedPharmarcy}
+                onChange={(e: any) =>
+                  handleChange("nominatedPharmarcy", e.target.value)
+                }
+              />
+
+              <InputField
+                type="text"
+                label="Registered Doctor"
+                name="registeredDoctor"
+                value={editForm.registeredDoctor}
+                onChange={(e: any) =>
+                  handleChange("registeredDoctor", e.target.value)
+                }
+              />
+            </Box>
+          </Box>
+        </div>
+
+        <Stack marginTop={5}>
+          <Button
+            variant="contained"
+            sx={{
+              color: "#FFF",
+              outline: "none",
+              textTransform: "capitalize",
+              fontWeight: 600,
+              background: "#2E90FA",
+              height: "48px",
+              "&:hover": { backgroundColor: "#2E90FA" },
+              borderRadius: 2,
+            }}
+            onClick={updateUser}
+            disabled={isLoad}
+          >
+            Save changes
+          </Button>
+        </Stack>
+      </form>
     </Box>
   );
 }
