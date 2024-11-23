@@ -34,6 +34,7 @@ const config: Config = {
           900: "#101928",
         },
         err: "#D42620",
+        succ: "#099250",
         warn: {
           100: "#FDEAD7",
         },

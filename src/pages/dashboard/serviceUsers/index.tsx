@@ -22,6 +22,7 @@ import Message from "./Message";
 import { useState } from "react";
 import { axiosInstance } from "../../../Utils";
 import Swal from "sweetalert2";
+import { useGetUserConsent } from "../../../api/HealthServiceUser/consent";
 
 export default function Singleuser() {
   const client = useSelector((state: any) => state.client.clients.tab1[0]);
@@ -37,6 +38,12 @@ export default function Singleuser() {
   const { id } = useParams();
 
   const navigate = useNavigate();
+
+  const newId = id ? parseInt(id) : NaN;
+
+  const { data } = useGetUserConsent(newId);
+
+  console.log("consent data;", data?.data);
 
   const isInputEmpty = () => message.trim() === "";
 
