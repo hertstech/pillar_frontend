@@ -23,6 +23,7 @@ import { useState } from "react";
 import { axiosInstance } from "../../../Utils";
 import Swal from "sweetalert2";
 import { useGetUserConsent } from "../../../api/HealthServiceUser/consent";
+import { ConsentBoxes } from "../../../components/ServiceUser/Consent";
 
 export default function Singleuser() {
   const client = useSelector((state: any) => state.client.clients.tab1[0]);
@@ -202,17 +203,31 @@ export default function Singleuser() {
               <span>Go Back</span>
             </div>
 
-            <div
-              style={{
-                color: "#101928",
-                fontWeight: 700,
-                fontSize: 18,
-                fontFamily: "fontBold",
-                textTransform: "capitalize",
-              }}
-            >
-              {`${client?.firstName} ${client?.lastName}`}
-            </div>
+            <Box className="flex gap-2 items-center">
+              <Box className="font-bold text-lg capitalize text-neu-900">
+                {`${client?.firstName} ${client?.lastName}`}
+              </Box>
+              <ConsentBoxes data={data?.data} />
+              {/* <Box
+                  className="flex rounded-full px-3 py-1 items-center gap-1 bg-red-100
+                text-err font-semibold text-xs uppercase"
+                >
+                  <span>
+                    <MdBloodtype className="text-err" size={18} />
+                  </span>
+                  <span>GT</span>
+                </Box>
+                <Box
+                  className="flex rounded-full px-3 py-1 items-center gap-1 bg-red-100
+                text-err font-semibold text-xs uppercase"
+                >
+                  <span>
+                    <GiHeartOrgan className="text-err" size={16} />
+                  </span>
+                  <span>cpr</span>
+                </Box>
+              */}
+            </Box>
           </Stack>
 
           <Stack
