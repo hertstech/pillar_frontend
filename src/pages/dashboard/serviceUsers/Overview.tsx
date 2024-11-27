@@ -18,7 +18,6 @@ import { FaHeartbeat } from "react-icons/fa";
 import { FaHeartCircleCheck } from "react-icons/fa6";
 import { ProfileSummary } from "../../../components/ServiceUser/ProfileSummary";
 
-
 ChartJS.register(
   LineElement,
   LinearScale,
@@ -33,6 +32,7 @@ export interface client {
   email: string;
   phoneNumber: string;
   address: string;
+  bmi?: number;
   lga: string;
   dateOfBirth: Date;
   height: number;
@@ -140,8 +140,6 @@ export default function Overview({ client }: PropType) {
       },
     },
   };
-
-  
 
   useEffect(() => {
     const getOverview = async () => {
@@ -781,7 +779,7 @@ export default function Overview({ client }: PropType) {
         </Box>
       </Box>
 
-     <ProfileSummary client={client} NHRID={NHRID} isLoading={isLoading}/>
+      <ProfileSummary client={client} NHRID={NHRID} isLoading={isLoading} />
     </Box>
   );
 }

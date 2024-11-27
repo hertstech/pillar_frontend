@@ -12,7 +12,7 @@ export const ConsentStatus: React.FC<ConsentViewProps> = ({ NHRID, goTo }) => {
   const { data } = useGetUserConsent(NHRID as number);
 
   if (!data) {
-    return <p>Loading...</p>;
+    return <p className="text-center text-2xl italic">Loading consent...</p>;
   }
 
   const consentData = [
@@ -58,7 +58,11 @@ export const ConsentStatus: React.FC<ConsentViewProps> = ({ NHRID, goTo }) => {
         },
         {
           label: "Sharing health information with family members or caregivers",
-          value: data?.data.family_sharing?.length > 0 ? "yes" : "no",
+          value: data?.data.family_sharing?.some(
+            (member: any) => member.first_name || member.last_name
+          )
+            ? true
+            : false,
         },
       ],
       familySharing: data?.data.family_sharing || [],

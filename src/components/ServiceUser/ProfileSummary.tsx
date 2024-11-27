@@ -102,13 +102,31 @@ export const ProfileSummary: React.FC<IProps> = ({
       <Box className="w-full h-fit rounded-lg border-[1px] border-[#E4E7EC] mt-8 p-8 bg-white">
         <GaugeChart
           id="gauge-chart5"
-          nrOfLevels={50}
-          arcsLength={[0.25, 0.25, 0.25, 0.25]}
+          arcsLength={[50, 50, 50, 50]}
           colors={["#40B2F6", "#42B129", "#FFB40B", "#FE3F32"]}
-          percent={2}
+          percent={
+            client?.bmi ? parseFloat(client?.bmi.toFixed(1)) / 100 : "N/A"
+          }
           needleScale={0.4}
-          textComponent={"Body Mass Index"}
           arcPadding={-0.1}
+          arcWidth={0.4}
+          cornerRadius={0}
+          textColor={["#40B2F6", "#42B129", "#FFB40B", "#FE3F32"]}
+          // formatTextValue={}
+          textComponent={
+            <div>
+              <div className="flex w-full justify-between">
+                <p className="text-xs font-base text-neu-700">
+                  Body Mass Index
+                </p>
+                <p>{"icon"}</p>
+              </div>
+              <p className="text-2xl text-neu-900 font-semibold">
+                {client?.bmi ? client?.bmi.toFixed(1) : "N/A"}{" "}
+                <span className="text-sm">kg/m&sup2;</span>
+              </p>
+            </div>
+          }
         />
       </Box>
       <Box className="w-full h-fit rounded-lg border-[1px] border-[#E4E7EC] mt-8 p-8 bg-white">
