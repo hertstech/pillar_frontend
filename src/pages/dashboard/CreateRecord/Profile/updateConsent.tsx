@@ -157,9 +157,9 @@ export const UpdateConsent = forwardRef(({ NHRID }: StepFourProps) => {
         newState ? [{ firstName: "", lastName: "" }] : []
       );
     } else if (key === "vaccineConsent") {
-      setShowVaccineOptions(!showVaccineOptions);
-
-      setValue("vaccineConsent", consentData.vaccineConsent || []);
+      const newState = !showVaccineOptions;
+      setShowVaccineOptions(newState);
+      setValue("vaccineConsent", newState ? [] : []);
     } else {
       setValue(key, !(consentData[key] as boolean));
     }
@@ -172,12 +172,10 @@ export const UpdateConsent = forwardRef(({ NHRID }: StepFourProps) => {
   ];
 
   const toggleVaccineOption = (optionKey: VaccineOptionKey) => {
-    setValue(
-      "vaccineConsent",
-      consentData.vaccineConsent.includes(optionKey)
-        ? consentData.vaccineConsent.filter((key) => key !== optionKey)
-        : [...consentData.vaccineConsent, optionKey]
-    );
+    const updatedConsent = consentData.vaccineConsent.includes(optionKey)
+      ? consentData.vaccineConsent.filter((key) => key !== optionKey)
+      : [...consentData.vaccineConsent, optionKey];
+    setValue("vaccineConsent", updatedConsent);
   };
 
   const handleConsentToAll = () => {

@@ -37,10 +37,17 @@ type ConsentData = Record<string, boolean>;
 
 const transformConsentData = (data: ConsentData = {}) => {
   return Object.entries(data)
-    .filter(
-      ([key, value]) =>
-        value && newKeyAbbreviationMap[key]?.abbreviation !== "N/A"
-    )
+    .filter(([key, value]) => {
+      const isExcludedKey =
+        (key === "vaccine_consent" || key === "family_sharing") &&
+        Array.isArray(value) &&
+        value.length === 0;
+      return (
+        !isExcludedKey &&
+        value &&
+        newKeyAbbreviationMap[key]?.abbreviation !== "N/A"
+      );
+    })
     .map(([key]) => ({
       abbreviation: newKeyAbbreviationMap[key].abbreviation,
       icon: newKeyAbbreviationMap[key].icon,
