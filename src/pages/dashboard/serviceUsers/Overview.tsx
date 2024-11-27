@@ -1,4 +1,4 @@
-import { Box, Chip, Divider, Stack, Typography, Avatar } from "@mui/material";
+import { Box, Chip, Divider, Stack, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import {
   Chart as ChartJS,
@@ -14,10 +14,10 @@ import { Line } from "react-chartjs-2";
 import { axiosInstance } from "../../../Utils";
 import { useParams } from "react-router-dom";
 import { ItemLabel } from "../../../components/InputField";
-import { TextLabel } from "./Health/Components/textLabel";
 import { FaHeartbeat } from "react-icons/fa";
 import { FaHeartCircleCheck } from "react-icons/fa6";
-// import Avatars from "../../../components/Avatar";
+import { ProfileSummary } from "../../../components/ServiceUser/ProfileSummary";
+
 
 ChartJS.register(
   LineElement,
@@ -28,7 +28,7 @@ ChartJS.register(
   Tooltip
 );
 
-interface client {
+export interface client {
   id: string;
   email: string;
   phoneNumber: string;
@@ -100,6 +100,8 @@ interface PropType {
 export default function Overview({ client }: PropType) {
   const { id } = useParams();
 
+  const [isLoading, setIsLoading] = React.useState(false);
+
   const [temp, setTemp] = React.useState<any>({});
 
   const [glucose, setGlucose] = React.useState<any>({});
@@ -139,7 +141,7 @@ export default function Overview({ client }: PropType) {
     },
   };
 
-  const [isLoading, setIsLoading] = React.useState(false);
+  
 
   useEffect(() => {
     const getOverview = async () => {
@@ -779,134 +781,7 @@ export default function Overview({ client }: PropType) {
         </Box>
       </Box>
 
-      <Box className="w-[30%]">
-        <Box className="w-full h-fit rounded-lg border-[1px] border-[#E4E7EC]">
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              p: 3,
-            }}
-          >
-            <Avatar sx={{ bgcolor: "#B2DDFF" }}>
-              {client?.firstName.slice(0, 1)}
-            </Avatar>
-            <div className="">
-              <Typography
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  fontWeight: 500,
-                  fontSize: 18,
-                  textTransform: "capitalize",
-                  marginLeft: 2,
-                }}
-              >
-                {client?.firstName + " " + client?.lastName}
-              </Typography>
-              <span
-                style={{
-                  fontWeight: 400,
-                  fontSize: 14,
-                  color: "#475467",
-                  marginLeft: 16,
-                }}
-              >
-                NHRID: {NHRID}
-              </span>
-            </div>
-          </Box>
-
-          <Divider />
-
-          <Box className="grid grid-cols-2 p-6">
-            <>
-              <TextLabel
-                isLoading={isLoading}
-                label="Age"
-                text={moment(new Date()).diff(client?.dateOfBirth, "years")}
-              />
-              <TextLabel
-                isLoading={isLoading}
-                label="Height"
-                text={client?.height + "" + "cm"}
-              />{" "}
-              <TextLabel
-                isLoading={isLoading}
-                label="Eye color"
-                text={"None"}
-              />
-              <TextLabel
-                isLoading={isLoading}
-                label="HMO Plan"
-                text={client?.HMOPlan || "None"}
-              />
-            </>
-            <>
-              <TextLabel
-                isLoading={isLoading}
-                label="Date of Birth"
-                text={moment(client?.dateOfBirth).format("DD/MM/YYYY")}
-              />
-              <TextLabel
-                isLoading={isLoading}
-                label="Weight"
-                text={client?.weight + "" + "kg"}
-              />
-              <TextLabel
-                isLoading={isLoading}
-                label="Hair color"
-                text={"Brown"}
-              />
-              <TextLabel
-                isLoading={isLoading}
-                label="Weight"
-                text={"123883893/O"}
-              />
-            </>
-          </Box>
-        </Box>
-        <Box className="w-full h-fit rounded-lg border-[1px] border-[#E4E7EC] mt-8 p-8">
-          <Box>
-            <TextLabel
-              isLoading={isLoading}
-              label="Email Address"
-              text={client?.email || "None"}
-            />
-            <TextLabel
-              isLoading={isLoading}
-              label="Phone Number"
-              text={client?.phoneNumber}
-            ></TextLabel>
-            <TextLabel
-              isLoading={isLoading}
-              label="Address"
-              text={client?.address}
-            />
-          </Box>
-          <Box className="grid grid-cols-3">
-            {" "}
-            <TextLabel
-              isLoading={isLoading}
-              label="L.G.A"
-              text={client?.lga || "N/A"}
-            />
-            <TextLabel
-              isLoading={isLoading}
-              label="State"
-              text={client?.state || "N/A"}
-            ></TextLabel>
-            <TextLabel
-              isLoading={isLoading}
-              label="Country"
-              text={"Nigeria"} // to be updated from server
-            />
-          </Box>
-          <p className="text-right font-light text-sm text-neu-600 italic">
-            Last updated on 23rd Nov, 2024
-          </p>
-        </Box>
-      </Box>
+     <ProfileSummary client={client} NHRID={NHRID} isLoading={isLoading}/>
     </Box>
   );
 }

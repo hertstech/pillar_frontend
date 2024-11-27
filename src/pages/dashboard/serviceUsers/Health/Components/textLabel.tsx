@@ -14,7 +14,7 @@ export const TextLabel = ({ text, label, isLoading }: TextLabelProps) => (
       fontWeight: 400,
       color: "#475467",
       fontSize: 12,
-      margin: "20px 0px",
+      margin: "15px 0px",
     }}
   >
     {label}

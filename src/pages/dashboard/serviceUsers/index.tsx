@@ -57,7 +57,7 @@ export default function Singleuser() {
     },
     {
       label: "Profile",
-      content: <Profile client={client} />,
+      content: <Profile client={client} isLoading={isLoading} />,
     },
     {
       label: "Health Information",
