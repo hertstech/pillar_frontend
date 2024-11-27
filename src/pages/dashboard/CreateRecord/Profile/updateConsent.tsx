@@ -79,9 +79,6 @@ export const UpdateConsent = forwardRef(({ NHRID }: StepFourProps) => {
 
   const { data } = useGetUserConsent(NHRID);
 
-  console.log("consent data;", data?.data);
-  console.log("idsss;", typeof NHRID);
-
   const {
     handleSubmit,
     watch,

@@ -23,7 +23,7 @@ import { useState } from "react";
 import { axiosInstance } from "../../../Utils";
 import Swal from "sweetalert2";
 import { useGetUserConsent } from "../../../api/HealthServiceUser/consent";
-import { ConsentBoxes } from "../../../components/ServiceUser/Consent";
+import { ConsentBoxes } from "../../../components/ServiceUser/ConsentPills";
 
 export default function Singleuser() {
   const client = useSelector((state: any) => state.client.clients.tab1[0]);
