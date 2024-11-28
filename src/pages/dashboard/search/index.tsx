@@ -345,7 +345,7 @@ export default function Search() {
 
             {searchOptions ? (
               // SECOND CHOICE CLIENT DETAILS
-              <form action="">
+              <form onSubmit={searchNameDate}>
                 <div className={Styles.content}>
                   <Typography
                     variant="subtitle2"
@@ -399,7 +399,10 @@ export default function Search() {
                     {error && error}
                   </Typography>
 
-                  <label style={{ marginTop: 10 }} htmlFor="dateOfBirth">
+                  <label
+                    style={{ marginTop: 10, marginBottom: 25 }}
+                    htmlFor="dateOfBirth"
+                  >
                     Date of Birth
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DemoContainer components={["DatePicker"]}>
@@ -421,19 +424,17 @@ export default function Search() {
                     </LocalizationProvider>
                   </label>
 
-                  <div className={Styles.bttn}>
-                    <Buttons
-                      loading={isLoading}
-                      disabled={!firstName || !lastName}
-                      title="Search records"
-                      onClick={searchNameDate}
-                    />
-                  </div>
+                  <Buttons
+                    type="submit"
+                    loading={isLoading}
+                    disabled={!firstName || !lastName}
+                    title="Search records"
+                  />
                 </div>
               </form>
             ) : (
               // DEFAULT: NHR ID
-              <form action="">
+              <form onSubmit={searchNHRID}>
                 <div className={Styles.content}>
                   <Typography
                     variant="subtitle2"
@@ -462,10 +463,10 @@ export default function Search() {
 
                   <div className={Styles.bttn}>
                     <Buttons
+                      type="submit"
                       title="Search records"
                       disabled={!numberValue}
                       loading={isLoading}
-                      onClick={searchNHRID}
                     />
                   </div>
                 </div>
