@@ -78,9 +78,6 @@ export default function StepFour({ NHRID }: StepFourProps) {
   const { mutate } = useUpdateUserConsent();
   const { data } = useGetUserConsent(NHRID);
 
-  console.log("consent data;", data?.data);
-  console.log("idsss;", typeof NHRID);
-
   const {
     handleSubmit,
     watch,
@@ -154,7 +151,7 @@ export default function StepFour({ NHRID }: StepFourProps) {
     setValue("vaccineConsent", newConsent);
   };
 
-  console.log("submission errors:", errors);
+  console.error("submission errors:", errors);
   const onSubmit = (data: ConsentData) => {
     const newData = transformToSnakeCase(data);
     mutate(
