@@ -5,7 +5,6 @@ import {
   InputAdornment,
   MenuItem,
   OutlinedInput,
-  Stack,
   TextField,
   Typography,
 } from "@mui/material";
@@ -74,7 +73,7 @@ export default function Profile() {
 
   const [isLoad, setIsLoad] = React.useState(false);
 
-  const updateUser = async (e:any) => {
+  const updateUser = async (e: any) => {
     e.preventDefault();
     setIsLoad(true);
 
