@@ -74,7 +74,8 @@ export default function Profile() {
 
   const [isLoad, setIsLoad] = React.useState(false);
 
-  const updateUser = async () => {
+  const updateUser = async (e:any) => {
+    e.preventDefault();
     setIsLoad(true);
 
     try {
@@ -120,7 +121,7 @@ export default function Profile() {
         </Typography>
       </div>
 
-      <form>
+      <form onSubmit={updateUser}>
         <div>
           <Box>
             <Typography
@@ -505,8 +506,15 @@ export default function Profile() {
           </Box>
         </div>
 
-        <Stack marginTop={5}>
-          <Button
+        <Button
+          type="submit"
+          disabled={isLoad}
+          variant="contained"
+          sx={{ width: "100%", color: "white", marginTop: 4 }}
+        >
+          Update Profile
+        </Button>
+        {/* <Button
             variant="contained"
             sx={{
               color: "#FFF",
@@ -521,9 +529,8 @@ export default function Profile() {
             onClick={updateUser}
             disabled={isLoad}
           >
-            Save changes
-          </Button>
-        </Stack>
+            Update Profile
+          </Button> */}
       </form>
     </Box>
   );

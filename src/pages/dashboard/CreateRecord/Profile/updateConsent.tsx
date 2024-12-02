@@ -357,7 +357,7 @@ export const UpdateConsent = forwardRef(({ NHRID }: StepFourProps) => {
             variant="contained"
             sx={{ width: "100%", color: "white", marginTop: 4 }}
           >
-            Update profile
+            Update consent
           </Button>
         </Box>
       </form>
