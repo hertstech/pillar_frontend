@@ -7,7 +7,7 @@ import {
   Stack,
 } from "@mui/material";
 import { useSelector } from "react-redux";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import HeaderTabs from "../../../components/HeaderTabs";
 import Profile from "./Profile";
 import Health from "./Health";
@@ -24,6 +24,8 @@ import { axiosInstance } from "../../../Utils";
 import Swal from "sweetalert2";
 import { useGetUserConsent } from "../../../api/HealthServiceUser/consent";
 import { ConsentBoxes } from "../../../components/ServiceUser/ConsentPills";
+import PopperOver from "../../../components/Popover";
+import ShareUserAccessForm from "./ShareAndTransfer/ShareUserAccess";
 
 export default function Singleuser() {
   const client = useSelector((state: any) => state.client.clients.tab1[0]);
@@ -34,6 +36,8 @@ export default function Singleuser() {
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
+  const [isOpenAccessForm, setIsOpenAccessForm] = useState<boolean>(false);
+
   const [message, setMessage] = useState("");
 
   const { id } = useParams();
@@ -43,8 +47,6 @@ export default function Singleuser() {
   const newId = id ? parseInt(id) : NaN;
 
   const { data } = useGetUserConsent(newId);
-
-  console.log("consent data;", data?.data);
 
   const isInputEmpty = () => message.trim() === "";
 
@@ -125,6 +127,7 @@ export default function Singleuser() {
     <Stack sx={{}}>
       <Box>
         <Box
+          pr={2}
           sx={{
             display: "flex",
             alignItems: "center",
@@ -208,29 +211,30 @@ export default function Singleuser() {
                 {`${client?.firstName} ${client?.lastName}`}
               </Box>
               <ConsentBoxes data={data?.data} />
-              {/* <Box
-                  className="flex rounded-full px-3 py-1 items-center gap-1 bg-red-100
-                text-err font-semibold text-xs uppercase"
-                >
-                  <span>
-                    <MdBloodtype className="text-err" size={18} />
-                  </span>
-                  <span>GT</span>
-                </Box>
-                <Box
-                  className="flex rounded-full px-3 py-1 items-center gap-1 bg-red-100
-                text-err font-semibold text-xs uppercase"
-                >
-                  <span>
-                    <GiHeartOrgan className="text-err" size={16} />
-                  </span>
-                  <span>cpr</span>
-                </Box>
-              */}
             </Box>
           </Stack>
 
-          <Stack
+          <PopperOver
+            position="bottom-end"
+            popperContent={
+              <Box className="bg-white min-w-[200px] max-h-[112px] rounded-lg">
+                <button
+                  onClick={() => setIsOpenAccessForm(true)}
+                  className="p-3 border-b w-full text font-medium text-base  text-left"
+                >
+                  Share access
+                </button>
+                <button
+                  onClick={() => null}
+                  className="p-3 w-full text font-medium text-base  text-left"
+                >
+                  Transfer record
+                </button>
+              </Box>
+            }
+          />
+
+          {/* <Stack
             alignItems="center"
             sx={{ mr: 2.5, display: "flex", flexDirection: "row", gap: 3 }}
           >
@@ -317,11 +321,18 @@ export default function Singleuser() {
               </svg>
               Update Record
             </Link>
-          </Stack>
+          </Stack> */}
         </Box>
 
         <HeaderTabs links={filteredTabs} />
       </Box>
+
+      {/* Modals here */}
+
+      <ShareUserAccessForm
+        open={isOpenAccessForm}
+        setOpen={() => setIsOpenAccessForm(true)}
+      />
 
       <>
         <Dialog maxWidth="sm" fullWidth open={isOpen}>

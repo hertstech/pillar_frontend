@@ -4,6 +4,7 @@ interface ButtonProps {
   onClick?: any;
   loading?: boolean;
   disabled?: boolean;
+  className?: string;
 }
 
 export default function Button({
@@ -12,14 +13,15 @@ export default function Button({
   loading,
   disabled,
   type,
+  ...rest
 }: ButtonProps) {
   return (
     <button
       onClick={onClick}
+      className={rest.className}
       style={{
         background: loading ? "#D0D5DD" : "#2E90FA",
         opacity: disabled ? 0.3 : 1,
-        // background: loading || disabled? "#D3D3D3" : "#2E90FA",
         color: loading || disabled ? "#FFF" : "#F6FEF9",
         width: "100%",
         height: 24,
@@ -32,7 +34,6 @@ export default function Button({
         outline: "none",
         borderRadius: 6,
         fontSize: 16,
-        // cursor: loading || disabled ? "not-allowed" : "pointer",
         cursor: loading ? "not-allowed" : disabled ? "not-allowed" : "pointer",
       }}
       type={type ? type : "button"}

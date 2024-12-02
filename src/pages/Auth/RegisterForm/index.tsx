@@ -134,7 +134,10 @@ export default function RegisterPage() {
                 </Typography>
               </Box>
 
-              <form className={Styles.form}>
+              <form
+                onSubmit={handleSubmit}
+                className={`${Styles.form} flex flex-col gap-3`}
+              >
                 <div
                   style={{ display: "flex", gap: 10, alignItems: "flex-end" }}
                 >
@@ -218,7 +221,7 @@ export default function RegisterPage() {
                 />
                 <div style={{ marginTop: 20 }}>
                   <Button
-                    onClick={handleSubmit}
+                    type="submit"
                     loading={isLoadingButton}
                     title="Register"
                   />

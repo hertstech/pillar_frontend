@@ -40,7 +40,7 @@ export default function LoginPage() {
     if (!isValidEmail(formData.email)) {
       setError("Email is Invalid");
       return;
-    } 
+    }
 
     try {
       const response = await axiosInstance.post("/auth/login", formData);
@@ -92,7 +92,7 @@ export default function LoginPage() {
                 </Typography>
               </Box>
 
-              <form className={Styles.form}>
+              <form className={Styles.form} onSubmit={handleLogin}>
                 <InputField
                   type="text"
                   label="Email"
@@ -109,13 +109,14 @@ export default function LoginPage() {
                   onChange={handleChange}
                   placeholder="Create password"
                 />
-                <div style={{ marginTop: 20 }}>
-                  <Button
-                    loading={isLoadingButton}
-                    onClick={handleLogin}
-                    title="Sign In"
-                  />
-                </div>
+
+                <Button
+                  type="submit"
+                  loading={isLoadingButton}
+                  title="Sign In"
+                  className="mt-8"
+                />
+
                 <p className={Styles.errorText}>{error && error}</p>
               </form>
 

@@ -16,10 +16,23 @@ export const ProfileSummary: React.FC<IProps> = ({
   NHRID,
   isLoading,
 }) => {
-  const bmi =
-    typeof client?.bmi === "number"
-      ? parseFloat(client.bmi.toFixed(1)) / 100
-      : 0;
+  const maxBmi = 40;
+  const minBmi = 16;
+
+  const normalizedBmi = client?.bmi
+    ? Math.min(parseFloat(client.bmi.toFixed(1)), maxBmi)
+    : minBmi;
+
+  const bmi = (normalizedBmi - minBmi) / (maxBmi - minBmi);
+
+  const getBMIDescription = (bmi:any) => {
+    if (bmi < 18.5) return { label: "Underweight", color: "#40B2F6" };
+    if (bmi < 23) return { label: "Healthy", color: "#42B129" };
+    if (bmi < 27.5) return { label: "Overweight", color: "#FFB40B" };
+    return { label: "Obese", color: "#FE3F32" };
+  };
+
+  const bmiLevel = getBMIDescription(client?.bmi);
 
   return (
     <Box className="w-[30%]">
@@ -106,10 +119,13 @@ export const ProfileSummary: React.FC<IProps> = ({
         </Box>
       </Box>
       <Box className="w-full h-fit rounded-lg border-[1px] border-[#E4E7EC] mt-8 p-8 bg-white relative">
-        <BiSolidPrinter size={22} className="text-neu-400 absolute top-12 right-6"/>
+        <BiSolidPrinter
+          size={22}
+          className="text-neu-400 absolute top-12 right-6"
+        />
         <GaugeChart
           id="gauge-chart5"
-          arcsLength={[50, 50, 50, 50]}
+          arcsLength={[18.5 - 16, 23 - 18.5, 27.5 - 23, 40 - 27.5]}
           colors={["#40B2F6", "#42B129", "#FFB40B", "#FE3F32"]}
           percent={bmi}
           needleScale={0.4}
@@ -123,8 +139,6 @@ export const ProfileSummary: React.FC<IProps> = ({
                 <p className="text-xs font-base text-neu-700">
                   Body Mass Index
                 </p>
-                <p>
-                </p>
               </div>
               <p className="text-2xl text-neu-900 font-semibold">
                 {client?.bmi ? client?.bmi.toFixed(1) : "N/A"}{" "}
@@ -133,6 +147,12 @@ export const ProfileSummary: React.FC<IProps> = ({
             </div>
           }
         />
+        <p
+          className={`text-lg text-center font-bold leading-6`}
+          style={{ color: bmiLevel.color }}
+        >
+          {bmiLevel.label}
+        </p>
       </Box>
       <Box className="w-full h-fit rounded-lg border-[1px] border-[#E4E7EC] mt-8 p-8 bg-white">
         <Box>
