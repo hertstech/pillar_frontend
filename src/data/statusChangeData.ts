@@ -14,6 +14,7 @@ export const reasons = {
     },
     { id: "4", name: "Emergency", value: "emergency" },
   ],
+
   holdCancel: [
     { id: "1", name: "Awaiting new information", value: "new_info" },
     { id: "2", name: "Treatment adjustment", value: "adjustment" },
@@ -22,5 +23,23 @@ export const reasons = {
     { id: "5", name: "Admin issues", value: "admin_issues" },
     { id: "6", name: "Health status changes", value: "status_changes" },
     { id: "7", name: "Reassessment", value: "reassessment" },
+  ],
+};
+
+export const accessData = {
+  specialty: [
+    { id: "0", name: "Driver", value: "dr" },
+    {
+      id: "1",
+      name: "Lorker",
+      value: "lk",
+    },
+    { id: "2", name: "Painter", value: "medical_findings" },
+    {
+      id: "3",
+      name: "Administrative ",
+      value: "administrative_factors",
+    },
+    { id: "4", name: "Emergency", value: "emergency" },
   ],
 };
