@@ -3,7 +3,7 @@ import { Box } from "@mui/material";
 import { ModalMain } from "../../../../components/Modals";
 import { PrimaryButton } from "../../../../components/Button/primaryButton";
 import { CustomSelect } from "../../../../components/Select";
-import { FieldError, FormProvider, useForm } from "react-hook-form";
+import {  FormProvider, useForm } from "react-hook-form";
 import { accessData } from "../../../../data/statusChangeData";
 import InputField from "../../../../components/InputField";
 import { joiResolver } from "@hookform/resolvers/joi";
@@ -25,7 +25,7 @@ export const accessSchema = Joi.object({
 const ShareUserAccessForm: React.FC<ActivityPinModalProps> = ({
   open,
   setOpen,
-  onClose,
+
 }) => {
   const methods = useForm({
     resolver: joiResolver(accessSchema),
