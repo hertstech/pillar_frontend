@@ -27,7 +27,7 @@ export const ModalMain: React.FC<AlertDialogSlideProps> = ({
   open,
   handleClose,
   children,
-  width 
+  width,
 }) => {
   const handleDialogClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -55,7 +55,20 @@ export const ModalMain: React.FC<AlertDialogSlideProps> = ({
         },
       }}
     >
-      <DialogContent>{children}</DialogContent>
+      <DialogContent
+        style={{
+          overflowY: "auto",
+          maxHeight: "90vh",
+          scrollbarWidth: "none",
+        }}
+        sx={{
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
+        }}
+      >
+        {children}
+      </DialogContent>
     </Dialog>
   );
 };
@@ -71,7 +84,6 @@ export const ModalAlt: React.FC<AlertDialogSlideProps> = ({
     left: "50%",
     transform: "translate(-50%, -50%)",
     bgcolor: "white",
-
     borderRadius: "8px",
     outline: "none",
     padding: "32px",

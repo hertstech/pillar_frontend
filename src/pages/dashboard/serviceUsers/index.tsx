@@ -331,7 +331,7 @@ export default function Singleuser() {
 
       <ShareUserAccessForm
         open={isOpenAccessForm}
-        setOpen={() => setIsOpenAccessForm(true)}
+        setOpen={setIsOpenAccessForm}
       />
 
       <>

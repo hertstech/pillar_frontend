@@ -3,10 +3,7 @@ import {
   Box,
   FormControlLabel,
   FormGroup,
-  FormLabel,
-  Switch,
   Checkbox,
-  Typography,
   Link,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
@@ -23,51 +20,13 @@ import {
 } from "../../../api/HealthServiceUser/consent";
 import { useAlert } from "../../../Utils/useAlert";
 import { useNavigate } from "react-router-dom";
+import { PlSwitcher } from "../../../components/Switcher";
 
 interface StepFourProps {
   NHRID: number;
 }
 
 type VaccineOptionKey = "fluShot" | "covid19" | "hepatitisB";
-
-const ConsentQuestion = ({
-  questionText,
-  checked,
-  onToggle,
-}: {
-  questionText: string;
-  checked: boolean;
-  onToggle: () => void;
-}) => (
-  <Box className="flex justify-between items-center font-normal">
-    <FormLabel className="!text-sm max-w-[450px] xl:max-w-[550px] !font-normal">
-      {questionText}
-    </FormLabel>
-    <Box
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        gap: 1,
-        maxWidth: "105px",
-        fontWeight: 400,
-      }}
-    >
-      <Typography variant="body2">No</Typography>
-      <FormControlLabel
-        className="!text-sm"
-        value="yes"
-        control={
-          <Switch
-            sx={{ width: 62, height: 40, padding: 1.5 }}
-            checked={checked}
-            onChange={onToggle}
-          />
-        }
-        label="Yes"
-      />
-    </Box>
-  </Box>
-);
 
 export default function StepFour({ NHRID }: StepFourProps) {
   const navigate = useNavigate();
@@ -200,7 +159,7 @@ export default function StepFour({ NHRID }: StepFourProps) {
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 4 }}>
                   {section.questions.map((question) => (
                     <Box key={question.key}>
-                      <ConsentQuestion
+                      <PlSwitcher
                         questionText={question.text}
                         checked={
                           question.key === "vaccineConsent"
