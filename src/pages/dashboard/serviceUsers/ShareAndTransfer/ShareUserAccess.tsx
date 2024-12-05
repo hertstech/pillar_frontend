@@ -54,7 +54,6 @@ const accessSchema = Joi.object({
   end_date: Joi.date().greater(Joi.ref("start_date")).optional().messages({
     "date.greater": "End date must be after the start date",
   }),
-
   consenting: Joi.string().when("toggle", {
     is: true,
     then: Joi.required().messages({ "string.empty": "Consent is required" }),
@@ -98,8 +97,6 @@ const ShareUserAccessForm: React.FC<ActivityPinModalProps> = ({
 
   const { data, isLoading, error } = useGetClinicUID(uid);
 
-  console.log(data);
-
   const validateClinicUID = useCallback(
     debounce((uid: string) => {
       setValue("hospital_uid", uid, { shouldValidate: true });
@@ -123,22 +120,21 @@ const ShareUserAccessForm: React.FC<ActivityPinModalProps> = ({
     validateClinicUID(uid);
   };
 
-  console.log("Form errors:", errors);
-const onSubmit = (data: any) => {
-  const mergedStartDateTime = startDate
-    ?.set("hour", startTime?.hour() || 0)
-    .set("minute", startTime?.minute() || 0);
+  console.error("Form errors:", errors);
+  const onSubmit = (data: any) => {
+    const mergedStartDateTime = startDate
+      ?.set("hour", startTime?.hour() || 0)
+      .set("minute", startTime?.minute() || 0);
 
-  const mergedEndDateTime = endDate
-    ?.set("hour", endTime?.hour() || 0)
-    .set("minute", endTime?.minute() || 0);
+    const mergedEndDateTime = endDate
+      ?.set("hour", endTime?.hour() || 0)
+      .set("minute", endTime?.minute() || 0);
 
-  data.start_date = mergedStartDateTime?.toISOString() || null;
-  data.end_date = mergedEndDateTime?.toISOString() || null;
+    data.start_date = mergedStartDateTime?.toISOString() || null;
+    data.end_date = mergedEndDateTime?.toISOString() || null;
 
-  console.log("Form Submission Data:", data);
-};
-
+    console.log("Form Submission Data:", data);
+  };
 
   useEffect(() => {
     if (data?.status === 200) {
@@ -147,7 +143,7 @@ const onSubmit = (data: any) => {
     } else {
       setIsValidUID(false);
     }
-  }, [uid]);
+  }, [uid, setValue]);
 
   return (
     <ModalMain

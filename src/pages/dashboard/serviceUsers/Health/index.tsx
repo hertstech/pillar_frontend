@@ -65,7 +65,7 @@ export default function Health({ client }: PropType) {
   const navigate = useNavigate();
 
   const navToUpdateHealth = () => {
-    navigate(`/dashboard/user/${id}/update/1`);
+    navigate(`/dashboard/user/${id}/update/0`);
     setHide(true);
   };
 

@@ -238,7 +238,7 @@ export default function Singleuser() {
           />
         </Box>
 
-        <HeaderTabs links={filteredTabs} />
+        <HeaderTabs links={filteredTabs} writeAccess={client?.read_access} />
       </Box>
 
       {/* Modals here */}

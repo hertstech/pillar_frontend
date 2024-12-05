@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ProfileSummary } from "../../../components/ServiceUser/ProfileSummary";
 import { EditIcon } from "../../../assets/Icons";
 import { ConsentStatus } from "../../../components/ServiceUser/ConsentStatus";
+import classNames from "classnames";
 
 interface client {
   id: string;
@@ -22,6 +23,7 @@ interface client {
   state: string;
   gender: string;
   religion: string;
+  read_access: boolean;
   tribalMarks: string;
   parentOne: string;
   parentOneNumber: string;
@@ -50,7 +52,7 @@ export default function Profile({ client, isLoading }: PropType) {
 
   const navigate = useNavigate();
 
-  console.log("clients dets;", client);
+  const writeAccess = client.read_access;
 
   const navToUpdateProfile = () => {
     navigate(`/dashboard/user/${id}/update`);
@@ -79,15 +81,23 @@ export default function Profile({ client, isLoading }: PropType) {
           >
             Personal Details
           </Typography>
-          <Button
-            variant="contained"
-            className="!rounded-full !font-semibold !bg-[#fff] px-2 !gap-2
-             !capitalize !outline !text-[#099250] !text-sm !absolute !top-4 !right-4"
-            onClick={navToUpdateProfile}
-          >
-            Edit
-            <EditIcon />
-          </Button>
+          {writeAccess ? (
+            <Button
+              variant="contained"
+              className={classNames(
+                `!rounded-full !font-semibold !bg-[#fff] px-2 !gap-2
+             !capitalize !outline !text-[#099250] !text-sm !absolute !top-4 !right-4`,
+                writeAccess && "!text-neu-400"
+              )}
+              onClick={navToUpdateProfile}
+              disabled={writeAccess === true}
+            >
+              Edit
+              <EditIcon />
+            </Button>
+          ) : (
+            <></>
+          )}
 
           <div className="grid grid-cols-3">
             <TextLabel label="First Name" text={client?.firstName} />
@@ -126,15 +136,19 @@ export default function Profile({ client, isLoading }: PropType) {
             >
               Emergency Contact
             </Typography>
-            <Button
-              variant="contained"
-              className="!rounded-full !font-semibold !bg-[#fff] px-2 !gap-2
-             !capitalize !outline !text-[#099250] !text-sm !absolute !top-4 !right-4"
-              onClick={navToUpdateProfile}
-            >
-              Edit
-              <EditIcon />
-            </Button>
+            {writeAccess ? (
+              <Button
+                variant="contained"
+                className="!rounded-full !font-semibold !bg-[#fff] px-2 !gap-2
+              !capitalize !outline !text-[#099250] !text-sm !absolute !top-4 !right-4"
+                onClick={navToUpdateProfile}
+              >
+                Edit
+                <EditIcon />
+              </Button>
+            ) : (
+              <></>
+            )}
 
             <div
               style={{
@@ -196,7 +210,11 @@ export default function Profile({ client, isLoading }: PropType) {
             </div>
           </Box>
         </Stack>
-        <ConsentStatus NHRID={newId} goTo={navToUpdateProfile} />
+        <ConsentStatus
+          NHRID={newId}
+          goTo={navToUpdateProfile}
+          writeAccess={writeAccess}
+        />
       </Box>
       <ProfileSummary client={client} NHRID={NHRID} isLoading={isLoading} />
     </Box>

@@ -4,11 +4,16 @@ import { EditIcon } from "../../assets/Icons";
 import { Box, Button, Checkbox } from "@mui/material";
 
 interface ConsentViewProps {
+  writeAccess: boolean;
   NHRID: number | null;
   goTo: () => void;
 }
 
-export const ConsentStatus: React.FC<ConsentViewProps> = ({ NHRID, goTo }) => {
+export const ConsentStatus: React.FC<ConsentViewProps> = ({
+  NHRID,
+  goTo,
+  writeAccess,
+}) => {
   const { data } = useGetUserConsent(NHRID as number);
 
   if (!data) {
@@ -98,16 +103,17 @@ export const ConsentStatus: React.FC<ConsentViewProps> = ({ NHRID, goTo }) => {
         <h2 className="text-lg font-semibold text-[#090816] flex items-center gap-1.5">
           Consent Preferences
         </h2>
-
-        <Button
-          variant="contained"
-          className="!rounded-full !font-semibold !bg-[#fff] px-2 !gap-2
+        {writeAccess && (
+          <Button
+            variant="contained"
+            className="!rounded-full !font-semibold !bg-[#fff] px-2 !gap-2
              !capitalize !outline !text-[#099250] !text-sm !absolute !top-4 !right-4"
-          onClick={goTo}
-        >
-          Edit
-          <EditIcon />
-        </Button>
+            onClick={goTo}
+          >
+            Edit
+            <EditIcon />
+          </Button>
+        )}
 
         {consentData.map((section, sectionIndex) => (
           <ConsentSection
