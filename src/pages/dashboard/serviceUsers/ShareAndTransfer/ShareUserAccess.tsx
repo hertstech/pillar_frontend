@@ -1,4 +1,10 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { Box } from "@mui/material";
 import { ModalMain } from "../../../../components/Modals";
 import { PrimaryButton } from "../../../../components/Button/primaryButton";
@@ -17,6 +23,8 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Dayjs } from "dayjs";
 import { PlSwitcher } from "../../../../components/Switcher";
 import { DemoItem } from "@mui/x-date-pickers/internals/demo";
+import { useGetClinicUID } from "../../../../api/HealthServiceUser/transferAndShareAccess";
+import { debounce } from "lodash";
 
 interface ActivityPinModalProps {
   open: boolean;
@@ -24,7 +32,15 @@ interface ActivityPinModalProps {
   onClose?: () => void;
 }
 
-export const accessSchema = Joi.object({
+export type docType = {
+  firstName: string;
+  lastName: string;
+  position: string | null;
+  title: string;
+  id: string;
+};
+
+const accessSchema = Joi.object({
   hospital_uid: Joi.string().required().messages({
     "string.empty": "UID is required",
   }),
@@ -34,8 +50,11 @@ export const accessSchema = Joi.object({
   doctors_name: Joi.string().required().messages({
     "string.empty": "Doctors name is required",
   }),
-  start_date: Joi.string().optional(),
-  end_date: Joi.string().optional(),
+  start_date: Joi.date().optional(),
+  end_date: Joi.date().greater(Joi.ref("start_date")).optional().messages({
+    "date.greater": "End date must be after the start date",
+  }),
+
   consenting: Joi.string().when("toggle", {
     is: true,
     then: Joi.required().messages({ "string.empty": "Consent is required" }),
@@ -51,6 +70,7 @@ const ShareUserAccessForm: React.FC<ActivityPinModalProps> = ({
   const [endDate, setEndDate] = useState<Dayjs | null>(null);
   const [endTime, setEndTime] = useState<Dayjs | null>(null);
   const [toggle, setToggle] = useState(false);
+  const [isValidUID, setIsValidUID] = useState<boolean>(false);
 
   const methods = useForm({
     resolver: joiResolver(accessSchema),
@@ -59,41 +79,85 @@ const ShareUserAccessForm: React.FC<ActivityPinModalProps> = ({
       hospital_name: "",
       doctors_name: "",
       consenting: "",
+      start_date: "",
+      end_date: "",
     },
   });
 
   const {
     watch,
     setValue,
+    getValues,
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = methods;
 
-  console.log("Form errors:", errors);
-  const onSubmit = (data: any) => {
-    const mergedStartDateTime = startDate
-      ?.set("hour", startTime?.hour() || 0)
-      .set("minute", startTime?.minute() || 0);
+  const uid = watch("hospital_uid");
 
-    const mergedEndDateTime = endDate
-      ?.set("hour", endTime?.hour() || 0)
-      .set("minute", endTime?.minute() || 0);
+  const { data, isLoading, error } = useGetClinicUID(uid);
 
-    const submissionData = {
-      ...data,
-      start_date: mergedStartDateTime?.toISOString() || null,
-      end_date: mergedEndDateTime?.toISOString() || null,
-    };
+  console.log(data);
 
-    console.log("Form Submission:", submissionData);
-    setOpen(false);
+  const validateClinicUID = useCallback(
+    debounce((uid: string) => {
+      setValue("hospital_uid", uid, { shouldValidate: true });
+    }, 2000),
+    [setValue]
+  );
+
+  const docData =
+    data?.data?.doctors?.map((dr: docType) => ({
+      id: dr.id,
+      name: `${dr.firstName.charAt(0).toUpperCase()}${dr.firstName.slice(
+        1
+      )} ${dr.lastName.charAt(0).toUpperCase()}${dr.lastName.slice(1)}`,
+      value: dr.id,
+    })) || [];
+
+  const handleUIDChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const uid = e.target.value.trim();
+    validateClinicUID(uid);
   };
 
-  const reasonsValue = watch("doctors_name");
+  console.log("Form errors:", errors);
+const onSubmit = (data: any) => {
+  const mergedStartDateTime = startDate
+    ?.set("hour", startTime?.hour() || 0)
+    .set("minute", startTime?.minute() || 0);
+
+  const mergedEndDateTime = endDate
+    ?.set("hour", endTime?.hour() || 0)
+    .set("minute", endTime?.minute() || 0);
+
+  data.start_date = mergedStartDateTime?.toISOString() || null;
+  data.end_date = mergedEndDateTime?.toISOString() || null;
+
+  console.log("Form Submission Data:", data);
+};
+
+
+  useEffect(() => {
+    if (data?.status === 200) {
+      setIsValidUID(true);
+      setValue("hospital_name", data?.data.name, { shouldValidate: true });
+    } else {
+      setIsValidUID(false);
+    }
+  }, [uid]);
 
   return (
-    <ModalMain width={"462px"} open={open} handleClose={() => setOpen(false)}>
+    <ModalMain
+      width={"462px"}
+      open={open}
+      handleClose={() => {
+        setOpen(false);
+        reset();
+      }}
+    >
       <Box className="flex flex-col justify-between py-4">
         <Box>
           <Box className="flex justify-between items-center">
@@ -123,24 +187,28 @@ const ShareUserAccessForm: React.FC<ActivityPinModalProps> = ({
               name="hospital_uid"
               placeholder="92845**45"
               register={register}
-              errors={errors}
+              onChange={handleUIDChange}
+              errors={error || errors}
+              checking={isValidUID}
             />
             <InputField
               type="text"
               label="Hospital Name"
               name="hospital_name"
+              value={getValues("hospital_name")}
               placeholder="Junkyard Clinic"
               register={register}
               errors={errors}
+              isReadOnly={true}
             />
             <CustomSelect
               label="Doctors Name"
               name="doctors_name"
-              selectItems={accessData.specialty}
-              value={reasonsValue}
-              onChange={(value) => {
-                setValue("doctors_name", value);
-              }}
+              selectItems={docData}
+              value={watch("doctors_name")}
+              onChange={(value) =>
+                setValue("doctors_name", value, { shouldValidate: true })
+              }
               register={register("doctors_name")}
               validationError={errors.doctors_name}
             />
@@ -180,7 +248,7 @@ const ShareUserAccessForm: React.FC<ActivityPinModalProps> = ({
                   label="Why"
                   name="consenting"
                   selectItems={accessData.specialty}
-                  value={reasonsValue}
+                  value={watch("consenting")}
                   onChange={(value) => {
                     setValue("consenting", value);
                   }}
@@ -199,6 +267,7 @@ const ShareUserAccessForm: React.FC<ActivityPinModalProps> = ({
                 buttonName="Cancel"
               />
               <PrimaryButton
+                disabled={isLoading}
                 type="submit"
                 width="100%"
                 buttonName="Grant access"
