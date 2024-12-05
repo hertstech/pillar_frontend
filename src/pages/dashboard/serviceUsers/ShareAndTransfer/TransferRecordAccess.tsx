@@ -104,27 +104,28 @@ const TransferRecordAccessForm: React.FC<ActivityPinModalProps> = ({
       ...data,
       service_user_id: NHRID,
     };
-    // return;
+
     mutate(submissionData, {
       onSuccess: () => {
+        setOpen(false);
         useAlert({
+          timer: 4000,
           isToast: true,
           icon: "success",
           title: "Record transferred successfully",
           position: "top-start",
         });
-
-        setOpen(false);
         reset();
       },
       onError: () => {
+        setOpen(false);
         useAlert({
+          timer: 4000,
           icon: "error",
           isToast: true,
           position: "top-start",
           title: "Unauthorized transfer",
         });
-         setOpen(false);
         reset();
       },
     });
@@ -137,7 +138,7 @@ const TransferRecordAccessForm: React.FC<ActivityPinModalProps> = ({
     } else {
       setIsValidUID(false);
     }
-  }, [uid]);
+  }, [uid, setValue]);
 
   return (
     <ModalMain width={"462px"} open={open} handleClose={() => setOpen(false)}>
