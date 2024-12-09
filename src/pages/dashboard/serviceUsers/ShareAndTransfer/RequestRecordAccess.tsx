@@ -13,6 +13,9 @@ import { PlSwitcher } from "../../../../components/Switcher";
 import { RiErrorWarningFill } from "react-icons/ri";
 import { accessData } from "../../../../data/statusChangeData";
 import { DemoItem } from "@mui/x-date-pickers/internals/demo";
+import { useTransferRecord } from "../../../../api/HealthServiceUser/transferAndShareAccess";
+import { useAlert } from "../../../../Utils/useAlert";
+import { useParams } from "react-router-dom";
 
 interface ActivityPinModalProps {
   open: boolean;
@@ -38,6 +41,11 @@ const RequestRecordAccess: React.FC<ActivityPinModalProps> = ({
   const [startDate, setStartDate] = useState<Dayjs | null>(null);
   const [endDate, setEndDate] = useState<Dayjs | null>(null);
   const [toggle, setToggle] = useState(false);
+  const { mutate } = useTransferRecord();
+
+  const { id } = useParams();
+
+  const NHRID = id;
 
   const methods = useForm({
     resolver: joiResolver(accessSchema),
@@ -63,9 +71,40 @@ const RequestRecordAccess: React.FC<ActivityPinModalProps> = ({
   ];
 
   const onSubmit = (data: any) => {
-    console.log("Form Submission Data:", data);
-    setOpen(false);
-    reset();
+    const submissionData = {
+      ...data,
+      service_user_id: NHRID,
+    };
+
+    if (data.access_type === "transfer_access") {
+      mutate(submissionData, {
+        onSuccess: () => {
+          setOpen(false);
+          useAlert({
+            timer: 4000,
+            isToast: true,
+            icon: "success",
+            title: "Transfer request sent!",
+            position: "top-start",
+          });
+          reset();
+        },
+        onError: () => {
+          setOpen(false);
+          useAlert({
+            timer: 4000,
+            icon: "error",
+            isToast: true,
+            position: "top-start",
+            title: "Request unsuccessful",
+          });
+          reset();
+        },
+      });
+    } else {
+      setOpen(false);
+      reset();
+    }
   };
 
   return (
@@ -112,7 +151,7 @@ const RequestRecordAccess: React.FC<ActivityPinModalProps> = ({
             />
 
             <DemoItem label="Access duration">
-              <Box className="flex gap-4 items-center ">
+              <Box className="flex gap-4 items-center relative">
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
                     value={startDate}
