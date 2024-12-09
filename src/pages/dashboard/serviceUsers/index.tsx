@@ -27,9 +27,12 @@ import { ConsentBoxes } from "../../../components/ServiceUser/ConsentPills";
 import PopperOver from "../../../components/Popover";
 import ShareUserAccessForm from "./ShareAndTransfer/ShareUserAccess";
 import TransferRecordAccessForm from "./ShareAndTransfer/TransferRecordAccess";
+import RequestRecordAccess from "./ShareAndTransfer/RequestRecordAccess";
 
 export default function Singleuser() {
   const client = useSelector((state: any) => state.client.clients.tab1[0]);
+
+  const writeAccess = client?.read_access;
 
   const user = useSelector((state: any) => state.user.user);
 
@@ -37,6 +40,7 @@ export default function Singleuser() {
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
+  const [isOpenRequestForm, setIsOpenRequestForm] = useState<boolean>(false);
   const [isOpenAccessForm, setIsOpenAccessForm] = useState<boolean>(false);
   const [isTransferAccessForm, setIsTransferAccessForm] =
     useState<boolean>(false);
@@ -220,29 +224,44 @@ export default function Singleuser() {
           <PopperOver
             position="bottom-end"
             popperContent={
-              <Box className="bg-white min-w-[200px] max-h-[112px] rounded-lg border-t">
-                <button
-                  onClick={() => setIsOpenAccessForm(true)}
-                  className="p-3 border-b w-full text font-medium text-base  text-left"
-                >
-                  Share access
-                </button>
-                <button
-                  onClick={() => setIsTransferAccessForm(true)}
-                  className="p-3 w-full text font-medium text-base  text-left"
-                >
-                  Transfer record
-                </button>
-              </Box>
+              !writeAccess ? (
+                <Box className="bg-white min-w-[200px] max-h-[112px] rounded-lg border-t">
+                  <button
+                    onClick={() => setIsOpenRequestForm(true)}
+                    className="p-3 border-b w-full text font-medium text-base  text-left"
+                  >
+                    Request access
+                  </button>
+                </Box>
+              ) : (
+                <Box className="bg-white min-w-[200px] max-h-[112px] rounded-lg border-t">
+                  <button
+                    onClick={() => setIsOpenAccessForm(true)}
+                    className="p-3 border-b w-full text font-medium text-base  text-left"
+                  >
+                    Share access
+                  </button>
+                  <button
+                    onClick={() => setIsTransferAccessForm(true)}
+                    className="p-3 w-full text font-medium text-base  text-left"
+                  >
+                    Transfer record
+                  </button>
+                </Box>
+              )
             }
           />
         </Box>
 
-        <HeaderTabs links={filteredTabs} writeAccess={client?.read_access} />
+        <HeaderTabs links={filteredTabs} writeAccess={writeAccess} />
       </Box>
 
       {/* Modals here */}
 
+      <RequestRecordAccess
+        open={isOpenRequestForm}
+        setOpen={setIsOpenRequestForm}
+      />
       <ShareUserAccessForm
         open={isOpenAccessForm}
         setOpen={setIsOpenAccessForm}
