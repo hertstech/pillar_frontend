@@ -224,7 +224,7 @@ export default function Singleuser() {
           <PopperOver
             position="bottom-end"
             popperContent={
-              writeAccess ? (
+              !writeAccess ? (
                 <Box className="bg-white min-w-[200px] max-h-[112px] rounded-lg border-t">
                   <button
                     onClick={() => setIsOpenRequestForm(true)}
