@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { useState } from "react";
 import { Box } from "@mui/material";
 import { ModalMain } from "../../../../components/Modals";
 import { PrimaryButton } from "../../../../components/Button/primaryButton";
@@ -6,54 +6,45 @@ import { CustomSelect } from "../../../../components/Select";
 import { FormProvider, useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
 import Joi from "joi";
-import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { Dayjs } from "dayjs";
 import { PlSwitcher } from "../../../../components/Switcher";
 import { RiErrorWarningFill } from "react-icons/ri";
 import { accessData } from "../../../../data/statusChangeData";
-import { DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { useTransferRecord } from "../../../../api/HealthServiceUser/transferAndShareAccess";
 import { useAlert } from "../../../../Utils/useAlert";
 import { useParams } from "react-router-dom";
 
 interface ActivityPinModalProps {
   open: boolean;
-  setOpen: Dispatch<SetStateAction<boolean>>;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   onClose?: () => void;
+  data?: any;
 }
 
 const accessSchema = Joi.object({
-  access_type: Joi.string().required().messages({
-    "string.empty": "Access type is required.",
-  }),
-  start_date: Joi.date().optional(),
-  end_date: Joi.date().greater(Joi.ref("start_date")).optional().messages({
-    "date.greater": "End date must be after the start date.",
-  }),
-  consenting: Joi.string().optional(),
+  consenting: Joi.string()
+    .allow("")
+    .when("$isToggleFalse", {
+      is: true,
+      then: Joi.string().required().messages({
+        "string.empty": "Please provide a reason.",
+      }),
+    }),
 });
 
 const RequestRecordAccess: React.FC<ActivityPinModalProps> = ({
   open,
   setOpen,
+  ...rest
 }) => {
-  const [startDate, setStartDate] = useState<Dayjs | null>(null);
-  const [endDate, setEndDate] = useState<Dayjs | null>(null);
-  const [toggle, setToggle] = useState(false);
+  const [toggle, setToggle] = useState(true);
   const { mutate } = useTransferRecord();
-
-  const { id } = useParams();
-
-  const NHRID = id;
+  const { id: NHRID } = useParams();
 
   const methods = useForm({
     resolver: joiResolver(accessSchema),
+    context: { isToggleFalse: !toggle },
     defaultValues: {
-      access_type: "",
       consenting: "",
-      start_date: "",
-      end_date: "",
     },
   });
 
@@ -65,46 +56,38 @@ const RequestRecordAccess: React.FC<ActivityPinModalProps> = ({
     formState: { errors },
   } = methods;
 
-  const accessTypes = [
-    { id: "43", name: "Sharing access", value: "sharing_access" },
-    { id: "2s", name: "Transfer access", value: "transfer_access" },
-  ];
-
   const onSubmit = (data: any) => {
     const submissionData = {
       ...data,
+      consenting: toggle ? "" : data.consenting,
+      hospital_uid: rest.data?.hospital_uid,
       service_user_id: NHRID,
     };
 
-    if (data.access_type === "transfer_access") {
-      mutate(submissionData, {
-        onSuccess: () => {
-          setOpen(false);
-          useAlert({
-            timer: 4000,
-            isToast: true,
-            icon: "success",
-            title: "Transfer request sent!",
-            position: "top-start",
-          });
-          reset();
-        },
-        onError: () => {
-          setOpen(false);
-          useAlert({
-            timer: 4000,
-            icon: "error",
-            isToast: true,
-            position: "top-start",
-            title: "Request unsuccessful",
-          });
-          reset();
-        },
-      });
-    } else {
-      setOpen(false);
-      reset();
-    }
+    mutate(submissionData, {
+      onSuccess: () => {
+        setOpen(false);
+        useAlert({
+          timer: 4000,
+          isToast: true,
+          icon: "success",
+          title: "Transfer request sent!",
+          position: "top-start",
+        });
+        reset();
+      },
+      onError: () => {
+        setOpen(false);
+        useAlert({
+          timer: 4000,
+          icon: "error",
+          isToast: true,
+          position: "top-start",
+          title: "Transfer request failed",
+        });
+        reset();
+      },
+    });
   };
 
   return (
@@ -139,64 +122,13 @@ const RequestRecordAccess: React.FC<ActivityPinModalProps> = ({
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col gap-8 mt-4"
           >
-            <CustomSelect
-              label="Access type"
-              name="access_type"
-              selectItems={accessTypes}
-              value={watch("access_type")}
-              onChange={(value) =>
-                setValue("access_type", value, { shouldValidate: true })
-              }
-              validationError={errors.access_type}
-            />
-
-            <DemoItem label="Access duration">
-              <Box className="flex gap-4 items-center relative">
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    value={startDate}
-                    onChange={(date: Dayjs | null) => {
-                      setStartDate(date);
-                      setValue("start_date", date ? date.toISOString() : "", {
-                        shouldValidate: true,
-                      });
-                    }}
-                    slotProps={{
-                      textField: {
-                        error: !!errors.start_date,
-                        helperText: errors.start_date?.message || "",
-                      },
-                    }}
-                  />
-                </LocalizationProvider>
-
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    value={endDate}
-                    onChange={(date: Dayjs | null) => {
-                      setEndDate(date);
-                      setValue("end_date", date ? date.toISOString() : "", {
-                        shouldValidate: true,
-                      });
-                    }}
-                    slotProps={{
-                      textField: {
-                        error: !!errors.end_date,
-                        helperText: errors.end_date?.message || "",
-                      },
-                    }}
-                  />
-                </LocalizationProvider>
-              </Box>
-            </DemoItem>
-
-            <Box className="flex flex-col gap-4 ">
+            <Box className="flex flex-col gap-4">
               <PlSwitcher
                 checked={toggle}
                 onToggle={() => setToggle(!toggle)}
                 questionText="Is service user capable of consenting to this?"
               />
-              {toggle && (
+              {!toggle && (
                 <CustomSelect
                   label="Reason"
                   name="consenting"
