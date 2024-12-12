@@ -23,8 +23,13 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Dayjs } from "dayjs";
 import { PlSwitcher } from "../../../../components/Switcher";
 import { DemoItem } from "@mui/x-date-pickers/internals/demo";
-import { useGetClinicUID } from "../../../../api/HealthServiceUser/transferAndShareAccess";
+import {
+  useGetClinicUID,
+  useTransferRecord,
+} from "../../../../api/HealthServiceUser/transferAndShareAccess";
 import { debounce } from "lodash";
+import { useAlert } from "../../../../Utils/useAlert";
+import { useParams } from "react-router-dom";
 
 interface ActivityPinModalProps {
   open: boolean;
@@ -54,25 +59,37 @@ const accessSchema = Joi.object({
   end_date: Joi.date().greater(Joi.ref("start_date")).optional().messages({
     "date.greater": "End date must be after the start date",
   }),
-  consenting: Joi.string().when("toggle", {
-    is: true,
-    then: Joi.required().messages({ "string.empty": "Consent is required" }),
-  }),
+
+  consenting: Joi.string()
+    .allow("")
+    .when("$isToggleFalse", {
+      is: true,
+      then: Joi.string().required().messages({
+        "string.empty": "Please provide a reason.",
+      }),
+    }),
 });
 
 const ShareUserAccessForm: React.FC<ActivityPinModalProps> = ({
   open,
   setOpen,
 }) => {
+  const { id } = useParams();
+
+  const NHRID = id;
+
   const [startDate, setStartDate] = useState<Dayjs | null>(null);
   const [startTime, setStartTime] = useState<Dayjs | null>(null);
   const [endDate, setEndDate] = useState<Dayjs | null>(null);
   const [endTime, setEndTime] = useState<Dayjs | null>(null);
-  const [toggle, setToggle] = useState(false);
+  const [toggle, setToggle] = useState(true);
   const [isValidUID, setIsValidUID] = useState<boolean>(false);
+
+  const { mutate } = useTransferRecord();
 
   const methods = useForm({
     resolver: joiResolver(accessSchema),
+    context: { isToggleFalse: !toggle },
     defaultValues: {
       hospital_uid: "",
       hospital_name: "",
@@ -121,6 +138,7 @@ const ShareUserAccessForm: React.FC<ActivityPinModalProps> = ({
   };
 
   console.error("Form errors:", errors);
+
   const onSubmit = (data: any) => {
     const mergedStartDateTime = startDate
       ?.set("hour", startTime?.hour() || 0)
@@ -130,9 +148,42 @@ const ShareUserAccessForm: React.FC<ActivityPinModalProps> = ({
       ?.set("hour", endTime?.hour() || 0)
       .set("minute", endTime?.minute() || 0);
 
-    data.start_date = mergedStartDateTime?.toISOString() || null;
-    data.end_date = mergedEndDateTime?.toISOString() || null;
+    data.start_date = mergedStartDateTime
+      ? mergedStartDateTime.toISOString()
+      : null;
 
+    data.end_date = mergedEndDateTime ? mergedEndDateTime.toISOString() : null;
+
+    mutate(
+      {
+        ...data,
+        service_user_id: NHRID,
+      },
+      {
+        onSuccess: () => {
+          setOpen(false);
+          useAlert({
+            timer: 4000,
+            isToast: true,
+            icon: "success",
+            title: "Record access shared successfully",
+            position: "top-start",
+          });
+          reset();
+        },
+        onError: () => {
+          setOpen(false);
+          useAlert({
+            timer: 4000,
+            icon: "error",
+            isToast: true,
+            position: "top-start",
+            title: "Unauthorized access sharing",
+          });
+          reset();
+        },
+      }
+    );
     console.log("Form Submission Data:", data);
   };
 
@@ -212,9 +263,22 @@ const ShareUserAccessForm: React.FC<ActivityPinModalProps> = ({
             <Box className="flex gap-4 items-center">
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoItem label="Start Date">
-                  <DatePicker value={startDate} onChange={setStartDate} />
+                  <DatePicker
+                    value={startDate}
+                    onChange={(newValue) => {
+                      setStartDate(newValue);
+                      setValue(
+                        "start_date",
+                        newValue ? newValue.toISOString() : "",
+                        {
+                          shouldValidate: true,
+                        }
+                      );
+                    }}
+                  />
                 </DemoItem>
               </LocalizationProvider>
+
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <span className="mt-6">
                   <TimePicker value={startTime} onChange={setStartTime} />
@@ -224,7 +288,19 @@ const ShareUserAccessForm: React.FC<ActivityPinModalProps> = ({
             <Box className="flex gap-4 items-center">
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoItem label="End Date">
-                  <DatePicker value={endDate} onChange={setEndDate} />
+                  <DatePicker
+                    value={endDate}
+                    onChange={(newValue) => {
+                      setEndDate(newValue);
+                      setValue(
+                        "end_date",
+                        newValue ? newValue.toISOString() : "",
+                        {
+                          shouldValidate: true,
+                        }
+                      );
+                    }}
+                  />
                 </DemoItem>
               </LocalizationProvider>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -239,7 +315,7 @@ const ShareUserAccessForm: React.FC<ActivityPinModalProps> = ({
                 onToggle={() => setToggle(!toggle)}
                 questionText="Is service user capable of consenting to this?"
               />
-              {toggle && (
+              {!toggle && (
                 <CustomSelect
                   label="Why"
                   name="consenting"
