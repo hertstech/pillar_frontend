@@ -23,9 +23,7 @@ import { UpdateConsent } from "./Profile/updateConsent";
 // }
 
 export default function CreateRecord() {
-
   const { id } = useParams();
-
 
   const newId = parseInt(id as string);
 

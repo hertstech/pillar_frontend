@@ -12,6 +12,7 @@ interface TabProps {
   heading?: string;
   links: LinkItem[];
   isLoaded?: boolean;
+  writeAccess?: boolean;
   activeTab?: number;
   setActiveTab?: (index: number) => void;
 }
@@ -21,6 +22,7 @@ export default function HeaderTabs({
   links,
   isLoaded,
   activeTab,
+  writeAccess,
   setActiveTab,
 }: TabProps) {
   const [value, setValue] = React.useState(0);
@@ -48,7 +50,6 @@ export default function HeaderTabs({
           >
             {heading}
           </Typography>
-
           <Tabs
             TabIndicatorProps={{ style: { display: "none" } }}
             value={activeTab !== undefined ? activeTab : value}
@@ -57,27 +58,41 @@ export default function HeaderTabs({
             onChange={handleChange}
             textColor="inherit"
           >
-            {links.map((tab, index) => (
-              <Tab
-                sx={{
-                  textTransform: "capitalize",
-                  color: value === index ? "#087443" : "#344054",
-                  borderBottom:
-                    value === index ? "2px solid #087443" : "0px solid #099250",
-                  fontWeight: value === index ? 600 : 400,
-                  fontFamily: "fontBold",
-                }}
-                key={index}
-                label={tab.label}
-                icon={tab.icon}
-                value={tab.content}
-                iconPosition="start"
-                onClick={() => {
-                  setActiveTab?.(index);
-                  setValue(index);
-                }}
-              />
-            ))}
+            {links.map((tab, index) => {
+              const isExcluded = ["Profile", "Overview"].includes(tab.label);
+              const isDisabled = !writeAccess && !isExcluded;
+              return (
+                <Tab
+                  sx={{
+                    textTransform: "capitalize",
+                    color: isDisabled
+                      ? "#B0B0B0"
+                      : value === index
+                      ? "#087443"
+                      : "#344054",
+                    borderBottom:
+                      value === index && !isDisabled
+                        ? "2px solid #087443"
+                        : "0px solid #099250",
+                    fontWeight: value === index ? 600 : 400,
+                    fontFamily: "fontBold",
+                    pointerEvents: isDisabled ? "none" : "auto",
+                    opacity: isDisabled ? 0.6 : 1,
+                  }}
+                  key={index}
+                  label={tab.label}
+                  icon={tab.icon}
+                  value={tab.content}
+                  iconPosition="start"
+                  onClick={() => {
+                    if (!isDisabled) {
+                      setActiveTab?.(index);
+                      setValue(index);
+                    }
+                  }}
+                />
+              );
+            })}
           </Tabs>
 
           <Box

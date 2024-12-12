@@ -1,6 +1,7 @@
 import { MdBloodtype } from "react-icons/md";
 import { GiHeartOrgan } from "react-icons/gi";
 import { Box } from "@mui/material";
+import { PlTooltip } from "../Tooltip";
 
 const newKeyAbbreviationMap: Record<
   string,
@@ -33,10 +34,26 @@ const newKeyAbbreviationMap: Record<
   vaccine_consent: { abbreviation: "VAX", icon: <MdBloodtype size={18} /> },
 };
 
+const humanReadableMap: Record<string, string> = {
+  treatment_consent: "Treatment Consent",
+  alternate_treatment_consent: "Alternate Treatment Consent",
+  vaccine_consent: "Vaccine Consent",
+  provider_sharing: "Provider Sharing",
+  mental_health_record_sharing: "Mental Health Record Sharing",
+  family_sharing: "Family Sharing",
+  genetic_testing_consent: "Genetic Testing Consent",
+  medical_record_sharing: "Medical Record Sharing",
+  organ_donation: "Organ Donation",
+  marketing_consent: "Marketing Consent",
+  research_organ_donation: "Research Organ Donation",
+  research_consent: "Research Consent",
+  transfusion_consent: "Transfusion Consent",
+};
+
 type ConsentData = Record<string, boolean>;
 
-const transformConsentData = (data: ConsentData = {}) => {
-  return Object.entries(data)
+export const ConsentBoxes = ({ data }: { data?: ConsentData }) => {
+  const transformConsentData = Object.entries(data || {})
     .filter(([key, value]) => {
       const isExcludedKey =
         (key === "vaccine_consent" || key === "family_sharing") &&
@@ -49,25 +66,24 @@ const transformConsentData = (data: ConsentData = {}) => {
       );
     })
     .map(([key]) => ({
-      abbreviation: newKeyAbbreviationMap[key].abbreviation,
-      icon: newKeyAbbreviationMap[key].icon,
+      name: humanReadableMap[key] || key,
+      abbreviation: newKeyAbbreviationMap[key]?.abbreviation,
+      icon: newKeyAbbreviationMap[key]?.icon,
     }));
-};
-
-export const ConsentBoxes = ({ data }: { data?: ConsentData }) => {
-  const transformedData = transformConsentData(data);
 
   return (
     <>
-      {transformedData.map(({ abbreviation, icon }, index) => (
-        <Box
-          key={index}
-          className="flex rounded-full px-3 py-1 items-center gap-1 bg-err2-50
-           text-err2-100 font-semibold text-xs uppercase"
-        >
-          {icon && <span>{icon}</span>}
-          <span>{abbreviation}</span>
-        </Box>
+      {transformConsentData.map(({ name, abbreviation, icon }, index) => (
+        <PlTooltip title={name} placement="top" >
+          <Box
+            key={index}
+            className="flex rounded-full px-3 py-1 items-center gap-1 bg-err2-50
+        text-err2-100 font-semibold text-xs uppercase"
+          >
+            {icon && <span>{icon}</span>}
+            <span>{abbreviation}</span>
+          </Box>
+        </PlTooltip>
       ))}
     </>
   );
