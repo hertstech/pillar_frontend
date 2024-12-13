@@ -50,6 +50,7 @@ const TransferRecordAccessForm: React.FC<ActivityPinModalProps> = ({
   const NHRID = id;
 
   const [isValidUID, setIsValidUID] = useState<boolean>(false);
+  const [isSending, setIsSending] = useState(false);
 
   const methods = useForm({
     resolver: joiResolver(transferSchema),
@@ -99,6 +100,7 @@ const TransferRecordAccessForm: React.FC<ActivityPinModalProps> = ({
   };
 
   const onSubmit = (data: any) => {
+    setIsSending(true)
     const submissionData = {
       ...data,
       service_user_id: NHRID,
@@ -106,6 +108,8 @@ const TransferRecordAccessForm: React.FC<ActivityPinModalProps> = ({
 
     mutate(submissionData, {
       onSuccess: () => {
+        reset();
+        setIsSending(false)
         setOpen(false);
         useAlert({
           timer: 4000,
@@ -114,9 +118,10 @@ const TransferRecordAccessForm: React.FC<ActivityPinModalProps> = ({
           title: "Record transferred successfully",
           position: "top-start",
         });
-        reset();
       },
       onError: () => {
+        reset();
+        setIsSending(false)
         setOpen(false);
         useAlert({
           timer: 4000,
@@ -125,7 +130,6 @@ const TransferRecordAccessForm: React.FC<ActivityPinModalProps> = ({
           position: "top-start",
           title: "Unauthorized transfer",
         });
-        reset();
       },
     });
   };
@@ -215,7 +219,7 @@ const TransferRecordAccessForm: React.FC<ActivityPinModalProps> = ({
                 buttonName="Cancel"
               />
               <PrimaryButton
-                disabled={isLoading}
+                disabled={isLoading||isSending}
                 type="submit"
                 width="100%"
                 buttonName="Transfer access"

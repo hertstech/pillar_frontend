@@ -220,7 +220,6 @@ export default function Singleuser() {
               <ConsentBoxes data={data?.data} />
             </Box>
           </Stack>
-
           <PopperOver
             position="bottom-end"
             popperContent={
