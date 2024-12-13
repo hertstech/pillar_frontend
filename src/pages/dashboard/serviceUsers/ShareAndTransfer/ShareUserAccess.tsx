@@ -137,7 +137,6 @@ const ShareUserAccessForm: React.FC<ActivityPinModalProps> = ({
     validateClinicUID(uid);
   };
 
-  console.error("Form errors:", errors);
 
   const onSubmit = (data: any) => {
     const mergedStartDateTime = startDate
@@ -184,7 +183,6 @@ const ShareUserAccessForm: React.FC<ActivityPinModalProps> = ({
         },
       }
     );
-    console.log("Form Submission Data:", data);
   };
 
   useEffect(() => {

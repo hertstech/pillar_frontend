@@ -98,7 +98,6 @@ const TransferRecordAccessForm: React.FC<ActivityPinModalProps> = ({
     validateClinicUID(uid);
   };
 
-  console.log("Form errors:", errors);
   const onSubmit = (data: any) => {
     const submissionData = {
       ...data,
