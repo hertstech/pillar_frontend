@@ -16,6 +16,7 @@ const config: Config = {
           200: "#B2DDFF",
           500: "#2E90FA",
           600: "#1570EF",
+          650: "#155EEF",
         },
         sec: {
           1: "",

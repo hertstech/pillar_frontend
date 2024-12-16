@@ -28,6 +28,8 @@ import PopperOver from "../../../components/Popover";
 import ShareUserAccessForm from "./ShareAndTransfer/ShareUserAccess";
 import TransferRecordAccessForm from "./ShareAndTransfer/TransferRecordAccess";
 import RequestRecordAccess from "./ShareAndTransfer/RequestRecordAccess";
+import ServiceUserTest from "./Test";
+import { SendIcon } from "../../../assets/Icons";
 
 export default function Singleuser() {
   const client = useSelector((state: any) => state.client.clients.tab1[0]);
@@ -71,6 +73,10 @@ export default function Singleuser() {
     {
       label: "Health Information",
       content: <Health client={client} />,
+    },
+    {
+      label: "Test",
+      content: <ServiceUserTest client={client} />,
     },
     {
       label: "Medication",
@@ -220,36 +226,56 @@ export default function Singleuser() {
               <ConsentBoxes data={data?.data} />
             </Box>
           </Stack>
-          <PopperOver
-            position="bottom-end"
-            popperContent={
-              !writeAccess ? (
-                <Box className="bg-white min-w-[200px] max-h-[112px] rounded-lg border-t">
-                  <button
-                    onClick={() => setIsOpenRequestForm(true)}
-                    className="p-3 border-b w-full text font-medium text-base  text-left"
-                  >
-                    Request access
-                  </button>
-                </Box>
-              ) : (
-                <Box className="bg-white min-w-[200px] max-h-[112px] rounded-lg border-t">
-                  <button
-                    onClick={() => setIsOpenAccessForm(true)}
-                    className="p-3 border-b w-full text font-medium text-base  text-left"
-                  >
-                    Share access
-                  </button>
-                  <button
-                    onClick={() => setIsTransferAccessForm(true)}
-                    className="p-3 w-full text font-medium text-base  text-left"
-                  >
-                    Transfer record
-                  </button>
-                </Box>
-              )
-            }
-          />
+
+          <Box className="flex items-center gap-8">
+            <Button
+              startIcon={<SendIcon />}
+              sx={{
+                textTransform: "none",
+                background: "#D1E9FF",
+                p: 1.5,
+                alignItems: "center",
+                color: "#1570EF",
+                "&:hover": { backgroundColor: "#D1E9FF" },
+                borderRadius: 2,
+                height: "48px",
+              }}
+              onClick={() => setIsOpen(true)}
+              className="!bg-pri-650 !text-white min-w-[188px] max-h-[40px]"
+            >
+              Send message
+            </Button>
+            <PopperOver
+              position="bottom-end"
+              popperContent={
+                !writeAccess ? (
+                  <Box className="bg-white min-w-[200px] max-h-[112px] rounded-lg border-t">
+                    <button
+                      onClick={() => setIsOpenRequestForm(true)}
+                      className="p-3 border-b w-full text font-medium text-base  text-left"
+                    >
+                      Request access
+                    </button>
+                  </Box>
+                ) : (
+                  <Box className="bg-white min-w-[200px] max-h-[112px] rounded-lg border-t">
+                    <button
+                      onClick={() => setIsOpenAccessForm(true)}
+                      className="p-3 border-b w-full text font-medium text-base  text-left"
+                    >
+                      Share access
+                    </button>
+                    <button
+                      onClick={() => setIsTransferAccessForm(true)}
+                      className="p-3 w-full text font-medium text-base  text-left"
+                    >
+                      Transfer record
+                    </button>
+                  </Box>
+                )
+              }
+            />
+          </Box>
         </Box>
 
         <HeaderTabs links={filteredTabs} writeAccess={writeAccess} />
