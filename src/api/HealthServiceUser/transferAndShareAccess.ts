@@ -13,10 +13,10 @@ export const useGetClinicUID = (CUID: string) => {
 
 export const useTransferRecord = () => {
   const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: (data) => {
+    mutationFn: (data: Record<string, any>) => {
       return axiosInstance.post(`/api/v1/facilities/transfer`, data);
-      data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({

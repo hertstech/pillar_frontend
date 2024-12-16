@@ -58,7 +58,9 @@ export interface client {
   email: string;
   phoneNumber: string;
   address: string;
+  bmi?: number;
   lga: string;
+  date_created?: Date| string;
   dateOfBirth: Date;
   height: number;
   weight: number;
@@ -68,7 +70,6 @@ export interface client {
   state: string;
   gender: string;
   religion: string;
-  date_created: string;
   tribalMarks: string;
   parentOne: string;
   parentOneNumber: string;
