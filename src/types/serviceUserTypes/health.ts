@@ -60,7 +60,7 @@ export interface client {
   address: string;
   bmi?: number;
   lga: string;
-  date_created: Date| string;
+  date_created?: Date| string;
   dateOfBirth: Date;
   height: number;
   weight: number;
