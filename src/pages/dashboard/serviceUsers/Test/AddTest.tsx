@@ -77,6 +77,7 @@ export function AddTestRecord() {
 
   const onSubmit = (data: testTypes) => {
     console.log(data);
+    console.log(tabId);
   };
 
   return (
