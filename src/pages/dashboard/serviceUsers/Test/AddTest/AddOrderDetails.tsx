@@ -1,13 +1,10 @@
-import React, { useState } from "react";
-import { Box, Stack } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
-import { LiaArrowCircleLeftSolid } from "react-icons/lia";
-import { CustomSelect } from "../../../../components/Select";
+import { useState } from "react";
+import { Box } from "@mui/material";
+import { useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
 import Joi from "joi";
-import { testData } from "./data";
-import InputField from "../../../../components/InputField";
+import InputField from "../../../../../components/InputField";
 import {
   DatePicker,
   LocalizationProvider,
@@ -18,18 +15,12 @@ import { DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { Dayjs } from "dayjs";
 
 type testTypes = {
-  category: string;
-  testTypes: string;
+  orderId: string;
+  testDate: string;
 };
 
 const testSchema = Joi.object({
-  category: Joi.string().required().messages({
-    "string.empty": "Category is required",
-  }),
-  testTypes: Joi.string().required().messages({
-    "string.empty": "Test Types is required",
-  }),
-  reading: Joi.string().required().messages({
+  orderId: Joi.string().required().messages({
     "string.empty": "Reading values is required",
   }),
   testDate: Joi.string().optional(),
@@ -41,8 +32,7 @@ const testSchema = Joi.object({
   }),
 });
 
-export function AddTestRecord() {
-  const navigate = useNavigate();
+export function AddOrderDetails() {
   const { tabId } = useParams();
 
   const [testingDate, setTestingDate] = useState<Dayjs | null>(null);
@@ -51,29 +41,18 @@ export function AddTestRecord() {
   const methods = useForm({
     resolver: joiResolver(testSchema),
     defaultValues: {
-      category: "",
-      testTypes: "",
+      orderId: "",
       reading: "",
       testDate: "",
     },
   });
 
   const {
-    watch,
     setValue,
-    getValues,
     register,
     handleSubmit,
     formState: { errors },
   } = methods;
-
-  const categoryValue = watch("category");
-  const filteredTestTypes = React.useMemo(() => {
-    const selectedCategory = testData.category.find(
-      (item) => item.value === categoryValue
-    );
-    return selectedCategory?.subValues || [];
-  }, [categoryValue]);
 
   const onSubmit = (data: testTypes) => {
     console.log(data);
@@ -82,61 +61,17 @@ export function AddTestRecord() {
 
   return (
     <Box>
-      <Box className="flex items-center justify-between border-b border-neu-50">
-        <Stack p={2} sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-          <div
-            className="flex items-center cursor-pointer text-neu-500 gap-1 text-sm"
-            onClick={() => {
-              navigate(-1);
-            }}
-          >
-            <LiaArrowCircleLeftSolid size={20} />
-            <span className="mt-1">Go Back</span>
-          </div>
-
-          <div className="text-neu-900 font-bold text-lg capitalize">
-            Record Test
-          </div>
-        </Stack>
-      </Box>
-
       <Box sx={{ p: 2 }}>
         <Box className="max-w-[600px] w-full">
-          <h1 className="text-3xl font-bold">Add Test Result</h1>
-          <h3 className="my-6 text-lg font-bold capitalize">Test 1</h3>
-
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col gap-8 bg-bg2 rounded-lg p-6"
           >
-            <CustomSelect
-              label="Category"
-              name="category"
-              selectItems={testData.category}
-              value={categoryValue}
-              onChange={(value) =>
-                setValue("category", value, { shouldValidate: true })
-              }
-              register={register("category")}
-              validationError={errors.category}
-            />
-            <CustomSelect
-              label="Test Types"
-              name="testTypes"
-              isDisabled={getValues("category") === ""}
-              selectItems={filteredTestTypes}
-              value={watch("testTypes")}
-              onChange={(value) =>
-                setValue("testTypes", value, { shouldValidate: true })
-              }
-              register={register("testTypes")}
-              validationError={errors.testTypes}
-            />
             <InputField
               type="text"
-              label="Reading"
-              name="reading"
-              placeholder="eg 60-70"
+              label="Order ID"
+              name="orderId"
+              placeholder="e.g. 2323422"
               register={register}
               errors={errors}
             />
@@ -183,9 +118,9 @@ export function AddTestRecord() {
               errors={errors}
             />
 
-            <button type="submit" className="btn btn-primary">
+            {/* <button type="submit" className="btn btn-primary">
               Submit
-            </button>
+            </button> */}
           </form>
         </Box>
       </Box>
