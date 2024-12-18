@@ -55,7 +55,7 @@ export function AddOrderDetails() {
   } = methods;
 
   const onSubmit = (data: testTypes) => {
-    console.log(data);
+    console.log("data for submission;", data);
     console.log(tabId);
   };
 
@@ -118,9 +118,9 @@ export function AddOrderDetails() {
               errors={errors}
             />
 
-            {/* <button type="submit" className="btn btn-primary">
+            <button type="submit" className="btn btn-primary">
               Submit
-            </button> */}
+            </button>
           </form>
         </Box>
       </Box>
