@@ -37,6 +37,7 @@ const RequestRecordAccess: React.FC<ActivityPinModalProps> = ({
   ...rest
 }) => {
   const [toggle, setToggle] = useState(true);
+  const [isSending, setIsSending] = useState(false);
   const { mutate } = useTransferRecord();
   const { id: NHRID } = useParams();
 
@@ -56,7 +57,8 @@ const RequestRecordAccess: React.FC<ActivityPinModalProps> = ({
     formState: { errors },
   } = methods;
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: Record<string, any>) => {
+    setIsSending(true);
     const submissionData = {
       ...data,
       consenting: toggle ? "" : data.consenting,
@@ -66,7 +68,9 @@ const RequestRecordAccess: React.FC<ActivityPinModalProps> = ({
 
     mutate(submissionData, {
       onSuccess: () => {
+        reset();
         setOpen(false);
+        setIsSending(false);
         useAlert({
           timer: 4000,
           isToast: true,
@@ -74,10 +78,11 @@ const RequestRecordAccess: React.FC<ActivityPinModalProps> = ({
           title: "Transfer request sent!",
           position: "top-start",
         });
-        reset();
       },
       onError: () => {
+        reset();
         setOpen(false);
+        setIsSending(false);
         useAlert({
           timer: 4000,
           icon: "error",
@@ -85,7 +90,6 @@ const RequestRecordAccess: React.FC<ActivityPinModalProps> = ({
           position: "top-start",
           title: "Transfer request failed",
         });
-        reset();
       },
     });
   };
@@ -159,10 +163,10 @@ const RequestRecordAccess: React.FC<ActivityPinModalProps> = ({
                 buttonName="Cancel"
               />
               <PrimaryButton
-                disabled={false}
+                disabled={isSending}
                 type="submit"
                 width="100%"
-                buttonName="Send Request"
+                buttonName="Access record"
               />
             </Box>
           </form>

@@ -87,10 +87,10 @@ export default function Profile({ client, isLoading }: PropType) {
               className={classNames(
                 `!rounded-full !font-semibold !bg-[#fff] px-2 !gap-2
              !capitalize !outline !text-[#099250] !text-sm !absolute !top-4 !right-4`,
-                writeAccess && "!text-neu-400"
+                !writeAccess && "!text-neu-400"
               )}
               onClick={navToUpdateProfile}
-              disabled={writeAccess === true}
+              disabled={!writeAccess}
             >
               Edit
               <EditIcon />

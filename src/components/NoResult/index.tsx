@@ -1,12 +1,36 @@
 import { TableCell, Typography } from "@mui/material";
 import Styles from "./styles.module.css";
+import classNames from "classnames";
+import { Link } from "react-router-dom";
+interface IProps {
+  text: string;
+  description?: string;
+  linkTo?: string;
+  linkDesc?: string;
+}
 
-export default function NoResultIllustration({ text }: any) {
+export default function NoResultIllustration({
+  text: title,
+  description,
+  linkTo = "#",
+  linkDesc,
+}: IProps) {
   return (
-    <div className={Styles.background}>
-      <Typography fontWeight={400} fontSize={24} sx={{ color: "#101928" }}>
-        {text}
+    <div className={classNames(Styles.background, "gap-6")}>
+      <Typography fontWeight={700} fontSize={32} sx={{ color: "#101928" }}>
+        {title}
       </Typography>
+      {description && (
+        <p className="text-sm font-normal text-neu-400">{description}</p>
+      )}
+      {linkDesc && (
+        <Link
+          to={linkTo}
+          className="font-semibold text-white w-fit bg-pri-650 px-5 py-2 h-[40px] rounded-[10px]"
+        >
+          {linkDesc}
+        </Link>
+      )}
     </div>
   );
 }

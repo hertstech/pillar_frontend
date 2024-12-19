@@ -3,8 +3,8 @@ import React from "react";
 import { TextLabel } from "../../pages/dashboard/serviceUsers/Health/Components/textLabel";
 import GaugeChart from "react-gauge-chart";
 import moment from "moment";
-import { client } from "../../pages/dashboard/serviceUsers/Overview";
 import { BiSolidPrinter } from "react-icons/bi";
+import { client } from "../../types/serviceUserTypes/health";
 
 interface IProps {
   client: client;

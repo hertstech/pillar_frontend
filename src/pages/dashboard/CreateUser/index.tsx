@@ -276,7 +276,7 @@ export default function CreateUser() {
         </div>
       </Stack>
 
-      <Box sx={{ pt: 3 }}>
+       <Box sx={{ pt: 3 }}>
         <Grid container spacing={3} sx={{ pb: 15, px: 2.5 }}>
           <Grid item xs={12} md={4}>
             <Card
