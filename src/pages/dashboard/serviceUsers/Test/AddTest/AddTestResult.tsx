@@ -5,6 +5,7 @@ import {
   AccordionSummary,
   AccordionDetails,
   Button,
+  Stack,
 } from "@mui/material";
 import { CustomSelect } from "../../../../../components/Select";
 import { useForm, useFieldArray } from "react-hook-form";
@@ -13,6 +14,7 @@ import Joi from "joi";
 import { testData } from "../data";
 import InputField from "../../../../../components/InputField";
 import { FaAngleDown } from "react-icons/fa6";
+import Buttons from "../../../../../components/Button";
 
 const testSchema = Joi.object({
   tests: Joi.array().items(
@@ -24,7 +26,7 @@ const testSchema = Joi.object({
         "string.empty": "Test Types is required",
       }),
       reading: Joi.string().required().messages({
-        "string.empty": "Reading values is required",
+        "string.empty": "Reading values are required",
       }),
       notes: Joi.string().optional(),
     })
@@ -38,9 +40,14 @@ interface TestFormValues {
     reading: string;
     notes?: string;
   }[];
+  saveType: "draft" | "final";
 }
 
-export function AddTestResultForm() {
+type AddTestResultProps = {
+  onSubmit: (data: TestFormValues) => void;
+};
+
+export function AddTestResultForm({ onSubmit }: AddTestResultProps) {
   const [newTest, setNewTest] = useState({
     category: "",
     testTypes: "",
@@ -50,9 +57,7 @@ export function AddTestResultForm() {
 
   const methods = useForm<TestFormValues>({
     resolver: joiResolver(testSchema),
-    defaultValues: {
-      tests: [],
-    },
+    defaultValues: { tests: [] },
   });
 
   const {
@@ -61,11 +66,22 @@ export function AddTestResultForm() {
     setValue,
     formState: { errors },
   } = methods;
+  const { fields, append } = useFieldArray({ control, name: "tests" });
 
-  const { fields, append } = useFieldArray({
-    control,
-    name: "tests",
-  });
+  const handleSaveNewTest = () => {
+    append(newTest);
+    setNewTest({ category: "", testTypes: "", reading: "", notes: "" });
+  };
+
+  const handleSubmitTests = (saveType: "draft" | "final") => {
+    const formValues = methods.getValues();
+    if (newTest.category && newTest.testTypes && newTest.reading) {
+      formValues.tests.push(newTest);
+    }
+    onSubmit({ ...formValues, saveType });
+    methods.reset();
+    setNewTest({ category: "", testTypes: "", reading: "", notes: "" });
+  };
 
   const filteredTestTypesList = useMemo(() => {
     return fields.map((_, index) => {
@@ -76,11 +92,6 @@ export function AddTestResultForm() {
       return selectedCategory?.subValues || [];
     });
   }, [fields, watch]);
-
-  const onSubmit = () => {
-    append(newTest);
-    setNewTest({ category: "", testTypes: "", reading: "", notes: "" });
-  };
 
   return (
     <Box>
@@ -144,7 +155,7 @@ export function AddTestResultForm() {
                           type="text"
                           label="Reading"
                           name={`tests.${index}.reading`}
-                          placeholder="eg 60-70"
+                          placeholder="e.g., 60-70"
                           register={methods.register}
                           errors={errors}
                         />
@@ -175,52 +186,92 @@ export function AddTestResultForm() {
                   setNewTest((prev) => ({ ...prev, category: value }))
                 }
               />
-              <CustomSelect
-                label="Test Types"
-                name="testTypes"
-                isDisabled={!newTest.category}
-                selectItems={
-                  testData.category.find(
-                    (item) => item.value === newTest.category
-                  )?.subValues || []
-                }
-                value={newTest.testTypes}
-                onChange={(value) =>
-                  setNewTest((prev) => ({ ...prev, testTypes: value }))
-                }
-              />
-              <InputField
-                type="text"
-                label="Reading"
-                name="reading"
-                placeholder="eg 60-70"
-                value={newTest.reading}
-                onChange={(e) =>
-                  setNewTest((prev) => ({ ...prev, reading: e.target.value }))
-                }
-              />
-              <InputField
-                type="text"
-                textarea={true}
-                label="Add Notes (optional)"
-                name="notes"
-                placeholder="Enter notes here"
-                value={newTest.notes}
-                onChange={(e) =>
-                  setNewTest((prev) => ({ ...prev, notes: e.target.value }))
-                }
-              />
-              <Button
-                type="button"
-                variant="contained"
-                color="primary"
-                onClick={onSubmit}
-                disabled={
-                  !newTest.category || !newTest.testTypes || !newTest.reading
-                }
-              >
-                Save Test
-              </Button>
+              {newTest.category && (
+                <Box className="flex flex-col gap-8">
+                  <CustomSelect
+                    label="Test Types"
+                    name="testTypes"
+                    isDisabled={!newTest.category}
+                    selectItems={
+                      testData.category.find(
+                        (item) => item.value === newTest.category
+                      )?.subValues || []
+                    }
+                    value={newTest.testTypes}
+                    onChange={(value) =>
+                      setNewTest((prev) => ({ ...prev, testTypes: value }))
+                    }
+                  />
+                  <InputField
+                    type="text"
+                    label="Reading"
+                    name="reading"
+                    placeholder="e.g., 60-70"
+                    value={newTest.reading}
+                    onChange={(e) =>
+                      setNewTest((prev) => ({
+                        ...prev,
+                        reading: e.target.value,
+                      }))
+                    }
+                  />
+                  <InputField
+                    type="text"
+                    textarea={true}
+                    label="Add Notes (optional)"
+                    name="notes"
+                    placeholder="Enter notes here"
+                    value={newTest.notes}
+                    onChange={(e) =>
+                      setNewTest((prev) => ({ ...prev, notes: e.target.value }))
+                    }
+                  />
+                  <button
+                    type="button"
+                    onClick={handleSaveNewTest}
+                    className="text-pri-650 font-semibold text-left"
+                    disabled={
+                      !newTest.category ||
+                      !newTest.testTypes ||
+                      !newTest.reading
+                    }
+                  >
+                    <span className="text-xl font-semibold">+</span> Add another
+                    test
+                  </button>
+
+                  <Stack
+                    gap={3}
+                    width={"100%"}
+                    sx={{ mt: 4 }}
+                    direction="row"
+                    alignItems="center"
+                  >
+                    <Button
+                      fullWidth
+                      size="large"
+                      sx={{
+                        color: "#1570EF",
+                        border: "1px solid #D1E9FF",
+                        outline: "none",
+                        textTransform: "capitalize",
+                        fontWeight: 600,
+                        height: 48,
+                        background: "inherit",
+                        "&:hover": { backgroundColor: "#D1E9FF" },
+                      }}
+                      variant="outlined"
+                      onClick={() => handleSubmitTests("draft")}
+                    >
+                      Save as draft
+                    </Button>
+                    <Buttons
+                      onClick={() => handleSubmitTests("final")}
+                      title={"Save test result"}
+                    />
+                  </Stack>
+                </Box>
+              )}
             </Box>
           </Box>
         </Box>

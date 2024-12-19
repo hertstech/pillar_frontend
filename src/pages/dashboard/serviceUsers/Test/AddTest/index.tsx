@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { LiaArrowCircleLeftSolid } from "react-icons/lia";
-
 import {
   Box,
   Card,
@@ -12,61 +11,96 @@ import {
   Button,
   Typography,
 } from "@mui/material";
-import { client } from "../../../../../types/serviceUserTypes/health";
-import { NeedHelp } from "../../../../../components/CalendarField";
 import { useState } from "react";
 import { AddOrderDetails } from "./AddOrderDetails";
-
-import Buttons from "../../../../../components/Button";
 import { AddTestResultForm } from "./AddTestResult";
+import { NeedHelp } from "../../../../../components/CalendarField";
+import Buttons from "../../../../../components/Button";
+import { transformToSnakeCase } from "../../../../../Utils/caseTransformtter";
 
-interface IProps {
-  client?: client;
-}
+type FormDataTypes = {
+  orderDetails: Record<string, any>;
+  testResults: {
+    category: string;
+    testTypes: string;
+    reading: string;
+    notes?: string;
+  }[];
+};
 
-export const AddTestRecord: React.FC<IProps> = () => {
+export const AddTestRecord: React.FC = () => {
   const navigate = useNavigate();
-
   const [activeStep, setActiveStep] = useState(0);
-  const [isLoading, _] = useState(false);
+
+  const [formData, setFormData] = useState<FormDataTypes>({
+    orderDetails: {},
+    testResults: [],
+  });
+
+  const handleNext = () => {
+    if (activeStep < steps.length - 1) {
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    } else {
+      console.log("Final submission data:", formData);
+    }
+  };
 
   const steps = [
     {
       label: "Order details",
       description: "Add the test order details",
-      content: <AddOrderDetails />,
+      content: (
+        <AddOrderDetails
+          onSubmit={(data) => {
+            setFormData((prev) => ({ ...prev, orderDetails: data }));
+          }}
+          handleNext={handleNext}
+        />
+      ),
     },
     {
       label: "Test result",
       description: "Enter the test results accurately.",
-      content: <AddTestResultForm />,
+      content: (
+        <AddTestResultForm
+          
+          onSubmit={(data) => {
+            const { saveType, tests } = data;
+            setFormData((prev) => ({ ...prev, testResults: tests }));
+
+            if (saveType === "final") {
+              const newData = transformToSnakeCase({
+                ...formData.orderDetails,
+                testResults: tests,
+              });
+              console.log("Submitting final data:", newData);
+            } else {
+                const draftData = transformToSnakeCase({
+                  ...formData.orderDetails,
+                  testResults: tests,
+                });
+
+              console.log("Saving as draft:", draftData);
+            }
+
+            if (saveType === "final") handleNext();
+          }}
+        />
+      ),
     },
   ];
 
-  const handleNext = () => {
-    if (activeStep < steps.length - 1) {
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    }
-  };
-  const handleBack = () => {
-    if (activeStep > 0) {
-      setActiveStep(activeStep - 1);
-    }
-  };
   return (
     <Box>
       <Box className="flex items-center justify-between border-b border-neu-50">
         <Stack p={2} sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
           <div
             className="flex items-center cursor-pointer text-neu-500 gap-1 text-sm"
-            onClick={() => {
-              navigate(-1);
-            }}
+            onClick={() => navigate(-1)}
           >
             <LiaArrowCircleLeftSolid size={20} />
             <span className="mt-1">Go Back</span>
           </div>
-
           <div className="text-neu-900 font-bold text-lg capitalize">
             Record Test
           </div>
@@ -82,7 +116,6 @@ export const AddTestRecord: React.FC<IProps> = () => {
                 px: 3,
                 minHeight: "85vh",
                 display: "flex",
-
                 justifyContent: "space-between",
                 flexDirection: "column",
                 height: "100%",
@@ -114,9 +147,7 @@ export const AddTestRecord: React.FC<IProps> = () => {
                   <Step sx={{ marginTop: 2 }} key={item.label}>
                     <StepLabel>
                       <Typography
-                        sx={{
-                          fontWeight: activeStep === index ? 600 : 400,
-                        }}
+                        sx={{ fontWeight: activeStep === index ? 600 : 400 }}
                         color="#101928"
                         fontSize={16}
                       >
@@ -135,7 +166,6 @@ export const AddTestRecord: React.FC<IProps> = () => {
                   </Step>
                 ))}
               </Stepper>
-
               <NeedHelp />
             </Card>
           </Grid>
@@ -149,7 +179,7 @@ export const AddTestRecord: React.FC<IProps> = () => {
                 border: "none",
                 boxShadow: "none",
               }}
-              className="flex flex-col items-center "
+              className="flex flex-col items-center"
             >
               <div style={{ textAlign: "center", marginBottom: 25 }}>
                 <Typography fontWeight={700} color={"#101928"} fontSize={32}>
@@ -159,14 +189,15 @@ export const AddTestRecord: React.FC<IProps> = () => {
 
               {steps[activeStep].content}
 
-              <Stack
-                direction="row"
-                gap={3}
-                alignItems="center"
-                sx={{ mt: 2 }}
-                width={"75%"}
-              >
-                {activeStep >= 0 && activeStep <= 2 && (
+              {/* STAle  */}
+              {activeStep > 10 && (
+                <Stack
+                  gap={3}
+                  width={"100%"}
+                  sx={{ mt: 4 }}
+                  direction="row"
+                  alignItems="center"
+                >
                   <Button
                     fullWidth
                     size="large"
@@ -177,31 +208,18 @@ export const AddTestRecord: React.FC<IProps> = () => {
                       textTransform: "capitalize",
                       fontWeight: 600,
                       height: 48,
-                      background: "#D1E9FF",
+                      background: "inherit",
                       "&:hover": { backgroundColor: "#D1E9FF" },
                     }}
-                    disabled={activeStep <= 0 || isLoading}
                     variant="outlined"
-                    onClick={handleBack}
+                    onClick={() => null}
                   >
-                    {"Save as draft"}
+                    Save as draft
                   </Button>
-                )}
 
-                {activeStep <= 0 && (
-                  <Buttons onClick={handleNext} title={"Next"} />
-                )}
-
-                {activeStep > 0 && activeStep <= 1 && (
-                  <>
-                    <Buttons
-                      onClick={() => null}
-                      loading={isLoading}
-                      title={"Continue"}
-                    />
-                  </>
-                )}
-              </Stack>
+                  <Buttons onClick={handleNext} title={"Save test result"} />
+                </Stack>
+              )}
             </Card>
           </Grid>
         </Grid>
