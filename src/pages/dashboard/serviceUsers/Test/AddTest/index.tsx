@@ -17,6 +17,8 @@ import { AddTestResultForm } from "./AddTestResult";
 import { NeedHelp } from "../../../../../components/CalendarField";
 import Buttons from "../../../../../components/Button";
 import { transformToSnakeCase } from "../../../../../Utils/caseTransformtter";
+import { useCreateTest } from "../../../../../api/HealthServiceUser/test";
+import { useAlert } from "../../../../../Utils/useAlert";
 
 type FormDataTypes = {
   orderDetails: Record<string, any>;
@@ -30,6 +32,7 @@ type FormDataTypes = {
 
 export const AddTestRecord: React.FC = () => {
   const navigate = useNavigate();
+  const { mutate } = useCreateTest();
   const [activeStep, setActiveStep] = useState(0);
 
   const [formData, setFormData] = useState<FormDataTypes>({
@@ -63,7 +66,6 @@ export const AddTestRecord: React.FC = () => {
       description: "Enter the test results accurately.",
       content: (
         <AddTestResultForm
-          
           onSubmit={(data) => {
             const { saveType, tests } = data;
             setFormData((prev) => ({ ...prev, testResults: tests }));
@@ -74,13 +76,58 @@ export const AddTestRecord: React.FC = () => {
                 testResults: tests,
               });
               console.log("Submitting final data:", newData);
+
+              mutate(newData, {
+                onSuccess: () => {
+                  navigate(-1);
+                  useAlert({
+                    timer: 4000,
+                    isToast: true,
+                    icon: "success",
+                    title: "Test recorded successfully",
+                    position: "top-start",
+                  });
+                },
+                onError: () => {
+                  setActiveStep(0);
+                  useAlert({
+                    timer: 4000,
+                    icon: "error",
+                    isToast: true,
+                    position: "top-start",
+                    title: "Test record not added",
+                  });
+                },
+              });
             } else {
-                const draftData = transformToSnakeCase({
-                  ...formData.orderDetails,
-                  testResults: tests,
-                });
+              const draftData = transformToSnakeCase({
+                ...formData.orderDetails,
+                testResults: tests,
+              });
 
               console.log("Saving as draft:", draftData);
+              mutate(draftData, {
+                onSuccess: () => {
+                  navigate(-1);
+                  useAlert({
+                    timer: 4000,
+                    isToast: true,
+                    icon: "success",
+                    title: "Test drafted successfully",
+                    position: "top-start",
+                  });
+                },
+                onError: () => {
+                  setActiveStep(0);
+                  useAlert({
+                    timer: 4000,
+                    icon: "error",
+                    isToast: true,
+                    position: "top-start",
+                    title: "Test drafting failed",
+                  });
+                },
+              });
             }
 
             if (saveType === "final") handleNext();

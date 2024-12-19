@@ -14,12 +14,16 @@ import { DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { Dayjs } from "dayjs";
 import Buttons from "../../../../../components/Button";
 import { FiUploadCloud } from "react-icons/fi";
+import { useCreateTest } from "../../../../../api/HealthServiceUser/test";
+import { useAlert } from "../../../../../Utils/useAlert";
+import { transformToSnakeCase } from "../../../../../Utils/caseTransformtter";
 
 type TestFormData = {
   orderId: string;
   testDate: string;
   collectionSite: string;
   orderedBy: string;
+  testDoc?: File | null;
 };
 
 type AddOrderDetailsProps = {
@@ -37,6 +41,9 @@ const testSchema = Joi.object({
   orderedBy: Joi.string().required().messages({
     "string.empty": "Order author is required",
   }),
+  testDoc: Joi.alternatives()
+    .try(Joi.object().instance(File), Joi.allow(null))
+    .optional(),
 });
 
 export function AddOrderDetails({
@@ -46,7 +53,9 @@ export function AddOrderDetails({
   const [testingDate, setTestingDate] = useState<Dayjs | null>(null);
   const [testTime, setTestTime] = useState<Dayjs | null>(null);
   const [fileName, setFileName] = useState("");
-  const [_, setUploadedFile] = useState<File | null>(null);
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+
+  const { mutate } = useCreateTest();
 
   const {
     register,
@@ -60,6 +69,7 @@ export function AddOrderDetails({
       testDate: "",
       collectionSite: "",
       orderedBy: "",
+      testDoc: null,
     },
   });
 
@@ -68,13 +78,44 @@ export function AddOrderDetails({
     if (file) {
       setFileName(file.name);
       setUploadedFile(file);
+      setValue("testDoc", file, { shouldValidate: true });
     }
+  };
+
+  const handleDrafting = (data: TestFormData) => {
+    const newDraftData = transformToSnakeCase({
+      ...data,
+      testDate: testingDate ? testingDate.toISOString() : "",
+      testDoc: uploadedFile,
+    });
+
+    mutate(newDraftData, {
+      onSuccess: () => {
+        useAlert({
+          timer: 4000,
+          isToast: true,
+          icon: "success",
+          title: "Test drafted successfully",
+          position: "top-start",
+        });
+      },
+      onError: () => {
+        useAlert({
+          timer: 4000,
+          icon: "error",
+          isToast: true,
+          position: "top-start",
+          title: "Test drafting failed",
+        });
+      },
+    });
   };
 
   const handleFormSubmit = (data: TestFormData) => {
     onSubmit({
       ...data,
       testDate: testingDate ? testingDate.toISOString() : "",
+      testDoc: uploadedFile,
     });
     handleNext();
   };
@@ -88,7 +129,7 @@ export function AddOrderDetails({
         >
           <InputField
             type="text"
-            label="Order ID"
+            label="Enter new order ID"
             name="orderId"
             placeholder="e.g. 2323422"
             register={register}
@@ -160,7 +201,7 @@ export function AddOrderDetails({
                           </span>
                         </p>
                         <p className="text-neu-400">
-                          SVG, PNG, JPG or GIF (max. 800x400px)
+                          SVG, PNG, JPG, GIF, DOC, DOCX, or PDF
                         </p>
                       </div>
                     </>
@@ -173,9 +214,7 @@ export function AddOrderDetails({
                 id="testDoc"
                 className="hidden px-2 py-4 w-full h-full"
                 name="testDoc"
-                required
-                accept="image/svg,image/png,image/jpeg,image/gif,application/pdf,
-                application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                accept="image/svg,image/png,image/jpeg,image/gif,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                 onChange={handleFileUpload}
               />
             </label>
@@ -202,7 +241,7 @@ export function AddOrderDetails({
                 "&:hover": { backgroundColor: "#D1E9FF" },
               }}
               variant="outlined"
-              onClick={() => null}
+              onClick={handleSubmit(handleDrafting)}
             >
               Save as draft
             </Button>
