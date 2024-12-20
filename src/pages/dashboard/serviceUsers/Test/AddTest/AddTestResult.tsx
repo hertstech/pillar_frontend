@@ -124,7 +124,13 @@ export function AddTestResultForm({ onSubmit, orderData }: AddTestResultProps) {
                 return (
                   <Accordion
                     key={field.id}
-                    className="flex flex-col justify-center gap-8 !bg-bg2 !rounded-xl !border-none !shadow-none"
+                    className="flex flex-col justify-center gap-8 !bg-bg2 !rounded-xl 
+                    !border-none !shadow-none"
+                    sx={{
+                      "&::before": {
+                        backgroundColor: "transparent",
+                      },
+                    }}
                   >
                     <AccordionSummary
                       expandIcon={<FaAngleDown />}

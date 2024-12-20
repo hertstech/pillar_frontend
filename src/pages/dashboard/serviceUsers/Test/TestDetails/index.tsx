@@ -1,9 +1,10 @@
 import React from "react";
 import { Box, Stack } from "@mui/material";
 import { IoArrowBackCircleOutline } from "react-icons/io5";
-import Tabs from "../Health/Components/tab";
+import Tabs from "../../Health/Components/tab";
 import { FaDownload } from "react-icons/fa6";
-import PopperOver from "../../../../components/Popover";
+import PopperOver from "../../../../../components/Popover";
+import { Results } from "./Results";
 
 interface IProps {
   data: any;
@@ -86,7 +87,7 @@ export const TestDetails: React.FC<IProps> = ({
             tabs={[
               {
                 label: "Results",
-                content: <>results here</>,
+                content: <Results />,
               },
               {
                 label: "Details",

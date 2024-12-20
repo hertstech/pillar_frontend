@@ -89,6 +89,45 @@ export const testData = {
   ],
 };
 
+export const testUnits: Record<string, string> = {
+  hemoglobin: "g/dL",
+  wbc: "10³/μL",
+  rbc: "10⁶/μL",
+  platelets: "10³/μL",
+  haematocrit: "%",
+  corpuscularVol: "fL",
+  corpuscularHb: "pg",
+  bloodGlucoseFasting: "mg/dL",
+  bloodGlucoseRandom: "mg/dL",
+  bloodGlucoseGlycatedHaemoglobin: "%",
+  cholesterol: "mg/dL",
+  alt: "U/L",
+  ast: "U/L",
+  bilirubinTotal: "mg/dL",
+  alp: "U/L",
+  albumin: "g/dL",
+  ggt: "U/L",
+  creatinine: "mg/dL",
+  glomerularFiltrationRate: "mL/min/1.73m²",
+  urea: "mg/dL",
+  tsh: "μIU/mL",
+  t4: "ng/dL",
+};
+
+export const unitColors: Record<string, string> = {
+  "g/dL": "text-blue-500",
+  "mg/dL": "text-green-500",
+  "mmol/L": "text-red-500",
+  "10³/μL": "text-purple-500",
+  "%": "text-yellow-500",
+  fL: "text-orange-500",
+  pg: "text-indigo-500",
+  "U/L": "text-teal-500",
+  "mL/min/1.73m²": "text-pink-500",
+  "μIU/mL": "text-gray-500",
+  "ng/dL": "text-cyan-500",
+};
+
 export const dummyTestData = [
   {
     id: 1,
@@ -132,3 +171,37 @@ export const dummyTestData = [
   },
 ];
 
+export const testResults = [
+  {
+    id: 1,
+    category: "Test Category 1",
+    date: "20-04-2024",
+    type: "Test Type 1",
+    value: "134",
+    unit: "g/L",
+  },
+  {
+    id: 2,
+    category: "Test Category 2",
+    date: "21-04-2024",
+    type: "Test Type 2",
+    value: "145",
+    unit: "mg/dL",
+  },
+  {
+    id: 3,
+    category: "Test Category 3",
+    date: "22-04-2024",
+    type: "Test Type 3",
+    value: "128",
+    unit: "mmol/L",
+  },
+  {
+    id: 4,
+    category: "Test Category 4",
+    date: "23-04-2024",
+    type: "Test Type 4",
+    value: "112",
+    unit: "mEq/L",
+  },
+];
