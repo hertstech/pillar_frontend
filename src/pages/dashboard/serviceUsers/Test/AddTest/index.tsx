@@ -12,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { AddOrderDetails } from "./AddOrderDetails";
+import { AddOrderDetails, TestOrderTypes } from "./AddOrderDetails";
 import { AddTestResultForm } from "./AddTestResult";
 import { NeedHelp } from "../../../../../components/CalendarField";
 import Buttons from "../../../../../components/Button";
@@ -66,6 +66,7 @@ export const AddTestRecord: React.FC = () => {
       description: "Enter the test results accurately.",
       content: (
         <AddTestResultForm
+          orderData={formData.orderDetails as TestOrderTypes}
           onSubmit={(data) => {
             const { saveType, tests } = data;
             setFormData((prev) => ({ ...prev, testResults: tests }));

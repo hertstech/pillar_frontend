@@ -18,7 +18,7 @@ import { useCreateTest } from "../../../../../api/HealthServiceUser/test";
 import { useAlert } from "../../../../../Utils/useAlert";
 import { transformToSnakeCase } from "../../../../../Utils/caseTransformtter";
 
-type TestFormData = {
+export type TestOrderTypes = {
   orderId: string;
   testDate: string;
   collectionSite: string;
@@ -27,7 +27,7 @@ type TestFormData = {
 };
 
 type AddOrderDetailsProps = {
-  onSubmit: (data: TestFormData) => void;
+  onSubmit: (data: TestOrderTypes) => void;
 };
 
 const testSchema = Joi.object({
@@ -62,7 +62,7 @@ export function AddOrderDetails({
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<TestFormData>({
+  } = useForm<TestOrderTypes>({
     resolver: joiResolver(testSchema),
     defaultValues: {
       orderId: "",
@@ -82,7 +82,7 @@ export function AddOrderDetails({
     }
   };
 
-  const handleDrafting = (data: TestFormData) => {
+  const handleDrafting = (data: TestOrderTypes) => {
     const newDraftData = transformToSnakeCase({
       ...data,
       testDate: testingDate ? testingDate.toISOString() : "",
@@ -111,7 +111,7 @@ export function AddOrderDetails({
     });
   };
 
-  const handleFormSubmit = (data: TestFormData) => {
+  const handleFormSubmit = (data: TestOrderTypes) => {
     onSubmit({
       ...data,
       testDate: testingDate ? testingDate.toISOString() : "",

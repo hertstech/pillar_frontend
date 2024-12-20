@@ -15,6 +15,9 @@ import { testData } from "../data";
 import InputField from "../../../../../components/InputField";
 import { FaAngleDown } from "react-icons/fa6";
 import Buttons from "../../../../../components/Button";
+import { TestOrderTypes } from "./AddOrderDetails";
+import moment from "moment";
+import classNames from "classnames";
 
 const testSchema = Joi.object({
   tests: Joi.array().items(
@@ -44,16 +47,21 @@ interface TestFormValues {
 }
 
 type AddTestResultProps = {
+  orderData: TestOrderTypes;
   onSubmit: (data: TestFormValues) => void;
 };
 
-export function AddTestResultForm({ onSubmit }: AddTestResultProps) {
+export function AddTestResultForm({ onSubmit, orderData }: AddTestResultProps) {
   const [newTest, setNewTest] = useState({
     category: "",
     testTypes: "",
     reading: "",
     notes: "",
   });
+
+  const dateString = orderData?.testDate;
+
+  const formattedDate = moment(dateString).format("DD-MM-YYYY");
 
   const methods = useForm<TestFormValues>({
     resolver: joiResolver(testSchema),
@@ -75,10 +83,17 @@ export function AddTestResultForm({ onSubmit }: AddTestResultProps) {
 
   const handleSubmitTests = (saveType: "draft" | "final") => {
     const formValues = methods.getValues();
+
+    formValues.tests = formValues.tests.filter(
+      (test) => test.reading && test.category
+    );
+
     if (newTest.category && newTest.testTypes && newTest.reading) {
       formValues.tests.push(newTest);
     }
+
     onSubmit({ ...formValues, saveType });
+
     methods.reset();
     setNewTest({ category: "", testTypes: "", reading: "", notes: "" });
   };
@@ -93,12 +108,14 @@ export function AddTestResultForm({ onSubmit }: AddTestResultProps) {
     });
   }, [fields, watch]);
 
+  const toDisable = !newTest.category || !newTest.testTypes || !newTest.reading;
+
   return (
     <Box>
       <Box sx={{ p: 2 }}>
         <Box className="max-w-[600px] w-full">
           <Box className="flex flex-col gap-8 my-8 min-w-[600px]">
-            <h3 className="text-lg font-bold capitalize -mb-4">Saved Tests</h3>
+            <h3 className="text-lg font-bold capitalize -mb-4">Tests</h3>
             {fields.length > 0 &&
               fields.map((field, index) => {
                 const categoryValue = watch(`tests.${index}.category`);
@@ -107,24 +124,26 @@ export function AddTestResultForm({ onSubmit }: AddTestResultProps) {
                 return (
                   <Accordion
                     key={field.id}
-                    className="flex flex-col justify-center gap-8 !bg-bg2 !rounded-lg !border-none"
+                    className="flex flex-col justify-center gap-8 !bg-bg2 !rounded-xl !border-none !shadow-none"
                   >
                     <AccordionSummary
                       expandIcon={<FaAngleDown />}
-                      className="!max-h-[50px] !mt-7"
+                      className="!max-h-[50px] !mt-7 !shadow-none"
                     >
-                      <Box className="flex flex-col">
+                      <Box className="flex flex-col ">
                         <h2 className="text-lg font-semibold capitalize">
                           {categoryValue || `Test ${index + 1}`}
                         </h2>
                         <p className="text-sm text-neu-600 font-normal capitalize">
                           {watch(`tests.${index}.testTypes`) || "Test Type"} •{" "}
                           {watch(`tests.${index}.reading`) || "Reading"} •{" "}
-                          {watch(`tests.${index}.notes`) || "Notes"}
+                          {watch(`tests.${index}.notes`) || "Notes"}•{" "}
+                          {formattedDate || "Date"}•{" "}
+                          {orderData.collectionSite || "Collection site"}
                         </p>
                       </Box>
                     </AccordionSummary>
-                    <AccordionDetails>
+                    <AccordionDetails className="!border-none !shadow-none">
                       <Box className="flex flex-col gap-6">
                         <CustomSelect
                           label={`Category ${index + 1}`}
@@ -229,49 +248,49 @@ export function AddTestResultForm({ onSubmit }: AddTestResultProps) {
                   <button
                     type="button"
                     onClick={handleSaveNewTest}
-                    className="text-pri-650 font-semibold text-left"
-                    disabled={
-                      !newTest.category ||
-                      !newTest.testTypes ||
-                      !newTest.reading
-                    }
+                    className={classNames(
+                      "font-semibold text-left",
+                      toDisable
+                        ? "cursor-not-allowed text-neu-300"
+                        : "text-pri-650 "
+                    )}
+                    disabled={toDisable}
                   >
                     <span className="text-xl font-semibold">+</span> Add another
                     test
                   </button>
-
-                  <Stack
-                    gap={3}
-                    width={"100%"}
-                    sx={{ mt: 4 }}
-                    direction="row"
-                    alignItems="center"
-                  >
-                    <Button
-                      fullWidth
-                      size="large"
-                      sx={{
-                        color: "#1570EF",
-                        border: "1px solid #D1E9FF",
-                        outline: "none",
-                        textTransform: "capitalize",
-                        fontWeight: 600,
-                        height: 48,
-                        background: "inherit",
-                        "&:hover": { backgroundColor: "#D1E9FF" },
-                      }}
-                      variant="outlined"
-                      onClick={() => handleSubmitTests("draft")}
-                    >
-                      Save as draft
-                    </Button>
-                    <Buttons
-                      onClick={() => handleSubmitTests("final")}
-                      title={"Save test result"}
-                    />
-                  </Stack>
                 </Box>
-              )}
+              )}{" "}
+              <Stack
+                gap={3}
+                width={"100%"}
+                sx={{ mt: 4 }}
+                direction="row"
+                alignItems="center"
+              >
+                <Button
+                  fullWidth
+                  size="large"
+                  sx={{
+                    color: "#1570EF",
+                    border: "1px solid #D1E9FF",
+                    outline: "none",
+                    textTransform: "capitalize",
+                    fontWeight: 600,
+                    height: 48,
+                    background: "inherit",
+                    "&:hover": { backgroundColor: "#D1E9FF" },
+                  }}
+                  variant="outlined"
+                  onClick={() => handleSubmitTests("draft")}
+                >
+                  Save as draft
+                </Button>
+                <Buttons
+                  onClick={() => handleSubmitTests("final")}
+                  title={"Save test result"}
+                />
+              </Stack>
             </Box>
           </Box>
         </Box>
