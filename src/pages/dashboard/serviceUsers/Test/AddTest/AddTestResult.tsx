@@ -129,6 +129,7 @@ export function AddTestResultForm({ onSubmit, orderData }: AddTestResultProps) {
                     sx={{
                       "&::before": {
                         backgroundColor: "transparent",
+                        
                       },
                     }}
                   >

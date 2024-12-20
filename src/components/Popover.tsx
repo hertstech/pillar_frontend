@@ -38,7 +38,7 @@ const PopperOver: React.FC<PopperProps> = ({
   const id = open ? "simple-popper" : undefined;
 
   return (
-    <div>
+    <div className="z-10">
       <button aria-describedby={id} type="button" onClick={handleClick}>
         {buttonText ? (
           buttonText

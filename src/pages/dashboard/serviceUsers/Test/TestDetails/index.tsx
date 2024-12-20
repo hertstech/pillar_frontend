@@ -6,6 +6,8 @@ import { FaDownload } from "react-icons/fa6";
 import PopperOver from "../../../../../components/Popover";
 import { Results } from "./Results";
 import { Summary } from "./Summary";
+import { TestLogEntry } from "./TestActivityLog";
+import { LogEntry } from "../../Health/ActivityLog";
 
 interface IProps {
   data: any;
@@ -92,11 +94,17 @@ export const TestDetails: React.FC<IProps> = ({
               },
               {
                 label: "Details",
-                content: <Summary/>,
+                content: <Summary />,
               },
               {
                 label: "Activity",
-                content: <>all acts here</>,
+                content: (
+                  <LogEntry
+                    date="5th Nov., 2023 • 5:30 AM"
+                    title="Edited test result"
+                    author="Aminat Rukaiya Okeke"
+                  />
+                ),
               },
             ]}
           />
