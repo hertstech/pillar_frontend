@@ -13,6 +13,9 @@ import React, { useState, useEffect } from "react";
 import moment from "moment";
 import { TableLoader } from "../../../../components/NoResult";
 import PopperOver from "../../../../components/Popover";
+import DrawerComp from "../../../../components/Drawer";
+import { TestDetails } from "./TestDetails";
+import { dummyTestData } from "./data";
 
 const TABLE_HEAD = [
   { id: "oder-id", label: "Order ID", align: "left" },
@@ -27,6 +30,8 @@ const TABLE_HEAD = [
 export default function AllTestResult({ data, isLoading }: any) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [openDrawer, setOpenDrawer] = useState<boolean>(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const handleChangePage = (_event: unknown, newPage: number) =>
     setPage(newPage);
@@ -35,6 +40,11 @@ export default function AllTestResult({ data, isLoading }: any) {
   ) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
+  };
+
+  const handleToggle = (itemId: string) => {
+    setSelectedId(itemId);
+    setOpenDrawer(!openDrawer);
   };
 
   const actions = [
@@ -49,6 +59,18 @@ export default function AllTestResult({ data, isLoading }: any) {
 
   return (
     <Box>
+      <DrawerComp
+        variant="plain"
+        openDrawer={openDrawer}
+        onCloseDrawer={() => setOpenDrawer(false)}
+      >
+        <TestDetails
+          id={selectedId as string}
+          data={dummyTestData}
+          disableDrawer={false}
+          handleCloseDrawer={() => setOpenDrawer(false)}
+        />
+      </DrawerComp>
       <Box marginTop={2}>
         <TableContainer
           sx={{ borderRadius: 2.5, background: "#FFF", position: "relative" }}
@@ -73,7 +95,7 @@ export default function AllTestResult({ data, isLoading }: any) {
                   .map((item: any) => (
                     <TableRow
                       key={item.id}
-                      onClick={() => alert(`open row of: ${item.order_id}`)}
+                      onClick={() => handleToggle(item.order_id)}
                       hover
                       sx={{
                         height: "72px",

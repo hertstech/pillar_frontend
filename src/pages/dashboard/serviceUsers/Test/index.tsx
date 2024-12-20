@@ -45,11 +45,11 @@ const ServiceUserTest: React.FC<IProps> = ({ client }) => {
                   },
                   {
                     label: "Draft",
-                    content: <> </>,
+                    content: <>Draft test here </>,
                   },
                   {
                     label: "Archived",
-                    content: <></>,
+                    content: <>Archived test here</>,
                   },
                 ]}
               />
