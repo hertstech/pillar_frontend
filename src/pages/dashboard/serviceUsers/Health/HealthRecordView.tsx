@@ -89,6 +89,7 @@ export const HealthRecordOverview: React.FC<IProps> = ({
                 {moment(item.date_created).format("Do MMM, YYYY") || ""}
               </p>
             </Box>
+            
           </Stack>
           <Tabs
             tabs={[

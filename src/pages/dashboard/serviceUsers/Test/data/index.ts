@@ -88,3 +88,47 @@ export const testData = {
     },
   ],
 };
+
+export const dummyTestData = [
+  {
+    id: 1,
+    order_id: "ORD12345",
+    order_by: "John Doe",
+    test_number: 5,
+    collection_site: "Site A",
+    testDate: "2024-12-19T10:00:00Z",
+  },
+  {
+    id: 2,
+    order_id: "ORD67890",
+    order_by: "Jane Smith",
+    test_number: 3,
+    collection_site: "Site B",
+    testDate: "2024-12-18T14:30:00Z",
+  },
+  {
+    id: 3,
+    order_id: "ORD54321",
+    order_by: "Alice Brown",
+    test_number: 7,
+    collection_site: "Site C",
+    testDate: "2024-12-17T09:15:00Z",
+  },
+  {
+    id: 4,
+    order_id: "ORD98765",
+    order_by: "Bob White",
+    test_number: 2,
+    collection_site: "Site D",
+    testDate: "2024-12-16T11:45:00Z",
+  },
+  {
+    id: 5,
+    order_id: "ORD11223",
+    order_by: "Charlie Black",
+    test_number: 6,
+    collection_site: "Site E",
+    testDate: "2024-12-15T08:20:00Z",
+  },
+];
+

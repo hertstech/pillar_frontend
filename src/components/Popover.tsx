@@ -42,7 +42,7 @@ const PopperOver: React.FC<PopperProps> = ({
         {buttonText ? (
           buttonText
         ) : (
-          <IoEllipsisHorizontalCircleOutline size={26} />
+          <IoEllipsisHorizontalCircleOutline size={26} className="text-neu-600"/>
         )}
       </button>
       <Popper
