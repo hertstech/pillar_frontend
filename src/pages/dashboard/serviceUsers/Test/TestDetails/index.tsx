@@ -5,6 +5,7 @@ import Tabs from "../../Health/Components/tab";
 import { FaDownload } from "react-icons/fa6";
 import PopperOver from "../../../../../components/Popover";
 import { Results } from "./Results";
+import { Summary } from "./Summary";
 
 interface IProps {
   data: any;
@@ -91,7 +92,7 @@ export const TestDetails: React.FC<IProps> = ({
               },
               {
                 label: "Details",
-                content: <>test dets here</>,
+                content: <Summary/>,
               },
               {
                 label: "Activity",
