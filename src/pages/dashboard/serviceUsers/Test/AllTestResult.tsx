@@ -73,6 +73,7 @@ export default function AllTestResult({ data, isLoading }: any) {
                   .map((item: any) => (
                     <TableRow
                       key={item.id}
+                      onClick={() => alert(`open row of: ${item.order_id}`)}
                       hover
                       sx={{
                         height: "72px",
@@ -92,7 +93,7 @@ export default function AllTestResult({ data, isLoading }: any) {
                           noWrap
                           sx={{ textTransform: "capitalize" }}
                         >
-                          #{item.order_id}
+                          Test #{item.order_id}
                         </Typography>
                       </TableCell>
                       <TableCell sx={{ borderBottom: "none" }}>
@@ -112,10 +113,20 @@ export default function AllTestResult({ data, isLoading }: any) {
                         </span>
                       </TableCell>
 
-                      <TableCell sx={{ borderBottom: "none" }}>
+                      <TableCell
+                        sx={{ borderBottom: "none", cursor: "pointer" }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                      >
                         Download
                       </TableCell>
-                      <TableCell sx={{ borderBottom: "none" }}>
+                      <TableCell
+                        sx={{ borderBottom: "none" }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                      >
                         <PopperOver
                           position="bottom-end"
                           popperContent={
@@ -142,16 +153,17 @@ export default function AllTestResult({ data, isLoading }: any) {
               )}
             </TableBody>
           </Table>
-
-          <TablePagination
-            rowsPerPageOptions={[10, 25, 75]}
-            count={data.length}
-            component="div"
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
+          <Box className="flex justify-start mt-4">
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25, 75]}
+              count={data.length}
+              component="div"
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </Box>
         </TableContainer>
       </Box>
     </Box>
