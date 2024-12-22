@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Stack } from "@mui/material";
 import { IoArrowBackCircleOutline } from "react-icons/io5";
 import Tabs from "../../Health/Components/tab";
@@ -6,8 +6,8 @@ import { FaDownload } from "react-icons/fa6";
 import PopperOver from "../../../../../components/Popover";
 import { Results } from "./Results";
 import { Summary } from "./Summary";
-import { TestLogEntry } from "./TestActivityLog";
 import { LogEntry } from "../../Health/ActivityLog";
+import { PastTests } from "../Components/PastTestModal";
 
 interface IProps {
   data: any;
@@ -22,12 +22,13 @@ export const TestDetails: React.FC<IProps> = ({
   data: item,
   handleCloseDrawer,
 }) => {
+  const [openPastTest, setOpenPastTest] = useState(false);
   console.log(item);
   const actions = [
     { label: "Edit test", onClick: () => null },
     { label: "Archive test", onClick: () => null },
     { label: "Duplicate test", onClick: () => null },
-    { label: "View past result", onClick: () => null },
+    { label: "View past result", onClick: () => setOpenPastTest(true) },
     { label: "Delete", onClick: () => null, isDanger: true },
   ];
 
@@ -109,6 +110,7 @@ export const TestDetails: React.FC<IProps> = ({
             ]}
           />
         </Box>
+        <PastTests setOpen={setOpenPastTest} open={openPastTest} testId={id} />
       </Box>
     </>
   );
