@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import { FaAngleDown } from "react-icons/fa6";
 import { icons } from "../icons";
-import { testData, unitColors } from "../data";
+import { testData, testUnits, unitColors } from "../data";
 import classNames from "classnames";
 import { getNameByValue } from "../../../../../Utils/getByName";
 
@@ -22,31 +22,6 @@ interface Result {
 interface IProps {
   data: Result[];
 }
-
-const testUnits: Record<string, string> = {
-  hemoglobin: "g/dL",
-  wbc: "10³/μL",
-  rbc: "10⁶/μL",
-  platelets: "10³/μL",
-  haematocrit: "%",
-  corpuscularVol: "fL",
-  corpuscularHb: "pg",
-  bloodGlucoseFasting: "mg/dL",
-  bloodGlucoseRandom: "mg/dL",
-  bloodGlucoseGlycatedHaemoglobin: "%",
-  cholesterol: "mg/dL",
-  alt: "U/L",
-  ast: "U/L",
-  bilirubinTotal: "mg/dL",
-  alp: "U/L",
-  albumin: "g/dL",
-  ggt: "U/L",
-  creatinine: "mg/dL",
-  glr: "mL/min/1.73m²",
-  urea: "mg/dL",
-  tsh: "μIU/mL",
-  t4: "ng/dL",
-};
 
 export const Results = ({ data }: IProps) => {
   const [expanded, setExpanded] = useState<number | false>(false);
