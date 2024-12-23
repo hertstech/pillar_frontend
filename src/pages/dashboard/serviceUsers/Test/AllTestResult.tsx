@@ -151,6 +151,7 @@ export default function AllTestResult({ data = [], isLoading }: any) {
 
                       <TableCell
                         sx={{ borderBottom: "none", cursor: "pointer" }}
+                        className="!text-pri-650"
                         onClick={(e) => {
                           e.stopPropagation();
                         }}

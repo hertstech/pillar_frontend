@@ -18,6 +18,8 @@ interface TextProps {
   disabled?: boolean;
   checking?: boolean;
   isReadOnly?: boolean;
+  maxLength?: number;
+  onKeyDown?: (e: React.KeyboardEvent) => void;
   pattern?: string;
   onChange?: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -101,6 +103,7 @@ export default function InputField({
               onWheel={onWheel}
               {...(register && register(name, { required }))}
               readOnly={rest.isReadOnly}
+              {...rest}
             />
             {rest.checking && (
               <span className="absolute top-5 right-4">

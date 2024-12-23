@@ -16,15 +16,23 @@ const ServiceUserTest: React.FC<IProps> = ({ client }) => {
   const { id } = useParams();
 
   const { data, isLoading } = useGetAllTest(id as string);
-  console.log("created test;", data?.data);
 
   console.log("client data:", client);
+
+  if (isLoading) {
+    <Spinner title="loading tests..." />;
+  }
 
   return (
     <Box>
       <Box>
-        {isLoading ? (
-          <Spinner title="loading tests..." />
+        {!data?.data || data.data.length === 0 ? (
+          <NoResultIllustration
+            text={"No tests added yet"}
+            description="Add new test result here"
+            linkDesc="Add test result"
+            linkTo={`add-test`}
+          />
         ) : (
           <Box className="flex flex-col gap-6">
             <Box className="flex justify-between items-center">
@@ -76,15 +84,6 @@ const ServiceUserTest: React.FC<IProps> = ({ client }) => {
             </Box>
           </Box>
         )}
-        {!data?.data ||
-          (data.data.length === 0 && (
-            <NoResultIllustration
-              text={"No tests added yet"}
-              description="Add new test result here"
-              linkDesc="Add test result"
-              linkTo={`add-test`}
-            />
-          ))}
       </Box>
     </Box>
   );

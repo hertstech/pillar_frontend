@@ -31,9 +31,14 @@ type AddOrderDetailsProps = {
 };
 
 const testSchema = Joi.object({
-  orderId: Joi.string().required().messages({
-    "string.empty": "Order ID is required",
-  }),
+  orderId: Joi.string()
+    .regex(/^\S{1,6}$/)
+    .required()
+    .messages({
+      "string.empty": "Order ID is required",
+      "string.pattern.base":
+        "Order ID must not contain spaces and be at most 5 characters long",
+    }),
   testDate: Joi.string().optional(),
   collectionSite: Joi.string().required().messages({
     "string.empty": "Collection site is required",
@@ -131,10 +136,17 @@ export function AddOrderDetails({
             type="text"
             label="Enter new order ID"
             name="orderId"
-            placeholder="e.g. 2323422"
+            placeholder="e.g. 23234"
             register={register}
             errors={errors}
+            maxLength={5}
+            onKeyDown={(e: React.KeyboardEvent) => {
+              if (e.key === " ") {
+                e.preventDefault();
+              }
+            }}
           />
+
           <Box className="flex gap-4 items-center">
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoItem label="Date of Test">

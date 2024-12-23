@@ -94,7 +94,7 @@ export const TestDetails: React.FC<IProps> = ({ id, handleCloseDrawer }) => {
               },
               {
                 label: "Details",
-                content: <Summary />,
+                content: <Summary data={data?.data} />,
               },
               {
                 label: "Activity",
