@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { LiaArrowCircleLeftSolid } from "react-icons/lia";
 import {
   Box,
@@ -31,6 +31,7 @@ type FormDataTypes = {
 };
 
 export const AddTestRecord: React.FC = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const { mutate } = useCreateTest();
   const [activeStep, setActiveStep] = useState(0);
@@ -74,32 +75,36 @@ export const AddTestRecord: React.FC = () => {
             if (saveType === "final") {
               const newData = transformToSnakeCase({
                 ...formData.orderDetails,
-                testResults: tests,
+
+                testsResults: tests,
               });
               console.log("Submitting final data:", newData);
 
-              mutate(newData, {
-                onSuccess: () => {
-                  navigate(-1);
-                  useAlert({
-                    timer: 4000,
-                    isToast: true,
-                    icon: "success",
-                    title: "Test recorded successfully",
-                    position: "top-start",
-                  });
-                },
-                onError: () => {
-                  setActiveStep(0);
-                  useAlert({
-                    timer: 4000,
-                    icon: "error",
-                    isToast: true,
-                    position: "top-start",
-                    title: "Test record not added",
-                  });
-                },
-              });
+              mutate(
+                { testData: newData, NHRID: id },
+                {
+                  onSuccess: () => {
+                    navigate(-1);
+                    useAlert({
+                      timer: 4000,
+                      isToast: true,
+                      icon: "success",
+                      title: "Test recorded successfully",
+                      position: "top-start",
+                    });
+                  },
+                  onError: () => {
+                    setActiveStep(0);
+                    useAlert({
+                      timer: 4000,
+                      icon: "error",
+                      isToast: true,
+                      position: "top-start",
+                      title: "Test record not added",
+                    });
+                  },
+                }
+              );
             } else {
               const draftData = transformToSnakeCase({
                 ...formData.orderDetails,

@@ -16,7 +16,8 @@ export const useCreateTest = () => {
 
   return useMutation({
     mutationFn: (data: Record<string, any>) => {
-      return axiosInstance.post(`/api/v1/test/create`, data);
+      const { NHRID, testData } = data;
+      return axiosInstance.post(`/api/v1/order/${NHRID}/test`, testData);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
