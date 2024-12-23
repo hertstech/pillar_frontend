@@ -15,6 +15,7 @@ import { TableLoader } from "../../../../components/NoResult";
 import PopperOver from "../../../../components/Popover";
 import DrawerComp from "../../../../components/Drawer";
 import { TestDetails } from "./TestDetails";
+import { DeleteAllTestsOrder } from "./AddTest/DeleteAllTest";
 
 const TABLE_HEAD = [
   { id: "oder-id", label: "Order ID", align: "left" },
@@ -30,6 +31,7 @@ export default function AllTestResult({ data = [], isLoading }: any) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
+  const [openDeleteTest, setOpenDeleteTest] = useState<boolean>(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const handleChangePage = (_event: unknown, newPage: number) =>
@@ -41,19 +43,31 @@ export default function AllTestResult({ data = [], isLoading }: any) {
     setPage(0);
   };
 
-const handleToggle = (itemId: string) => {
-  const sanitizedId = itemId.replace(/\s+/g, "");
-  setSelectedId(sanitizedId);
-  setOpenDrawer(!openDrawer);
-};
-
+  const handleToggle = (itemId: string) => {
+    const sanitizedId = itemId.replace(/\s+/g, "");
+    setSelectedId(sanitizedId);
+    setOpenDrawer(!openDrawer);
+  };
+  const handleOpenDelete = (itemId: string | null) => {
+    if (!itemId) {
+      console.error("Invalid itemId for deletion.");
+      return;
+    }
+    const sanitizedId = itemId.replace(/\s+/g, "");
+    setSelectedId(sanitizedId);
+    setOpenDeleteTest(true);
+  };
 
   const actions = [
     { label: "Edit test", onClick: () => null },
     { label: "Archive test", onClick: () => null },
     { label: "Duplicate test", onClick: () => null },
     { label: "View past result", onClick: () => null },
-    { label: "Delete", onClick: () => null, isDanger: true },
+    {
+      label: "Delete",
+      onClick: () => handleOpenDelete(selectedId),
+      isDanger: true,
+    },
   ];
 
   useEffect(() => setPage(0), []);
@@ -144,7 +158,7 @@ const handleToggle = (itemId: string) => {
                         Download
                       </TableCell>
                       <TableCell
-                        sx={{ borderBottom: "none" }}
+                        sx={{ borderBottom: "none", cursor: "pointer" }}
                         onClick={(e) => {
                           e.stopPropagation();
                         }}
@@ -156,7 +170,11 @@ const handleToggle = (itemId: string) => {
                               {actions.map((action, index) => (
                                 <button
                                   key={index}
-                                  onClick={action.onClick}
+                                  onClick={() =>
+                                    action.label === "Delete"
+                                      ? handleOpenDelete(item.order_id)
+                                      : action.onClick()
+                                  }
                                   className={`p-3 w-full text font-medium text-sm text-left ${
                                     action.isDanger ? "text-err" : ""
                                   } ${
@@ -184,6 +202,11 @@ const handleToggle = (itemId: string) => {
               page={page}
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+            <DeleteAllTestsOrder
+              id={selectedId as string}
+              showModal={openDeleteTest}
+              closeModal={() => setOpenDeleteTest(false)}
             />
           </Box>
         </TableContainer>

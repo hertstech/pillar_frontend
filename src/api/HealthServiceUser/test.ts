@@ -36,3 +36,17 @@ export const useCreateTest = () => {
     },
   });
 };
+
+export const useDeleteAllTestOrder = () => {
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, string>({
+    mutationFn: (testId: string) => {
+      return axiosInstance.delete(`/api/v1/order/${testId}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["getTests"],
+      });
+    },
+  });
+};

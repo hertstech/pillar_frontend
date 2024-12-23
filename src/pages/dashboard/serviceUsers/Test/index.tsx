@@ -1,12 +1,12 @@
 import { Box, MenuItem, Select } from "@mui/material";
 import { client } from "../../../../types/serviceUserTypes/health";
 import NoResultIllustration from "../../../../components/NoResult";
-import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { LuFlaskConical } from "react-icons/lu";
 import Tabs from "../Health/Components/tab";
 import AllTestResult from "./AllTestResult";
 import { useGetAllTest } from "../../../../api/HealthServiceUser/test";
+import { Spinner } from "../../../../components/Spinner";
 
 interface IProps {
   client: client;
@@ -14,16 +14,18 @@ interface IProps {
 
 const ServiceUserTest: React.FC<IProps> = ({ client }) => {
   const { id } = useParams();
-  const [testData, _] = useState(true);
 
-  const { data } = useGetAllTest(id as string);
+  const { data, isLoading } = useGetAllTest(id as string);
   console.log("created test;", data?.data);
 
   console.log("client data:", client);
+
   return (
     <Box>
       <Box>
-        {testData ? (
+        {isLoading ? (
+          <Spinner title="loading tests..." />
+        ) : (
           <Box className="flex flex-col gap-6">
             <Box className="flex justify-between items-center">
               <p className="text-sm font-semibold leading-5">
@@ -73,14 +75,16 @@ const ServiceUserTest: React.FC<IProps> = ({ client }) => {
               </Box>
             </Box>
           </Box>
-        ) : (
-          <NoResultIllustration
-            text={"No tests added yet"}
-            description="Add new test result here"
-            linkDesc="Add test result"
-            linkTo={`add-test`}
-          />
         )}
+        {!data?.data ||
+          (data.data.length === 0 && (
+            <NoResultIllustration
+              text={"No tests added yet"}
+              description="Add new test result here"
+              linkDesc="Add test result"
+              linkTo={`add-test`}
+            />
+          ))}
       </Box>
     </Box>
   );
