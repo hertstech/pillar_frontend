@@ -6,7 +6,10 @@ import {
   ThyroidIcon,
 } from "../../../../../assets/Icons";
 
-export const icons = {
+export const icons: Record<
+  "blood" | "lipid-profile" | "liver" | "kidney" | "thyroid",
+  JSX.Element
+> = {
   blood: <MdOutlineWaterDrop size={22} />,
   "lipid-profile": <HeartSquaredIcon />,
   liver: <LiverIcon />,

@@ -18,6 +18,7 @@ import Buttons from "../../../../../components/Button";
 import { TestOrderTypes } from "./AddOrderDetails";
 import moment from "moment";
 import classNames from "classnames";
+import { getNameByValue } from "../../../../../Utils/getByName";
 
 const testSchema = Joi.object({
   tests: Joi.array().items(
@@ -129,7 +130,6 @@ export function AddTestResultForm({ onSubmit, orderData }: AddTestResultProps) {
                     sx={{
                       "&::before": {
                         backgroundColor: "transparent",
-                        
                       },
                     }}
                   >
@@ -141,9 +141,13 @@ export function AddTestResultForm({ onSubmit, orderData }: AddTestResultProps) {
                         <h2 className="text-lg font-semibold capitalize">
                           {categoryValue || `Test ${index + 1}`}
                         </h2>
+
                         <p className="text-sm text-neu-600 font-normal capitalize">
-                          {watch(`tests.${index}.testTypes`) || "Test Type"} •{" "}
-                          {watch(`tests.${index}.reading`) || "Reading"} •{" "}
+                          {getNameByValue(
+                            watch(`tests.${index}.testTypes`),
+                            testData.category
+                          ) || "Test Type"}{" "}
+                          • {watch(`tests.${index}.reading`) || "Reading"} •{" "}
                           {watch(`tests.${index}.notes`) || "Notes"}•{" "}
                           {formattedDate || "Date"}•{" "}
                           {orderData.collectionSite || "Collection site"}

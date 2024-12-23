@@ -7,10 +7,24 @@ import {
 } from "@mui/material";
 import { FaAngleDown } from "react-icons/fa6";
 import { icons } from "../icons";
-import { testResults, unitColors } from "../data";
+import { testData, unitColors } from "../data";
 import classNames from "classnames";
+import { getNameByValue } from "../../../../../Utils/getByName";
 
-export const Results = () => {
+interface Result {
+  id: number;
+  category: keyof typeof icons;
+  test_types: string;
+  date: string;
+  reading: string;
+  unit: string;
+}
+
+interface IProps {
+  data: Result[];
+}
+
+export const Results = ({ data }: IProps) => {
   const [expanded, setExpanded] = useState<number | false>(false);
 
   const handleAccordionChange =
@@ -21,7 +35,7 @@ export const Results = () => {
 
   return (
     <div className="flex flex-col gap-4">
-      {testResults.map((result) => (
+      {data?.map((result) => (
         <Accordion
           key={result.id}
           expanded={expanded === result.id}
@@ -37,26 +51,26 @@ export const Results = () => {
           <AccordionSummary
             expandIcon={
               <FaAngleDown
-                className={
-                  (classNames(
-                    "absolute top-5 right-2 transition-transform duration-300"
-                  ),
-                  expanded ? "!top-4 !left-2" : "rotate-0")
-                }
+                className={classNames(
+                  "absolute top-5 right-2 transition-transform duration-300",
+                  expanded ? "!top-4 !left-2" : "rotate-0"
+                )}
               />
             }
             className="!max-h-[52px] !mt-7 !shadow-none"
           >
             <Box className="flex flex-col w-full gap-8">
               <p className="flex items-center gap-2 text-sm text-neu-500 font-normal capitalize">
-                {icons.blood} {result.category} • {result.date}
+                {icons[result.category]}{" "}
+                {getNameByValue(result.category, testData.category)} •{" "}
+                {result.date}
               </p>
               <Box className="flex justify-between items-center w-[95%]">
                 <p className="text-base font-semibold capitalize">
-                  {result.type}
+                  {getNameByValue(result.test_types, testData.category)}
                 </p>
                 <p className="text-base text-succ font-semibold mr-2">
-                  {result.value}{" "}
+                  {result.reading}{" "}
                   <span
                     className={classNames(
                       "text-sm font-normal ",
@@ -70,7 +84,8 @@ export const Results = () => {
             </Box>
           </AccordionSummary>
           <AccordionDetails className="!border-none !shadow-none">
-            Additional details for {result.type}.
+            Additional details for{" "}
+            {getNameByValue(result.test_types, testData.category)}.
           </AccordionDetails>
         </Accordion>
       ))}

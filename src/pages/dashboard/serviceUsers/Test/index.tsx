@@ -2,18 +2,22 @@ import { Box, MenuItem, Select } from "@mui/material";
 import { client } from "../../../../types/serviceUserTypes/health";
 import NoResultIllustration from "../../../../components/NoResult";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { LuFlaskConical } from "react-icons/lu";
 import Tabs from "../Health/Components/tab";
 import AllTestResult from "./AllTestResult";
-import { dummyTestData } from "./data";
+import { useGetAllTest } from "../../../../api/HealthServiceUser/test";
 
 interface IProps {
   client: client;
 }
 
 const ServiceUserTest: React.FC<IProps> = ({ client }) => {
+  const { id } = useParams();
   const [testData, _] = useState(true);
+
+  const { data } = useGetAllTest(id as string);
+  console.log("created test;", data?.data);
 
   console.log("client data:", client);
   return (
@@ -40,7 +44,7 @@ const ServiceUserTest: React.FC<IProps> = ({ client }) => {
                   {
                     label: "Results",
                     content: (
-                      <AllTestResult data={dummyTestData} isLoading={false} />
+                      <AllTestResult data={data?.data} isLoading={false} />
                     ),
                   },
                   {

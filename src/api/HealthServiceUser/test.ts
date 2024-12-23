@@ -1,11 +1,21 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../../Utils";
 
-export const useGetDraftedTest = (CUID: string) => {
+export const useGetAllTest = (NHRID: string) => {
   return useQuery({
-    queryKey: ["getTests", CUID],
+    queryKey: ["getTests", NHRID],
     queryFn: async () => {
-      const res = axiosInstance.get(`/api/v1/test/${CUID}`);
+      const res = axiosInstance.get(`/api/v1/order/service-user/${NHRID}`);
+      return res;
+    },
+  });
+};
+
+export const useGetSingleTest = (testID: string) => {
+  return useQuery({
+    queryKey: ["getTests", testID],
+    queryFn: async () => {
+      const res = axiosInstance.get(`/api/v1/order/${testID}`);
       return res;
     },
   });

@@ -15,7 +15,6 @@ import { TableLoader } from "../../../../components/NoResult";
 import PopperOver from "../../../../components/Popover";
 import DrawerComp from "../../../../components/Drawer";
 import { TestDetails } from "./TestDetails";
-import { dummyTestData } from "./data";
 
 const TABLE_HEAD = [
   { id: "oder-id", label: "Order ID", align: "left" },
@@ -27,7 +26,7 @@ const TABLE_HEAD = [
   { id: "", label: "", align: "" },
 ];
 
-export default function AllTestResult({ data, isLoading }: any) {
+export default function AllTestResult({ data = [], isLoading }: any) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
@@ -42,10 +41,12 @@ export default function AllTestResult({ data, isLoading }: any) {
     setPage(0);
   };
 
-  const handleToggle = (itemId: string) => {
-    setSelectedId(itemId);
-    setOpenDrawer(!openDrawer);
-  };
+const handleToggle = (itemId: string) => {
+  const sanitizedId = itemId.replace(/\s+/g, "");
+  setSelectedId(sanitizedId);
+  setOpenDrawer(!openDrawer);
+};
+
 
   const actions = [
     { label: "Edit test", onClick: () => null },
@@ -66,7 +67,6 @@ export default function AllTestResult({ data, isLoading }: any) {
       >
         <TestDetails
           id={selectedId as string}
-          data={dummyTestData}
           disableDrawer={false}
           handleCloseDrawer={() => setOpenDrawer(false)}
         />
@@ -120,11 +120,11 @@ export default function AllTestResult({ data, isLoading }: any) {
                       </TableCell>
                       <TableCell sx={{ borderBottom: "none" }}>
                         {" "}
-                        <span>{item.order_by}</span>
+                        <span>{item.ordered_by}</span>
                       </TableCell>
                       <TableCell sx={{ borderBottom: "none" }}>
                         {" "}
-                        <span>{item.test_number} tests</span>
+                        <span>{item.number_of_tests} tests</span>
                       </TableCell>
                       <TableCell sx={{ borderBottom: "none" }}>
                         <span>{item.collection_site}</span>

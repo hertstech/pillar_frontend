@@ -8,22 +8,21 @@ import { Results } from "./Results";
 import { Summary } from "./Summary";
 import { LogEntry } from "../../Health/ActivityLog";
 import { PastTests } from "../Components/PastTestModal";
+import { useGetSingleTest } from "../../../../../api/HealthServiceUser/test";
 
 interface IProps {
-  data: any;
   id: string | undefined;
   disableDrawer: boolean;
   refreshData?: () => void;
   handleCloseDrawer: () => void;
 }
 
-export const TestDetails: React.FC<IProps> = ({
-  id,
-  data: item,
-  handleCloseDrawer,
-}) => {
+export const TestDetails: React.FC<IProps> = ({ id, handleCloseDrawer }) => {
   const [openPastTest, setOpenPastTest] = useState(false);
-  console.log(item);
+  const { data } = useGetSingleTest(id as string);
+
+  console.log("created test;", data?.data);
+
   const actions = [
     { label: "Edit test", onClick: () => null },
     { label: "Archive test", onClick: () => null },
@@ -91,7 +90,7 @@ export const TestDetails: React.FC<IProps> = ({
             tabs={[
               {
                 label: "Results",
-                content: <Results />,
+                content: <Results data={data?.data} />,
               },
               {
                 label: "Details",
