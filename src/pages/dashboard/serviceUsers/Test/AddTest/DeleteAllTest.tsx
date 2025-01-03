@@ -2,7 +2,7 @@ import { Box, Button } from "@mui/material";
 import { useDeleteAllTestOrder } from "../../../../../api/HealthServiceUser/test";
 import { useAlert } from "../../../../../Utils/useAlert";
 import { ModalAlt } from "../../../../../components/Modals";
-import { InfoIcon } from "../../../../../assets/Icons";
+import { InfoIcon } from "../../../../../../public/assets/Icons";
 
 interface IProps {
   id: string;

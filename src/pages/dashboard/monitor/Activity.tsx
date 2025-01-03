@@ -17,7 +17,7 @@ import React, { useState, useEffect } from "react";
 import moment from "moment";
 import InputField from "../../../components/InputField";
 import { TableLoader } from "../../../components/NoResult";
-import { SearchIcon } from "../../../assets/Icons";
+import { SearchIcon } from "../../../../public/assets/Icons";
 import { IoSettings } from "react-icons/io5";
 import ActivityPinModal from "./Components/activityPinModal";
 

@@ -8,7 +8,7 @@ import AddClinicalNotes from "./AddClinicalNote";
 import classNames from "classnames";
 import { useFormatDate } from "../../../../Utils/dateToText";
 import { DeleteClinicalNote } from "./DeleteClinicalNote";
-import { FemaleAvatar } from "../../../../assets/Icons";
+import { FemaleAvatar } from "../../../../../public/assets/Icons";
 import UpdateClinicalNotes from "./UpdateClinicalNote";
 import { NotesType } from "../../../../types/serviceUserTypes/clinicalNotes";
 import {

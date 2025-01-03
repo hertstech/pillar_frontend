@@ -11,7 +11,7 @@ import {
 } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DemoItem } from "@mui/x-date-pickers/internals/demo";
-import { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import Buttons from "../../../../../components/Button";
 import { FiUploadCloud } from "react-icons/fi";
 import { useCreateTest } from "../../../../../api/HealthServiceUser/test";
@@ -20,6 +20,7 @@ import { transformToSnakeCase } from "../../../../../Utils/caseTransformtter";
 
 export type TestOrderTypes = {
   orderId: string;
+  testName: string;
   testDate: string;
   collectionSite: string;
   orderedBy: string;
@@ -39,6 +40,9 @@ const testSchema = Joi.object({
       "string.pattern.base":
         "Order ID must not contain spaces and be at most 5 characters long",
     }),
+  testName: Joi.string().required().messages({
+    "string.empty": "A test name is required",
+  }),
   testDate: Joi.string().optional(),
   collectionSite: Joi.string().required().messages({
     "string.empty": "Collection site is required",
@@ -71,6 +75,7 @@ export function AddOrderDetails({
     resolver: joiResolver(testSchema),
     defaultValues: {
       orderId: "",
+      testName: "",
       testDate: "",
       collectionSite: "",
       orderedBy: "",
@@ -146,6 +151,14 @@ export function AddOrderDetails({
               }
             }}
           />
+          <InputField
+            type="text"
+            label="Test Name"
+            name="testName"
+            placeholder="John Wick's test"
+            register={register}
+            errors={errors}
+          />
 
           <Box className="flex gap-4 items-center">
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -162,6 +175,7 @@ export function AddOrderDetails({
                       }
                     );
                   }}
+                  shouldDisableDate={(date) => date && date.isAfter(dayjs())}
                 />
               </DemoItem>
             </LocalizationProvider>

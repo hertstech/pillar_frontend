@@ -1,6 +1,6 @@
 import React from "react";
 import { useGetUserConsent } from "../../api/HealthServiceUser/consent";
-import { EditIcon } from "../../assets/Icons";
+import { EditIcon } from "../../../public/assets/Icons";
 import { Box, Button, Checkbox } from "@mui/material";
 
 interface ConsentViewProps {

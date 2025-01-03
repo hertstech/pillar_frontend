@@ -4,7 +4,7 @@ import {
   HeartSquaredIcon,
   LiverIcon,
   ThyroidIcon,
-} from "../../../../../assets/Icons";
+} from "../../../../../../public/assets/Icons";
 
 export const icons: Record<
   "blood" | "lipid-profile" | "liver" | "kidney" | "thyroid",

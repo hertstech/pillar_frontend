@@ -1,9 +1,9 @@
 import { Box, Button, Grid, Stack, Typography } from "@mui/material";
 import React from "react";
-import Avatar from "../../assets/avatar.svg";
 import InputField from "../../components/InputField";
 import Styles from "./styles.module.css";
 import { FiCamera } from "react-icons/fi";
+import Avatar from "../../../public/assets/avatar.svg";
 
 export default function General({ organization }: any) {
   const [profilePicture, setProfilePicture] = React.useState(Avatar);

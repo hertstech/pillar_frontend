@@ -10,7 +10,7 @@ import NoResultIllustration, { SpinLoader } from "../../../components/NoResult";
 import ChartComponent from "../monitor/ChartComponent";
 import { IoEllipsisVertical } from "react-icons/io5";
 import { FaTrash } from "react-icons/fa";
-import { PinIcon } from "../../../assets/Icons";
+import { PinIcon } from "../../../../public/assets/Icons";
 import { useChartData, useMonitoringData } from "../../../hooks/monitoring";
 
 export default function Analytics() {

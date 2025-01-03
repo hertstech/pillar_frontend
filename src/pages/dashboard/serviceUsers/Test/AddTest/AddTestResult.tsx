@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import {
   Box,
   Accordion,
@@ -11,7 +11,7 @@ import { CustomSelect } from "../../../../../components/Select";
 import { useForm, useFieldArray } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
 import Joi from "joi";
-import { testData } from "../data";
+import { testData, testUnits } from "../data";
 import InputField from "../../../../../components/InputField";
 import { FaAngleDown } from "react-icons/fa6";
 import Buttons from "../../../../../components/Button";
@@ -59,9 +59,9 @@ export function AddTestResultForm({ onSubmit, orderData }: AddTestResultProps) {
     reading: "",
     notes: "",
   });
+  const [newTestUnit, setNewTestUnit] = useState("");
 
   const dateString = orderData?.testDate;
-
   const formattedDate = moment(dateString).format("DD-MM-YYYY");
 
   const methods = useForm<TestFormValues>({
@@ -111,6 +111,10 @@ export function AddTestResultForm({ onSubmit, orderData }: AddTestResultProps) {
 
   const toDisable = !newTest.category || !newTest.testTypes || !newTest.reading;
 
+  useEffect(() => {
+    setNewTestUnit(testUnits[newTest.testTypes] || "");
+  }, [newTest.testTypes]);
+
   return (
     <Box>
       <Box sx={{ p: 2 }}>
@@ -120,7 +124,9 @@ export function AddTestResultForm({ onSubmit, orderData }: AddTestResultProps) {
             {fields.length > 0 &&
               fields.map((field, index) => {
                 const categoryValue = watch(`tests.${index}.category`);
+                const testTypeValue = watch(`tests.${index}.testTypes`);
                 const filteredTestTypes = filteredTestTypesList[index];
+                const unit = testUnits[testTypeValue] || "";
 
                 return (
                   <Accordion
@@ -142,12 +148,13 @@ export function AddTestResultForm({ onSubmit, orderData }: AddTestResultProps) {
                           {categoryValue || `Test ${index + 1}`}
                         </h2>
 
-                        <p className="text-sm text-neu-600 font-normal capitalize">
+                        <p className="text-sm text-neu-600 font-normal">
                           {getNameByValue(
                             watch(`tests.${index}.testTypes`),
                             testData.category
                           ) || "Test Type"}{" "}
-                          • {watch(`tests.${index}.reading`) || "Reading"} •{" "}
+                          • {watch(`tests.${index}.reading`) || "Reading"}{" "}
+                          <span className="text-xs">{unit}</span> •{" "}
                           {watch(`tests.${index}.notes`) || "Notes"}•{" "}
                           {formattedDate || "Date"}•{" "}
                           {orderData.collectionSite || "Collection site"}
@@ -173,7 +180,7 @@ export function AddTestResultForm({ onSubmit, orderData }: AddTestResultProps) {
                           name={`tests.${index}.testTypes`}
                           isDisabled={!categoryValue}
                           selectItems={filteredTestTypes}
-                          value={watch(`tests.${index}.testTypes`)}
+                          value={testTypeValue}
                           onChange={(value) =>
                             setValue(`tests.${index}.testTypes`, value, {
                               shouldValidate: true,
@@ -181,14 +188,20 @@ export function AddTestResultForm({ onSubmit, orderData }: AddTestResultProps) {
                           }
                           validationError={errors.tests?.[index]?.testTypes}
                         />
-                        <InputField
-                          type="text"
-                          label="Reading"
-                          name={`tests.${index}.reading`}
-                          placeholder="e.g., 60-70"
-                          register={methods.register}
-                          errors={errors}
-                        />
+                        <Box className="relative">
+                          <InputField
+                            type="text"
+                            label="Reading"
+                            name={`tests.${index}.reading`}
+                            placeholder="e.g., 60-70"
+                            register={methods.register}
+                            errors={errors}
+                          />
+                          <span className="absolute right-3 top-12 mt-1 text-neu-400 text-base font-normal">
+                            {unit}
+                          </span>
+                        </Box>
+
                         <InputField
                           type="text"
                           textarea={true}
@@ -232,19 +245,24 @@ export function AddTestResultForm({ onSubmit, orderData }: AddTestResultProps) {
                       setNewTest((prev) => ({ ...prev, testTypes: value }))
                     }
                   />
-                  <InputField
-                    type="text"
-                    label="Reading"
-                    name="reading"
-                    placeholder="e.g., 60-70"
-                    value={newTest.reading}
-                    onChange={(e) =>
-                      setNewTest((prev) => ({
-                        ...prev,
-                        reading: e.target.value,
-                      }))
-                    }
-                  />
+                  <Box className="relative">
+                    <InputField
+                      type="text"
+                      label="Reading"
+                      name="reading"
+                      placeholder="e.g., 60-70"
+                      value={newTest.reading}
+                      onChange={(e) =>
+                        setNewTest((prev) => ({
+                          ...prev,
+                          reading: e.target.value,
+                        }))
+                      }
+                    />
+                    <span className="absolute right-3 top-12 mt-1 text-neu-400 text-base font-normal">
+                      {newTestUnit}
+                    </span>
+                  </Box>
                   <InputField
                     type="text"
                     textarea={true}
@@ -271,7 +289,7 @@ export function AddTestResultForm({ onSubmit, orderData }: AddTestResultProps) {
                     test
                   </button>
                 </Box>
-              )}{" "}
+              )}
               <Stack
                 gap={3}
                 width={"100%"}

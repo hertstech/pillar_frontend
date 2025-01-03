@@ -117,6 +117,7 @@ export default function AllTestResult({ data = [], isLoading }: any) {
                         "&:nth-of-type(even)": { background: "#F9F9FB" },
                         position: "relative",
                         borderBottom: "none",
+                        ":hover": { cursor: "pointer" },
                       }}
                     >
                       <TableCell

@@ -3,7 +3,7 @@ import moment from "moment";
 import { TextLabel } from "../../../components/InputField";
 import { useNavigate, useParams } from "react-router-dom";
 import { ProfileSummary } from "../../../components/ServiceUser/ProfileSummary";
-import { EditIcon } from "../../../assets/Icons";
+import { EditIcon } from "../../../../public/assets/Icons";
 import { ConsentStatus } from "../../../components/ServiceUser/ConsentStatus";
 import classNames from "classnames";
 

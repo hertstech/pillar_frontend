@@ -49,6 +49,12 @@ export const AddTestRecord: React.FC = () => {
     }
   };
 
+  const handlePrev = () => {
+    if (activeStep === 1) {
+      setActiveStep((prev) => prev - 1);
+    }
+  };
+
   const steps = [
     {
       label: "Order details",
@@ -232,8 +238,16 @@ export const AddTestRecord: React.FC = () => {
                 border: "none",
                 boxShadow: "none",
               }}
-              className="flex flex-col items-center"
+              className="flex flex-col items-center relative"
             >
+              {activeStep === 1 && (
+                <div
+                  className="absolute left-0 flex items-center cursor-pointer text-neu-500 gap-1 text-sm"
+                  onClick={handlePrev}
+                >
+                  <LiaArrowCircleLeftSolid size={20} />
+                </div>
+              )}
               <div style={{ textAlign: "center", marginBottom: 25 }}>
                 <Typography fontWeight={700} color={"#101928"} fontSize={32}>
                   Record test result
