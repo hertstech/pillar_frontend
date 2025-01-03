@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { LiaArrowCircleLeftSolid } from "react-icons/lia";
 import {
   Box,
@@ -12,13 +12,14 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { AddOrderDetails, TestOrderTypes } from "./AddOrderDetails";
-import { AddTestResultForm } from "./AddTestResult";
+import { DupOrderDetails, TestOrderTypes } from "./DupOrderDetails";
+import { DupTestResultForm } from "./DupTestResult";
 import { NeedHelp } from "../../../../../components/CalendarField";
 import Buttons from "../../../../../components/Button";
 import { transformToSnakeCase } from "../../../../../Utils/caseTransformer";
 import { useCreateTest } from "../../../../../api/HealthServiceUser/test";
 import { useAlert } from "../../../../../Utils/useAlert";
+import { useGetSingleTest } from "../../../../../api/HealthServiceUser/test";
 
 type FormDataTypes = {
   orderDetails: Record<string, any>;
@@ -30,9 +31,12 @@ type FormDataTypes = {
   }[];
 };
 
-export const AddTestRecord: React.FC = () => {
-  const { id } = useParams();
+export const DupTestRecord: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const testId = location.state?.id;
+
+  const { id } = useParams();
   const { mutate } = useCreateTest();
   const [activeStep, setActiveStep] = useState(0);
 
@@ -40,6 +44,10 @@ export const AddTestRecord: React.FC = () => {
     orderDetails: {},
     testResults: [],
   });
+
+  const { data } = useGetSingleTest(testId as string);
+
+  console.log("created test;", data);
 
   const handleNext = () => {
     if (activeStep < steps.length - 1) {
@@ -60,7 +68,8 @@ export const AddTestRecord: React.FC = () => {
       label: "Order details",
       description: "Add the test order details",
       content: (
-        <AddOrderDetails
+        <DupOrderDetails
+          orderData={data?.data?.orderDetails}
           onSubmit={(data) => {
             setFormData((prev) => ({ ...prev, orderDetails: data }));
           }}
@@ -72,7 +81,8 @@ export const AddTestRecord: React.FC = () => {
       label: "Test result",
       description: "Enter the test results accurately.",
       content: (
-        <AddTestResultForm
+        <DupTestResultForm
+        // testData={data?.data?.testData}
           orderData={formData.orderDetails as TestOrderTypes}
           onSubmit={(data) => {
             const { saveType, tests } = data;
@@ -95,7 +105,7 @@ export const AddTestRecord: React.FC = () => {
                       timer: 4000,
                       isToast: true,
                       icon: "success",
-                      title: "Test recorded successfully",
+                      title: "Test duplicated successfully",
                       position: "top-start",
                     });
                   },
@@ -106,7 +116,7 @@ export const AddTestRecord: React.FC = () => {
                       icon: "error",
                       isToast: true,
                       position: "top-start",
-                      title: "Test record not added",
+                      title: "Test record not duplicated",
                     });
                   },
                 }
@@ -161,7 +171,7 @@ export const AddTestRecord: React.FC = () => {
             <span className="mt-1">Go Back</span>
           </div>
           <div className="text-neu-900 font-bold text-lg capitalize">
-            Record Test
+            Duplicate Record
           </div>
         </Stack>
       </Box>

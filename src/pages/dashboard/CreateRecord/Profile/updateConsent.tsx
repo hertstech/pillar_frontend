@@ -14,7 +14,7 @@ import { joiResolver } from "@hookform/resolvers/joi";
 import { allConsentData } from "../../../../data/consentData";
 import InputField from "../../../../components/InputField";
 import { consentSchema } from "../../../../schemas/createUserSchema";
-import { transformToSnakeCase } from "../../../../Utils/caseTransformtter";
+import { transformToSnakeCase } from "../../../../Utils/caseTransformer";
 import { ConsentData } from "../../../../types/serviceUserTypes/consent";
 import {
   useGetUserConsent,

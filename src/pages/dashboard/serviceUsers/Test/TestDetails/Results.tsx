@@ -10,6 +10,7 @@ import { icons } from "../icons";
 import { testData, testUnits, unitColors } from "../data";
 import classNames from "classnames";
 import { getNameByValue } from "../../../../../Utils/getByName";
+import { PropagateLoader } from "react-spinners";
 
 interface Result {
   id: number;
@@ -21,9 +22,10 @@ interface Result {
 
 interface IProps {
   data: Result[];
+  loading: boolean;
 }
 
-export const Results = ({ data }: IProps) => {
+export const Results = ({ data, loading }: IProps) => {
   const [expanded, setExpanded] = useState<number | false>(false);
 
   const handleAccordionChange =
@@ -32,13 +34,21 @@ export const Results = ({ data }: IProps) => {
       setExpanded(isExpanded ? panel : false);
     };
 
+  if (loading) {
+    return (
+      <div className="h-full flex justify-center items-center">
+        <PropagateLoader size={10} />
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-4">
       {!data || data.length === 0 ? (
-        <span>No test added </span>
+        <span>No test added</span>
       ) : (
         data?.map((result) => {
-          const unit = testUnits[result.test_types] || ""; 
+          const unit = testUnits[result.test_types] || "";
 
           return (
             <Accordion

@@ -17,10 +17,12 @@ const ServiceUserTest: React.FC<IProps> = ({ client }) => {
 
   const { data, isLoading } = useGetAllTest(id as string);
 
-  console.log("client data:", client);
-
   if (isLoading) {
-    <Spinner title="loading tests..." />;
+    return (
+      <div className="h-[70vh] flex justify-center items-center">
+        <Spinner title="Loading tests..." />
+      </div>
+    );
   }
 
   return (

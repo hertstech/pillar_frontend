@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Box, Stack, Button } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
@@ -27,7 +27,8 @@ export type TestOrderTypes = {
   testDoc?: File | null;
 };
 
-type AddOrderDetailsProps = {
+type DupOrderDetailsProps = {
+  orderData: any;
   onSubmit: (data: TestOrderTypes) => void;
 };
 
@@ -55,10 +56,11 @@ const testSchema = Joi.object({
     .optional(),
 });
 
-export function AddOrderDetails({
+export function DupOrderDetails({
+  orderData,
   onSubmit,
   handleNext,
-}: AddOrderDetailsProps & { handleNext: () => void }) {
+}: DupOrderDetailsProps & { handleNext: () => void }) {
   const [testingDate, setTestingDate] = useState<Dayjs | null>(null);
   const [testTime, setTestTime] = useState<Dayjs | null>(null);
   const [fileName, setFileName] = useState("");
@@ -82,6 +84,27 @@ export function AddOrderDetails({
       testDoc: null,
     },
   });
+
+  useEffect(() => {
+    if (orderData) {
+      setValue("orderId", orderData.orderId || "");
+      setValue("testName", orderData.testName || "");
+      setValue("testDate", orderData.testDate || "");
+      setValue("collectionSite", orderData.collectionSite || "");
+      setValue("orderedBy", orderData.orderedBy || "");
+
+      if (orderData.testDoc) {
+        setFileName(orderData.testDoc.name || "");
+        setUploadedFile(orderData.testDoc);
+        setValue("testDoc", orderData.testDoc, { shouldValidate: true });
+      }
+
+      if (orderData.testDate) {
+        const parsedDate = dayjs(orderData.testDate);
+        setTestingDate(parsedDate);
+      }
+    }
+  }, [orderData, setValue]);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -159,7 +182,6 @@ export function AddOrderDetails({
             register={register}
             errors={errors}
           />
-
           <Box className="flex gap-4 items-center">
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoItem label="Date of Test">
@@ -279,3 +301,4 @@ export function AddOrderDetails({
     </Box>
   );
 }
+

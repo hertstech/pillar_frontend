@@ -15,6 +15,7 @@ import File from "../pages/dashboard/files";
 import CreateReport from "../pages/dashboard/monitor/Report/CreateReport";
 import Home from "../pages/dashboard/home";
 import { AddTestRecord } from "../pages/dashboard/serviceUsers/Test/AddTest";
+import { DupTestRecord } from "../pages/dashboard/serviceUsers/Test/DuplicateTest";
 
 export const router = createBrowserRouter([
   // AUTH
@@ -94,6 +95,7 @@ export const router = createBrowserRouter([
           { path: "update", element: <CreateRecord /> },
           { path: "update/:tabId", element: <CreateRecord /> },
           { path: "add-test", element: <AddTestRecord /> },
+          { path: "duplicate-test", element: <DupTestRecord /> },
         ],
       },
     ],

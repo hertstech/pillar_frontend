@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Table,
@@ -9,13 +10,13 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import React, { useState, useEffect } from "react";
 import moment from "moment";
 import { TableLoader } from "../../../../components/NoResult";
 import PopperOver from "../../../../components/Popover";
 import DrawerComp from "../../../../components/Drawer";
 import { TestDetails } from "./TestDetails";
 import { DeleteAllTestsOrder } from "./AddTest/DeleteAllTest";
+import { useNavigate } from "react-router-dom";
 
 const TABLE_HEAD = [
   { id: "oder-id", label: "Order ID", align: "left" },
@@ -28,6 +29,7 @@ const TABLE_HEAD = [
 ];
 
 export default function AllTestResult({ data = [], isLoading }: any) {
+  const navigate = useNavigate();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
@@ -48,6 +50,13 @@ export default function AllTestResult({ data = [], isLoading }: any) {
     setSelectedId(sanitizedId);
     setOpenDrawer(!openDrawer);
   };
+
+   const handleDuplicate = (Id: string | null) => {
+     navigate("duplicate-test", {
+       state: { id: Id },
+     });
+   };
+
   const handleOpenDelete = (itemId: string | null) => {
     if (!itemId) {
       console.error("Invalid itemId for deletion.");
@@ -61,7 +70,10 @@ export default function AllTestResult({ data = [], isLoading }: any) {
   const actions = [
     { label: "Edit test", onClick: () => null },
     { label: "Archive test", onClick: () => null },
-    { label: "Duplicate test", onClick: () => null },
+    {
+      label: "Duplicate test",
+      onClick: () => handleDuplicate(selectedId),
+    },
     { label: "View past result", onClick: () => null },
     {
       label: "Delete",
@@ -69,6 +81,16 @@ export default function AllTestResult({ data = [], isLoading }: any) {
       isDanger: true,
     },
   ];
+
+  const handlePopperClick = (orderId: string, action: any) => {
+    if (action.label === "Delete") {
+      handleOpenDelete(orderId);
+    } else if (action.label === "Duplicate test") {
+      handleDuplicate(orderId);
+    } else {
+      action.onClick();
+    }
+  };
 
   useEffect(() => setPage(0), []);
 
@@ -134,11 +156,9 @@ export default function AllTestResult({ data = [], isLoading }: any) {
                         </Typography>
                       </TableCell>
                       <TableCell sx={{ borderBottom: "none" }}>
-                        {" "}
                         <span>{item.ordered_by}</span>
                       </TableCell>
                       <TableCell sx={{ borderBottom: "none" }}>
-                        {" "}
                         <span>{item.number_of_tests} tests</span>
                       </TableCell>
                       <TableCell sx={{ borderBottom: "none" }}>
@@ -172,11 +192,11 @@ export default function AllTestResult({ data = [], isLoading }: any) {
                               {actions.map((action, index) => (
                                 <button
                                   key={index}
-                                  onClick={() =>
-                                    action.label === "Delete"
-                                      ? handleOpenDelete(item.order_id)
-                                      : action.onClick()
-                                  }
+                                  onClick={(e: any) => {
+                                    e.stopPropagation();
+                                    handlePopperClick(item.order_id, action);
+                                  
+                                  }}
                                   className={`p-3 w-full text font-medium text-sm text-left ${
                                     action.isDanger ? "text-err" : ""
                                   } ${

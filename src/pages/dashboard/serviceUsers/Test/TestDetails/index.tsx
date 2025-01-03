@@ -9,6 +9,8 @@ import { Summary } from "./Summary";
 import { LogEntry } from "../../Health/ActivityLog";
 import { PastTests } from "../Components/PastTestModal";
 import { useGetSingleTest } from "../../../../../api/HealthServiceUser/test";
+import { useNavigate } from "react-router-dom";
+import { DeleteAllTestsOrder } from "../AddTest/DeleteAllTest";
 
 interface IProps {
   id: string | undefined;
@@ -18,18 +20,51 @@ interface IProps {
 }
 
 export const TestDetails: React.FC<IProps> = ({ id, handleCloseDrawer }) => {
+  const navigate = useNavigate();
+
   const [openPastTest, setOpenPastTest] = useState(false);
-  const { data } = useGetSingleTest(id as string);
+  const [openDeleteTest, setOpenDeleteTest] = useState<boolean>(false);
+
+  const { data, isLoading } = useGetSingleTest(id as string);
 
   console.log("created test;", data?.data);
+
+  const handleDuplicate = (Id: string | null) => {
+    navigate("duplicate-test", {
+      state: { id: Id },
+    });
+  };
+
+  const handleOpenDelete = (itemId: string | undefined) => {
+    if (!itemId) {
+      console.error("Invalid itemId for deletion.");
+      return;
+    }
+
+    setOpenDeleteTest(true);
+  };
 
   const actions = [
     { label: "Edit test", onClick: () => null },
     { label: "Archive test", onClick: () => null },
-    { label: "Duplicate test", onClick: () => null },
+    { label: "Duplicate test", onClick: () => handleDuplicate(id as string) },
     { label: "View past result", onClick: () => setOpenPastTest(true) },
-    { label: "Delete", onClick: () => null, isDanger: true },
+    {
+      label: "Delete",
+      onClick: () => handleOpenDelete(id as string),
+      isDanger: true,
+    },
   ];
+
+  const handlePopperClick = (orderId: string, action: any) => {
+    if (action.label === "Delete") {
+      handleOpenDelete(orderId);
+    } else if (action.label === "Duplicate test") {
+      handleDuplicate(orderId);
+    } else {
+      action.onClick();
+    }
+  };
 
   return (
     <>
@@ -72,7 +107,10 @@ export const TestDetails: React.FC<IProps> = ({ id, handleCloseDrawer }) => {
                       {actions.map((action, index) => (
                         <button
                           key={index}
-                          onClick={action.onClick}
+                          onClick={(e: any) => {
+                            e.stopPropagation();
+                            handlePopperClick(id as string, action);
+                          }}
                           className={`p-3 w-full text font-medium text-sm text-left ${
                             action.isDanger ? "text-err" : ""
                           } ${index < actions.length - 1 ? "border-b" : ""}`}
@@ -90,7 +128,7 @@ export const TestDetails: React.FC<IProps> = ({ id, handleCloseDrawer }) => {
             tabs={[
               {
                 label: "Results",
-                content: <Results data={data?.data} />,
+                content: <Results data={data?.data} loading={isLoading} />,
               },
               {
                 label: "Details",
@@ -110,6 +148,11 @@ export const TestDetails: React.FC<IProps> = ({ id, handleCloseDrawer }) => {
           />
         </Box>
         <PastTests setOpen={setOpenPastTest} open={openPastTest} testId={id} />
+        <DeleteAllTestsOrder
+          id={id as string}
+          showModal={openDeleteTest}
+          closeModal={() => setOpenDeleteTest(false)}
+        />
       </Box>
     </>
   );
