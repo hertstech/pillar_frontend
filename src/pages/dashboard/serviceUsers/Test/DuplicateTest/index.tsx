@@ -38,7 +38,7 @@ export const DupTestRecord: React.FC = () => {
 
   const { id } = useParams();
   const { mutate } = useCreateTest();
-  const [activeStep, setActiveStep] = useState(1);
+  const [activeStep, setActiveStep] = useState(0);
 
   const [formData, setFormData] = useState<FormDataTypes>({
     orderDetails: {},

@@ -55,7 +55,10 @@ export default function Profile({ client, isLoading }: PropType) {
   const writeAccess = client.read_access;
 
   const navToUpdateProfile = () => {
-    navigate(`/dashboard/user/${id}/update`);
+    navigate(`/dashboard/user/${id}/update/0`);
+  };
+  const navToUpdateConsent = () => {
+    navigate(`/dashboard/user/${id}/update/1`);
   };
 
   const formattedValue = (value: string) => {
@@ -212,7 +215,7 @@ export default function Profile({ client, isLoading }: PropType) {
         </Stack>
         <ConsentStatus
           NHRID={newId}
-          goTo={navToUpdateProfile}
+          goTo={navToUpdateConsent}
           writeAccess={writeAccess}
         />
       </Box>

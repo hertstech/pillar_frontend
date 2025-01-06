@@ -110,7 +110,7 @@ export default function Allergies({ client }: PropType) {
   const [isLoading, setIsLoading] = useState(false);
 
   const navToUpdateAllergy = () => {
-    navigate(`/dashboard/user/${id}/update/3`);
+    navigate(`/dashboard/user/${id}/update/4`);
   };
 
   const deleteForm = (index: number) => {

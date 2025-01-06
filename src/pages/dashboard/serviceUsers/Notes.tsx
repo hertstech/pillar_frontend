@@ -80,7 +80,7 @@ export default function Notes({ client }: PropType) {
   const navigate = useNavigate();
 
   const navToUpdateNotes = () => {
-    navigate(`/dashboard/user/${id}/update/4`);
+    navigate(`/dashboard/user/${id}/update/5`);
   };
 
   const deleteForm = (index: number) => {

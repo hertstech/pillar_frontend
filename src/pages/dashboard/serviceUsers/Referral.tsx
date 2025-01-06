@@ -103,7 +103,7 @@ export default function Referral({ client }: PropType) {
   const navigate = useNavigate();
 
   const navToUpdateReferral = () => {
-    navigate(`/dashboard/user/${id}/update/5`);
+    navigate(`/dashboard/user/${id}/update/6`);
   };
 
   const deleteForm = (index: number) => {

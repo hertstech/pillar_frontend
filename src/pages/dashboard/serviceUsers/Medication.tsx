@@ -118,7 +118,7 @@ export default function Assessment({ client }: PropType) {
   const [record, setRecord] = useState<apiResponse[]>([]);
 
   const navToUpdateMed = () => {
-    navigate(`/dashboard/user/${id}/update/2`);
+    navigate(`/dashboard/user/${id}/update/3`);
   };
 
   const deleteForm = (index: number) => {
@@ -321,7 +321,7 @@ export default function Assessment({ client }: PropType) {
                   Dosage
                   <div style={{ display: "flex", gap: 5 }}>
                     <input
-                      type="text"
+                      type="number"
                       name={`dosage_${index}`}
                       value={form.dosage}
                       onChange={(e) =>
