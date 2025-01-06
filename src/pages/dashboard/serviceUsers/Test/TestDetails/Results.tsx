@@ -19,6 +19,7 @@ interface Result {
   date: string;
   reading: string;
 }
+[];
 
 interface IProps {
   data: Result[];
@@ -44,7 +45,7 @@ export const Results = ({ data, loading }: IProps) => {
 
   return (
     <div className="flex flex-col gap-4">
-      {!data || data.length === 0 ? (
+      {!data || data?.length === 0 ? (
         <span>No test added</span>
       ) : (
         data?.map((result) => {

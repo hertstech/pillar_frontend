@@ -34,12 +34,12 @@ type DupOrderDetailsProps = {
 
 const testSchema = Joi.object({
   orderId: Joi.string()
-    .regex(/^\S{1,6}$/)
+    .regex(/^\S{1,20}$/)
     .required()
     .messages({
       "string.empty": "Order ID is required",
       "string.pattern.base":
-        "Order ID must not contain spaces and be at most 5 characters long",
+        "Order ID must not contain spaces and be at most 20 characters long",
     }),
   testName: Joi.string().required().messages({
     "string.empty": "A test name is required",
@@ -87,11 +87,11 @@ export function DupOrderDetails({
 
   useEffect(() => {
     if (orderData) {
-      setValue("orderId", orderData.orderId || "");
-      setValue("testName", orderData.testName || "");
-      setValue("testDate", orderData.testDate || "");
-      setValue("collectionSite", orderData.collectionSite || "");
-      setValue("orderedBy", orderData.orderedBy || "");
+      setValue("orderId", orderData.order_id || "");
+      setValue("testName", orderData.test_name || "");
+      setValue("testDate", orderData.test_date || "");
+      setValue("collectionSite", orderData.collection_site || "");
+      setValue("orderedBy", orderData.ordered_by || "");
 
       if (orderData.testDoc) {
         setFileName(orderData.testDoc.name || "");
@@ -99,8 +99,8 @@ export function DupOrderDetails({
         setValue("testDoc", orderData.testDoc, { shouldValidate: true });
       }
 
-      if (orderData.testDate) {
-        const parsedDate = dayjs(orderData.testDate);
+      if (orderData.test_date) {
+        const parsedDate = dayjs(orderData.test_date);
         setTestingDate(parsedDate);
       }
     }
@@ -173,6 +173,7 @@ export function DupOrderDetails({
                 e.preventDefault();
               }
             }}
+            isReadOnly
           />
           <InputField
             type="text"
@@ -301,4 +302,3 @@ export function DupOrderDetails({
     </Box>
   );
 }
-

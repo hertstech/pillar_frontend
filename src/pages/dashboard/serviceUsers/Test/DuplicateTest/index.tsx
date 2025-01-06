@@ -38,7 +38,7 @@ export const DupTestRecord: React.FC = () => {
 
   const { id } = useParams();
   const { mutate } = useCreateTest();
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState(1);
 
   const [formData, setFormData] = useState<FormDataTypes>({
     orderDetails: {},
@@ -46,8 +46,6 @@ export const DupTestRecord: React.FC = () => {
   });
 
   const { data } = useGetSingleTest(testId as string);
-
-  console.log("created test;", data);
 
   const handleNext = () => {
     if (activeStep < steps.length - 1) {
@@ -69,7 +67,7 @@ export const DupTestRecord: React.FC = () => {
       description: "Add the test order details",
       content: (
         <DupOrderDetails
-          orderData={data?.data?.orderDetails}
+          orderData={data?.data}
           onSubmit={(data) => {
             setFormData((prev) => ({ ...prev, orderDetails: data }));
           }}
@@ -82,7 +80,7 @@ export const DupTestRecord: React.FC = () => {
       description: "Enter the test results accurately.",
       content: (
         <DupTestResultForm
-        // testData={data?.data?.testData}
+          testInfo={data?.data?.tests}
           orderData={formData.orderDetails as TestOrderTypes}
           onSubmit={(data) => {
             const { saveType, tests } = data;

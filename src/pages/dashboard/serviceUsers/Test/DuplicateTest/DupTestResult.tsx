@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import {
   Box,
   Accordion,
@@ -49,10 +49,22 @@ interface TestFormValues {
 
 type AddTestResultProps = {
   orderData: TestOrderTypes;
+  testInfo:
+    | {
+        id?: string;
+        additional_notes: string | null;
+        category: string;
+        reading: string;
+        test_types: string;
+      }[]
+    | any;
   onSubmit: (data: TestFormValues) => void;
 };
-
-export function DupTestResultForm({ onSubmit, orderData }: AddTestResultProps) {
+export function DupTestResultForm({
+  onSubmit,
+  orderData,
+  testInfo,
+}: AddTestResultProps) {
   const [newTest, setNewTest] = useState({
     category: "",
     testTypes: "",
@@ -61,12 +73,20 @@ export function DupTestResultForm({ onSubmit, orderData }: AddTestResultProps) {
   });
   const [newTestUnit, setNewTestUnit] = useState("");
 
-  const dateString = orderData?.testDate;
-  const formattedDate = moment(dateString).format("DD-MM-YYYY");
+  console.log("test information;", testInfo);
 
+  const formattedDate = moment(orderData?.testDate).format("DD-MM-YYYY");
   const methods = useForm<TestFormValues>({
     resolver: joiResolver(testSchema),
-    defaultValues: { tests: [] },
+    defaultValues: {
+      tests:
+        testInfo?.map((test: any) => ({
+          category: test.category || "",
+          testTypes: test.test_types || "",
+          reading: test.reading || "",
+          notes: test.additional_notes || "" || null,
+        })) || [],
+    },
   });
 
   const {
@@ -77,9 +97,12 @@ export function DupTestResultForm({ onSubmit, orderData }: AddTestResultProps) {
   } = methods;
   const { fields, append } = useFieldArray({ control, name: "tests" });
 
+  const appendedRef = useRef(false);
+
   const handleSaveNewTest = () => {
     append(newTest);
     setNewTest({ category: "", testTypes: "", reading: "", notes: "" });
+    setNewTestUnit("");
   };
 
   const handleSubmitTests = (saveType: "draft" | "final") => {
@@ -97,23 +120,34 @@ export function DupTestResultForm({ onSubmit, orderData }: AddTestResultProps) {
 
     methods.reset();
     setNewTest({ category: "", testTypes: "", reading: "", notes: "" });
+    setNewTestUnit("");
   };
 
   const filteredTestTypesList = useMemo(() => {
     return fields.map((_, index) => {
       const categoryValue = watch(`tests.${index}.category`);
-      const selectedCategory = testData.category.find(
-        (item) => item.value === categoryValue
+      const selectedCategory = testData?.category?.find(
+        (item: any) => item.value === categoryValue
       );
       return selectedCategory?.subValues || [];
     });
-  }, [fields, watch]);
+  }, [fields, watch, testData]);
 
   const toDisable = !newTest.category || !newTest.testTypes || !newTest.reading;
 
   useEffect(() => {
-    setNewTestUnit(testUnits[newTest.testTypes] || "");
-  }, [newTest.testTypes]);
+    if (testInfo && !appendedRef.current) {
+      const initialTests = testInfo?.map((test: any) => ({
+        id: test.id || "",
+        category: test.category || "",
+        testTypes: test.test_types || "",
+        reading: test.reading || "",
+        notes: test.additional_notes || "" || null,
+      }));
+      initialTests.forEach((test: any) => append(test));
+      appendedRef.current = true;
+    }
+  }, [testInfo, append]);
 
   return (
     <Box>
@@ -121,6 +155,7 @@ export function DupTestResultForm({ onSubmit, orderData }: AddTestResultProps) {
         <Box className="max-w-[600px] w-full">
           <Box className="flex flex-col gap-8 my-8 min-w-[600px]">
             <h3 className="text-lg font-bold capitalize -mb-4">Tests</h3>
+
             {fields.length > 0 &&
               fields.map((field, index) => {
                 const categoryValue = watch(`tests.${index}.category`);
@@ -130,7 +165,7 @@ export function DupTestResultForm({ onSubmit, orderData }: AddTestResultProps) {
 
                 return (
                   <Accordion
-                    key={field.id}
+                    key={`accordion-${field.id}`}
                     className="flex flex-col justify-center gap-8 !bg-bg2 !rounded-xl 
                     !border-none !shadow-none"
                     sx={{
@@ -139,12 +174,9 @@ export function DupTestResultForm({ onSubmit, orderData }: AddTestResultProps) {
                       },
                     }}
                   >
-                    <AccordionSummary
-                      expandIcon={<FaAngleDown />}
-                      className="!max-h-[50px] !mt-7 !shadow-none"
-                    >
-                      <Box className="flex flex-col ">
-                        <h2 className="text-lg font-semibold capitalize">
+                    <AccordionSummary expandIcon={<FaAngleDown />}>
+                      <Box>
+                        <h2 className="text-lg font-semibold">
                           {categoryValue || `Test ${index + 1}`}
                         </h2>
 
@@ -154,9 +186,9 @@ export function DupTestResultForm({ onSubmit, orderData }: AddTestResultProps) {
                             testData.category
                           ) || "Test Type"}{" "}
                           • {watch(`tests.${index}.reading`) || "Reading"}{" "}
-                          <span className="text-xs">{unit}</span> •{" "}
-                          {watch(`tests.${index}.notes`) || "Notes"}•{" "}
-                          {formattedDate || "Date"}•{" "}
+                          <span>{unit}</span> •{" "}
+                          {watch(`tests.${index}.notes`) || "Notes"} •{" "}
+                          {formattedDate || "Date"} •{" "}
                           {orderData.collectionSite || "Collection site"}
                         </p>
                       </Box>
