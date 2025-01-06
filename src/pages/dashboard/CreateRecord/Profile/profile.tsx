@@ -475,25 +475,7 @@ export const ProfileForm = forwardRef(({ onSubmit }: any, ref) => {
       >
         Continue
       </Button>
-      {/* <Stack marginTop={5}>
-              <Button
-                variant="contained"
-                sx={{
-                  color: "#FFF",
-                  outline: "none",
-                  textTransform: "capitalize",
-                  fontWeight: 600,
-                  background: "#2E90FA",
-                  height: "48px",
-                  "&:hover": { backgroundColor: "#2E90FA" },
-                  borderRadius: 2,
-                }}
-                onClick={updateUser}
-                disabled={isLoad}
-              >
-                Save changes
-              </Button>
-            </Stack> */}
+   
     </form>
   );
 });

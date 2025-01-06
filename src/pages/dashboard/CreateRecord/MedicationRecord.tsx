@@ -226,7 +226,7 @@ export default function MedicationRecord() {
 
           <div style={{ display: "flex", gap: 5, alignItems: "flex-end" }}>
             <InputField
-              type="text"
+              type="number"
               label="Dosage"
               name={`dosage`}
               value={formField.dosage}
@@ -385,7 +385,7 @@ export default function MedicationRecord() {
                   text={formField.medicationDosageForm}
                 />
                 <TextLabel
-                  label="Dosage"
+                  label="Dosage "
                   text={`${formField.dosage}, ${formField.dosagemeasurement}`}
                 />
                 <TextLabel

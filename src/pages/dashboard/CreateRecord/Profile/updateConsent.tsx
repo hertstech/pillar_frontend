@@ -192,6 +192,9 @@ export const UpdateConsent = forwardRef(({ NHRID }: StepFourProps) => {
 
   console.log("Error on updated:", errors);
   const onSubmit = (data: ConsentData) => {
+     if (!showShareWithFamily) {
+       data.familySharing = [];
+     }
     if (!isDirty) {
       useAlert({
         icon: "warning",

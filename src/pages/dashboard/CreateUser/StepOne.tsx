@@ -515,7 +515,7 @@ export default function StepOne({
 
       {/* MEDICAL INFORMATION */}
       <Box>
-        <Typography variant="h6">Medical Information</Typography>
+        <Typography variant="h6"> Care Team Information</Typography>
 
         <InputField
           type="text"
