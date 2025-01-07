@@ -17,6 +17,7 @@ import DrawerComp from "../../../../components/Drawer";
 import { TestDetails } from "./TestDetails";
 import { DeleteAllTestsOrder } from "./AddTest/DeleteAllTest";
 import { useNavigate } from "react-router-dom";
+import { PastTests } from "./Components/PastTestModal";
 
 const TABLE_HEAD = [
   { id: "oder-id", label: "Order ID", align: "left" },
@@ -32,6 +33,7 @@ export default function AllTestResult({ data = [], isLoading }: any) {
   const navigate = useNavigate();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [openPastTest, setOpenPastTest] = useState(false);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [openDeleteTest, setOpenDeleteTest] = useState<boolean>(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -51,11 +53,11 @@ export default function AllTestResult({ data = [], isLoading }: any) {
     setOpenDrawer(!openDrawer);
   };
 
-   const handleDuplicate = (Id: string | null) => {
-     navigate("duplicate-test", {
-       state: { id: Id },
-     });
-   };
+  const handleDuplicate = (Id: string | null) => {
+    navigate("duplicate-test", {
+      state: { id: Id },
+    });
+  };
 
   const handleOpenDelete = (itemId: string | null) => {
     if (!itemId) {
@@ -74,7 +76,7 @@ export default function AllTestResult({ data = [], isLoading }: any) {
       label: "Duplicate test",
       onClick: () => handleDuplicate(selectedId),
     },
-    { label: "View past result", onClick: () => null },
+    { label: "View past result", onClick: () => setOpenPastTest(true) },
     {
       label: "Delete",
       onClick: () => handleOpenDelete(selectedId),
@@ -195,7 +197,6 @@ export default function AllTestResult({ data = [], isLoading }: any) {
                                   onClick={(e: any) => {
                                     e.stopPropagation();
                                     handlePopperClick(item.order_id, action);
-                                  
                                   }}
                                   className={`p-3 w-full text font-medium text-sm text-left ${
                                     action.isDanger ? "text-err" : ""
@@ -208,6 +209,11 @@ export default function AllTestResult({ data = [], isLoading }: any) {
                               ))}
                             </Box>
                           }
+                        />
+                        <PastTests
+                          setOpen={setOpenPastTest}
+                          open={openPastTest}
+                          testId={item.id}
                         />
                       </TableCell>
                     </TableRow>

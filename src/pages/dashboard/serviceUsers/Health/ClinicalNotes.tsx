@@ -16,6 +16,7 @@ import {
   useGetClinicalNote,
 } from "../../../../api/HealthServiceUser/clinicalNotes";
 import { useAlert } from "../../../../Utils/useAlert";
+import { PropagateLoader } from "react-spinners";
 
 interface IProps {
   item: {
@@ -296,8 +297,8 @@ export const ClinicalNoteComp = ({ item }: IProps) => {
             </Box>
           ))
         ) : isLoading ? (
-          <p className="flex justify-center items-center h-full">
-            Fetching notes...
+          <p className="flex justify-center items-center h-[10vh]">
+            <PropagateLoader size={10} />
           </p>
         ) : (
           <p className="flex justify-center items-center h-full">

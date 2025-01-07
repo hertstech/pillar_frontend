@@ -34,12 +34,12 @@ type DupOrderDetailsProps = {
 
 const testSchema = Joi.object({
   orderId: Joi.string()
-    .regex(/^\S{1,20}$/)
+    .regex(/^\S{1,6}$/)
     .required()
     .messages({
       "string.empty": "Order ID is required",
       "string.pattern.base":
-        "Order ID must not contain spaces and be at most 20 characters long",
+        "Order ID must not contain spaces and be at most 6 characters long",
     }),
   testName: Joi.string().required().messages({
     "string.empty": "A test name is required",
@@ -87,7 +87,6 @@ export function DupOrderDetails({
 
   useEffect(() => {
     if (orderData) {
-      setValue("orderId", orderData.order_id || "");
       setValue("testName", orderData.test_name || "");
       setValue("testDate", orderData.test_date || "");
       setValue("collectionSite", orderData.collection_site || "");
@@ -173,7 +172,7 @@ export function DupOrderDetails({
                 e.preventDefault();
               }
             }}
-            isReadOnly
+
           />
           <InputField
             type="text"
