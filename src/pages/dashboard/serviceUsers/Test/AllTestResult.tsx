@@ -58,6 +58,11 @@ export default function AllTestResult({ data = [], isLoading }: any) {
       state: { id: Id },
     });
   };
+  const handleUpdate = (Id: string | null) => {
+    navigate("update-test", {
+      state: { id: Id },
+    });
+  };
 
   const handleOpenDelete = (itemId: string | null) => {
     if (!itemId) {
@@ -70,7 +75,7 @@ export default function AllTestResult({ data = [], isLoading }: any) {
   };
 
   const actions = [
-    { label: "Edit test", onClick: () => null },
+    { label: "Edit test", onClick: () => handleUpdate(selectedId) },
     { label: "Archive test", onClick: () => null },
     {
       label: "Duplicate test",
@@ -89,12 +94,15 @@ export default function AllTestResult({ data = [], isLoading }: any) {
       handleOpenDelete(orderId);
     } else if (action.label === "Duplicate test") {
       handleDuplicate(orderId);
+    } else if (action.label === "Edit test") {
+      handleUpdate(orderId);
     } else {
       action.onClick();
     }
   };
 
   useEffect(() => setPage(0), []);
+
 
   return (
     <Box>

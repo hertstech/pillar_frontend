@@ -36,6 +36,21 @@ export const useCreateTest = () => {
     },
   });
 };
+export const useUpdateTest = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: Record<string, any>) => {
+      const { NHRID, testData } = data;
+      return axiosInstance.put(`/api/v1/order/${NHRID}/test`, testData);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["getTests"],
+      });
+    },
+  });
+};
 
 export const useDeleteAllTestOrder = () => {
   const queryClient = useQueryClient();
