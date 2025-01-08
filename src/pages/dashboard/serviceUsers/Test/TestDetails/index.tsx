@@ -35,6 +35,12 @@ export const TestDetails: React.FC<IProps> = ({ id, handleCloseDrawer }) => {
     });
   };
 
+  const handleUpdate = (Id: string | null) => {
+    navigate("update-test", {
+      state: { id: Id },
+    });
+  };
+
   const handleOpenDelete = (itemId: string | undefined) => {
     if (!itemId) {
       console.error("Invalid itemId for deletion.");
@@ -45,7 +51,7 @@ export const TestDetails: React.FC<IProps> = ({ id, handleCloseDrawer }) => {
   };
 
   const actions = [
-    { label: "Edit test", onClick: () => null },
+    { label: "Update test", onClick: () => handleUpdate(id as string) },
     { label: "Archive test", onClick: () => null },
     { label: "Duplicate test", onClick: () => handleDuplicate(id as string) },
     { label: "View past result", onClick: () => setOpenPastTest(true) },
@@ -61,6 +67,8 @@ export const TestDetails: React.FC<IProps> = ({ id, handleCloseDrawer }) => {
       handleOpenDelete(orderId);
     } else if (action.label === "Duplicate test") {
       handleDuplicate(orderId);
+    } else if (action.label === "Update test") {
+      handleUpdate(orderId);
     } else {
       action.onClick();
     }

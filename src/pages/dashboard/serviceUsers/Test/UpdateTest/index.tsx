@@ -76,8 +76,6 @@ export const UpdateTestRecord: React.FC = () => {
                 testsResults: tests,
               });
 
-              console.log("Submitting final data:", newData);
-
               mutate(
                 { testData: newData, NHRID: id },
                 {
@@ -109,7 +107,6 @@ export const UpdateTestRecord: React.FC = () => {
                 testResults: tests,
               });
 
-              console.log("Saving as draft:", draftData);
               mutate(draftData, {
                 onSuccess: () => {
                   navigate(-1);
@@ -206,7 +203,7 @@ export const UpdateTestRecord: React.FC = () => {
               )}
               <div style={{ textAlign: "center", marginBottom: 25 }}>
                 <Typography fontWeight={700} color={"#101928"} fontSize={32}>
-                  {activeStep > 0 ? "Record test result" : "Order Details"}
+                  {"Update test result"}
                 </Typography>
               </div>
 

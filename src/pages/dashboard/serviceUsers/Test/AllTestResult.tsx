@@ -75,7 +75,7 @@ export default function AllTestResult({ data = [], isLoading }: any) {
   };
 
   const actions = [
-    { label: "Edit test", onClick: () => handleUpdate(selectedId) },
+    { label: "Update test", onClick: () => handleUpdate(selectedId) },
     { label: "Archive test", onClick: () => null },
     {
       label: "Duplicate test",
@@ -94,7 +94,7 @@ export default function AllTestResult({ data = [], isLoading }: any) {
       handleOpenDelete(orderId);
     } else if (action.label === "Duplicate test") {
       handleDuplicate(orderId);
-    } else if (action.label === "Edit test") {
+    } else if (action.label === "Update test") {
       handleUpdate(orderId);
     } else {
       action.onClick();
@@ -102,7 +102,6 @@ export default function AllTestResult({ data = [], isLoading }: any) {
   };
 
   useEffect(() => setPage(0), []);
-
 
   return (
     <Box>

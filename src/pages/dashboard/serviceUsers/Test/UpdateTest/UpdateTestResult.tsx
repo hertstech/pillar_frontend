@@ -73,8 +73,7 @@ export function UpdateTestResultForm({
     notes: "",
   });
   const [newTestUnit, setNewTestUnit] = useState("");
-
-  console.log("test information;", testInfo);
+  const [showNewUpdate, setShowNewUpdate] = useState(true);
 
   const formattedDate = moment(orderData?.testDate).format("DD-MM-YYYY");
   const methods = useForm<TestFormValues>({
@@ -182,9 +181,7 @@ export function UpdateTestResultForm({
                             testData.category
                           ) || "Test Type"}{" "}
                           • {watch(`tests.${index}.reading`) || "Reading"}{" "}
-                          <span>{unit}</span> •{" "}
-                          {watch(`tests.${index}.notes`) || "Notes"} •{" "}
-                          {formattedDate || "Date"} •{" "}
+                          <span>{unit}</span> • {formattedDate || "Date"} •{" "}
                           {orderData.collectionSite || "Collection site"}
                         </p>
                       </Box>
@@ -248,74 +245,92 @@ export function UpdateTestResultForm({
 
           <Box className="p-6 w-[600px] !bg-bg2 !rounded-lg">
             <Box className="flex flex-col gap-8">
-              <CustomSelect
-                label="Category"
-                name="category"
-                selectItems={testData.category}
-                value={newTest.category}
-                onChange={(value) =>
-                  setNewTest((prev) => ({ ...prev, category: value }))
-                }
-              />
-              {newTest.category && (
+              {showNewUpdate ? (
+                <button
+                  type="button"
+                  onClick={() => setShowNewUpdate(false)}
+                  className={classNames(
+                    "font-semibold text-left text-pri-650 "
+                  )}
+                >
+                  <span className="text-xl font-semibold">+</span> Add another
+                  test
+                </button>
+              ) : (
                 <Box className="flex flex-col gap-8">
                   <CustomSelect
-                    label="Test Types"
-                    name="testTypes"
-                    isDisabled={!newTest.category}
-                    selectItems={
-                      testData.category.find(
-                        (item) => item.value === newTest.category
-                      )?.subValues || []
-                    }
-                    value={newTest.testTypes}
+                    label="Category"
+                    name="category"
+                    selectItems={testData.category}
+                    value={newTest.category}
                     onChange={(value) =>
-                      setNewTest((prev) => ({ ...prev, testTypes: value }))
+                      setNewTest((prev) => ({ ...prev, category: value }))
                     }
                   />
-                  <Box className="relative">
-                    <InputField
-                      type="text"
-                      label="Reading"
-                      name="reading"
-                      placeholder="e.g., 60-70"
-                      value={newTest.reading}
-                      onChange={(e) =>
-                        setNewTest((prev) => ({
-                          ...prev,
-                          reading: e.target.value,
-                        }))
-                      }
-                    />
-                    <span className="absolute right-3 top-12 mt-1 text-neu-400 text-base font-normal">
-                      {newTestUnit}
-                    </span>
-                  </Box>
-                  <InputField
-                    type="text"
-                    textarea={true}
-                    label="Add Notes (optional)"
-                    name="notes"
-                    placeholder="Enter notes here"
-                    value={newTest.notes as string}
-                    onChange={(e) =>
-                      setNewTest((prev) => ({ ...prev, notes: e.target.value }))
-                    }
-                  />
-                  <button
-                    type="button"
-                    onClick={handleSaveNewTest}
-                    className={classNames(
-                      "font-semibold text-left",
-                      toDisable
-                        ? "cursor-not-allowed text-neu-300"
-                        : "text-pri-650 "
-                    )}
-                    disabled={toDisable}
-                  >
-                    <span className="text-xl font-semibold">+</span> Add another
-                    test
-                  </button>
+                  {newTest.category && (
+                    <Box className="flex flex-col gap-8">
+                      <CustomSelect
+                        label="Test Types"
+                        name="testTypes"
+                        isDisabled={!newTest.category}
+                        selectItems={
+                          testData.category.find(
+                            (item) => item.value === newTest.category
+                          )?.subValues || []
+                        }
+                        value={newTest.testTypes}
+                        onChange={(value) =>
+                          setNewTest((prev) => ({ ...prev, testTypes: value }))
+                        }
+                      />
+                      <Box className="relative">
+                        <InputField
+                          type="text"
+                          label="Reading"
+                          name="reading"
+                          placeholder="e.g., 60-70"
+                          value={newTest.reading}
+                          onChange={(e) =>
+                            setNewTest((prev) => ({
+                              ...prev,
+                              reading: e.target.value,
+                            }))
+                          }
+                        />
+                        <span className="absolute right-3 top-12 mt-1 text-neu-400 text-base font-normal">
+                          {newTestUnit}
+                        </span>
+                      </Box>
+                      <InputField
+                        type="text"
+                        textarea={true}
+                        label="Add Notes (optional)"
+                        name="notes"
+                        placeholder="Enter notes here"
+                        value={newTest.notes as string}
+                        onChange={(e) =>
+                          setNewTest((prev) => ({
+                            ...prev,
+                            notes: e.target.value,
+                          }))
+                        }
+                      />
+                      <button
+                        type="button"
+                        onClick={handleSaveNewTest}
+                        className={classNames(
+                          "font-semibold text-left",
+                          toDisable
+                            ? "cursor-not-allowed text-neu-300"
+                            : "text-pri-650 "
+                        )}
+                        disabled={toDisable}
+                      >
+                        <span className="text-xl font-semibold">+</span> Add
+                        another test
+                      </button>
+                    </Box>
+                  )}
                 </Box>
               )}
               <Stack
