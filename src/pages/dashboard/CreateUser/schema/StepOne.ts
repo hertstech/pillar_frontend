@@ -9,7 +9,10 @@ export const stepOneSchema = Joi.object({
     .email({ tlds: { allow: false } })
     .required(),
   gender: Joi.string().valid("male", "female").required(),
-  dateOfBirth: Joi.date().less("now").required(),
+
+  dateOfBirth: Joi.date().iso().required().messages({
+    "any.required": "Date of birth is required.",
+  }),
   religion: Joi.string()
     .valid("christian", "muslim", "traditional", "others")
     .optional(),

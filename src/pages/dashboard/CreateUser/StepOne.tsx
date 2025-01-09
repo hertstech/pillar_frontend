@@ -44,15 +44,18 @@ export default function StepOne({
     event: React.ChangeEvent<{ name?: string; value: any }>
   ) => {
     const { name, value } = event.target;
-     superHandleChange({ ...formData, [name || ""]: value });
+    superHandleChange({ ...formData, [name || ""]: value });
     setValue(name || "", value, { shouldValidate: true });
   };
 
   const handleDateChange = (newValue: any) => {
-    setValue("dateOfBirth", newValue ? newValue.toISOString() : "", {
+    setValue("dateOfBirth", newValue ? newValue.format("YYYY-MM-DD") : "", {
       shouldValidate: true,
     });
-    superHandleChange({ ...formData, dateOfBirth: newValue });
+    superHandleChange({
+      ...formData,
+      dateOfBirth: newValue ? newValue.format("YYYY-MM-DD") : "",
+    });
   };
 
   const handlePhoneChange = (value: any, identifier: any) => {
@@ -98,6 +101,11 @@ export default function StepOne({
                 </MenuItem>
               ))}
             </TextField>
+            {!!errors.title && (
+              <p className="text-err text-xs !font-semibold">
+                Title is required.
+              </p>
+            )}
           </label>
 
           <InputField
@@ -177,21 +185,22 @@ export default function StepOne({
                     readOnly: true,
                   },
                 }}
-                value={dayjs(formData.dateOfBirth)}
+                value={
+                  formData.dateOfBirth ? dayjs(formData.dateOfBirth) : null
+                }
                 onChange={(newValue) => {
                   handleDateChange(newValue);
-
-                  setValue(
-                    "dateOfBirth",
-                    newValue ? newValue.toISOString() : "",
-                    {
-                      shouldValidate: true,
-                    }
-                  );
                 }}
               />
             </DemoContainer>
           </LocalizationProvider>
+          {!!errors?.dateOfBirth && (
+            <p className="text-err text-xs !font-semibold">
+              {/* @ts-ignore */}
+              {errors.dateOfBirth?.message ||
+                "Please enter your Date of Birth."}
+            </p>
+          )}
         </label>
 
         <label htmlFor="religion" className="hidden">
@@ -523,7 +532,6 @@ export default function StepOne({
             type="text"
             label="Full Name"
             name="nokFullName"
-            value={formData.nokFullName}
             onChange={handleChange}
             register={register}
             errors={errors}
@@ -542,7 +550,6 @@ export default function StepOne({
               type="number"
               label="NHR ID"
               name="nokNHR_ID"
-              value={formData.nokNHR_ID}
               onChange={handleChange}
               register={register}
               errors={errors}
