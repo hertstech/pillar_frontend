@@ -121,7 +121,7 @@ export default function InputField({
           </div>
         )}
         {errors?.[name] && (
-          <p className="text-err ml-4 text-xs !font-semibold">
+          <p className="text-err ml-4 text-xs !font-semibold" >
             {errors[name]?.message || "This field is required"}
           </p>
         )}
