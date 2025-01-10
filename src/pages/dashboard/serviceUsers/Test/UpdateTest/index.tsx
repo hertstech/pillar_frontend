@@ -1,4 +1,4 @@
-import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { LiaArrowCircleLeftSolid } from "react-icons/lia";
 import { Box, Card, Grid, Stack, Button, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -26,7 +26,6 @@ export const UpdateTestRecord: React.FC = () => {
   const location = useLocation();
   const testId = location.state?.id;
 
-  const { id } = useParams();
   const { mutate } = useUpdateTest();
   const [activeStep, setActiveStep] = useState(0);
 
@@ -64,20 +63,25 @@ export const UpdateTestRecord: React.FC = () => {
       description: "Enter the test results accurately.",
       content: (
         <UpdateTestResultForm
-          testInfo={data?.data?.tests}
+          testInfo={data?.data?.tests_results}
           orderData={formData.orderDetails as TestOrderTypes}
           onSubmit={(data) => {
-            const { saveType, tests } = data;
+            const { saveType, tests_results: tests } = data;
             setFormData((prev) => ({ ...prev, testResults: tests }));
+
+            const status = saveType === "draft" ? "draft" : "active";
 
             if (saveType === "final") {
               const newData = transformToSnakeCase({
                 ...formData.orderDetails,
                 testsResults: tests,
+                status,
               });
 
+              const NHRID = newData?.order_id;
+
               mutate(
-                { testData: newData, NHRID: id },
+                { testData: newData, NHRID },
                 {
                   onSuccess: () => {
                     navigate(-1);
@@ -85,7 +89,7 @@ export const UpdateTestRecord: React.FC = () => {
                       timer: 4000,
                       isToast: true,
                       icon: "success",
-                      title: "Test duplicated successfully",
+                      title: "Test Updated successfully",
                       position: "top-start",
                     });
                   },
@@ -96,7 +100,7 @@ export const UpdateTestRecord: React.FC = () => {
                       icon: "error",
                       isToast: true,
                       position: "top-start",
-                      title: "Test record not duplicated",
+                      title: "Test record not updated",
                     });
                   },
                 }

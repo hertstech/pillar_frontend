@@ -21,7 +21,7 @@ import classNames from "classnames";
 import { getNameByValue } from "../../../../../Utils/getByName";
 
 const testSchema = Joi.object({
-  tests: Joi.array().items(
+  tests_results: Joi.array().items(
     Joi.object({
       category: Joi.string().required().messages({
         "string.empty": "Category is required",
@@ -38,7 +38,7 @@ const testSchema = Joi.object({
 });
 
 interface TestFormValues {
-  tests: {
+  tests_results: {
     category: string;
     testTypes: string;
     reading: string;
@@ -79,7 +79,7 @@ export function DupTestResultForm({
   const methods = useForm<TestFormValues>({
     resolver: joiResolver(testSchema),
     defaultValues: {
-      tests:
+      tests_results:
         testInfo?.map((test: any) => ({
           category: test.category || "",
           testTypes: test.test_types || "",
@@ -95,7 +95,7 @@ export function DupTestResultForm({
     setValue,
     formState: { errors },
   } = methods;
-  const { fields, append } = useFieldArray({ control, name: "tests" });
+  const { fields, append } = useFieldArray({ control, name: "tests_results" });
 
   const appendedRef = useRef(false);
 
@@ -108,12 +108,12 @@ export function DupTestResultForm({
   const handleSubmitTests = (saveType: "draft" | "final") => {
     const formValues = methods.getValues();
 
-    formValues.tests = formValues.tests.filter(
+    formValues.tests_results = formValues.tests_results.filter(
       (test) => test.reading && test.category
     );
 
     if (newTest.category && newTest.testTypes && newTest.reading) {
-      formValues.tests.push(newTest);
+      formValues.tests_results.push(newTest);
     }
 
     onSubmit({ ...formValues, saveType });
@@ -125,7 +125,7 @@ export function DupTestResultForm({
 
   const filteredTestTypesList = useMemo(() => {
     return fields.map((_, index) => {
-      const categoryValue = watch(`tests.${index}.category`);
+      const categoryValue = watch(`tests_results.${index}.category`);
       const selectedCategory = testData?.category?.find(
         (item: any) => item.value === categoryValue
       );
@@ -137,17 +137,17 @@ export function DupTestResultForm({
 
   useEffect(() => {
     if (testInfo && !appendedRef.current) {
-      const initialTests = testInfo?.map((test: any) => ({
+      appendedRef.current = true;
+      const initialTests = testInfo.map((test: any) => ({
         id: test.id || "",
         category: test.category || "",
         testTypes: test.test_types || "",
         reading: test.reading || "",
-        notes: test.additional_notes || "" || null,
+        notes: test.additional_notes || "",
       }));
-      initialTests.forEach((test: any) => append(test));
-      appendedRef.current = true;
+      methods.reset({ tests_results: initialTests });
     }
-  }, [testInfo, append]);
+  }, [testInfo, methods]);
 
   return (
     <Box>
@@ -158,8 +158,8 @@ export function DupTestResultForm({
 
             {fields.length > 0 &&
               fields.map((field, index) => {
-                const categoryValue = watch(`tests.${index}.category`);
-                const testTypeValue = watch(`tests.${index}.testTypes`);
+                const categoryValue = watch(`tests_results.${index}.category`);
+                const testTypeValue = watch(`tests_results.${index}.testTypes`);
                 const filteredTestTypes = filteredTestTypesList[index];
                 const unit = testUnits[testTypeValue] || "";
 
@@ -182,12 +182,13 @@ export function DupTestResultForm({
 
                         <p className="text-sm text-neu-600 font-normal">
                           {getNameByValue(
-                            watch(`tests.${index}.testTypes`),
+                            watch(`tests_results.${index}.testTypes`),
                             testData.category
                           ) || "Test Type"}{" "}
-                          • {watch(`tests.${index}.reading`) || "Reading"}{" "}
+                          •{" "}
+                          {watch(`tests_results.${index}.reading`) || "Reading"}{" "}
                           <span>{unit}</span> •{" "}
-                          {watch(`tests.${index}.notes`) || "Notes"} •{" "}
+                          {watch(`tests_results.${index}.notes`) || "Notes"} •{" "}
                           {formattedDate || "Date"} •{" "}
                           {orderData.collectionSite || "Collection site"}
                         </p>
@@ -201,11 +202,13 @@ export function DupTestResultForm({
                           selectItems={testData.category}
                           value={categoryValue}
                           onChange={(value) =>
-                            setValue(`tests.${index}.category`, value, {
+                            setValue(`tests_results.${index}.category`, value, {
                               shouldValidate: true,
                             })
                           }
-                          validationError={errors.tests?.[index]?.category}
+                          validationError={
+                            errors.tests_results?.[index]?.category
+                          }
                         />
                         <CustomSelect
                           label={`Test Types ${index + 1}`}
@@ -214,17 +217,23 @@ export function DupTestResultForm({
                           selectItems={filteredTestTypes}
                           value={testTypeValue}
                           onChange={(value) =>
-                            setValue(`tests.${index}.testTypes`, value, {
-                              shouldValidate: true,
-                            })
+                            setValue(
+                              `tests_results.${index}.testTypes`,
+                              value,
+                              {
+                                shouldValidate: true,
+                              }
+                            )
                           }
-                          validationError={errors.tests?.[index]?.testTypes}
+                          validationError={
+                            errors.tests_results?.[index]?.testTypes
+                          }
                         />
                         <Box className="relative">
                           <InputField
                             type="text"
                             label="Reading"
-                            name={`tests.${index}.reading`}
+                            name={`tests_results.${index}.reading`}
                             placeholder="e.g., 60-70"
                             register={methods.register}
                             errors={errors}
@@ -238,7 +247,7 @@ export function DupTestResultForm({
                           type="text"
                           textarea={true}
                           label="Add Notes (optional)"
-                          name={`tests.${index}.notes`}
+                          name={`tests_results.${index}.notes`}
                           placeholder="Enter notes here"
                           register={methods.register}
                           errors={errors}

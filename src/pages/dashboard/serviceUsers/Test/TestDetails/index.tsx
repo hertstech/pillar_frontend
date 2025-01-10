@@ -137,7 +137,10 @@ export const TestDetails: React.FC<IProps> = ({ id, handleCloseDrawer }) => {
               {
                 label: "Results",
                 content: (
-                  <Results data={data?.data?.tests} loading={isLoading} />
+                  <Results
+                    data={data?.data?.tests_results}
+                    loading={isLoading}
+                  />
                 ),
               },
               {

@@ -63,9 +63,7 @@ export default function StepOne({
     superHandleChange({ ...formData, [identifier]: value });
   };
 
-  console.log("all errors;", errors);
   const onSubmit = (data: any) => {
-    console.log("all data;", data);
     superHandleChange(data);
     handleNext();
   };

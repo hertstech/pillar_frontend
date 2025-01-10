@@ -78,11 +78,13 @@ export const AddTestRecord: React.FC = () => {
             const { saveType, tests } = data;
             setFormData((prev) => ({ ...prev, testResults: tests }));
 
+            const status = saveType === "draft" ? "draft" : "active";
+
             if (saveType === "final") {
               const newData = transformToSnakeCase({
                 ...formData.orderDetails,
-
                 testsResults: tests,
+                status,
               });
               console.log("Submitting final data:", newData);
 

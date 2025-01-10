@@ -42,7 +42,7 @@ export const useUpdateTest = () => {
   return useMutation({
     mutationFn: (data: Record<string, any>) => {
       const { NHRID, testData } = data;
-      return axiosInstance.put(`/api/v1/order/${NHRID}/test`, testData);
+      return axiosInstance.put(`/api/v1/order/${NHRID}`, testData);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({

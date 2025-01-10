@@ -80,22 +80,24 @@ export const DupTestRecord: React.FC = () => {
       description: "Enter the test results accurately.",
       content: (
         <DupTestResultForm
-          testInfo={data?.data?.tests}
+          testInfo={data?.data?.tests_results}
           orderData={formData.orderDetails as TestOrderTypes}
           onSubmit={(data) => {
-            const { saveType, tests } = data;
+            const { saveType, tests_results: tests } = data;
             setFormData((prev) => ({ ...prev, testResults: tests }));
 
+            const status = saveType === "draft" ? "draft" : "active";
+
+            const transformedData = transformToSnakeCase({
+              ...formData.orderDetails,
+              testResults: tests,
+              status,
+            });
+
             if (saveType === "final") {
-              const newData = transformToSnakeCase({
-                ...formData.orderDetails,
-
-                testsResults: tests,
-              });
-              console.log("Submitting final data:", newData);
-
+              console.log("Submitting final data:", transformedData);
               mutate(
-                { testData: newData, NHRID: id },
+                { testData: transformedData, NHRID: id },
                 {
                   onSuccess: () => {
                     navigate(-1);
@@ -120,13 +122,8 @@ export const DupTestRecord: React.FC = () => {
                 }
               );
             } else {
-              const draftData = transformToSnakeCase({
-                ...formData.orderDetails,
-                testResults: tests,
-              });
-
-              console.log("Saving as draft:", draftData);
-              mutate(draftData, {
+              console.log("Saving as draft:", transformedData);
+              mutate(transformedData, {
                 onSuccess: () => {
                   navigate(-1);
                   useAlert({
