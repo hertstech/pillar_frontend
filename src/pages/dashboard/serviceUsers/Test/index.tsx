@@ -7,6 +7,8 @@ import Tabs from "../Health/Components/tab";
 import AllTestResult from "./AllTestResult";
 import { useGetAllTest } from "../../../../api/HealthServiceUser/test";
 import { Spinner } from "../../../../components/Spinner";
+import DraftedResult from "./DraftedResult";
+import ArchivedResults from "./ArchievedResults";
 
 interface IProps {
   client: client;
@@ -61,11 +63,15 @@ const ServiceUserTest: React.FC<IProps> = ({ client }) => {
                   },
                   {
                     label: "Draft",
-                    content: <>Draft test here </>,
+                    content: (
+                      <DraftedResult data={data?.data} isLoading={false} />
+                    ),
                   },
                   {
                     label: "Archived",
-                    content: <>Archived test here</>,
+                    content: (
+                      <ArchivedResults data={data?.data} isLoading={false} />
+                    ),
                   },
                 ]}
               />

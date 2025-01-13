@@ -43,14 +43,6 @@ export const UpdateTestRecord: React.FC = () => {
     testResults: [],
   });
 
-  // const handleNext = () => {
-  //   if (activeStep < steps.length - 1) {
-  //     setActiveStep((prev) => prev + 1);
-  //   } else {
-  //     console.log("Final submission data:", formData);
-  //   }
-  // };
-
   const handlePrev = () => {
     if (activeStep === 1) {
       setActiveStep((prev) => prev - 1);

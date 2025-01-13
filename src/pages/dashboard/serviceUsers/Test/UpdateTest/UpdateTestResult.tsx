@@ -123,9 +123,6 @@ export function UpdateTestResultForm({
         (test) => test.reading && test.category
       );
 
-      // console.log("newData;", {...formValues});
-      // return;
-
       onSubmit({ ...formValues, saveType });
       methods.reset();
       setNewTest({
