@@ -19,6 +19,7 @@ import moment from "moment";
 import classNames from "classnames";
 import { getNameByValue } from "../../../../../Utils/getByName";
 import { TestOrderTypes } from "../DuplicateTest/DupOrderDetails";
+import { v4 as uuidv4 } from "uuid";
 
 const testSchema = Joi.object({
   tests_results: Joi.array().items(
@@ -69,6 +70,7 @@ export function UpdateTestResultForm({
   const [newTest, setNewTest] = useState<
     TestFormValues["tests_results"][number]
   >({
+    id: "" || uuidv4(),
     category: "",
     testTypes: "",
     reading: "",
@@ -101,23 +103,39 @@ export function UpdateTestResultForm({
 
   const handleSaveNewTest = () => {
     append(newTest);
-    setNewTest({ category: "", testTypes: "", reading: "", notes: null });
+    setNewTest({
+      id: uuidv4(),
+      category: "",
+      testTypes: "",
+      reading: "",
+      notes: null,
+    });
     setNewTestUnit("");
   };
 
   const handleSubmitTests = (saveType: "draft" | "final") => {
-    const formValues = methods.getValues();
-    formValues.tests_results = formValues.tests_results.filter(
-      (test) => test.reading && test.category
-    );
-
     if (newTest.category && newTest.testTypes && newTest.reading) {
       append(newTest);
     }
+    setTimeout(() => {
+      const formValues = methods.getValues();
+      formValues.tests_results = formValues.tests_results.filter(
+        (test) => test.reading && test.category
+      );
 
-    onSubmit({ ...formValues, saveType });
-    methods.reset();
-    setNewTest({ category: "", testTypes: "", reading: "", notes: null });
+      // console.log("newData;", {...formValues});
+      // return;
+
+      onSubmit({ ...formValues, saveType });
+      methods.reset();
+      setNewTest({
+        id: uuidv4(),
+        category: "",
+        testTypes: "",
+        reading: "",
+        notes: null,
+      });
+    });
   };
 
   const filteredTestTypesList = useMemo(() => {

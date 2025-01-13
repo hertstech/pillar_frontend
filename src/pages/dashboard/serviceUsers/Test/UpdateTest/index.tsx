@@ -1,13 +1,13 @@
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { LiaArrowCircleLeftSolid } from "react-icons/lia";
-import { Box, Card, Grid, Stack, Button, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Box, Card, Grid, Stack, Typography } from "@mui/material";
 import { UpdateTestResultForm } from "./UpdateTestResult";
-import Buttons from "../../../../../components/Button";
 import { transformToSnakeCase } from "../../../../../Utils/caseTransformer";
 import { useUpdateTest } from "../../../../../api/HealthServiceUser/test";
 import { useAlert } from "../../../../../Utils/useAlert";
 import { useGetSingleTest } from "../../../../../api/HealthServiceUser/test";
+import ReasoningModal from "../Components/updateResonsModal";
 import { TestOrderTypes } from "../DuplicateTest/DupOrderDetails";
 
 type FormDataTypes = {
@@ -27,34 +27,81 @@ export const UpdateTestRecord: React.FC = () => {
   const testId = location.state?.id;
 
   const { mutate } = useUpdateTest();
-  const [activeStep, setActiveStep] = useState(0);
-
   const { data } = useGetSingleTest(testId as string);
 
+  const [activeStep, setActiveStep] = useState(0);
+  const [isReasoningModalOpen, setIsReasoningModalOpen] = useState(false);
   const [formData, setFormData] = useState<FormDataTypes>({
     orderDetails: {
       orderId: data?.data.order_id || "",
       testName: data?.data?.test_name || "",
       testDate: data?.data?.test_date || "",
-      collectionSite: data?.data?.collection_site,
-      orderedBy: data?.data?.ordered_by,
+      collectionSite: data?.data?.collection_site || "",
+      orderedBy: data?.data?.ordered_by || "",
       testDoc: null,
     },
     testResults: [],
   });
 
-  const handleNext = () => {
-    if (activeStep < steps.length - 1) {
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    } else {
-      console.log("Final submission data:", formData);
-    }
-  };
+  // const handleNext = () => {
+  //   if (activeStep < steps.length - 1) {
+  //     setActiveStep((prev) => prev + 1);
+  //   } else {
+  //     console.log("Final submission data:", formData);
+  //   }
+  // };
 
   const handlePrev = () => {
     if (activeStep === 1) {
       setActiveStep((prev) => prev - 1);
     }
+  };
+
+  const handleFinalSubmit = (reason: string) => {
+    if (!formData.orderDetails.orderId || !formData.testResults.length) {
+      useAlert({
+        timer: 4000,
+        icon: "warning",
+        isToast: true,
+        position: "top-start",
+        title: "Incomplete data, please check before submitting.",
+      });
+      return;
+    }
+
+    const newData = transformToSnakeCase({
+      ...formData.orderDetails,
+      testsResults: formData.testResults,
+      reasoning: reason,
+      status: "active",
+    });
+
+    mutate(
+      { testData: newData, NHRID: newData.order_id },
+      {
+        onSuccess: () => {
+          navigate(-1);
+          useAlert({
+            timer: 4000,
+            isToast: true,
+            icon: "success",
+            title: "Test updated successfully",
+            position: "top-start",
+          });
+        },
+        onError: () => {
+          // setActiveStep(0);
+          navigate(-1);
+          useAlert({
+            timer: 4000,
+            icon: "error",
+            isToast: true,
+            position: "top-start",
+            title: "Failed to update test record",
+          });
+        },
+      }
+    );
   };
 
   const steps = [
@@ -67,21 +114,21 @@ export const UpdateTestRecord: React.FC = () => {
           orderData={formData.orderDetails as TestOrderTypes}
           onSubmit={(data) => {
             const { saveType, tests_results: tests } = data;
-            setFormData((prev) => ({ ...prev, testResults: tests }));
-
-            const status = saveType === "draft" ? "draft" : "active";
+            setFormData((prev) => ({
+              ...prev,
+              testResults: tests,
+            }));
 
             if (saveType === "final") {
-              const newData = transformToSnakeCase({
+              setIsReasoningModalOpen(true);
+            } else {
+              const draftData = transformToSnakeCase({
                 ...formData.orderDetails,
                 testsResults: tests,
-                status,
               });
 
-              const NHRID = newData?.order_id;
-
               mutate(
-                { testData: newData, NHRID },
+                { testData: draftData, NHRID: formData.orderDetails.orderId },
                 {
                   onSuccess: () => {
                     navigate(-1);
@@ -89,53 +136,22 @@ export const UpdateTestRecord: React.FC = () => {
                       timer: 4000,
                       isToast: true,
                       icon: "success",
-                      title: "Test Updated successfully",
+                      title: "Draft saved successfully",
                       position: "top-start",
                     });
                   },
                   onError: () => {
-                    setActiveStep(0);
                     useAlert({
                       timer: 4000,
                       icon: "error",
                       isToast: true,
                       position: "top-start",
-                      title: "Test record not updated",
+                      title: "Failed to save draft",
                     });
                   },
                 }
               );
-            } else {
-              const draftData = transformToSnakeCase({
-                ...formData.orderDetails,
-                testResults: tests,
-              });
-
-              mutate(draftData, {
-                onSuccess: () => {
-                  navigate(-1);
-                  useAlert({
-                    timer: 4000,
-                    isToast: true,
-                    icon: "success",
-                    title: "Test drafted successfully",
-                    position: "top-start",
-                  });
-                },
-                onError: () => {
-                  setActiveStep(0);
-                  useAlert({
-                    timer: 4000,
-                    icon: "error",
-                    isToast: true,
-                    position: "top-start",
-                    title: "Test drafting failed",
-                  });
-                },
-              });
             }
-
-            if (saveType === "final") handleNext();
           }}
         />
       ),
@@ -144,18 +160,17 @@ export const UpdateTestRecord: React.FC = () => {
 
   useEffect(() => {
     if (data?.data && !formData.orderDetails.orderId) {
-      setFormData((prev) => ({
-        ...prev,
+      setFormData({
         orderDetails: {
           orderId: data?.data.order_id || "",
           testName: data?.data.test_name || "",
           testDate: data?.data.test_date || "",
           collectionSite: data?.data.collection_site || "",
-          orderedBy: data?.data.order_by || "",
+          orderedBy: data?.data.ordered_by || "",
           testDoc: null,
         },
-        testResults: data?.data.tests || [],
-      }));
+        testResults: data?.data.tests_results || [],
+      });
     }
   }, [data]);
 
@@ -175,16 +190,11 @@ export const UpdateTestRecord: React.FC = () => {
           </div>
         </Stack>
       </Box>
-
       <Box sx={{ pt: 3 }}>
         <Grid
           container
           spacing={3}
-          sx={{
-            pb: 15,
-            px: 2.5,
-            justifyContent: "center",
-          }}
+          sx={{ pb: 15, px: 2.5, justifyContent: "center" }}
         >
           <Grid item xs={12} md={8}>
             <Card
@@ -210,40 +220,17 @@ export const UpdateTestRecord: React.FC = () => {
                   {"Update test result"}
                 </Typography>
               </div>
-
               {steps[activeStep].content}
-
-              {/* STAle  */}
-              {activeStep > 10 && (
-                <Stack
-                  gap={3}
-                  width={"100%"}
-                  sx={{ mt: 4 }}
-                  direction="row"
-                  alignItems="center"
-                >
-                  <Button
-                    fullWidth
-                    size="large"
-                    sx={{
-                      color: "#1570EF",
-                      border: "1px solid #D1E9FF",
-                      outline: "none",
-                      textTransform: "capitalize",
-                      fontWeight: 600,
-                      height: 48,
-                      background: "inherit",
-                      "&:hover": { backgroundColor: "#D1E9FF" },
-                    }}
-                    variant="outlined"
-                    onClick={() => null}
-                  >
-                    Save as draft
-                  </Button>
-
-                  <Buttons onClick={handleNext} title={"Save test result"} />
-                </Stack>
-              )}
+              <ReasoningModal
+                selectedId={formData.orderDetails.order_id}
+                open={isReasoningModalOpen}
+                setOpen={setIsReasoningModalOpen}
+                onClose={(reason) => {
+                  setIsReasoningModalOpen(false);
+                  handleFinalSubmit(reason);
+                }}
+                treatmentStatusValue={"pending"}
+              />
             </Card>
           </Grid>
         </Grid>
