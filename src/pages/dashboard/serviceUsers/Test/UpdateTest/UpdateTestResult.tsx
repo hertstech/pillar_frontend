@@ -16,7 +16,7 @@ import InputField from "../../../../../components/InputField";
 import { FaAngleDown } from "react-icons/fa6";
 import Buttons from "../../../../../components/Button";
 import moment from "moment";
-import classNames from "classnames";
+// import classNames from "classnames";
 import { getNameByValue } from "../../../../../Utils/getByName";
 import { TestOrderTypes } from "../DuplicateTest/DupOrderDetails";
 import { v4 as uuidv4 } from "uuid";
@@ -76,8 +76,8 @@ export function UpdateTestResultForm({
     reading: "",
     notes: "",
   });
-  const [newTestUnit, setNewTestUnit] = useState("");
-  const [showNewUpdate, setShowNewUpdate] = useState(true);
+  // const [newTestUnit, setNewTestUnit] = useState("");
+  // const [showNewUpdate, setShowNewUpdate] = useState(true);
 
   const formattedDate = moment(orderData?.testDate).format("DD-MM-YYYY");
   const methods = useForm<TestFormValues>({
@@ -101,17 +101,17 @@ export function UpdateTestResultForm({
 
   const appendedRef = useRef(false);
 
-  const handleSaveNewTest = () => {
-    append(newTest);
-    setNewTest({
-      id: uuidv4(),
-      category: "",
-      testTypes: "",
-      reading: "",
-      notes: null,
-    });
-    setNewTestUnit("");
-  };
+  // const handleSaveNewTest = () => {
+  //   append(newTest);
+  //   setNewTest({
+  //     id: uuidv4(),
+  //     category: "",
+  //     testTypes: "",
+  //     reading: "",
+  //     notes: null,
+  //   });
+  //   setNewTestUnit("");
+  // };
 
   const handleSubmitTests = (saveType: "draft" | "final") => {
     if (newTest.category && newTest.testTypes && newTest.reading) {
@@ -145,7 +145,7 @@ export function UpdateTestResultForm({
     });
   }, [fields, watch, testData]);
 
-  const toDisable = !newTest.category || !newTest.testTypes || !newTest.reading;
+  // const toDisable = !newTest.category || !newTest.testTypes || !newTest.reading;
 
   useEffect(() => {
     if (testInfo && !appendedRef.current && fields.length === 0) {
@@ -273,7 +273,7 @@ export function UpdateTestResultForm({
 
           <Box className="p-6 w-[600px] !bg-bg2 !rounded-lg">
             <Box className="flex flex-col gap-8">
-              {showNewUpdate ? (
+              {/* {showNewUpdate ? (
                 <button
                   type="button"
                   onClick={() => setShowNewUpdate(false)}
@@ -360,7 +360,8 @@ export function UpdateTestResultForm({
                     </Box>
                   )}
                 </Box>
-              )}
+              )} */}
+
               <Stack
                 gap={3}
                 width={"100%"}
