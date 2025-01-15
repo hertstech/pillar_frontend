@@ -595,20 +595,65 @@ export default function StepOne({
 
         <InputField
           type="text"
-          label="Nominated Pharmacy"
-          name="nominatedPharmarcy"
+          isReadOnly
+          label="Facility Name"
+          name="facilityName"
+          onChange={handleChange}
+          placeholder="Enter Facility's name"
+          register={register}
+          errors={errors}
+        />
+
+        <div style={{ marginTop: 8 }}>
+          <label htmlFor="facilityType">
+            Facility Type
+            <TextField
+              aria-readonly
+              select
+              {...register("facilityType")}
+              sx={{ marginTop: "5px" }}
+              fullWidth
+              name="facilityType"
+              value={formData.parentTwoRelationship}
+              onChange={handleChange}
+            >
+              {relations.map((item, index) => (
+                <MenuItem key={index} value={item.value}>
+                  {item.label}
+                </MenuItem>
+              ))}
+            </TextField>
+          </label>
+        </div>
+        <InputField
+          type="text"
+          isReadOnly
+          label="Facility Contact"
+          name="facilityContact"
+          placeholder="Enter Facility's phone number"
           onChange={handleChange}
           register={register}
           errors={errors}
         />
         <InputField
           type="text"
-          label="Registered Doctor"
-          name="registeredDoctor"
+          isReadOnly
+          label="Facility Address"
+          name="facilityAddress"
+          placeholder="Enter Facility's full address"
           onChange={handleChange}
           register={register}
           errors={errors}
         />
+        <InputField
+          type="text"
+          label="Nominated Pharmacy"
+          name="nominatedPharmarcy"
+          onChange={handleChange}
+          register={register}
+          errors={errors}
+        />
+
         <InputField
           type="text"
           label="Registered Hospital"
@@ -620,8 +665,49 @@ export default function StepOne({
 
         <InputField
           type="text"
+          label="Registered Doctor"
+          name="registeredDoctor"
+          placeholder="Enter Doctors full name"
+          onChange={handleChange}
+          register={register}
+          errors={errors}
+        />
+        <InputField
+          isReadOnly
+          type="number"
+          label="Doctor's License"
+          placeholder="Enter Doctors license number"
+          name="doctorsLicense"
+          onChange={handleChange}
+          register={register}
+          errors={errors}
+        />
+        <InputField
+          isReadOnly
+          type="number"
+          label="Doctor's Contact"
+          name="doctorsContact"
+          placeholder="Enter Doctors phone number"
+          onChange={handleChange}
+          register={register}
+          errors={errors}
+        />
+
+        <InputField
+          type="text"
           label="HMO Plan"
           name="HMOPlan"
+          placeholder="Enter current HMO plan"
+          onChange={handleChange}
+          register={register}
+          errors={errors}
+        />
+        <InputField
+          isReadOnly
+          type="number"
+          label="HMO Number"
+          name="HMONumber"
+          placeholder="Enter HMO number"
           onChange={handleChange}
           register={register}
           errors={errors}
