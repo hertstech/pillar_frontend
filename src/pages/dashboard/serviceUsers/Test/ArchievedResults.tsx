@@ -18,6 +18,8 @@ import { TestDetails } from "./TestDetails";
 import { DeleteAllTestsOrder } from "./AddTest/DeleteAllTest";
 import { useNavigate } from "react-router-dom";
 import { PastTests } from "./Components/PastTestModal";
+import { useUpdateTestStatus } from "../../../../api/HealthServiceUser/test";
+import { useAlert } from "../../../../Utils/useAlert";
 
 const TABLE_HEAD = [
   { id: "oder-id", label: "Order ID", align: "left" },
@@ -38,6 +40,8 @@ export default function ArchivedResults({ data = [], isLoading }: any) {
   const [openDeleteTest, setOpenDeleteTest] = useState<boolean>(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
+  const { mutate } = useUpdateTestStatus();
+
   const handleChangePage = (_event: unknown, newPage: number) =>
     setPage(newPage);
   const handleChangeRowsPerPage = (
@@ -48,6 +52,8 @@ export default function ArchivedResults({ data = [], isLoading }: any) {
   };
 
   const handleToggle = (itemId: string) => {
+    console.log("Item ID in handleToggle:", itemId);
+
     const sanitizedId = itemId.replace(/\s+/g, "");
     setSelectedId(sanitizedId);
     setOpenDrawer(!openDrawer);
@@ -74,34 +80,85 @@ export default function ArchivedResults({ data = [], isLoading }: any) {
     setOpenDeleteTest(true);
   };
 
+  const handleStatusChange = (orderId: string | null) => {
+   console.log("Order ID passed to handleStatusChange:", orderId);
+   if (!orderId) {
+     console.error("Missing orderId. Unable to update status.");
+     return;
+   }
+    const currentStatus = data.find(
+      (item: any) => item.order_id === orderId
+    )?.status;
+
+    if (!currentStatus) {
+      console.error(`Order ID ${orderId} not found in data.`);
+      return;
+    }
+
+    const newStatus = currentStatus === "archive" ? "active" : "archive";
+    const testData = { status: newStatus };
+
+    console.log(`Updating status for Order ID: ${orderId} to ${newStatus}`);
+
+    mutate(
+      { testData, ID: orderId },
+      {
+        onSuccess: () => {
+          useAlert({
+            isToast: true,
+            icon: "success",
+            title: `Test ${
+              newStatus === "active" ? "activated" : "archived"
+            } successfully`,
+            position: "top-start",
+          });
+        },
+        onError: () => {
+          useAlert({
+            isToast: true,
+            icon: "error",
+            title: `Failed to ${
+              newStatus === "active" ? "activate" : "archive"
+            } test`,
+            position: "top-start",
+          });
+        },
+      }
+    );
+  };
+
   const actions = [
+    { label: "Update test", onClick: () => handleUpdate(selectedId) },
     {
-      label: "Update test",
-      onClick: () => handleUpdate(selectedId),
-      disabled: true,
+      label:
+        data.find((item: any) => item.order_id === selectedId)?.status !==
+        "archive"
+          ? "Unarchive test"
+          : "Archive test",
+      onClick: () => handleStatusChange(selectedId as string),
     },
-    { label: "Archive test", onClick: () => null, disabled: false },
     {
       label: "Duplicate test",
       onClick: () => handleDuplicate(selectedId),
-      disabled: true,
     },
-    {
-      label: "View past result",
-      onClick: () => setOpenPastTest(true),
-      disabled: true,
-    },
+    { label: "View past result", onClick: () => setOpenPastTest(true) },
     {
       label: "Delete",
       onClick: () => handleOpenDelete(selectedId),
       isDanger: true,
-      disabled: false,
     },
   ];
 
   const handlePopperClick = (orderId: string, action: any) => {
+    if (!orderId) {
+      console.error("Invalid orderId passed to handlePopperClick.");
+      return;
+    }
+
     if (action.label === "Delete") {
       handleOpenDelete(orderId);
+    } else if (action.label === "Unarchive test") {
+      handleStatusChange(orderId);
     } else if (action.label === "Duplicate test") {
       handleDuplicate(orderId);
     } else if (action.label === "Update test") {
@@ -144,24 +201,24 @@ export default function ArchivedResults({ data = [], isLoading }: any) {
             <TableBody>
               {isLoading ? (
                 <TableLoader />
-              ) : data.filter((item: any) => item.status === "archived")
+              ) : data.filter((item: any) => item.status === "archive")
                   .length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={TABLE_HEAD.length} align="center">
                     <Box py={2}>
                       <Typography variant="subtitle1" color="textSecondary">
-                        No archived results available.
+                        No archived result[s] available.
                       </Typography>
                     </Box>
                   </TableCell>
                 </TableRow>
               ) : (
                 data
-                  .filter((item: any) => item.status === "archived")
+                  .filter((item: any) => item.status === "archive")
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((item: any) => (
+                  .map((item: any, idx: number) => (
                     <TableRow
-                      key={item.id}
+                      key={item.id || idx}
                       onClick={() => handleToggle(item.order_id)}
                       hover
                       sx={{
@@ -173,7 +230,11 @@ export default function ArchivedResults({ data = [], isLoading }: any) {
                         ":hover": { cursor: "pointer" },
                       }}
                     >
-                      <TableCell sx={{ borderBottom: "none" }}>
+                      <TableCell
+                        sx={{
+                          borderBottom: "none",
+                        }}
+                      >
                         <Typography
                           variant="subtitle2"
                           noWrap
@@ -196,6 +257,7 @@ export default function ArchivedResults({ data = [], isLoading }: any) {
                           {moment(item.testDate).format("DD-MM-YY LT")}
                         </span>
                       </TableCell>
+
                       <TableCell
                         sx={{ borderBottom: "none", cursor: "pointer" }}
                         className="!text-pri-650"
@@ -234,6 +296,7 @@ export default function ArchivedResults({ data = [], isLoading }: any) {
                             </Box>
                           }
                         />
+
                         <PastTests
                           setOpen={setOpenPastTest}
                           open={openPastTest}

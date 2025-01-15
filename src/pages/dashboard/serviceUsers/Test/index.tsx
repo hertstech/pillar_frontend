@@ -58,19 +58,19 @@ const ServiceUserTest: React.FC<IProps> = ({ client }) => {
                   {
                     label: "Results",
                     content: (
-                      <AllTestResult data={data?.data} isLoading={false} />
+                      <AllTestResult data={data?.data} isLoading={isLoading} />
                     ),
                   },
                   {
                     label: "Draft",
                     content: (
-                      <DraftedResult data={data?.data} isLoading={false} />
+                      <DraftedResult data={data?.data} isLoading={isLoading} />
                     ),
                   },
                   {
                     label: "Archived",
                     content: (
-                      <ArchivedResults data={data?.data} isLoading={false} />
+                      <ArchivedResults data={data?.data} isLoading={isLoading} />
                     ),
                   },
                 ]}

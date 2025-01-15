@@ -18,6 +18,8 @@ import { TestDetails } from "./TestDetails";
 import { DeleteAllTestsOrder } from "./AddTest/DeleteAllTest";
 import { useNavigate } from "react-router-dom";
 import { PastTests } from "./Components/PastTestModal";
+import { useUpdateTestStatus } from "../../../../api/HealthServiceUser/test";
+import { useAlert } from "../../../../Utils/useAlert";
 
 const TABLE_HEAD = [
   { id: "oder-id", label: "Order ID", align: "left" },
@@ -38,6 +40,8 @@ export default function AllTestResult({ data = [], isLoading }: any) {
   const [openDeleteTest, setOpenDeleteTest] = useState<boolean>(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
+  const { mutate } = useUpdateTestStatus();
+
   const handleChangePage = (_event: unknown, newPage: number) =>
     setPage(newPage);
   const handleChangeRowsPerPage = (
@@ -48,6 +52,8 @@ export default function AllTestResult({ data = [], isLoading }: any) {
   };
 
   const handleToggle = (itemId: string) => {
+    console.log("Item ID in handleToggle:", itemId); 
+    
     const sanitizedId = itemId.replace(/\s+/g, "");
     setSelectedId(sanitizedId);
     setOpenDrawer(!openDrawer);
@@ -74,9 +80,63 @@ export default function AllTestResult({ data = [], isLoading }: any) {
     setOpenDeleteTest(true);
   };
 
+  const handleStatusChange = (orderId: string | null) => {
+    if (!orderId) {
+      console.error("Missing orderId. Unable to update status.");
+      return;
+    }
+
+    const currentStatus = data.find(
+      (item: any) => item.order_id === orderId
+    )?.status;
+
+    if (!currentStatus) {
+      console.error(`Order ID ${orderId} not found in data.`);
+      return;
+    }
+
+    const newStatus = currentStatus === "active" ? "archive" : "active";
+    const testData = { status: newStatus };
+
+    console.log(`Updating status for Order ID: ${orderId} to ${newStatus}`);
+
+    mutate(
+      { testData, ID: orderId },
+      {
+        onSuccess: () => {
+          useAlert({
+            isToast: true,
+            icon: "success",
+            title: `Test ${
+              newStatus === "archive" ? "archived" : "activated"
+            } successfully`,
+            position: "top-start",
+          });
+        },
+        onError: () => {
+          useAlert({
+            isToast: true,
+            icon: "error",
+            title: `Failed to ${
+              newStatus === "archive" ? "archive" : "activate"
+            } test`,
+            position: "top-start",
+          });
+        },
+      }
+    );
+  };
+
   const actions = [
     { label: "Update test", onClick: () => handleUpdate(selectedId) },
-    { label: "Archive test", onClick: () => null },
+    {
+      label:
+        data.find((item: any) => item.order_id === selectedId)?.status !==
+        "active"
+          ? "Archive test"
+          : "Unarchive test",
+      onClick: () => handleStatusChange(selectedId as string),
+    },
     {
       label: "Duplicate test",
       onClick: () => handleDuplicate(selectedId),
@@ -90,8 +150,15 @@ export default function AllTestResult({ data = [], isLoading }: any) {
   ];
 
   const handlePopperClick = (orderId: string, action: any) => {
+    if (!orderId) {
+      console.error("Invalid orderId passed to handlePopperClick.");
+      return;
+    }
+
     if (action.label === "Delete") {
       handleOpenDelete(orderId);
+    } else if (action.label === "Archive test") {
+      handleStatusChange(orderId);
     } else if (action.label === "Duplicate test") {
       handleDuplicate(orderId);
     } else if (action.label === "Update test") {
@@ -134,12 +201,24 @@ export default function AllTestResult({ data = [], isLoading }: any) {
             <TableBody>
               {isLoading ? (
                 <TableLoader />
+              ) : data.filter((item: any) => item.status === "active")
+                  .length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={TABLE_HEAD.length} align="center">
+                    <Box py={2}>
+                      <Typography variant="subtitle1" color="textSecondary">
+                        No active result[s] available.
+                      </Typography>
+                    </Box>
+                  </TableCell>
+                </TableRow>
               ) : (
                 data
+                  .filter((item: any) => item.status === "active" || null)
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((item: any) => (
+                  .map((item: any, idx: number) => (
                     <TableRow
-                      key={item.id}
+                      key={item.id || idx}
                       onClick={() => handleToggle(item.order_id)}
                       hover
                       sx={{
@@ -217,6 +296,7 @@ export default function AllTestResult({ data = [], isLoading }: any) {
                             </Box>
                           }
                         />
+
                         <PastTests
                           setOpen={setOpenPastTest}
                           open={openPastTest}

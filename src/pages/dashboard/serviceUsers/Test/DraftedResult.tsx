@@ -76,7 +76,7 @@ export default function DraftedResult({ data = [], isLoading }: any) {
 
   const actions = [
     { label: "Update test", onClick: () => handleUpdate(selectedId) },
-    { label: "Archive test", onClick: () => null },
+    // { label: "Archive test", onClick: () => null },
     {
       label: "Duplicate test",
       onClick: () => handleDuplicate(selectedId),

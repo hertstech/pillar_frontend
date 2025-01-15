@@ -36,6 +36,7 @@ export const useCreateTest = () => {
     },
   });
 };
+
 export const useUpdateTest = () => {
   const queryClient = useQueryClient();
 
@@ -43,6 +44,22 @@ export const useUpdateTest = () => {
     mutationFn: (data: Record<string, any>) => {
       const { NHRID, testData } = data;
       return axiosInstance.put(`/api/v1/order/${NHRID}`, testData);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["getTests"],
+      });
+    },
+  });
+};
+
+export const useUpdateTestStatus = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: Record<string, any>) => {
+      const { ID, testData } = data;
+      return axiosInstance.put(`/api/v1/order/status/${ID}`, testData);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
