@@ -26,6 +26,8 @@ export const UpdateTestRecord: React.FC = () => {
   const location = useLocation();
   const testId = location.state?.id;
 
+  console.log(testId);
+
   const { mutate } = useUpdateTest();
   const { data } = useGetSingleTest(testId as string);
 
@@ -116,11 +118,12 @@ export const UpdateTestRecord: React.FC = () => {
             } else {
               const draftData = transformToSnakeCase({
                 ...formData.orderDetails,
-                testsResults: tests,
+                testsResults: formData.testResults,
+                status: "draft",
               });
 
               mutate(
-                { testData: draftData, NHRID: formData.orderDetails.orderId },
+                { testData: draftData, NHRID: draftData.order_id },
                 {
                   onSuccess: () => {
                     navigate(-1);
