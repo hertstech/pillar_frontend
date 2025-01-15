@@ -17,6 +17,7 @@ import { FiUploadCloud } from "react-icons/fi";
 import { useCreateTest } from "../../../../../api/HealthServiceUser/test";
 import { useAlert } from "../../../../../Utils/useAlert";
 import { transformToSnakeCase } from "../../../../../Utils/caseTransformer";
+import { useNavigate, useParams } from "react-router-dom";
 
 export type TestOrderTypes = {
   orderId: string;
@@ -59,6 +60,8 @@ export function AddOrderDetails({
   onSubmit,
   handleNext,
 }: AddOrderDetailsProps & { handleNext: () => void }) {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const [testingDate, setTestingDate] = useState<Dayjs | null>(null);
   const [testTime, setTestTime] = useState<Dayjs | null>(null);
   const [fileName, setFileName] = useState("");
@@ -97,28 +100,34 @@ export function AddOrderDetails({
       ...data,
       testDate: testingDate ? testingDate.toISOString() : "",
       testDoc: uploadedFile,
+      status: "draft",
+      testsResults: [],
     });
 
-    mutate(newDraftData, {
-      onSuccess: () => {
-        useAlert({
-          timer: 4000,
-          isToast: true,
-          icon: "success",
-          title: "Test drafted successfully",
-          position: "top-start",
-        });
-      },
-      onError: () => {
-        useAlert({
-          timer: 4000,
-          icon: "error",
-          isToast: true,
-          position: "top-start",
-          title: "Test drafting failed",
-        });
-      },
-    });
+    mutate(
+      { testData: newDraftData, NHRID: id },
+      {
+        onSuccess: () => {
+          navigate(-1);
+          useAlert({
+            timer: 4000,
+            isToast: true,
+            icon: "success",
+            title: "Test drafted successfully",
+            position: "top-start",
+          });
+        },
+        onError: () => {
+          useAlert({
+            timer: 4000,
+            icon: "error",
+            isToast: true,
+            position: "top-start",
+            title: "Test drafting failed",
+          });
+        },
+      }
+    );
   };
 
   const handleFormSubmit = (data: TestOrderTypes) => {

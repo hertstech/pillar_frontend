@@ -120,28 +120,31 @@ export const AddTestRecord: React.FC = () => {
               });
 
               console.log("Saving as draft:", draftData);
-              mutate(draftData, {
-                onSuccess: () => {
-                  navigate(-1);
-                  useAlert({
-                    timer: 4000,
-                    isToast: true,
-                    icon: "success",
-                    title: "Test drafted successfully",
-                    position: "top-start",
-                  });
-                },
-                onError: () => {
-                  setActiveStep(0);
-                  useAlert({
-                    timer: 4000,
-                    icon: "error",
-                    isToast: true,
-                    position: "top-start",
-                    title: "Test drafting failed",
-                  });
-                },
-              });
+              mutate(
+                { testData: draftData, NHRID: id },
+                {
+                  onSuccess: () => {
+                    navigate(-1);
+                    useAlert({
+                      timer: 4000,
+                      isToast: true,
+                      icon: "success",
+                      title: "Test drafted successfully",
+                      position: "top-start",
+                    });
+                  },
+                  onError: () => {
+                    setActiveStep(0);
+                    useAlert({
+                      timer: 4000,
+                      icon: "error",
+                      isToast: true,
+                      position: "top-start",
+                      title: "Test drafting failed",
+                    });
+                  },
+                }
+              );
             }
 
             if (saveType === "final") handleNext();

@@ -23,7 +23,7 @@ import { useGetSingleTest } from "../../../../../api/HealthServiceUser/test";
 
 type FormDataTypes = {
   orderDetails: Record<string, any>;
-  testResults: {
+  testsResults: {
     category: string;
     testTypes: string;
     reading: string;
@@ -42,7 +42,7 @@ export const DupTestRecord: React.FC = () => {
 
   const [formData, setFormData] = useState<FormDataTypes>({
     orderDetails: {},
-    testResults: [],
+    testsResults: [],
   });
 
   const { data } = useGetSingleTest(testId as string);
@@ -84,7 +84,7 @@ export const DupTestRecord: React.FC = () => {
           orderData={formData.orderDetails as TestOrderTypes}
           onSubmit={(data) => {
             const { saveType, tests_results: tests } = data;
-            setFormData((prev) => ({ ...prev, testResults: tests }));
+            setFormData((prev) => ({ ...prev, testsResults: tests }));
 
             const status = saveType === "draft" ? "draft" : "active";
 
@@ -123,28 +123,31 @@ export const DupTestRecord: React.FC = () => {
               );
             } else {
               console.log("Saving as draft:", transformedData);
-              mutate(transformedData, {
-                onSuccess: () => {
-                  navigate(-1);
-                  useAlert({
-                    timer: 4000,
-                    isToast: true,
-                    icon: "success",
-                    title: "Test drafted successfully",
-                    position: "top-start",
-                  });
-                },
-                onError: () => {
-                  setActiveStep(0);
-                  useAlert({
-                    timer: 4000,
-                    icon: "error",
-                    isToast: true,
-                    position: "top-start",
-                    title: "Test drafting failed",
-                  });
-                },
-              });
+              mutate(
+                { testData: transformedData, NHRID: id },
+                {
+                  onSuccess: () => {
+                    navigate(-1);
+                    useAlert({
+                      timer: 4000,
+                      isToast: true,
+                      icon: "success",
+                      title: "Test drafted successfully",
+                      position: "top-start",
+                    });
+                  },
+                  onError: () => {
+                    setActiveStep(0);
+                    useAlert({
+                      timer: 4000,
+                      icon: "error",
+                      isToast: true,
+                      position: "top-start",
+                      title: "Test drafting failed",
+                    });
+                  },
+                }
+              );
             }
 
             if (saveType === "final") handleNext();
