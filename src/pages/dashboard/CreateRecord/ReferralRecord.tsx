@@ -146,24 +146,38 @@ export default function ReferralRecord() {
             onChange={(e: any) => handleChange("referralName", e.target.value)}
           />
 
-          <label htmlFor="referral_reason">
-            Referral reason
-            <TextField
-              select
-              sx={{ marginTop: "8px" }}
-              fullWidth
-              name={`referralReason`}
-              value={formField.referralReason}
-              onChange={(e) => handleChange("referralReason", e.target.value)}
-            >
-              <MenuItem value="Complex condition Diagnostic procedure">
-                Complex condition Diagnostic procedure
-              </MenuItem>
-              <MenuItem value="Surgery">Surgery</MenuItem>
-              <MenuItem value="Specialized Care">Specialized Care</MenuItem>
-              <MenuItem value="Maternity Care">Maternity Care</MenuItem>
-            </TextField>
-          </label>
+          {formField.referralReason === "other" ? (
+            <InputField
+              type="text"
+              label="Other referral reasons"
+              placeholder="Enter possible reasons"
+              name={`otherReason`}
+              value={formField.teamReferredTo}
+              onChange={(e: any) =>
+                handleChange("teamReferredTo", e.target.value)
+              }
+            />
+          ) : (
+            <label htmlFor="referral_reason">
+              Referral reason
+              <TextField
+                select
+                sx={{ marginTop: "8px" }}
+                fullWidth
+                name={`referralReason`}
+                value={formField.referralReason}
+                onChange={(e) => handleChange("referralReason", e.target.value)}
+              >
+                <MenuItem value="Complex condition Diagnostic procedure">
+                  Complex condition Diagnostic procedure
+                </MenuItem>
+                <MenuItem value="Surgery">Surgery</MenuItem>
+                <MenuItem value="Specialized Care">Specialized Care</MenuItem>
+                <MenuItem value="Maternity Care">Maternity Care</MenuItem>
+                <MenuItem value="otherReason">Other</MenuItem>
+              </TextField>
+            </label>
+          )}
 
           <label htmlFor="urgency_status">
             Urgency Status
