@@ -38,7 +38,6 @@ export const stepOneSchema = Joi.object({
   nokFullName: Joi.string().allow("").optional(),
   nokNHR_ID: Joi.string().allow("").optional(),
   nokPhoneNumber: Joi.string().allow("").optional(),
-
   NIN: Joi.string().allow("").optional(),
   driversLicense: Joi.string().allow("").optional(),
   day: Joi.number().integer().min(1).max(31).allow("").optional(),
@@ -51,4 +50,11 @@ export const stepOneSchema = Joi.object({
     .optional(),
   nokRelationship: Joi.string().allow("").optional(),
   passportNumber: Joi.string().allow("").optional(),
+  facilityName: Joi.string().required(),
+  facilityType: Joi.string().required(),
+  facilityContact: Joi.string().allow("").optional(),
+  facilityAddress: Joi.string().required(),
+  doctorsLicense: Joi.string().allow("").optional(),
+  doctorsContact: Joi.string().allow("").optional(),
+  HMONumber: Joi.string().allow("").optional(),
 });

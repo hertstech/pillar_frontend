@@ -433,7 +433,7 @@ export const ProfileForm = forwardRef(({ onSubmit }: any, ref) => {
               fontWeight={600}
               fontSize={20}
             >
-              Health Plan Information
+              Care team Information
             </Typography>
             <InputField
               type="text"

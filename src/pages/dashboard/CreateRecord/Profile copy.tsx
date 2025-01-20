@@ -471,7 +471,7 @@ export default function Profile() {
                 fontWeight={600}
                 fontSize={20}
               >
-                Health Plan Information
+                Care team Information
               </Typography>
               <InputField
                 type="text"
@@ -522,11 +522,8 @@ export default function Profile() {
           >
             Save changes
           </Button>
-          
         </Stack>
       </form>
-
-
     </Box>
   );
 }
