@@ -15,8 +15,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Calendar } from "../../../components/CalendarField";
 import InputField, { TextLabel } from "../../../components/InputField";
 import moment from "moment";
-import Swal from "sweetalert2";
 import { axiosInstance } from "../../../Utils";
+import { useAlert } from "../../../Utils/useAlert";
 
 export default function ReferralRecord() {
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
@@ -81,10 +81,9 @@ export default function ReferralRecord() {
     if (!formField.careSetting) {
       setIsLoading(false);
       setIsOpen(false);
-      return Swal.fire({
+      return useAlert({
         icon: "info",
-        text: `You cannot submit an empty form!`,
-        confirmButtonColor: "#2E90FA",
+        title: `You cannot submit an empty form!`,
       });
     }
 
@@ -96,21 +95,23 @@ export default function ReferralRecord() {
 
       setIsOpen(false);
       setIsLoading(false);
-      Swal.fire({
+      useAlert({
         icon: "success",
         title: `Successful`,
+        isToast: true,
+        position: "top-start",
         text: `${res.data.message}`,
-        confirmButtonColor: "#2E90FA",
       });
 
       navigate(`/dashboard/user/${id}/5`);
     } catch (error: any) {
       setIsLoading(false);
-      Swal.fire({
+      useAlert({
         icon: "error",
         title: "Error",
+        isToast: true,
+        position: "top-start",
         text: `${error.response.data.message}`,
-        confirmButtonColor: "#2E90FA",
       });
     }
   };
