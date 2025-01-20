@@ -84,7 +84,7 @@ export const UpdateConsent = forwardRef(({ NHRID }: StepFourProps) => {
     watch,
     setValue,
     reset,
-    formState: { errors },
+    // formState: { errors },
   } = useForm<ConsentData>({
     resolver: joiResolver(consentSchema),
     defaultValues: {
@@ -190,11 +190,10 @@ export const UpdateConsent = forwardRef(({ NHRID }: StepFourProps) => {
     return () => subscription.unsubscribe();
   }, [watch]);
 
-  console.log("Error on updated:", errors);
   const onSubmit = (data: ConsentData) => {
-     if (!showShareWithFamily) {
-       data.familySharing = [];
-     }
+    if (!showShareWithFamily) {
+      data.familySharing = [];
+    }
     if (!isDirty) {
       useAlert({
         icon: "warning",

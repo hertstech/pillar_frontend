@@ -25,7 +25,7 @@ import { NeedHelp } from "../../../components/CalendarField";
 import { useAlert } from "../../../Utils/useAlert";
 
 export default function CreateUser() {
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState(3);
   const [result, setResult] = useState("");
   const [data, setData] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -132,7 +132,13 @@ export default function CreateUser() {
       label: "Consent information",
       description: "Choose medical and data sharing choices",
       // @ts-ignore
-      content: <StepFour NHRID={data?.NHRID as number} />,
+      content: (
+        <StepFour
+          NHRID={
+            296769246748 //data?.NHRID as number
+          }
+        />
+      ),
     },
   ];
 
@@ -183,8 +189,9 @@ export default function CreateUser() {
     } catch (error: any) {
       useAlert({
         icon: "error",
+        isToast: true,
         title: "Error",
-        text: `${error.response.data.detail}`,
+        text: `${error.response.data.detail || error.response.data.message}`,
       });
 
       setIsLoading(false);

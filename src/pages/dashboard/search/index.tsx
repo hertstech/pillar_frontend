@@ -27,7 +27,6 @@ export default function Search() {
   const [searchOptions, setSearchOption] = useState(false);
 
   const user = useSelector((state: any) => state.user.user);
-  console.log("user data:", user);
 
   const token = useSelector((state: any) => state.user.access_token);
 

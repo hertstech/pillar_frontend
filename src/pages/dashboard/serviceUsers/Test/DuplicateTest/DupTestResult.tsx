@@ -73,7 +73,6 @@ export function DupTestResultForm({
   });
   const [newTestUnit, setNewTestUnit] = useState("");
 
-  console.log("test information;", testInfo);
 
   const formattedDate = moment(orderData?.testDate).format("DD-MM-YYYY");
   const methods = useForm<TestFormValues>({

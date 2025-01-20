@@ -44,8 +44,6 @@ export const AddTestRecord: React.FC = () => {
   const handleNext = () => {
     if (activeStep < steps.length - 1) {
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    } else {
-      console.log("Final submission data:", formData);
     }
   };
 
@@ -86,7 +84,6 @@ export const AddTestRecord: React.FC = () => {
                 testsResults: tests,
                 status,
               });
-              console.log("Submitting final data:", newData);
 
               mutate(
                 { testData: newData, NHRID: id },
@@ -119,7 +116,6 @@ export const AddTestRecord: React.FC = () => {
                 testResults: tests,
               });
 
-              console.log("Saving as draft:", draftData);
               mutate(
                 { testData: draftData, NHRID: id },
                 {

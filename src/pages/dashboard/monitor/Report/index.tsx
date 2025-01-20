@@ -109,7 +109,6 @@ export default function Report({
         if (location.pathname === "/dashboard/home") {
           setActiveTab(0);
           triggerRefresh();
-          console.log(true);
         } else {
           navigate("/dashboard/home");
         }

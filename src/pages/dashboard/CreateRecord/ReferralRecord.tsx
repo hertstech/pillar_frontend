@@ -76,7 +76,6 @@ export default function ReferralRecord() {
       referralReason: finalReferralReason,
     };
 
-    console.log(payload);
 
     if (!formField.careSetting) {
       setIsLoading(false);

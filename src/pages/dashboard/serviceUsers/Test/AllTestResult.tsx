@@ -66,8 +66,6 @@ export default function AllTestResult({ data = [], isLoading }: any) {
     setPage(0);
   };
 
-  console.log("document data:", downloadedFile?.data);
-
   const handleToggle = (itemId: string) => {
     const sanitizedId = itemId.replace(/\s+/g, "");
     setSelectedId(sanitizedId);
@@ -120,8 +118,6 @@ export default function AllTestResult({ data = [], isLoading }: any) {
 
     const newStatus = currentStatus === "active" ? "archive" : "active";
     const testData = { status: newStatus };
-
-    console.log(`Updating status for Order ID: ${orderId} to ${newStatus}`);
 
     mutate(
       { testData, ID: orderId },
@@ -195,7 +191,6 @@ export default function AllTestResult({ data = [], isLoading }: any) {
 
   useEffect(() => {
     if (isSuccess) {
-      const fileData = downloadedFile?.data;
       const fileUrl = downloadedFile?.data?.url;
       const filename = downloadedFile?.data?.filename || "download";
 

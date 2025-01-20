@@ -52,7 +52,6 @@ export default function ArchivedResults({ data = [], isLoading }: any) {
   };
 
   const handleToggle = (itemId: string) => {
-    console.log("Item ID in handleToggle:", itemId);
 
     const sanitizedId = itemId.replace(/\s+/g, "");
     setSelectedId(sanitizedId);
@@ -81,7 +80,6 @@ export default function ArchivedResults({ data = [], isLoading }: any) {
   };
 
   const handleStatusChange = (orderId: string | null) => {
-   console.log("Order ID passed to handleStatusChange:", orderId);
    if (!orderId) {
      console.error("Missing orderId. Unable to update status.");
      return;
@@ -97,8 +95,6 @@ export default function ArchivedResults({ data = [], isLoading }: any) {
 
     const newStatus = currentStatus === "archive" ? "active" : "archive";
     const testData = { status: newStatus };
-
-    console.log(`Updating status for Order ID: ${orderId} to ${newStatus}`);
 
     mutate(
       { testData, ID: orderId },

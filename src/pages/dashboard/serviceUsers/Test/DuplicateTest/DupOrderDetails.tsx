@@ -163,8 +163,6 @@ export function DupOrderDetails({
     }
   };
 
-  console.log(uploadedFile);
-
   const handleDrafting = (data: TestOrderTypes) => {
     const newDraftData = transformToSnakeCase({
       ...data,

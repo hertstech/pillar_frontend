@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -23,6 +23,7 @@ import { useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { stepOneSchema } from "./schema/StepOne";
 import Buttons from "../../../components/Button";
+import { useGetHCPInfo } from "../../../api/hcp";
 
 export default function StepOne({
   formData,
@@ -30,6 +31,9 @@ export default function StepOne({
   handleChange: superHandleChange,
 }: any) {
   const [show, setShow] = useState(false);
+
+  const { data } = useGetHCPInfo();
+
   const {
     register,
     setValue,
@@ -67,6 +71,23 @@ export default function StepOne({
     superHandleChange(data);
     handleNext();
   };
+
+  useEffect(() => {
+    if (data?.data) {
+      const hcpData = data.data;
+      setValue("facilityName", hcpData?.name || "");
+      setValue("facilityType", hcpData?.ownership || "");
+      setValue("facilityAddress", hcpData?.address || "");
+
+      if (hcpData?.management?.length > 0) {
+        const manager = hcpData.management[0];
+        setValue(
+          "registeredDoctor",
+          `${manager.title} ${manager.firstName} ${manager.lastName}`
+        );
+      }
+    }
+  }, [data, setValue]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -590,8 +611,9 @@ export default function StepOne({
       )}
 
       {/* MEDICAL INFORMATION */}
+
       <Box>
-        <Typography variant="h6"> Care Team Information</Typography>
+        <Typography variant="h6">Care Team Information</Typography>
 
         <InputField
           type="text"
@@ -599,7 +621,6 @@ export default function StepOne({
           label="Facility Name"
           name="facilityName"
           onChange={handleChange}
-          placeholder="Enter Facility's name"
           register={register}
           errors={errors}
         />
@@ -608,23 +629,22 @@ export default function StepOne({
           <label htmlFor="facilityType">
             Facility Type
             <TextField
-              aria-readonly
               select
               {...register("facilityType")}
               sx={{ marginTop: "5px" }}
               fullWidth
               name="facilityType"
-              value={formData.parentTwoRelationship}
+              value={data?.data?.ownership || ""}
               onChange={handleChange}
+              inputProps={{ readOnly: true }}
             >
-              {relations.map((item, index) => (
-                <MenuItem key={index} value={item.value}>
-                  {item.label}
-                </MenuItem>
-              ))}
+              <MenuItem value={data?.data?.ownership}>
+                {data?.data?.ownership}
+              </MenuItem>
             </TextField>
           </label>
         </div>
+
         <InputField
           type="text"
           isReadOnly
@@ -635,6 +655,7 @@ export default function StepOne({
           register={register}
           errors={errors}
         />
+
         <InputField
           type="text"
           isReadOnly
@@ -645,6 +666,7 @@ export default function StepOne({
           register={register}
           errors={errors}
         />
+
         <InputField
           type="text"
           label="Nominated Pharmacy"
@@ -667,27 +689,27 @@ export default function StepOne({
           type="text"
           label="Registered Doctor"
           name="registeredDoctor"
-          placeholder="Enter Doctors full name"
+          placeholder="Enter Doctor's full name"
           onChange={handleChange}
           register={register}
           errors={errors}
         />
+
         <InputField
-          isReadOnly
           type="number"
           label="Doctor's License"
-          placeholder="Enter Doctors license number"
+          placeholder="Enter Doctor's license number"
           name="doctorsLicense"
           onChange={handleChange}
           register={register}
           errors={errors}
         />
+
         <InputField
-          isReadOnly
           type="number"
           label="Doctor's Contact"
           name="doctorsContact"
-          placeholder="Enter Doctors phone number"
+          placeholder="Enter Doctor's phone number"
           onChange={handleChange}
           register={register}
           errors={errors}
@@ -702,8 +724,8 @@ export default function StepOne({
           register={register}
           errors={errors}
         />
+
         <InputField
-          isReadOnly
           type="number"
           label="HMO Number"
           name="HMONumber"

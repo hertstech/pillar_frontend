@@ -26,8 +26,6 @@ export const UpdateTestRecord: React.FC = () => {
   const location = useLocation();
   const testId = location.state?.id;
 
-  console.log(testId);
-
   const { mutate } = useUpdateTest();
   const { data } = useGetSingleTest(testId as string);
 

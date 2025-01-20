@@ -50,9 +50,7 @@ export const DupTestRecord: React.FC = () => {
   const handleNext = () => {
     if (activeStep < steps.length - 1) {
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    } else {
-      console.log("Final submission data:", formData);
-    }
+    } 
   };
 
   const handlePrev = () => {
@@ -95,7 +93,6 @@ export const DupTestRecord: React.FC = () => {
             });
 
             if (saveType === "final") {
-              console.log("Submitting final data:", transformedData);
               mutate(
                 { testData: transformedData, NHRID: id },
                 {
@@ -122,7 +119,6 @@ export const DupTestRecord: React.FC = () => {
                 }
               );
             } else {
-              console.log("Saving as draft:", transformedData);
               mutate(
                 { testData: transformedData, NHRID: id },
                 {

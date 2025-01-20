@@ -12,7 +12,6 @@ export const PinnedActivityLogs = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [validLogTypes] = useRecoilState(selectedLogTypeState);
 
-  console.log(validLogTypes);
   const { data } = useGetPinnedLog();
 
   useEffect(() => {
