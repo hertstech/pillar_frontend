@@ -26,8 +26,6 @@ import { list } from "../../../data/searchData";
 export default function Search() {
   const [searchOptions, setSearchOption] = useState(false);
 
-  const user = useSelector((state: any) => state.user.user);
-
   const token = useSelector((state: any) => state.user.access_token);
 
   const navigate = useNavigate();

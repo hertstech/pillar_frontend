@@ -84,6 +84,8 @@ export function AddOrderDetails({
   const { mutate } = useCreateTest();
   const { mutate: uploadFile, data, isPending } = useUploadTestDocument();
 
+  console.log(data);
+
   const {
     register,
     handleSubmit,
