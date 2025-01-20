@@ -16,10 +16,15 @@ import PopperOver from "../../../../components/Popover";
 import DrawerComp from "../../../../components/Drawer";
 import { TestDetails } from "./TestDetails";
 import { DeleteAllTestsOrder } from "./AddTest/DeleteAllTest";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { PastTests } from "./Components/PastTestModal";
-import { useUpdateTestStatus } from "../../../../api/HealthServiceUser/test";
+import {
+  useDownloadFiles,
+  useUpdateTestStatus,
+} from "../../../../api/HealthServiceUser/test";
 import { useAlert } from "../../../../Utils/useAlert";
+import useDownloader from "react-use-downloader";
+import classNames from "classnames";
 
 const TABLE_HEAD = [
   { id: "oder-id", label: "Order ID", align: "left" },
@@ -32,6 +37,7 @@ const TABLE_HEAD = [
 ];
 
 export default function AllTestResult({ data = [], isLoading }: any) {
+  const { id } = useParams();
   const navigate = useNavigate();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -39,8 +45,17 @@ export default function AllTestResult({ data = [], isLoading }: any) {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [openDeleteTest, setOpenDeleteTest] = useState<boolean>(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [docId, setDocId] = useState<string | null>(null);
 
   const { mutate } = useUpdateTestStatus();
+
+  const {
+    data: downloadedFile,
+    isSuccess,
+    isError,
+  } = useDownloadFiles({ docId, NHRID: id });
+
+  const { download } = useDownloader();
 
   const handleChangePage = (_event: unknown, newPage: number) =>
     setPage(newPage);
@@ -51,9 +66,9 @@ export default function AllTestResult({ data = [], isLoading }: any) {
     setPage(0);
   };
 
+  console.log("document data:", downloadedFile?.data);
+
   const handleToggle = (itemId: string) => {
-    console.log("Item ID in handleToggle:", itemId); 
-    
     const sanitizedId = itemId.replace(/\s+/g, "");
     setSelectedId(sanitizedId);
     setOpenDrawer(!openDrawer);
@@ -78,6 +93,14 @@ export default function AllTestResult({ data = [], isLoading }: any) {
     const sanitizedId = itemId.replace(/\s+/g, "");
     setSelectedId(sanitizedId);
     setOpenDeleteTest(true);
+  };
+
+  const handleDownload = (documentId: string) => {
+    if (!documentId) {
+      console.error("Document ID is missing.");
+      return;
+    }
+    setDocId(documentId);
   };
 
   const handleStatusChange = (orderId: string | null) => {
@@ -170,6 +193,22 @@ export default function AllTestResult({ data = [], isLoading }: any) {
 
   useEffect(() => setPage(0), []);
 
+  useEffect(() => {
+    if (isSuccess) {
+      const fileData = downloadedFile?.data;
+      const fileUrl = downloadedFile?.data?.url;
+      const filename = downloadedFile?.data?.filename || "download";
+
+      if (fileUrl) {
+        download(fileUrl, filename);
+      } else {
+        console.error("Invalid file URL received from API.");
+      }
+    } else if (isError) {
+      console.error("Error downloading file:");
+    }
+  }, [setDocId, downloadedFile]);
+
   return (
     <Box>
       <DrawerComp
@@ -257,16 +296,24 @@ export default function AllTestResult({ data = [], isLoading }: any) {
                           {moment(item.testDate).format("DD-MM-YY LT")}
                         </span>
                       </TableCell>
-
                       <TableCell
-                        sx={{ borderBottom: "none", cursor: "pointer" }}
-                        className="!text-pri-650"
+                        className={classNames(
+                          "!border-b-0",
+                          item.document_id ? "!text-pri-650" : "!text-neu-400",
+                          item.document_id
+                            ? "!cursor-pointer"
+                            : "!cursor-not-allowed"
+                        )}
                         onClick={(e) => {
-                          e.stopPropagation();
+                          if (item.document_id) {
+                            e.stopPropagation();
+                            handleDownload(item.document_id);
+                          }
                         }}
                       >
                         Download
                       </TableCell>
+
                       <TableCell
                         sx={{ borderBottom: "none", cursor: "pointer" }}
                         onClick={(e) => {

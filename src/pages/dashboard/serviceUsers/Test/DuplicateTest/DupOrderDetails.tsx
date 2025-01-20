@@ -14,10 +14,15 @@ import { DemoItem } from "@mui/x-date-pickers/internals/demo";
 import dayjs, { Dayjs } from "dayjs";
 import Buttons from "../../../../../components/Button";
 import { FiUploadCloud } from "react-icons/fi";
-import { useCreateTest } from "../../../../../api/HealthServiceUser/test";
+import {
+  useCreateTest,
+  useUploadTestDocument,
+} from "../../../../../api/HealthServiceUser/test";
 import { useAlert } from "../../../../../Utils/useAlert";
 import { transformToSnakeCase } from "../../../../../Utils/caseTransformer";
 import { useNavigate, useParams } from "react-router-dom";
+import { allowedFileTypes } from "../AddTest/AddOrderDetails";
+import { BarLoader } from "react-spinners";
 
 export type TestOrderTypes = {
   orderId: string;
@@ -70,6 +75,9 @@ export function DupOrderDetails({
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
 
   const { mutate } = useCreateTest();
+  const { mutate: uploadFile, data, isPending } = useUploadTestDocument();
+
+  const uploadedDocId = data?.data?.document_id;
 
   const {
     register,
@@ -95,10 +103,12 @@ export function DupOrderDetails({
       setValue("collectionSite", orderData.collection_site || "");
       setValue("orderedBy", orderData.ordered_by || "");
 
-      if (orderData.testDoc) {
-        setFileName(orderData.testDoc.name || "");
-        setUploadedFile(orderData.testDoc);
-        setValue("testDoc", orderData.testDoc, { shouldValidate: true });
+      if (orderData.document_id) {
+        setFileName(orderData.document_id || uploadedDocId || null);
+        setUploadedFile(orderData.document_id || uploadedDocId);
+        setValue("testDoc", orderData.document_id || uploadedDocId, {
+          shouldValidate: true,
+        });
       }
 
       if (orderData.test_date) {
@@ -111,17 +121,56 @@ export function DupOrderDetails({
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      setFileName(file.name);
-      setUploadedFile(file);
-      setValue("testDoc", file, { shouldValidate: true });
+      if (!allowedFileTypes.includes(file.type)) {
+        useAlert({
+          isToast: true,
+          icon: "error",
+          title: "invalid file type",
+        });
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        alert("File size exceeds 5MB");
+        return;
+      }
+
+      uploadFile(
+        { NHRID: id as string, file },
+        {
+          onSuccess: (response) => {
+            const assetId = response?.data?.asset_id;
+            if (assetId) {
+              setFileName(file.name);
+              setUploadedFile(assetId);
+              setValue("testDoc", assetId, { shouldValidate: true });
+            } else {
+              useAlert({
+                isToast: true,
+                icon: "error",
+                title: "Failed to retrieve asset ID from the server.",
+              });
+            }
+          },
+          onError: () => {
+            useAlert({
+              isToast: true,
+              icon: "error",
+              title: "File upload failed. Please try again.",
+            });
+          },
+        }
+      );
     }
   };
+
+  console.log(uploadedFile);
 
   const handleDrafting = (data: TestOrderTypes) => {
     const newDraftData = transformToSnakeCase({
       ...data,
       testDate: testingDate ? testingDate.toISOString() : "",
       testDoc: uploadedFile,
+      status: "draft",
       testsResults: [],
     });
 
@@ -240,28 +289,32 @@ export function DupOrderDetails({
                flex-col border rounded-md flex items-center justify-center cursor-pointer"
             >
               <div>
-                <div className="text-sm text-[#A8B8C2] text-center">
-                  {fileName ? (
-                    <div className="text-base text-succ">{fileName}</div>
-                  ) : (
-                    <>
-                      <div className="flex flex-col items-center gap-2 text-sm font-normal">
-                        <div className="p-3 bg-bg2 rounded-full text-center w-fit">
-                          <FiUploadCloud size={24} className="text-neu-900" />
+                {isPending ? (
+                  <BarLoader width={100} color="#1570EF" />
+                ) : (
+                  <div className="text-sm text-[#A8B8C2] text-center">
+                    {fileName ? (
+                      <div className="text-base text-succ">{fileName}</div>
+                    ) : (
+                      <>
+                        <div className="flex flex-col items-center gap-2 text-sm font-normal">
+                          <div className="p-3 bg-bg2 rounded-full text-center w-fit">
+                            <FiUploadCloud size={24} className="text-neu-900" />
+                          </div>
+                          <p className="text-err">
+                            Click to upload{" "}
+                            <span className="font-normal text-neu-900">
+                              or drag and drop
+                            </span>
+                          </p>
+                          <p className="text-neu-400">
+                            SVG, PNG, JPG, GIF, DOC, DOCX, or PDF
+                          </p>
                         </div>
-                        <p className="text-err">
-                          Click to upload{" "}
-                          <span className="font-normal text-neu-900">
-                            or drag and drop
-                          </span>
-                        </p>
-                        <p className="text-neu-400">
-                          SVG, PNG, JPG, GIF, DOC, DOCX, or PDF
-                        </p>
-                      </div>
-                    </>
-                  )}
-                </div>
+                      </>
+                    )}
+                  </div>
+                )}
               </div>
 
               <input

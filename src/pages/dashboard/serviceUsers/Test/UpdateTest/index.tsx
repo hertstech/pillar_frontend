@@ -40,7 +40,7 @@ export const UpdateTestRecord: React.FC = () => {
       testDate: data?.data?.test_date || "",
       collectionSite: data?.data?.collection_site || "",
       orderedBy: data?.data?.ordered_by || "",
-      testDoc: null,
+      testDoc: data?.data?.document_id || null,
     },
     testResults: [],
   });

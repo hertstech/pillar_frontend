@@ -15,6 +15,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { DeleteAllTestsOrder } from "../AddTest/DeleteAllTest";
 import { useAlert } from "../../../../../Utils/useAlert";
+import classNames from "classnames";
 
 interface IProps {
   id: string | undefined;
@@ -116,7 +117,23 @@ export const TestDetails: React.FC<IProps> = ({ id, handleCloseDrawer }) => {
   };
 
   const actions = [
-    { label: "Update test", onClick: () => handleUpdate(id as string) },
+    ...(status === "draft"
+      ? [
+          {
+            label: "Update test",
+            onClick: () => handleUpdate(id as string),
+          },
+          {
+            label: "Delete",
+            onClick: () => handleOpenDelete(id as string),
+            isDanger: true,
+          },
+        ]
+      : []),
+    {
+      label: "Duplicate test",
+      onClick: () => handleDuplicate(id as string),
+    },
     ...(status !== "draft"
       ? [
           {
@@ -129,14 +146,12 @@ export const TestDetails: React.FC<IProps> = ({ id, handleCloseDrawer }) => {
           },
         ]
       : []),
-    { label: "Duplicate test", onClick: () => handleDuplicate(id as string) },
-    { label: "View past result", onClick: () => setOpenPastTest(true) },
     {
-      label: "Delete",
-      onClick: () => handleOpenDelete(id as string),
-      isDanger: true,
+      label: "View past result",
+      onClick: () => setOpenPastTest(true),
     },
   ];
+
 
   return (
     <Box
@@ -167,7 +182,12 @@ export const TestDetails: React.FC<IProps> = ({ id, handleCloseDrawer }) => {
               </p>
             </Box>
             <Box className="flex gap-5">
-              <button className="flex mt-1 gap-2 text-sm font-[600] text-pri-650">
+              <button
+                className={classNames(
+                  "flex mt-1 gap-2 text-sm font-[600] text-pri-650",
+                  data?.data?.document_id ? "!text-pri-650" : "!text-neu-400"
+                )}
+              >
                 <FaDownload /> <span className="">Download</span>
               </button>
               <PopperOver

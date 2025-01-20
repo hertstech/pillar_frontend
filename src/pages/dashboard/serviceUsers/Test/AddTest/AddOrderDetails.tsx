@@ -14,10 +14,14 @@ import { DemoItem } from "@mui/x-date-pickers/internals/demo";
 import dayjs, { Dayjs } from "dayjs";
 import Buttons from "../../../../../components/Button";
 import { FiUploadCloud } from "react-icons/fi";
-import { useCreateTest } from "../../../../../api/HealthServiceUser/test";
+import {
+  useCreateTest,
+  useUploadTestDocument,
+} from "../../../../../api/HealthServiceUser/test";
 import { useAlert } from "../../../../../Utils/useAlert";
 import { transformToSnakeCase } from "../../../../../Utils/caseTransformer";
 import { useNavigate, useParams } from "react-router-dom";
+import { BarLoader } from "react-spinners";
 
 export type TestOrderTypes = {
   orderId: string;
@@ -25,7 +29,7 @@ export type TestOrderTypes = {
   testDate: string;
   collectionSite: string;
   orderedBy: string;
-  testDoc?: File | null;
+  testDoc?: number | null;
 };
 
 type AddOrderDetailsProps = {
@@ -56,6 +60,16 @@ const testSchema = Joi.object({
     .optional(),
 });
 
+export const allowedFileTypes = [
+  "image/svg+xml",
+  "image/png",
+  "image/jpeg",
+  "image/gif",
+  "application/pdf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+];
+
 export function AddOrderDetails({
   onSubmit,
   handleNext,
@@ -65,9 +79,12 @@ export function AddOrderDetails({
   const [testingDate, setTestingDate] = useState<Dayjs | null>(null);
   const [testTime, setTestTime] = useState<Dayjs | null>(null);
   const [fileName, setFileName] = useState("");
-  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [uploadedFile, setUploadedFile] = useState<number | null>(null);
 
   const { mutate } = useCreateTest();
+  const { mutate: uploadFile, data, isPending } = useUploadTestDocument();
+
+  console.log(data);
 
   const {
     register,
@@ -89,11 +106,49 @@ export function AddOrderDetails({
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      setFileName(file.name);
-      setUploadedFile(file);
-      setValue("testDoc", file, { shouldValidate: true });
+      if (!allowedFileTypes.includes(file.type)) {
+        useAlert({
+          isToast: true,
+          icon: "error",
+          title: "invalid file type",
+        });
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        alert("File size exceeds 5MB");
+        return;
+      }
+
+      uploadFile(
+        { NHRID: id as string, file },
+        {
+          onSuccess: (response) => {
+            const assetId = response?.data?.asset_id;
+            if (assetId) {
+              setFileName(file.name);
+              setUploadedFile(assetId);
+              setValue("testDoc", assetId, { shouldValidate: true });
+            } else {
+              useAlert({
+                isToast: true,
+                icon: "error",
+                title: "Failed to retrieve asset ID from the server.",
+              });
+            }
+          },
+          onError: () => {
+            useAlert({
+              isToast: true,
+              icon: "error",
+              title: "File upload failed. Please try again.",
+            });
+          },
+        }
+      );
     }
   };
+
+  console.log(uploadedFile);
 
   const handleDrafting = (data: TestOrderTypes) => {
     const newDraftData = transformToSnakeCase({
@@ -134,7 +189,7 @@ export function AddOrderDetails({
     onSubmit({
       ...data,
       testDate: testingDate ? testingDate.toISOString() : "",
-      testDoc: uploadedFile,
+      testDoc: uploadedFile as number,
     });
     handleNext();
   };
@@ -220,28 +275,32 @@ export function AddOrderDetails({
                flex-col border rounded-md flex items-center justify-center cursor-pointer"
             >
               <div>
-                <div className="text-sm text-[#A8B8C2] text-center">
-                  {fileName ? (
-                    <div className="text-base text-succ">{fileName}</div>
-                  ) : (
-                    <>
-                      <div className="flex flex-col items-center gap-2 text-sm font-normal">
-                        <div className="p-3 bg-bg2 rounded-full text-center w-fit">
-                          <FiUploadCloud size={24} className="text-neu-900" />
+                {isPending ? (
+                  <BarLoader width={100} color="#1570EF" />
+                ) : (
+                  <div className="text-sm text-[#A8B8C2] text-center">
+                    {fileName ? (
+                      <div className="text-base text-succ">{fileName}</div>
+                    ) : (
+                      <>
+                        <div className="flex flex-col items-center gap-2 text-sm font-normal">
+                          <div className="p-3 bg-bg2 rounded-full text-center w-fit">
+                            <FiUploadCloud size={24} className="text-neu-900" />
+                          </div>
+                          <p className="text-err">
+                            Click to upload{" "}
+                            <span className="font-normal text-neu-900">
+                              or drag and drop
+                            </span>
+                          </p>
+                          <p className="text-neu-400">
+                            SVG, PNG, JPG, GIF, DOC, DOCX, or PDF
+                          </p>
                         </div>
-                        <p className="text-err">
-                          Click to upload{" "}
-                          <span className="font-normal text-neu-900">
-                            or drag and drop
-                          </span>
-                        </p>
-                        <p className="text-neu-400">
-                          SVG, PNG, JPG, GIF, DOC, DOCX, or PDF
-                        </p>
-                      </div>
-                    </>
-                  )}
-                </div>
+                      </>
+                    )}
+                  </div>
+                )}
               </div>
 
               <input

@@ -5,7 +5,7 @@ export const useGetAllTest = (NHRID: string) => {
   return useQuery({
     queryKey: ["getTests", NHRID],
     queryFn: async () => {
-      const res = axiosInstance.get(`/api/v1/order/service-user/${NHRID}`);
+      const res = axiosInstance.get(`/api/v1/orders/service-user/${NHRID}`);
       return res;
     },
   });
@@ -21,6 +21,17 @@ export const useGetSingleTest = (testID: string) => {
   });
 };
 
+export const useDownloadFiles = (data: Record<string, any>) => {
+  const { NHRID, docId } = data;
+  return useQuery({
+    queryKey: ["getTests", docId],
+    queryFn: async () => {
+      const res = axiosInstance.get(`/api/v1/order/${NHRID}/report/${docId}`);
+      return res;
+    },
+  });
+};
+
 export const useCreateTest = () => {
   const queryClient = useQueryClient();
 
@@ -28,6 +39,31 @@ export const useCreateTest = () => {
     mutationFn: (data: Record<string, any>) => {
       const { NHRID, testData } = data;
       return axiosInstance.post(`/api/v1/order/${NHRID}/test`, testData);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["getTests"],
+      });
+    },
+  });
+};
+
+export const useUploadTestDocument = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: { NHRID: string; file: File }) => {
+      const { NHRID, file } = data;
+      const formData = new FormData();
+      formData.append("file", file);
+
+      return axiosInstance.post(
+        `/api/v1/order/${NHRID}/report`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
     },
     onSuccess: () => {
       queryClient.invalidateQueries({

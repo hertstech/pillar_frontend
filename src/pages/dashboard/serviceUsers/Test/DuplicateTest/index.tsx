@@ -90,7 +90,7 @@ export const DupTestRecord: React.FC = () => {
 
             const transformedData = transformToSnakeCase({
               ...formData.orderDetails,
-              testResults: tests,
+              testsResults: tests,
               status,
             });
 
