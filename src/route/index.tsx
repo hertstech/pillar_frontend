@@ -46,16 +46,11 @@ export const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: <DashboardLayout />,
-
     children: [
-      { element: <Navigate to="/dashboard" replace />, index: true },
+      { element: <Navigate to="/dashboard/home" replace />, index: true },
       {
         path: "home",
         element: <Home />,
-        // children: [
-        //   { index: true, element: <Home /> },
-        //   { path: "search", element: <Result /> },
-        // ],
       },
       {
         path: "search",
@@ -65,17 +60,14 @@ export const router = createBrowserRouter([
           { path: "result", element: <Result /> },
         ],
       },
-
       {
         path: "create-new",
         element: <CreateUser />,
       },
-
       {
         path: "setting",
         element: <Settings />,
       },
-
       {
         path: "monitoring",
         element: <Outlet />,
@@ -84,20 +76,17 @@ export const router = createBrowserRouter([
           { path: "create-report", element: <CreateReport /> },
         ],
       },
-
       { path: "files", element: <File /> },
-
       {
         path: "user/:id",
         element: <Outlet />,
         children: [
-          { index: true, element: <Singleuser /> },
-          { path: ":tabID", element: <Singleuser /> },
+          { path: ":tabID?", element: <Singleuser /> },
           { path: "update", element: <CreateRecord /> },
-          { path: "update/:tabId", element: <CreateRecord /> },
-          { path: "add-test", element: <AddTestRecord /> },
-          { path: "duplicate-test", element: <DupTestRecord /> },
-          { path: "update-test", element: <UpdateTestRecord /> },
+          { path: "update/:tabID?", element: <CreateRecord /> },
+          { path: ":tabID?/add-test", element: <AddTestRecord /> },
+          { path: ":tabID?/duplicate-test", element: <DupTestRecord /> },
+          { path: ":tabID?/update-test", element: <UpdateTestRecord /> },
         ],
       },
     ],
