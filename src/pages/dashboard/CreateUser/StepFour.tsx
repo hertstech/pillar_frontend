@@ -263,7 +263,7 @@ export default function StepFour({ NHRID }: StepFourProps) {
             </Box>
           </Box>
         ))}
-        <Box className="flex items-center justify-center mt-8 gap-4">
+        <Box className="flex items-center justify-center mt-8  pr-2 text-center gap-4">
           <Link
             href="/dashboard/home"
             fontWeight={500}

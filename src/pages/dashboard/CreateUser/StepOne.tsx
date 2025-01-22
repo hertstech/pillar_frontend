@@ -737,7 +737,7 @@ export default function StepOne({
       </Box>
 
       <Buttons
-        className="!flex justify-self-end !absolute bottom-6 right-24 !w-1/3"
+        className="!flex justify-self-end !absolute bottom-6 right-24 xl:right-36 !w-1/3"
         type="submit"
         title={"Next"}
       />
