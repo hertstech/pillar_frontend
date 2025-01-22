@@ -25,7 +25,7 @@ import { NeedHelp } from "../../../components/CalendarField";
 import { useAlert } from "../../../Utils/useAlert";
 
 export default function CreateUser() {
-  const [activeStep, setActiveStep] = useState(3);
+  const [activeStep, setActiveStep] = useState(0);
   const [result, setResult] = useState("");
   const [data, setData] = useState("");
   const [isLoading, setIsLoading] = useState(false);
