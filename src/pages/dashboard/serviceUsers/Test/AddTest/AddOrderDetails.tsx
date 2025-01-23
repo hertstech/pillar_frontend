@@ -29,7 +29,7 @@ export type TestOrderTypes = {
   testDate: string;
   collectionSite: string;
   orderedBy: string;
-  testDoc?: number | null;
+  document_id?: number | null;
 };
 
 type AddOrderDetailsProps = {
@@ -55,7 +55,7 @@ const testSchema = Joi.object({
   orderedBy: Joi.string().required().messages({
     "string.empty": "Order author is required",
   }),
-  testDoc: Joi.alternatives()
+  document_id: Joi.alternatives()
     .try(Joi.object().instance(File), Joi.allow(null))
     .optional(),
 });
@@ -99,7 +99,7 @@ export function AddOrderDetails({
       testDate: "",
       collectionSite: "",
       orderedBy: "",
-      testDoc: null,
+      document_id: null,
     },
   });
 
@@ -127,7 +127,7 @@ export function AddOrderDetails({
             if (assetId) {
               setFileName(file.name);
               setUploadedFile(assetId);
-              setValue("testDoc", assetId, { shouldValidate: true });
+              setValue("document_id", assetId, { shouldValidate: true });
             } else {
               useAlert({
                 isToast: true,
@@ -152,7 +152,7 @@ export function AddOrderDetails({
     const newDraftData = transformToSnakeCase({
       ...data,
       testDate: testingDate ? testingDate.toISOString() : "",
-      testDoc: uploadedFile,
+      document_id: uploadedFile,
       status: "draft",
       testsResults: [],
     });
@@ -187,7 +187,7 @@ export function AddOrderDetails({
     onSubmit({
       ...data,
       testDate: testingDate ? testingDate.toISOString() : "",
-      testDoc: uploadedFile as number,
+      document_id: uploadedFile as number,
     });
     handleNext();
   };
@@ -268,7 +268,7 @@ export function AddOrderDetails({
               Attach document (optional)
             </p>
             <label
-              htmlFor="testDoc"
+              htmlFor="document_id"
               className="border-neu-300 border-dashed bg-white px-2 py-4 min-w-[552px] h-[146px]
                flex-col border rounded-md flex items-center justify-center cursor-pointer"
             >
@@ -303,9 +303,9 @@ export function AddOrderDetails({
 
               <input
                 type="file"
-                id="testDoc"
+                id="document_id"
                 className="hidden px-2 py-4 w-full h-full"
-                name="testDoc"
+                name="document_id"
                 accept="image/svg,image/png,image/jpeg,image/gif,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                 onChange={handleFileUpload}
               />

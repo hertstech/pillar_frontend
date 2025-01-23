@@ -7,7 +7,7 @@ import RegisterPage from "../pages/Auth/RegisterForm";
 import Page404 from "../pages/Page404";
 import Singleuser from "../pages/dashboard/serviceUsers";
 import AuthGuard from "../Guard/AuthGuard";
-import CreateRecord from "../pages/dashboard/CreateRecord";
+import UpdateRecord from "../pages/dashboard/CreateRecord";
 import Search from "../pages/dashboard/search";
 import Result from "../pages/dashboard/search/Result";
 import Monitor from "../pages/dashboard/monitor";
@@ -82,8 +82,8 @@ export const router = createBrowserRouter([
         element: <Outlet />,
         children: [
           { path: ":tabID?", element: <Singleuser /> },
-          { path: "update", element: <CreateRecord /> },
-          { path: "update/:tabID?", element: <CreateRecord /> },
+          { path: "update", element: <UpdateRecord /> },
+          { path: "update/:tabID?", element: <UpdateRecord /> },
           { path: ":tabID?/add-test", element: <AddTestRecord /> },
           { path: ":tabID?/duplicate-test", element: <DupTestRecord /> },
           { path: ":tabID?/update-test", element: <UpdateTestRecord /> },

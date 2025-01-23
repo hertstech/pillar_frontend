@@ -30,7 +30,7 @@ export type TestOrderTypes = {
   testDate: string;
   collectionSite: string;
   orderedBy: string;
-  testDoc?: File | null;
+  document_id?: File | null;
 };
 
 type DupOrderDetailsProps = {
@@ -57,7 +57,7 @@ const testSchema = Joi.object({
   orderedBy: Joi.string().required().messages({
     "string.empty": "Order author is required",
   }),
-  testDoc: Joi.alternatives()
+  document_id: Joi.alternatives()
     .try(Joi.object().instance(File), Joi.allow(null))
     .optional(),
 });
@@ -92,7 +92,7 @@ export function DupOrderDetails({
       testDate: "",
       collectionSite: "",
       orderedBy: "",
-      testDoc: null,
+      document_id: null,
     },
   });
 
@@ -106,7 +106,7 @@ export function DupOrderDetails({
       if (orderData.document_id) {
         setFileName(orderData.document_id || uploadedDocId || null);
         setUploadedFile(orderData.document_id || uploadedDocId);
-        setValue("testDoc", orderData.document_id || uploadedDocId, {
+        setValue("document_id", orderData.document_id || uploadedDocId, {
           shouldValidate: true,
         });
       }
@@ -142,7 +142,7 @@ export function DupOrderDetails({
             if (assetId) {
               setFileName(file.name);
               setUploadedFile(assetId);
-              setValue("testDoc", assetId, { shouldValidate: true });
+              setValue("document_id", assetId, { shouldValidate: true });
             } else {
               useAlert({
                 isToast: true,
@@ -167,7 +167,7 @@ export function DupOrderDetails({
     const newDraftData = transformToSnakeCase({
       ...data,
       testDate: testingDate ? testingDate.toISOString() : "",
-      testDoc: uploadedFile,
+      document_id: uploadedFile,
       status: "draft",
       testsResults: [],
     });
@@ -202,7 +202,7 @@ export function DupOrderDetails({
     onSubmit({
       ...data,
       testDate: testingDate ? testingDate.toISOString() : "",
-      testDoc: uploadedFile,
+      document_id: uploadedFile,
     });
     handleNext();
   };
@@ -282,7 +282,7 @@ export function DupOrderDetails({
               Attach document (optional)
             </p>
             <label
-              htmlFor="testDoc"
+              htmlFor="document_id"
               className="border-neu-300 border-dashed bg-white px-2 py-4 min-w-[552px] h-[146px]
                flex-col border rounded-md flex items-center justify-center cursor-pointer"
             >
@@ -317,9 +317,9 @@ export function DupOrderDetails({
 
               <input
                 type="file"
-                id="testDoc"
+                id="document_id"
                 className="hidden px-2 py-4 w-full h-full"
-                name="testDoc"
+                name="document_id"
                 accept="image/svg,image/png,image/jpeg,image/gif,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                 onChange={handleFileUpload}
               />

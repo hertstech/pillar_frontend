@@ -55,7 +55,7 @@ export default function AllTestResult({ data = [], isLoading }: any) {
     isError,
   } = useDownloadFiles({ docId, NHRID: id });
 
-  const { download } = useDownloader();
+  const { download, error, isInProgress, percentage } = useDownloader();
 
   const handleChangePage = (_event: unknown, newPage: number) =>
     setPage(newPage);
@@ -189,13 +189,20 @@ export default function AllTestResult({ data = [], isLoading }: any) {
 
   useEffect(() => setPage(0), []);
 
+  console.log("is error:", error);
+  console.log("how far:", percentage);
+  console.log("is in progress", isInProgress);
+
   useEffect(() => {
     if (isSuccess) {
-      const fileUrl = downloadedFile?.data?.url;
+      const fileUrl = downloadedFile?.data;
       const filename = downloadedFile?.data?.filename || "download";
 
       if (fileUrl) {
-        download(fileUrl, filename);
+        download(
+          "https://www.pillartechnologybackend.com.ng/api/v1/order/996011136795/report/d0a23b4a7e636bd1",
+          filename
+        );
       } else {
         console.error("Invalid file URL received from API.");
       }

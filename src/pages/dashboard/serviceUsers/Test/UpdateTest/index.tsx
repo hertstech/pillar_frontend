@@ -38,7 +38,7 @@ export const UpdateTestRecord: React.FC = () => {
       testDate: data?.data?.test_date || "",
       collectionSite: data?.data?.collection_site || "",
       orderedBy: data?.data?.ordered_by || "",
-      testDoc: data?.data?.document_id || null,
+      document_id: data?.data?.document_id || null,
     },
     testResults: [],
   });
@@ -160,7 +160,7 @@ export const UpdateTestRecord: React.FC = () => {
           testDate: data?.data.test_date || "",
           collectionSite: data?.data.collection_site || "",
           orderedBy: data?.data.ordered_by || "",
-          testDoc: null,
+          document_id: null,
         },
         testResults: data?.data.tests_results || [],
       });

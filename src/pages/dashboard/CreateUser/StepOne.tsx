@@ -78,6 +78,7 @@ export default function StepOne({
       setValue("facilityName", hcpData?.name || "");
       setValue("facilityType", hcpData?.ownership || "");
       setValue("facilityAddress", hcpData?.address || "");
+      setValue("facilityContact", hcpData?.facility_phone_numbers || "");
 
       if (hcpData?.management?.length > 0) {
         const manager = hcpData.management[0];
@@ -637,6 +638,7 @@ export default function StepOne({
               value={data?.data?.ownership || ""}
               onChange={handleChange}
               inputProps={{ readOnly: true }}
+              className="!capitalize"
             >
               <MenuItem value={data?.data?.ownership}>
                 {data?.data?.ownership}
@@ -691,6 +693,7 @@ export default function StepOne({
           name="registeredDoctor"
           placeholder="Enter Doctor's full name"
           onChange={handleChange}
+          className="capitalize"
           register={register}
           errors={errors}
         />
@@ -737,7 +740,7 @@ export default function StepOne({
       </Box>
 
       <Buttons
-        className="!flex justify-self-end !absolute bottom-6 right-24 xl:right-36 !w-1/3"
+        className="!flex justify-self-end !absolute bottom-6 right-24 2xl:right-36 !w-1/3"
         type="submit"
         title={"Next"}
       />

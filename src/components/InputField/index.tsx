@@ -26,6 +26,7 @@ interface TextProps {
   ) => void;
   onWheel?: (e: React.WheelEvent) => void;
   textarea?: boolean;
+  className?: string;
 }
 
 export default function InputField({
@@ -42,6 +43,7 @@ export default function InputField({
   onWheel,
   textarea = false,
   errors,
+  className,
   ...rest
 }: TextProps) {
   const [showPassword, setShowPassword] = useState(false);
@@ -91,7 +93,8 @@ export default function InputField({
                 disabled &&
                   "text-neutral-400 border-neutral-200 bg-[#F0F2F5] cursor-not-allowed",
                 errors?.[name] && "border-red-500 !border-[1px]",
-                "!font-[400] !text-[1rem] placeholder:text-neu-400"
+                "!font-[400] !text-[1rem] placeholder:text-neu-400",
+                className
               )}
               name={name}
               value={value}
@@ -121,7 +124,7 @@ export default function InputField({
           </div>
         )}
         {errors?.[name] && (
-          <p className="text-err ml-4 text-xs !font-semibold" >
+          <p className="text-err ml-4 text-xs !font-semibold">
             {errors[name]?.message || "This field is required"}
           </p>
         )}

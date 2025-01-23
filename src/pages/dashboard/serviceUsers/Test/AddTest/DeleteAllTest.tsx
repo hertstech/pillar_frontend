@@ -11,7 +11,7 @@ interface IProps {
 }
 
 export const DeleteAllTestsOrder = ({ id, showModal, closeModal }: IProps) => {
-  const { mutate } = useDeleteAllTestOrder();
+  const { mutate,isPending } = useDeleteAllTestOrder();
 
   const handleDelete = () => {
     mutate(id, {
@@ -72,6 +72,7 @@ export const DeleteAllTestsOrder = ({ id, showModal, closeModal }: IProps) => {
               width: "50%",
               borderRadius: "6px",
             }}
+            disabled={isPending}
             onClick={handleDelete}
           >
             Delete
