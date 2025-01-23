@@ -24,6 +24,9 @@ export default function Profile() {
 
   const user = useSelector((state: any) => state.user.user);
 
+  console.log("user information;", user);
+  console.log("client information;", client);
+
   const { id } = useParams();
 
   const navigate = useNavigate();
@@ -61,6 +64,14 @@ export default function Profile() {
     HMOPlan: client?.HMOPlan || "",
     nominatedPharmarcy: client?.nominatedPharmarcy || "",
     registeredDoctor: client?.registeredDoctor || "",
+    facilityName: client?.facilityName || "",
+    facilityType: client?.facilityType || "",
+    facilityContact: client?.facilityContact || "",
+    facilityAddress: client?.facilityAddress || "",
+    registeredHospital: client?.registeredHospital || "",
+    doctorsLicense: client?.doctorsLicense || "",
+    doctorsContact: client?.doctorsContact || "",
+    HMONumber: client?.HMONumber || "",
   });
 
   const handleChange = (name: string, value: any) => {
@@ -466,7 +477,7 @@ export default function Profile() {
               </>
             )}
 
-            <Box sx={{ mt: 3 }}>
+            {/* <Box sx={{ mt: 3 }}>
               <Typography
                 sx={{ color: "#090816" }}
                 fontWeight={600}
@@ -500,6 +511,130 @@ export default function Profile() {
                 onChange={(e: any) =>
                   handleChange("registeredDoctor", e.target.value)
                 }
+              />
+            </Box> */}
+            <Box sx={{ mt: 3 }}>
+              <Typography variant="h6">Care Team Information</Typography>
+
+              <InputField
+                type="text"
+                isReadOnly
+                label="Facility Name"
+                name="facilityName"
+                value={editForm?.facilityName || ""}
+              />
+
+              <div style={{ marginTop: 8 }}>
+                <label htmlFor="facilityType">
+                  Facility Type
+                  <TextField
+                    select
+                    sx={{ marginTop: "5px" }}
+                    fullWidth
+                    name="facilityType"
+                    value={editForm?.facilityType || ""}
+                    onChange={() => null}
+                    inputProps={{ readOnly: true }}
+                    className="!capitalize"
+                  >
+                    <MenuItem value={editForm?.facilityType}>
+                      {editForm?.facilityType}
+                    </MenuItem>
+                  </TextField>
+                </label>
+              </div>
+
+              <InputField
+                type="text"
+                isReadOnly
+                label="Facility Contact"
+                name="facilityContact"
+                placeholder="Enter Facility's phone number"
+                value={editForm.facilityContact}
+              />
+
+              <InputField
+                type="text"
+                isReadOnly
+                label="Facility Address"
+                name="facilityAddress"
+                placeholder="Enter Facility's full address"
+                value={editForm.facilityAddress}
+                onChange={(e: any) =>
+                  handleChange("facilityAddress", e.target.value)
+                }
+              />
+
+              <InputField
+                type="text"
+                label="Nominated Pharmacy"
+                name="nominatedPharmarcy"
+                value={editForm.nominatedPharmarcy}
+                onChange={(e: any) =>
+                  handleChange("nominatedPharmarcy", e.target.value)
+                }
+              />
+
+              <InputField
+                type="text"
+                label="Registered Hospital"
+                name="registeredHospital"
+                value={editForm.registeredHospital}
+                onChange={(e: any) =>
+                  handleChange("registeredHospital", e.target.value)
+                }
+              />
+
+              <InputField
+                type="text"
+                label="Registered Doctor"
+                name="registeredDoctor"
+                placeholder="Enter Doctor's full name"
+                className="capitalize"
+                value={editForm.registeredDoctor}
+                onChange={(e: any) =>
+                  handleChange("registeredDoctor", e.target.value)
+                }
+              />
+
+              <InputField
+                type="number"
+                label="Doctor's License"
+                placeholder="Enter Doctor's license number"
+                name="doctorsLicense"
+                value={editForm.doctorsLicense}
+                onChange={(e: any) =>
+                  handleChange("doctorsLicense", e.target.value)
+                }
+              />
+
+              <InputField
+                type="number"
+                label="Doctor's Contact"
+                name="doctorsContact"
+                placeholder="Enter Doctor's phone number"
+                value={editForm.doctorsContact}
+                onChange={(e: any) =>
+                  handleChange("doctorsContact", e.target.value)
+                }
+              />
+
+              <InputField
+                type="text"
+                label="HMO Plan"
+                name="HMOPlan"
+                placeholder="Enter current HMO plan"
+                value={editForm.HMOPlan}
+                onChange={(e: any) => handleChange("HMOPlan", e.target.value)}
+              />
+
+              <InputField
+                type="number"
+                label="HMO Number"
+                name="HMONumber"
+                placeholder="Enter HMO number"
+                value={editForm.HMONumber}
+                onChange={(e: any) => handleChange("HMONumber", e.target.value)}
               />
             </Box>
           </Box>
