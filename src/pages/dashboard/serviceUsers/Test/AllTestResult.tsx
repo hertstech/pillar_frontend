@@ -18,10 +18,7 @@ import { TestDetails } from "./TestDetails";
 import { DeleteAllTestsOrder } from "./AddTest/DeleteAllTest";
 import { useNavigate, useParams } from "react-router-dom";
 import { PastTests } from "./Components/PastTestModal";
-import {
-  useDownloadFiles,
-  useUpdateTestStatus,
-} from "../../../../api/HealthServiceUser/test";
+import { useUpdateTestStatus } from "../../../../api/HealthServiceUser/test";
 import { useAlert } from "../../../../Utils/useAlert";
 import useDownloader from "react-use-downloader";
 import classNames from "classnames";
@@ -48,12 +45,6 @@ export default function AllTestResult({ data = [], isLoading }: any) {
   const [docId, setDocId] = useState<string | null>(null);
 
   const { mutate } = useUpdateTestStatus();
-
-  const {
-    data: downloadedFile,
-    isSuccess,
-    isError,
-  } = useDownloadFiles({ docId, NHRID: id });
 
   const { download, error, isInProgress, percentage } = useDownloader();
 
@@ -194,22 +185,21 @@ export default function AllTestResult({ data = [], isLoading }: any) {
   console.log("is in progress", isInProgress);
 
   useEffect(() => {
-    if (isSuccess) {
-      const fileUrl = downloadedFile?.data;
-      const filename = downloadedFile?.data?.filename || "download";
+    if (docId) {
+      const filename = "download";
 
-      if (fileUrl) {
+      if (docId !== null) {
         download(
-          "https://www.pillartechnologybackend.com.ng/api/v1/order/996011136795/report/d0a23b4a7e636bd1",
+          `https://www.pillartechnologybackend.com.ng/api/v1/order/${id}/report/${docId}`,
           filename
         );
       } else {
         console.error("Invalid file URL received from API.");
       }
-    } else if (isError) {
+    } else {
       console.error("Error downloading file:");
     }
-  }, [setDocId, downloadedFile]);
+  }, [setDocId]);
 
   return (
     <Box>

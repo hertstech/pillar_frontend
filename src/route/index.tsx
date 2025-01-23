@@ -5,7 +5,7 @@ import CreateUser from "../pages/dashboard/CreateUser";
 import Settings from "../pages/Settings";
 import RegisterPage from "../pages/Auth/RegisterForm";
 import Page404 from "../pages/Page404";
-import Singleuser from "../pages/dashboard/serviceUsers";
+import SingleUser from "../pages/dashboard/serviceUsers";
 import AuthGuard from "../Guard/AuthGuard";
 import UpdateRecord from "../pages/dashboard/CreateRecord";
 import Search from "../pages/dashboard/search";
@@ -81,7 +81,7 @@ export const router = createBrowserRouter([
         path: "user/:id",
         element: <Outlet />,
         children: [
-          { path: ":tabID?", element: <Singleuser /> },
+          { path: ":tabID?", element: <SingleUser /> },
           { path: "update", element: <UpdateRecord /> },
           { path: "update/:tabID?", element: <UpdateRecord /> },
           { path: ":tabID?/add-test", element: <AddTestRecord /> },

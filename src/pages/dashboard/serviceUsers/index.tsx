@@ -21,7 +21,6 @@ import Overview from "./Overview";
 import Message from "./Message";
 import { useState } from "react";
 import { axiosInstance } from "../../../Utils";
-import Swal from "sweetalert2";
 import { useGetUserConsent } from "../../../api/HealthServiceUser/consent";
 import { ConsentBoxes } from "../../../components/ServiceUser/ConsentPills";
 import PopperOver from "../../../components/Popover";
@@ -30,13 +29,17 @@ import TransferRecordAccessForm from "./ShareAndTransfer/TransferRecordAccess";
 import RequestRecordAccess from "./ShareAndTransfer/RequestRecordAccess";
 import ServiceUserTest from "./Test";
 import { BackIcon, SendIcon } from "../../../../public/assets/Icons";
+import { useAlert } from "../../../Utils/useAlert";
 
-export default function Singleuser() {
+export default function SingleUser() {
   const client = useSelector((state: any) => state.client.clients.tab1[0]);
+
+  console.log("client information on first load:", client);
 
   const writeAccess = client?.read_access;
 
   const user = useSelector((state: any) => state.user.user);
+  console.log("user information on first load:", user);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -126,10 +129,9 @@ export default function Singleuser() {
       setIsOpen(false);
       setIsLoading(false);
 
-      Swal.fire({
+      useAlert({
         icon: "success",
-        text: `${res.data}`,
-        confirmButtonColor: "#2E90FA",
+        title: `${res.data}`,
       });
     } catch (error) {
       setIsLoading(false);

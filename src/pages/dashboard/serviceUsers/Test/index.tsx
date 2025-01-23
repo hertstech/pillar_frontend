@@ -17,9 +17,9 @@ interface IProps {
 const ServiceUserTest: React.FC<IProps> = ({ client }) => {
   const { id } = useParams();
 
-  const { data, isLoading } = useGetAllTest(id as string);
+  const { data, isLoading, isPending } = useGetAllTest(id as string);
 
-  if (isLoading) {
+  if (isLoading || isPending) {
     return (
       <div className="h-[70vh] flex justify-center items-center">
         <Spinner title="Loading tests..." />
