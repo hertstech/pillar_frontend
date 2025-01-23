@@ -17,6 +17,7 @@ import { ItemLabel } from "../../../components/InputField";
 import { FaHeartbeat } from "react-icons/fa";
 import { FaHeartCircleCheck } from "react-icons/fa6";
 import { ProfileSummary } from "../../../components/ServiceUser/ProfileSummary";
+import { client } from "../../../types/serviceUserTypes/health";
 
 ChartJS.register(
   LineElement,
@@ -26,39 +27,6 @@ ChartJS.register(
   Legend,
   Tooltip
 );
-
-export interface client {
-  id: string;
-  email: string;
-  phoneNumber: string;
-  address: string;
-  bmi?: number;
-  lga: string;
-  dateOfBirth: Date;
-  height: number;
-  weight: number;
-  HMOPlan: string;
-  firstName: string;
-  lastName: string;
-  state: string;
-  gender: string;
-  religion: string;
-  tribalMarks: string;
-  parentOne: string;
-  parentOneNumber: string;
-  parentOneNHR_ID: string;
-  parentOneRelationship: string;
-  parentTwo: string;
-  parentTwoNumber: string;
-  parentTwoNHR_ID: string;
-  parentTwoRelationship: string;
-  nominatedPharmarcy: string;
-  registeredDoctor: string;
-  nokFullName: string;
-  nokNHR_ID: string;
-  nokPhoneNumber: string;
-  nokRelationship: string;
-}
 
 interface allergyResponse {
   reaction: string;

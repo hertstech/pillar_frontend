@@ -135,7 +135,7 @@ export default function LoginPage() {
       </Container>
 
       <div style={{ width: "100%" }}>
-        <img className={Styles.images} src="/assets/Frame 625882.svg" alt="" />
+        <img className={Styles.images} src="/asset/Frame 625882.svg" alt="" />
       </div>
     </div>
   );

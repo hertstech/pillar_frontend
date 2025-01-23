@@ -22,7 +22,7 @@ import { UpdateConsent } from "./Profile/updateConsent";
 //   isLoaded?: boolean;
 // }
 
-export default function CreateRecord() {
+export default function UpdateRecord() {
   const { id } = useParams();
 
   const newId = parseInt(id as string);

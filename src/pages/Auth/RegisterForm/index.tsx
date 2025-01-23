@@ -117,7 +117,7 @@ export default function RegisterPage() {
         <div className={Styles.wrapper}>
           <Stack alignItems="center">
             <Stack alignItems="center">
-              <img src="/assets/logo.svg" className={Styles.Logo} alt="" />
+              <img src="/asset/logo.svg" className={Styles.Logo} alt="" />
               <Box sx={{ textAlign: "center" }}>
                 <Typography
                   variant="h1"

@@ -106,7 +106,7 @@ export default function AdditionalInformationRecord() {
     <Box>
       <div style={{ textAlign: "center", marginBottom: 25 }}>
         <Typography fontWeight={700} color={"#101928"} fontSize={32}>
-          Record Additional Informations
+          Record Additional Information
         </Typography>
       </div>
 

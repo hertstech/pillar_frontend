@@ -12,7 +12,7 @@ import { allConsentData } from "../../../data/consentData";
 import InputField from "../../../components/InputField";
 import BaseButton from "../../../components/Button";
 import { consentSchema } from "../../../schemas/createUserSchema";
-import { transformToSnakeCase } from "../../../Utils/caseTransformtter";
+import { transformToSnakeCase } from "../../../Utils/caseTransformer";
 import { ConsentData } from "../../../types/serviceUserTypes/consent";
 import {
   useGetUserConsent,
@@ -37,13 +37,7 @@ export default function StepFour({ NHRID }: StepFourProps) {
   const { mutate } = useUpdateUserConsent();
   const { data } = useGetUserConsent(NHRID);
 
-  const {
-    handleSubmit,
-    watch,
-    setValue,
-
-    formState: { errors },
-  } = useForm<ConsentData>({
+  const { handleSubmit, watch, setValue } = useForm<ConsentData>({
     resolver: joiResolver(consentSchema),
     defaultValues: {
       treatmentConsent: data?.data.treatment_consent ?? false,
@@ -77,9 +71,9 @@ export default function StepFour({ NHRID }: StepFourProps) {
         newState ? [{ firstName: "", lastName: "" }] : []
       );
     } else if (key === "vaccineConsent") {
-      setShowVaccineOptions(!showVaccineOptions);
-
-      setValue("vaccineConsent", consentData.vaccineConsent || []);
+      const newState = !showVaccineOptions;
+      setShowVaccineOptions(newState);
+      setValue("vaccineConsent", newState ? [] : []);
     } else {
       setValue(key, !(consentData[key] as boolean));
     }
@@ -92,12 +86,10 @@ export default function StepFour({ NHRID }: StepFourProps) {
   ];
 
   const toggleVaccineOption = (optionKey: VaccineOptionKey) => {
-    setValue(
-      "vaccineConsent",
-      consentData.vaccineConsent.includes(optionKey)
-        ? consentData.vaccineConsent.filter((key) => key !== optionKey)
-        : [...consentData.vaccineConsent, optionKey]
-    );
+    const updatedConsent = consentData.vaccineConsent.includes(optionKey)
+      ? consentData.vaccineConsent.filter((key) => key !== optionKey)
+      : [...consentData.vaccineConsent, optionKey];
+    setValue("vaccineConsent", updatedConsent);
   };
 
   const handleConsentToAll = () => {
@@ -110,9 +102,24 @@ export default function StepFour({ NHRID }: StepFourProps) {
     setValue("vaccineConsent", newConsent);
   };
 
-  console.error("submission errors:", errors);
   const onSubmit = (data: ConsentData) => {
+    if (!showShareWithFamily) {
+      data.familySharing = [];
+    } else if (
+      showShareWithFamily &&
+      (!data.familySharing || data.familySharing.length === 0)
+    ) {
+      useAlert({
+        isToast: true,
+        icon: "error",
+        position: "top-start",
+        title: "Please provide family details to continue.",
+      });
+      return;
+    }
+
     const newData = transformToSnakeCase(data);
+
     mutate(
       { data: newData, NHRID },
       {
@@ -256,7 +263,7 @@ export default function StepFour({ NHRID }: StepFourProps) {
             </Box>
           </Box>
         ))}
-        <Box className="flex items-center justify-center mt-8 gap-4">
+        <Box className="flex items-center justify-center mt-8  pr-2 text-center gap-4">
           <Link
             href="/dashboard/home"
             fontWeight={500}

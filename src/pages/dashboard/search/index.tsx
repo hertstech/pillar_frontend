@@ -19,15 +19,12 @@ import Buttons from "../../../components/Button";
 import Styles from "./home.module.css";
 import { useSelector } from "react-redux";
 import { axiosInstance } from "../../../Utils";
-import Swal from "sweetalert2";
 import Page from "../../../components/PageWrapper";
 import { list } from "../../../data/searchData";
+import { useAlert } from "../../../Utils/useAlert";
 
 export default function Search() {
   const [searchOptions, setSearchOption] = useState(false);
-
-  const user = useSelector((state: any) => state.user.user);
-  console.log("user data:", user);
 
   const token = useSelector((state: any) => state.user.access_token);
 
@@ -58,12 +55,10 @@ export default function Search() {
   const id = open ? "simple-popover" : undefined;
 
   function formatNumberForView(number: string) {
-    // Add a dash after every 4 characters
     return number.replace(/(\d{4})(?=\d)/g, "$1-");
   }
 
   function parseNumberForApi(number: any) {
-    // Remove dashes before sending to the API
     return number.replace(/-/g, "");
   }
 
@@ -88,7 +83,6 @@ export default function Search() {
       return;
     }
 
-    // Remove dashes before sending to the API
     const apiData = parseNumberForApi(numberValue);
 
     try {
@@ -101,11 +95,11 @@ export default function Search() {
         setIsLoading(false);
       }
     } catch (error: any) {
-      Swal.fire({
+      useAlert({
         icon: "info",
         title: "Not Found",
         text: `Incorrect NHR ID, please try again`,
-        confirmButtonColor: "#2E90FA",
+        isToast: true,
       });
       setIsLoading(false);
     }
@@ -156,19 +150,16 @@ export default function Search() {
         setIsLoading(false);
       }
     } catch (error: any) {
-      Swal.fire({
+      useAlert({
         icon: "info",
         title: "Not Found",
         text: `Incorrect User data, please try again`,
-        confirmButtonColor: "#2E90FA",
       });
       setIsLoading(false);
     }
   };
 
-  // Assuming dateObj is of type Dayjs | null
   const handleDateChange = (dateObj: Dayjs | null) => {
-    // Convert Dayjs object to string or use an empty string if null
     const dateString = dateObj ? dateObj.format() : "";
     setDateOfBirth(dateString);
   };
@@ -202,12 +193,7 @@ export default function Search() {
             }}
           >
             Search client’s Health Record Here
-            {/* Welcome back, {user?.title}{" "}
-            {user?.lastName} */}
           </Typography>
-          {/* <span style={{ color: "#667185" }} className="capitalize">
-            Search client’s health record here
-          </span> */}
         </div>
 
         <Button

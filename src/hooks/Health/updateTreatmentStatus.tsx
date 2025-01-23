@@ -71,7 +71,6 @@ export const useHealthRecord = (
     setValue,
   ]);
 
-  console.log("initial status;", treatmentStatus);
 
   const updateRecord = async (data: FormValues, reason: string) => {
     try {

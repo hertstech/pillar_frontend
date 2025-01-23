@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -18,46 +18,80 @@ import StatesData from "../../../../states.json";
 import PhoneField from "../../../components/PhoneInput";
 import moment from "moment";
 import { relations, titles } from "../serviceUsers/shared";
-// import { countries } from "../../../components/_mock/_countries";
+import { GoPlusCircle } from "react-icons/go";
+import { useForm } from "react-hook-form";
+import { joiResolver } from "@hookform/resolvers/joi";
+import { stepOneSchema } from "./schema/StepOne";
+import Buttons from "../../../components/Button";
+import { useGetHCPInfo } from "../../../api/hcp";
 
 export default function StepOne({
   formData,
+  handleNext,
   handleChange: superHandleChange,
 }: any) {
   const [show, setShow] = useState(false);
 
+  const { data } = useGetHCPInfo();
+
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: joiResolver(stepOneSchema),
+    defaultValues: formData,
+  });
+
   const handleChange = (
-    event: React.ChangeEvent<{ name?: any; value: any }>
+    event: React.ChangeEvent<{ name?: string; value: any }>
   ) => {
     const { name, value } = event.target;
     superHandleChange({ ...formData, [name || ""]: value });
+    setValue(name || "", value, { shouldValidate: true });
   };
 
-  const handleDateChange = (newValue: any, name: string) => {
-    superHandleChange({ ...formData, [name]: newValue.format() });
+  const handleDateChange = (newValue: any) => {
+    setValue("dateOfBirth", newValue ? newValue.format("YYYY-MM-DD") : "", {
+      shouldValidate: true,
+    });
+    superHandleChange({
+      ...formData,
+      dateOfBirth: newValue ? newValue.format("YYYY-MM-DD") : "",
+    });
   };
 
   const handlePhoneChange = (value: any, identifier: any) => {
-    switch (identifier) {
-      case "phoneNumber":
-        superHandleChange({ ...formData, phoneNumber: value });
-        break;
-      case "parentOneNumber":
-        superHandleChange({ ...formData, parentOneNumber: value });
-        break;
-      case "parentTwoNumber":
-        superHandleChange({ ...formData, parentTwoNumber: value });
-        break;
-      case "nokPhoneNumber":
-        superHandleChange({ ...formData, nokPhoneNumber: value });
-        break;
-      default:
-        break;
-    }
+    setValue(identifier, value, { shouldValidate: true });
+    superHandleChange({ ...formData, [identifier]: value });
   };
 
+  const onSubmit = (data: any) => {
+    superHandleChange(data);
+    handleNext();
+  };
+
+  useEffect(() => {
+    if (data?.data) {
+      const hcpData = data.data;
+      setValue("facilityName", hcpData?.name || "");
+      setValue("facilityType", hcpData?.ownership || "");
+      setValue("facilityAddress", hcpData?.address || "");
+      setValue("facilityContact", hcpData?.facility_phone_numbers || "");
+
+      if (hcpData?.management?.length > 0) {
+        const manager = hcpData.management[0];
+        setValue(
+          "registeredDoctor",
+          `${manager.title} ${manager.firstName} ${manager.lastName}`
+        );
+      }
+    }
+  }, [data, setValue]);
+
   return (
-    <>
+    <form onSubmit={handleSubmit(onSubmit)}>
       {/* PERSONAL INFORMATION */}
       <Box
         sx={{
@@ -71,11 +105,14 @@ export default function StepOne({
           <label htmlFor="title" style={{ marginTop: 9 }}>
             Title
             <TextField
+              {...register("title")}
               select
+              error={!!errors.title}
+              value={formData.title}
               sx={{ marginTop: "5px", width: "110px" }}
               fullWidth
               name="title"
-              value={formData.title}
+              placeholder="Mr"
               onChange={handleChange}
             >
               {titles.map((item, index) => (
@@ -84,14 +121,21 @@ export default function StepOne({
                 </MenuItem>
               ))}
             </TextField>
+            {!!errors.title && (
+              <p className="text-err text-xs !font-semibold">
+                Title is required.
+              </p>
+            )}
           </label>
 
           <InputField
             type="text"
             label="First Name"
             name="firstName"
-            value={formData.firstName}
+            placeholder="Pascal"
             onChange={handleChange}
+            register={register}
+            errors={errors}
           />
         </div>
 
@@ -99,39 +143,51 @@ export default function StepOne({
           type="text"
           label="Middle Name"
           name="middleName"
-          value={formData.middleName}
           onChange={handleChange}
+          placeholder="Nike"
+          register={register}
+          errors={errors}
         />
 
         <InputField
           type="text"
           label="Last Name"
           name="lastName"
-          value={formData.lastName}
+          placeholder="Wike"
           onChange={handleChange}
+          register={register}
+          errors={errors}
         />
 
         <InputField
           type="email"
           label="Email Address"
           name="email"
-          value={formData.email}
+          placeholder="mememe@allmail.com"
           onChange={handleChange}
+          register={register}
+          errors={errors}
         />
 
         <label htmlFor="gender">
           Gender
           <TextField
             select
+            {...register("gender")}
+            error={!!errors.gender}
             sx={{ marginTop: "5px" }}
             fullWidth
             name="gender"
-            value={formData.gender}
             onChange={handleChange}
           >
             <MenuItem value="male">Male</MenuItem>
             <MenuItem value="female">Female</MenuItem>
           </TextField>
+          {!!errors?.gender && (
+            <p className="text-err text-xs !font-semibold">
+              {"This field is required"}
+            </p>
+          )}
         </label>
 
         <label htmlFor="dateOfBirth">
@@ -149,34 +205,68 @@ export default function StepOne({
                     readOnly: true,
                   },
                 }}
-                value={dayjs(formData.dateOfBirth)}
-                onChange={(newValue) =>
-                  handleDateChange(newValue, "dateOfBirth")
+                value={
+                  formData.dateOfBirth ? dayjs(formData.dateOfBirth) : null
                 }
+                onChange={(newValue) => {
+                  handleDateChange(newValue);
+                }}
               />
             </DemoContainer>
           </LocalizationProvider>
+          {!!errors?.dateOfBirth && (
+            <p className="text-err text-xs !font-semibold">
+              {/* @ts-ignore */}
+              {errors.dateOfBirth?.message ||
+                "Please enter your Date of Birth."}
+            </p>
+          )}
+        </label>
+
+        <label htmlFor="religion" className="hidden">
+          Religion
+          <TextField
+            select
+            {...register("religion")}
+            error={!!errors.religion}
+            sx={{ marginTop: "5px" }}
+            fullWidth
+            name="religion"
+            onChange={handleChange}
+          >
+            <MenuItem value="christian">Christian</MenuItem>
+            <MenuItem value="muslim">Muslim</MenuItem>
+            <MenuItem value="traditional">Traditional</MenuItem>
+            <MenuItem value="others">Others</MenuItem>
+          </TextField>
         </label>
 
         <label htmlFor="religion">
           Religion
           <TextField
             select
+            {...register("religion")}
+            error={!!errors.religion}
             sx={{ marginTop: "5px" }}
             fullWidth
             name="religion"
-            value={formData.religion}
             onChange={handleChange}
           >
-            <MenuItem value="Christian">Christian</MenuItem>
-            <MenuItem value="Muslim">Muslim</MenuItem>
-            <MenuItem value="Traditional">Traditional</MenuItem>
-            <MenuItem value="Others">Others</MenuItem>
+            <MenuItem value="christian">Christian</MenuItem>
+            <MenuItem value="muslim">Muslim</MenuItem>
+            <MenuItem value="traditional">Traditional</MenuItem>
+            <MenuItem value="others">Others</MenuItem>
           </TextField>
+          {!!errors?.religion && (
+            <p className="text-err text-xs !font-semibold">
+              {"This field is required"}
+            </p>
+          )}
         </label>
 
         <PhoneField
-          name="PhoneNumber"
+          {...register("phoneNumber")}
+          name="phoneNumber"
           value={formData.phoneNumber}
           onChange={(value: any) => handlePhoneChange(value, "phoneNumber")}
         />
@@ -184,6 +274,8 @@ export default function StepOne({
         <label htmlFor="height">
           Height
           <OutlinedInput
+            type="number"
+            {...register("height")}
             sx={{ marginTop: "5px" }}
             fullWidth
             name="height"
@@ -196,11 +288,18 @@ export default function StepOne({
             }}
             onChange={handleChange}
           />
+          {!!errors?.religion && (
+            <p className="text-err text-xs !font-semibold">
+              {"This field is required"}
+            </p>
+          )}
         </label>
 
         <label>
           Weight
           <OutlinedInput
+            type="number"
+            {...register("weight")}
             sx={{ marginTop: "5px" }}
             fullWidth
             name="weight"
@@ -212,15 +311,22 @@ export default function StepOne({
             }}
             onChange={handleChange}
           />
+          {!!errors?.weight && (
+            <p className="text-err text-xs !font-semibold">
+              {"This field is required"}
+            </p>
+          )}
         </label>
 
         <label htmlFor="tribalMarks">
           Tribal Mark
           <TextField
             select
-            sx={{ marginTop: "5px" }}
+            {...register("tribalMarks")}
+            error={!!errors.tribalMarks}
             fullWidth
             name="tribalMarks"
+            sx={{ marginTop: "5px" }}
             value={formData.tribalMarks}
             onChange={handleChange}
           >
@@ -237,7 +343,8 @@ export default function StepOne({
           type="text"
           label="Address"
           name="address"
-          value={formData.address}
+          register={register}
+          errors={errors}
           onChange={handleChange}
         />
 
@@ -255,6 +362,8 @@ export default function StepOne({
               select
               sx={{ marginTop: "5px" }}
               fullWidth
+              {...register("state")}
+              error={!!errors.state}
               name="state"
               value={formData.state}
               onChange={handleChange}
@@ -271,6 +380,8 @@ export default function StepOne({
             L.G.A
             <TextField
               select
+              {...register("lga")}
+              error={!!errors.lga}
               sx={{ marginTop: "5px" }}
               fullWidth
               name="lga"
@@ -286,24 +397,6 @@ export default function StepOne({
               ))}
             </TextField>
           </label>
-
-          {/* <label htmlFor="state">
-            Country
-            <TextField
-              select
-              sx={{ marginTop: "5px" }}
-              fullWidth
-              name="country"
-              value={formData.country}
-              onChange={handleChange}
-            >
-              {countries.map((option: any) => (
-                <MenuItem key={option.code} value={option.label}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </TextField>
-          </label> */}
         </Box>
       </Box>
 
@@ -322,24 +415,16 @@ export default function StepOne({
               }}
               onClick={() => setShow(true)}
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                x="0px"
-                y="0px"
-                width="30"
-                height="30"
-                viewBox="0 0 32 32"
-              >
-                <path d="M 16 3 C 8.832031 3 3 8.832031 3 16 C 3 23.167969 8.832031 29 16 29 C 23.167969 29 29 23.167969 29 16 C 29 8.832031 23.167969 3 16 3 Z M 16 5 C 22.085938 5 27 9.914063 27 16 C 27 22.085938 22.085938 27 16 27 C 9.914063 27 5 22.085938 5 16 C 5 9.914063 9.914063 5 16 5 Z M 15 10 L 15 15 L 10 15 L 10 17 L 15 17 L 15 22 L 17 22 L 17 17 L 22 17 L 22 15 L 17 15 L 17 10 Z"></path>
-              </svg>
+              <GoPlusCircle />
             </button>
           </Stack>
           <InputField
             type="text"
             label="Legal Guardian 1"
             name="parentOne"
-            value={formData.parentOne}
             onChange={handleChange}
+            register={register}
+            errors={errors}
             placeholder="Please enter full name"
           />
           <Box
@@ -354,13 +439,15 @@ export default function StepOne({
               type="number"
               label="NHR ID"
               name="parentOneNHR_ID"
-              value={formData.parentOneNHR_ID}
               onChange={handleChange}
+              register={register}
+              errors={errors}
               placeholder="Enter NHR ID number"
             />
 
             <div style={{ marginTop: 8 }}>
               <PhoneField
+                {...register("parentOneNumber")}
                 name="parentOneNumber"
                 value={formData.parentOneNumber}
                 onChange={(value: any) =>
@@ -374,6 +461,7 @@ export default function StepOne({
                 Relationship
                 <TextField
                   select
+                  {...register("parentOneRelationship")}
                   sx={{ marginTop: "5px" }}
                   fullWidth
                   name="parentOneRelationship"
@@ -398,6 +486,8 @@ export default function StepOne({
                   name="parentTwo"
                   value={formData.parentTwo}
                   onChange={handleChange}
+                  register={register}
+                  errors={errors}
                   placeholder="Please enter full name"
                 />
                 <Box
@@ -409,15 +499,18 @@ export default function StepOne({
                   }}
                 >
                   <InputField
-                    type="text"
+                    type="number"
                     label="NHR ID"
                     name="parentTwoNHR_ID"
                     value={formData.parentTwoNHR_ID}
                     onChange={handleChange}
+                    register={register}
+                    errors={errors}
                   />
 
                   <div style={{ marginTop: 8 }}>
                     <PhoneField
+                      {...register("parentTwoNumber")}
                       name="parentTwoNumber"
                       value={formData.parentTwoNumber}
                       onChange={(value: any) =>
@@ -431,6 +524,7 @@ export default function StepOne({
                       Relationship
                       <TextField
                         select
+                        {...register("parentTwoRelationship")}
                         sx={{ marginTop: "5px" }}
                         fullWidth
                         name="parentTwoRelationship"
@@ -458,8 +552,9 @@ export default function StepOne({
             type="text"
             label="Full Name"
             name="nokFullName"
-            value={formData.nokFullName}
             onChange={handleChange}
+            register={register}
+            errors={errors}
             placeholder="Please enter full name"
           />
 
@@ -475,13 +570,15 @@ export default function StepOne({
               type="number"
               label="NHR ID"
               name="nokNHR_ID"
-              value={formData.nokNHR_ID}
               onChange={handleChange}
+              register={register}
+              errors={errors}
               placeholder="Enter NHR ID number"
             />
 
             <div style={{ marginTop: 8 }}>
               <PhoneField
+                {...register("nokPhoneNumber")}
                 name="nokPhoneNumber"
                 value={formData.nokPhoneNumber}
                 onChange={(value: any) =>
@@ -495,6 +592,7 @@ export default function StepOne({
                 Relationship
                 <TextField
                   select
+                  {...register("nokRelationship")}
                   sx={{ marginTop: "5px" }}
                   fullWidth
                   name="nokRelationship"
@@ -514,39 +612,138 @@ export default function StepOne({
       )}
 
       {/* MEDICAL INFORMATION */}
+
       <Box>
-        <Typography variant="h6">Medical Information</Typography>
+        <Typography variant="h6">Care Team Information</Typography>
+
+        <InputField
+          type="text"
+          isReadOnly
+          label="Facility Name"
+          name="facilityName"
+          onChange={handleChange}
+          register={register}
+          errors={errors}
+        />
+
+        <div style={{ marginTop: 8 }}>
+          <label htmlFor="facilityType">
+            Facility Type
+            <TextField
+              select
+              {...register("facilityType")}
+              sx={{ marginTop: "5px" }}
+              fullWidth
+              name="facilityType"
+              value={data?.data?.ownership || ""}
+              onChange={handleChange}
+              inputProps={{ readOnly: true }}
+              className="!capitalize"
+            >
+              <MenuItem value={data?.data?.ownership}>
+                {data?.data?.ownership}
+              </MenuItem>
+            </TextField>
+          </label>
+        </div>
+
+        <InputField
+          type="text"
+          isReadOnly
+          label="Facility Contact"
+          name="facilityContact"
+          placeholder="Enter Facility's phone number"
+          onChange={handleChange}
+          register={register}
+          errors={errors}
+        />
+
+        <InputField
+          type="text"
+          isReadOnly
+          label="Facility Address"
+          name="facilityAddress"
+          placeholder="Enter Facility's full address"
+          onChange={handleChange}
+          register={register}
+          errors={errors}
+        />
 
         <InputField
           type="text"
           label="Nominated Pharmacy"
           name="nominatedPharmarcy"
-          value={formData.nominatedPharmarcy}
           onChange={handleChange}
+          register={register}
+          errors={errors}
         />
-        <InputField
-          type="text"
-          label="Registered Doctor"
-          name="registeredDoctor"
-          value={formData.registeredDoctor}
-          onChange={handleChange}
-        />
+
         <InputField
           type="text"
           label="Registered Hospital"
           name="registeredHospital"
-          value={formData.registeredHospital}
           onChange={handleChange}
+          register={register}
+          errors={errors}
+        />
+
+        <InputField
+          type="text"
+          label="Registered Doctor"
+          name="registeredDoctor"
+          placeholder="Enter Doctor's full name"
+          onChange={handleChange}
+          className="capitalize"
+          register={register}
+          errors={errors}
+        />
+
+        <InputField
+          type="number"
+          label="Doctor's License"
+          placeholder="Enter Doctor's license number"
+          name="doctorsLicense"
+          onChange={handleChange}
+          register={register}
+          errors={errors}
+        />
+
+        <InputField
+          type="number"
+          label="Doctor's Contact"
+          name="doctorsContact"
+          placeholder="Enter Doctor's phone number"
+          onChange={handleChange}
+          register={register}
+          errors={errors}
         />
 
         <InputField
           type="text"
           label="HMO Plan"
           name="HMOPlan"
-          value={formData.HMOPlan}
+          placeholder="Enter current HMO plan"
           onChange={handleChange}
+          register={register}
+          errors={errors}
+        />
+
+        <InputField
+          type="number"
+          label="HMO Number"
+          name="HMONumber"
+          placeholder="Enter HMO number"
+          onChange={handleChange}
+          register={register}
+          errors={errors}
         />
       </Box>
-    </>
+
+      <Buttons
+        className="!flex justify-self-end !absolute bottom-6 right-24 2xl:right-36 !w-1/3"
+        type="submit"
+        title={"Next"}
+      />
+    </form>
   );
 }

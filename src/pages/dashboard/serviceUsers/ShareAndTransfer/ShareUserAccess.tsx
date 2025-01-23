@@ -15,9 +15,9 @@ import InputField from "../../../../components/InputField";
 import { joiResolver } from "@hookform/resolvers/joi";
 import Joi from "joi";
 import {
+  TimePicker,
   DatePicker,
   LocalizationProvider,
-  TimePicker,
 } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Dayjs } from "dayjs";
@@ -84,6 +84,7 @@ const ShareUserAccessForm: React.FC<ActivityPinModalProps> = ({
   const [endTime, setEndTime] = useState<Dayjs | null>(null);
   const [toggle, setToggle] = useState(true);
   const [isValidUID, setIsValidUID] = useState<boolean>(false);
+  const [isSending, setIsSending] = useState(false);
 
   const { mutate } = useTransferRecord();
 
@@ -137,9 +138,8 @@ const ShareUserAccessForm: React.FC<ActivityPinModalProps> = ({
     validateClinicUID(uid);
   };
 
-  console.error("Form errors:", errors);
-
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: Record<string, any>) => {
+    setIsSending(true);
     const mergedStartDateTime = startDate
       ?.set("hour", startTime?.hour() || 0)
       .set("minute", startTime?.minute() || 0);
@@ -161,6 +161,8 @@ const ShareUserAccessForm: React.FC<ActivityPinModalProps> = ({
       },
       {
         onSuccess: () => {
+          reset();
+          setIsSending(false);
           setOpen(false);
           useAlert({
             timer: 4000,
@@ -169,9 +171,10 @@ const ShareUserAccessForm: React.FC<ActivityPinModalProps> = ({
             title: "Record access shared successfully",
             position: "top-start",
           });
-          reset();
         },
         onError: () => {
+          reset();
+          setIsSending(false);
           setOpen(false);
           useAlert({
             timer: 4000,
@@ -180,11 +183,9 @@ const ShareUserAccessForm: React.FC<ActivityPinModalProps> = ({
             position: "top-start",
             title: "Unauthorized access sharing",
           });
-          reset();
         },
       }
     );
-    console.log("Form Submission Data:", data);
   };
 
   useEffect(() => {
@@ -339,7 +340,7 @@ const ShareUserAccessForm: React.FC<ActivityPinModalProps> = ({
                 buttonName="Cancel"
               />
               <PrimaryButton
-                disabled={isLoading}
+                disabled={isLoading || isSending}
                 type="submit"
                 width="100%"
                 buttonName="Grant access"

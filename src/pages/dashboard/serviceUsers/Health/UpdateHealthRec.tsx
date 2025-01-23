@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import DrawerComp from "../../../../components/Drawer";
-import { EditIcon } from "../../../../assets/Icons";
+import { EditIcon } from "../../../../../public/assets/Icons";
 import { Box, Button } from "@mui/material";
 import { MoveBackComp } from "../../../../components/MoveBack";
 import { CustomSelect } from "../../../../components/Select";
@@ -110,7 +110,7 @@ export const UpdateHealthRec: React.FC<IProps> = ({
     }
 
     try {
-      await updateRecord(data, "I just wanna do it now");
+      await updateRecord(data, "I just wanna do it now"); // temporal reason for update
     } catch (error) {
       handleError(error);
     } finally {

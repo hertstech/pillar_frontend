@@ -14,7 +14,7 @@ import { FaWpforms } from "react-icons/fa";
 import { MdOutlineSettings } from "react-icons/md";
 import { useState } from "react";
 import { axiosInstance } from "../../Utils";
-import { AppLogo, InfoIcon } from "../../assets/Icons";
+import { AppLogo, InfoIcon } from "../../../public/assets/Icons";
 
 // HOME, dashboard, Monitoring, Form, Files, Settings, Support
 

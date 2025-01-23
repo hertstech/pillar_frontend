@@ -21,8 +21,8 @@ import {
 } from "react-redux";
 import { axiosInstance } from "../../../Utils";
 import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
 import { NeedHelp } from "../../../components/CalendarField";
+import { useAlert } from "../../../Utils/useAlert";
 
 export default function CreateUser() {
   const [activeStep, setActiveStep] = useState(0);
@@ -43,7 +43,7 @@ export default function CreateUser() {
     gender: "",
     dateOfBirth: "",
     religion: "",
-    PhoneNumber: "",
+    phoneNumber: "",
     height: "",
     weight: "",
     address: "",
@@ -88,12 +88,28 @@ export default function CreateUser() {
 
     setResult(formData.NIN);
   };
+  const handleNext = () => {
+    if (activeStep < steps.length - 1) {
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    }
+  };
+  const handleBack = () => {
+    if (activeStep > 0) {
+      setActiveStep(activeStep - 1);
+    }
+  };
 
   const steps = [
     {
       label: "Profile",
       description: "Basic profile information",
-      content: <StepOne formData={formData} handleChange={handleChange} />,
+      content: (
+        <StepOne
+          formData={formData}
+          handleChange={handleChange}
+          handleNext={handleNext}
+        />
+      ),
     },
     {
       label: "Verify Identity",
@@ -116,15 +132,15 @@ export default function CreateUser() {
       label: "Consent information",
       description: "Choose medical and data sharing choices",
       // @ts-ignore
-      content: <StepFour NHRID={data?.NHRID as number} />,
+      content: (
+        <StepFour
+          NHRID={
+            296769246748 //data?.NHRID as number
+          }
+        />
+      ),
     },
   ];
-
-  const handleBack = () => {
-    if (activeStep > 0) {
-      setActiveStep(activeStep - 1);
-    }
-  };
 
   const verify = async () => {
     setIsLoading(true);
@@ -152,12 +168,6 @@ export default function CreateUser() {
     }
   };
 
-  const handleNext = () => {
-    if (activeStep < steps.length - 1) {
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    }
-  };
-
   const createUser = async () => {
     setIsLoading(true);
     try {
@@ -177,11 +187,11 @@ export default function CreateUser() {
 
       handleNext();
     } catch (error: any) {
-      Swal.fire({
+      useAlert({
         icon: "error",
+        isToast: true,
         title: "Error",
-        text: `${error.response.data.detail}`,
-        confirmButtonColor: "#2E90FA",
+        text: `${error.response.data.detail || error.response.data.message}`,
       });
 
       setIsLoading(false);
@@ -341,7 +351,7 @@ export default function CreateUser() {
             </Card>
           </Grid>
 
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12} md={8} className="!relative">
             <Card
               sx={{
                 p: 3,
@@ -389,6 +399,7 @@ export default function CreateUser() {
                     fullWidth
                     size="large"
                     sx={{
+                      width: "50%",
                       color: "#1570EF",
                       border: "1px solid #D1E9FF",
                       outline: "none",
@@ -406,9 +417,9 @@ export default function CreateUser() {
                   </Button>
                 )}
 
-                {activeStep <= 0 && (
+                {/* {activeStep <= 0 && (
                   <Buttons onClick={handleNext} title={"Next"} />
-                )}
+                )} */}
                 {activeStep === 2 && (
                   <Buttons onClick={handleNext} title={"Next"} />
                 )}

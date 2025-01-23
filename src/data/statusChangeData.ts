@@ -28,18 +28,17 @@ export const reasons = {
 
 export const accessData = {
   specialty: [
-    { id: "0", name: "Driver", value: "dr" },
+    { id: "0", name: "Medical Emergency", value: "medical_emergency" },
     {
       id: "1",
-      name: "Lorker",
-      value: "lk",
+      name: "Incapacitation",
+      value: "incapacitation",
     },
-    { id: "2", name: "Painter", value: "medical_findings" },
+    { id: "2", name: "Legal Authority", value: "legal_authority" },
     {
       id: "3",
-      name: "Administrative ",
-      value: "administrative_factors",
+      name: "Public Interest",
+      value: "public_interest",
     },
-    { id: "4", name: "Emergency", value: "emergency" },
   ],
 };

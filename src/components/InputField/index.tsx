@@ -18,12 +18,15 @@ interface TextProps {
   disabled?: boolean;
   checking?: boolean;
   isReadOnly?: boolean;
+  maxLength?: number;
+  onKeyDown?: (e: React.KeyboardEvent) => void;
   pattern?: string;
   onChange?: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
   onWheel?: (e: React.WheelEvent) => void;
   textarea?: boolean;
+  className?: string;
 }
 
 export default function InputField({
@@ -40,6 +43,7 @@ export default function InputField({
   onWheel,
   textarea = false,
   errors,
+  className,
   ...rest
 }: TextProps) {
   const [showPassword, setShowPassword] = useState(false);
@@ -89,7 +93,8 @@ export default function InputField({
                 disabled &&
                   "text-neutral-400 border-neutral-200 bg-[#F0F2F5] cursor-not-allowed",
                 errors?.[name] && "border-red-500 !border-[1px]",
-                "!font-[400] !text-[1rem] placeholder:text-neu-400"
+                "!font-[400] !text-[1rem] placeholder:text-neu-400",
+                className
               )}
               name={name}
               value={value}
@@ -101,6 +106,7 @@ export default function InputField({
               onWheel={onWheel}
               {...(register && register(name, { required }))}
               readOnly={rest.isReadOnly}
+              {...rest}
             />
             {rest.checking && (
               <span className="absolute top-5 right-4">

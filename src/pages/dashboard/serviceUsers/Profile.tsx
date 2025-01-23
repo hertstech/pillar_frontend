@@ -3,7 +3,7 @@ import moment from "moment";
 import { TextLabel } from "../../../components/InputField";
 import { useNavigate, useParams } from "react-router-dom";
 import { ProfileSummary } from "../../../components/ServiceUser/ProfileSummary";
-import { EditIcon } from "../../../assets/Icons";
+import { EditIcon } from "../../../../public/assets/Icons";
 import { ConsentStatus } from "../../../components/ServiceUser/ConsentStatus";
 import classNames from "classnames";
 
@@ -55,7 +55,10 @@ export default function Profile({ client, isLoading }: PropType) {
   const writeAccess = client.read_access;
 
   const navToUpdateProfile = () => {
-    navigate(`/dashboard/user/${id}/update`);
+    navigate(`/dashboard/user/${id}/update/0`);
+  };
+  const navToUpdateConsent = () => {
+    navigate(`/dashboard/user/${id}/update/1`);
   };
 
   const formattedValue = (value: string) => {
@@ -87,10 +90,10 @@ export default function Profile({ client, isLoading }: PropType) {
               className={classNames(
                 `!rounded-full !font-semibold !bg-[#fff] px-2 !gap-2
              !capitalize !outline !text-[#099250] !text-sm !absolute !top-4 !right-4`,
-                writeAccess && "!text-neu-400"
+                !writeAccess && "!text-neu-400"
               )}
               onClick={navToUpdateProfile}
-              disabled={writeAccess === true}
+              disabled={!writeAccess}
             >
               Edit
               <EditIcon />
@@ -212,7 +215,7 @@ export default function Profile({ client, isLoading }: PropType) {
         </Stack>
         <ConsentStatus
           NHRID={newId}
-          goTo={navToUpdateProfile}
+          goTo={navToUpdateConsent}
           writeAccess={writeAccess}
         />
       </Box>

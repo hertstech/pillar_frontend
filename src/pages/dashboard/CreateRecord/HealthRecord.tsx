@@ -26,12 +26,12 @@ import {
 } from "../serviceUsers/shared";
 import Styles from "../serviceUsers/styles.module.css";
 import moment from "moment";
-import Swal from "sweetalert2";
 import { axiosInstance } from "../../../Utils";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRecordStatus } from "../../../hooks/Health/healthRecordStatus";
 import { DiagnosisType } from "../../../types/serviceUserTypes/health";
 import { useFilterEmptyFields } from "../../../Utils/filterStrings";
+import { useAlert } from "../../../Utils/useAlert";
 
 interface TextLabelProps {
   text: any;
@@ -135,10 +135,9 @@ export default function HealthRecord() {
     if (isCategoriesAndTypeEmpty) {
       setIsLoading(false);
       setIsOpen(false);
-      return Swal.fire({
+      return useAlert({
         icon: "info",
-        text: `You cannot submit an empty form!`,
-        confirmButtonColor: "#2E90FA",
+        title: `You cannot submit an empty form!`,
       });
     }
 
@@ -150,30 +149,27 @@ export default function HealthRecord() {
 
       setIsOpen(false);
       setIsLoading(false);
-      Swal.fire({
+      useAlert({
         icon: "success",
         title: `Successful`,
         text: `${res.data.message}`,
-        confirmButtonColor: "#2E90FA",
       });
       navigate(`/dashboard/user/${id}/2`);
     } catch (error: any) {
       setIsLoading(false);
       setIsOpen(!isOpen);
 
-      if (error.response.status === 400) {
-        Swal.fire({
+      if (error.response.status === 400 || 500) {
+        useAlert({
           icon: "error",
           title: "Not recorded",
-          text: `${error.response.data.detail}`,
-          confirmButtonColor: "#2E90FA",
+          text: `Health Record not recorded`,
         });
       } else {
-        Swal.fire({
+        useAlert({
           icon: "error",
           title: "Error",
-          text: `${error.response.data.message}`,
-          confirmButtonColor: "#2E90FA",
+          text: `Something went wrong, pls try again later`,
         });
       }
     }
@@ -181,8 +177,6 @@ export default function HealthRecord() {
 
   const { status, primaryDiagnosisStatus, secondaryDiagnosisStatus } =
     useRecordStatus(id as string);
-
-  console.log("the information status for pri diag:", secondaryDiagnosisStatus);
 
   return (
     <Box>

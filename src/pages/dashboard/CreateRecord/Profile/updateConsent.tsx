@@ -14,7 +14,7 @@ import { joiResolver } from "@hookform/resolvers/joi";
 import { allConsentData } from "../../../../data/consentData";
 import InputField from "../../../../components/InputField";
 import { consentSchema } from "../../../../schemas/createUserSchema";
-import { transformToSnakeCase } from "../../../../Utils/caseTransformtter";
+import { transformToSnakeCase } from "../../../../Utils/caseTransformer";
 import { ConsentData } from "../../../../types/serviceUserTypes/consent";
 import {
   useGetUserConsent,
@@ -84,7 +84,7 @@ export const UpdateConsent = forwardRef(({ NHRID }: StepFourProps) => {
     watch,
     setValue,
     reset,
-    formState: { errors },
+    // formState: { errors },
   } = useForm<ConsentData>({
     resolver: joiResolver(consentSchema),
     defaultValues: {
@@ -190,8 +190,10 @@ export const UpdateConsent = forwardRef(({ NHRID }: StepFourProps) => {
     return () => subscription.unsubscribe();
   }, [watch]);
 
-  console.log("Error on updated:", errors);
   const onSubmit = (data: ConsentData) => {
+    if (!showShareWithFamily) {
+      data.familySharing = [];
+    }
     if (!isDirty) {
       useAlert({
         icon: "warning",

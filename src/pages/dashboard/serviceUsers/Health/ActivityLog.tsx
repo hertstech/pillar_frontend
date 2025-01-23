@@ -3,6 +3,7 @@ import { LuDot } from "react-icons/lu";
 import { useGetHealthHistoryLog } from "../../../../api/Activities/index";
 import { useFormatDate } from "../../../../Utils/dateToText";
 import classNames from "classnames";
+import { PropagateLoader } from "react-spinners";
 
 interface IProps {
   id: string | undefined;
@@ -68,7 +69,10 @@ export const RecordActivityLog = ({ id }: IProps) => {
           />
         ))
       ) : isLoading ? (
-        <p className="text-center">Fetching History...</p>
+        <p className="text-center pb-5">
+          {" "}
+          <PropagateLoader size={10} />
+        </p>
       ) : (
         <p className="text-center">No activity recorded!</p>
       )}

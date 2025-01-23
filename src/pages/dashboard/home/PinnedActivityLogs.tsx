@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { EmptyPinnedIcon } from "../../../assets/Icons/emptyState";
+import { EmptyPinnedIcon } from "../../../../public/assets/Icons/emptyState";
 import { Link } from "react-router-dom";
 import { LogEntry } from "../serviceUsers/Health/ActivityLog";
 import { useEffect, useState } from "react";
@@ -12,7 +12,6 @@ export const PinnedActivityLogs = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [validLogTypes] = useRecoilState(selectedLogTypeState);
 
-  console.log(validLogTypes);
   const { data } = useGetPinnedLog();
 
   useEffect(() => {
