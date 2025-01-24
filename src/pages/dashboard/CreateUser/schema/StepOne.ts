@@ -52,7 +52,9 @@ export const stepOneSchema = Joi.object({
   passportNumber: Joi.string().allow("").optional(),
   facilityName: Joi.string().required(),
   facilityType: Joi.string().required(),
-  facilityContact: Joi.string().allow("").optional(),
+  facilityContact: Joi.alternatives()
+    .try(Joi.string().allow(""), Joi.array().items(Joi.string().allow("")))
+    .optional(),
   facilityAddress: Joi.string().required(),
   doctorsLicense: Joi.string().allow("").optional(),
   doctorsContact: Joi.string().allow("").optional(),

@@ -132,13 +132,7 @@ export default function CreateUser() {
       label: "Consent information",
       description: "Choose medical and data sharing choices",
       // @ts-ignore
-      content: (
-        <StepFour
-          NHRID={
-            296769246748 //data?.NHRID as number
-          }
-        />
-      ),
+      content: <StepFour NHRID={data?.NHRID as number} />,
     },
   ];
 
