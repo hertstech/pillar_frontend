@@ -333,6 +333,11 @@ export default function StepOne({
             <MenuItem value="Yes">Yes</MenuItem>
             <MenuItem value="No">No</MenuItem>
           </TextField>
+          {!!errors.tribalMarks && (
+            <p className="text-err text-xs !font-semibold">
+              tribalMarks field is required.
+            </p>
+          )}
         </label>
       </Box>
 
@@ -374,6 +379,11 @@ export default function StepOne({
                 </MenuItem>
               ))}
             </TextField>
+            {!!errors.state && (
+              <p className="text-err text-xs !font-semibold">
+                State is required.
+              </p>
+            )}
           </label>
 
           <label htmlFor="LGA">
@@ -396,6 +406,11 @@ export default function StepOne({
                 </MenuItem>
               ))}
             </TextField>
+            {!!errors.lga && (
+              <p className="text-err text-xs !font-semibold">
+                Local government is required.
+              </p>
+            )}
           </label>
         </Box>
       </Box>
