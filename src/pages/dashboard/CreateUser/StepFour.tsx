@@ -47,9 +47,7 @@ export default function StepFour({ NHRID }: StepFourProps) {
       providerSharing: data?.data.provide_sharing ?? false,
       mentalHealthRecordSharing:
         data?.data.mental_health_recording_sharing ?? false,
-      familySharing: data?.data.family_sharing ?? [
-        { firstName: null, lastName: null },
-      ],
+      familySharing: data?.data.family_sharing ?? [],
       geneticTestingConsent: data?.data.genetic_testing_consent ?? false,
       medicalRecordSharing: data?.data.medical_record_sharing ?? false,
       organDonation: data?.data.organ_donation ?? false,

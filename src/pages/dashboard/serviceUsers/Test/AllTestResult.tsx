@@ -42,11 +42,17 @@ export default function AllTestResult({ data = [], isLoading }: any) {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [openDeleteTest, setOpenDeleteTest] = useState<boolean>(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [docId, setDocId] = useState<string | null>(null);
 
   const { mutate } = useUpdateTestStatus();
 
-  const { download, error, isInProgress, percentage } = useDownloader();
+  const {  percentage, download,  error, isInProgress } =
+    useDownloader({
+      // mode: "no-cors",
+      // credentials: "include",
+      // headers: {
+      //   Authorization: `Bearer .eJw9kE1zgjAQhv9L73VCqM70aEXpMmQZNAGSS0dBS2LwY6QC-fWFHnraw77zvM_uy3GI6kNY6kRHIBx4qOEBl-28XMECzrciW0XvszE0HGhvwVx16WedKqJahd7tMIUb6wq6MVVoqdrBQjWbR0nFCEEii61XDiOo-d9P8OeeZj8F3dZVmJ2kH9kxZ9VUaKBjRrQsWLfMsG_GxWKcC-RCx6vIHj-XOjFrn7mSYiAHDNZT_3nyUqF0OB6Q8HOLedrjQAjjqo5zIJiLVgVVjW7pSwcdukqD7vToavZ5f6s-7Wmfp9MTGmnYXPIPizviY1C6mKcdo9AmPDNME4dGetKJOfJzL5s_L7LPPVtQHFS-IeqPAwMLwIv5so85OAjWXmJGN5P2cCGza3_7enVzlaBvugxFeh92YSEYWTX3Z7tt3DVpk02kL83byy8IM43H.V4tryAR0jEe6EeqInnxWBEIxUis`,
+      // },
+    });
 
   const handleChangePage = (_event: unknown, newPage: number) =>
     setPage(newPage);
@@ -88,8 +94,18 @@ export default function AllTestResult({ data = [], isLoading }: any) {
     if (!documentId) {
       console.error("Document ID is missing.");
       return;
+    } else {
+      const filename = `report_${documentId}.pdf`;
+      const downloadUrl = `https://www.pillartechnologybackend.com.ng/api/v1/order/${id}/report/${documentId}`;
+
+      download(downloadUrl, filename)
+        .then(() => {
+          console.log(`File downloaded successfully: ${filename}`);
+        })
+        .catch((err) => {
+          console.error(`Error downloading file: ${err}`);
+        });
     }
-    setDocId(documentId);
   };
 
   const handleStatusChange = (orderId: string | null) => {
@@ -184,23 +200,6 @@ export default function AllTestResult({ data = [], isLoading }: any) {
   console.log("how far:", percentage);
   console.log("is in progress", isInProgress);
 
-  useEffect(() => {
-    if (docId) {
-      const filename = "download";
-
-      if (docId !== null) {
-        download(
-          `https://www.pillartechnologybackend.com.ng/api/v1/order/${id}/report/${docId}`,
-          filename
-        );
-      } else {
-        console.error("Invalid file URL received from API.");
-      }
-    } else {
-      console.error("Error downloading file:");
-    }
-  }, [setDocId]);
-
   return (
     <Box>
       <DrawerComp
@@ -215,6 +214,17 @@ export default function AllTestResult({ data = [], isLoading }: any) {
         />
       </DrawerComp>
       <Box marginTop={2}>
+        {/* <div className="App">
+          <p>Download is in {isInProgress ? "in progress" : "stopped"}</p>
+
+          <button onClick={() => cancel()}>Cancel the download</button>
+          <p>Download size in bytes {size}</p>
+          <label htmlFor="file">Downloading progress:</label>
+          <progress id="file" value={percentage} max="100" />
+          <p>Elapsed time in seconds {elapsed}</p>
+          {error && <p>possible error {JSON.stringify(error)}</p>}
+        </div> */}
+
         <TableContainer
           sx={{ borderRadius: 2.5, background: "#FFF", position: "relative" }}
         >
