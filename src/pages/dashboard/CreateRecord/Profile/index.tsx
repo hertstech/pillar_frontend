@@ -68,9 +68,7 @@ export default function Profile() {
     facilityName: client?.facility?.name || "",
     facilityType: client?.facility?.facility_level || "",
     facilityOwnership: client?.ownership || "",
-    facilityContact: Array.isArray(client?.facility_phone_numbers)
-      ? client.facility_phone_numbers.join(", ")
-      : "",
+    facilityContact: client?.facility.facility_phone_numbers || "",
     facilityAddress: client?.facility?.address || "",
     registeredHospital: client?.registeredHospital || "",
     doctorsLicense: client?.doctorsLicense || "",
@@ -86,7 +84,6 @@ export default function Profile() {
     });
   };
 
-  console.log("facility number:", editForm.facilityContact);
   const [isLoad, setIsLoad] = React.useState(false);
 
   const updateUser = async (e: any) => {
@@ -547,11 +544,7 @@ export default function Profile() {
                 label="Facility Contact"
                 name="facilityContact"
                 placeholder="Enter Facility's phone number"
-                value={
-                  Array.isArray(editForm.facilityContact)
-                    ? editForm.facilityContact.join(", ")
-                    : editForm.facilityContact
-                }
+                value={editForm.facilityContact?.join(", ")}
               />
 
               <div style={{ marginTop: 8 }}>
