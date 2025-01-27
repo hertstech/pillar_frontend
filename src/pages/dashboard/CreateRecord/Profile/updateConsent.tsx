@@ -75,7 +75,7 @@ export const UpdateConsent = forwardRef(({ NHRID }: StepFourProps) => {
   const [showShareWithFamily, setShowShareWithFamily] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
 
-  const { mutate } = useUpdateUserConsent();
+  const { mutate, isPending } = useUpdateUserConsent();
 
   const { data } = useGetUserConsent(NHRID);
 
@@ -361,6 +361,7 @@ export const UpdateConsent = forwardRef(({ NHRID }: StepFourProps) => {
           <Button
             type="submit"
             variant="contained"
+            disabled={isPending}
             sx={{ width: "100%", color: "white", marginTop: 4 }}
           >
             Update consent
