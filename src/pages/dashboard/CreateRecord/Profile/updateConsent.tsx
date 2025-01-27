@@ -84,7 +84,7 @@ export const UpdateConsent = forwardRef(({ NHRID }: StepFourProps) => {
     watch,
     setValue,
     reset,
-    // formState: { errors },
+    formState: { errors },
   } = useForm<ConsentData>({
     resolver: joiResolver(consentSchema),
     defaultValues: {
@@ -93,7 +93,7 @@ export const UpdateConsent = forwardRef(({ NHRID }: StepFourProps) => {
       vaccineConsent: [],
       providerSharing: false,
       mentalHealthRecordSharing: false,
-      familySharing: [{ firstName: null, lastName: null }],
+
       geneticTestingConsent: false,
       medicalRecordSharing: false,
       organDonation: false,
@@ -123,10 +123,11 @@ export const UpdateConsent = forwardRef(({ NHRID }: StepFourProps) => {
         providerSharing: data.data.provide_sharing ?? false,
         mentalHealthRecordSharing:
           data.data.mental_health_record_sharing ?? false,
-        familySharing: data.data.family_sharing?.map((member: any) => ({
-          firstName: member.first_name || null,
-          lastName: member.last_name || null,
-        })) || [{ firstName: null, lastName: null }],
+        familySharing:
+          data.data.family_sharing?.map((member: any) => ({
+            firstName: member.first_name || null,
+            lastName: member.last_name || null,
+          })) || [],
         vaccineConsent: data.data.vaccine_consent || [],
         geneticTestingConsent: data.data.genetic_testing_consent ?? false,
         medicalRecordSharing: data.data.medical_record_sharing ?? false,
@@ -140,7 +141,7 @@ export const UpdateConsent = forwardRef(({ NHRID }: StepFourProps) => {
   }, [data, reset]);
 
   useEffect(() => {
-    console.log("Consent data updated:", watch());
+    watch();
   }, [watch()]);
 
   const consentData = watch();
@@ -149,10 +150,12 @@ export const UpdateConsent = forwardRef(({ NHRID }: StepFourProps) => {
     if (key === "familySharing") {
       const newState = !showShareWithFamily;
       setShowShareWithFamily(newState);
-      setValue(
-        "familySharing",
-        newState ? [{ firstName: "", lastName: "" }] : []
-      );
+      if (showShareWithFamily) {
+        setValue(
+          "familySharing",
+          newState ? [{ firstName: "", lastName: "" }] : []
+        );
+      }
     } else if (key === "vaccineConsent") {
       const newState = !showVaccineOptions;
       setShowVaccineOptions(newState);
@@ -190,6 +193,7 @@ export const UpdateConsent = forwardRef(({ NHRID }: StepFourProps) => {
     return () => subscription.unsubscribe();
   }, [watch]);
 
+  console.log(errors);
   const onSubmit = (data: ConsentData) => {
     if (!showShareWithFamily) {
       data.familySharing = [];

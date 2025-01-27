@@ -25,25 +25,29 @@ import { UpdateConsent } from "./Profile/updateConsent";
 export default function UpdateRecord() {
   const { id } = useParams();
 
+  const { tabId } = useParams();
+
   const newId = parseInt(id as string);
+
+  const navigate = useNavigate();
 
   const client = useSelector((state: any) => state.client.clients.tab1[0]);
 
   const user = useSelector((state: any) => state.user.user);
 
-  const [value, setValue] = React.useState(0);
-
-  const { tabId } = useParams();
-
-  const handleChange = (_event: any, newValue: number) => {
-    setValue(newValue);
-  };
+  const initialTab = tabId ? parseInt(tabId, 10) : 0;
+  const [value, setValue] = React.useState(initialTab);
 
   React.useEffect(() => {
-    setValue(tabId ? parseInt(tabId, 10) : 0);
-  }, [tabId]);
+    if (tabId && parseInt(tabId, 10) !== value) {
+      setValue(parseInt(tabId, 10));
+    }
+  }, [tabId, value]);
 
-  const navigate = useNavigate();
+  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+    navigate(`/dashboard/user/${id}/${newValue}`);
+  };
 
   const tabs = [
     {
@@ -408,7 +412,7 @@ export default function UpdateRecord() {
                     key={index}
                     label={tab.label}
                     icon={tab.icon}
-                    value={tab.content}
+                    value={index}
                     iconPosition="start"
                     onClick={() => setValue(index)}
                   />

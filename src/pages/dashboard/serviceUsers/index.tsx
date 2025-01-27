@@ -34,12 +34,12 @@ import { useAlert } from "../../../Utils/useAlert";
 export default function SingleUser() {
   const client = useSelector((state: any) => state.client.clients.tab1[0]);
 
-  console.log("client information on first load:", client);
+  // console.log("client information on first load:", client);
 
   const writeAccess = client?.read_access;
 
   const user = useSelector((state: any) => state.user.user);
-  console.log("user information on first load:", user);
+  // console.log("user information on first load:", user);
 
   const [isLoading, setIsLoading] = useState(false);
 
