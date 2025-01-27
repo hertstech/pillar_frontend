@@ -46,7 +46,7 @@ export default function UpdateRecord() {
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
-    navigate(`/dashboard/user/${id}/${newValue}`);
+    navigate(`/dashboard/user/${id}/update/${newValue}`);
   };
 
   const tabs = [
