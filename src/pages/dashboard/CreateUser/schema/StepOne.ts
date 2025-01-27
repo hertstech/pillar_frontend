@@ -32,6 +32,7 @@ export const stepOneSchema = Joi.object({
   parentTwoNumber: Joi.string().allow("").optional(),
   parentTwoRelationship: Joi.string().allow("").optional(),
   nominatedPharmarcy: Joi.string().allow("").optional(),
+  nominatedPharmarcyAddress: Joi.string().allow("").optional(),
   registeredDoctor: Joi.string().allow("").optional(),
   registeredHospital: Joi.string().allow("").optional(),
   HMOPlan: Joi.string().allow("").optional(),
@@ -52,6 +53,7 @@ export const stepOneSchema = Joi.object({
   passportNumber: Joi.string().allow("").optional(),
   facilityName: Joi.string().required(),
   facilityType: Joi.string().required(),
+  facilityOwnership: Joi.string().required(),
   facilityContact: Joi.alternatives()
     .try(Joi.string().allow(""), Joi.array().items(Joi.string().allow("")))
     .optional(),

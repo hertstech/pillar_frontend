@@ -63,11 +63,15 @@ export default function Profile() {
     nokRelationship: client?.nokRelationship || "",
     HMOPlan: client?.HMOPlan || "",
     nominatedPharmarcy: client?.nominatedPharmarcy || "",
+    nominatedPharmarcyAddress: client?.nominatedPharmarcyAddress || "",
     registeredDoctor: client?.registeredDoctor || "",
-    facilityName: client?.facilityName || "",
-    facilityType: client?.facilityType || "",
-    facilityContact: client?.facilityContact || "",
-    facilityAddress: client?.facilityAddress || "",
+    facilityName: client?.facility?.name || "",
+    facilityType: client?.facility?.facility_level || "",
+    facilityOwnership: client?.ownership || "",
+    facilityContact: Array.isArray(client?.facility_phone_numbers)
+      ? client.facility_phone_numbers.join(", ")
+      : "",
+    facilityAddress: client?.facility?.address || "",
     registeredHospital: client?.registeredHospital || "",
     doctorsLicense: client?.doctorsLicense || "",
     doctorsContact: client?.doctorsContact || "",
@@ -82,6 +86,7 @@ export default function Profile() {
     });
   };
 
+  console.log("facility number:", editForm.facilityContact);
   const [isLoad, setIsLoad] = React.useState(false);
 
   const updateUser = async (e: any) => {
@@ -524,6 +529,31 @@ export default function Profile() {
                 value={editForm?.facilityName || ""}
               />
 
+              <InputField
+                type="text"
+                isReadOnly
+                label="Facility Address"
+                name="facilityAddress"
+                placeholder="Enter Facility's full address"
+                value={editForm.facilityAddress}
+                onChange={(e: any) =>
+                  handleChange("facilityAddress", e.target.value)
+                }
+              />
+
+              <InputField
+                type="text"
+                isReadOnly
+                label="Facility Contact"
+                name="facilityContact"
+                placeholder="Enter Facility's phone number"
+                value={
+                  Array.isArray(editForm.facilityContact)
+                    ? editForm.facilityContact.join(", ")
+                    : editForm.facilityContact
+                }
+              />
+
               <div style={{ marginTop: 8 }}>
                 <label htmlFor="facilityType">
                   Facility Type
@@ -544,46 +574,25 @@ export default function Profile() {
                 </label>
               </div>
 
-              <InputField
-                type="text"
-                isReadOnly
-                label="Facility Contact"
-                name="facilityContact"
-                placeholder="Enter Facility's phone number"
-                value={editForm.facilityContact}
-              />
-
-              <InputField
-                type="text"
-                isReadOnly
-                label="Facility Address"
-                name="facilityAddress"
-                placeholder="Enter Facility's full address"
-                value={editForm.facilityAddress}
-                onChange={(e: any) =>
-                  handleChange("facilityAddress", e.target.value)
-                }
-              />
-
-              <InputField
-                type="text"
-                label="Nominated Pharmacy"
-                name="nominatedPharmarcy"
-                value={editForm.nominatedPharmarcy}
-                onChange={(e: any) =>
-                  handleChange("nominatedPharmarcy", e.target.value)
-                }
-              />
-
-              <InputField
-                type="text"
-                label="Registered Hospital"
-                name="registeredHospital"
-                value={editForm.registeredHospital}
-                onChange={(e: any) =>
-                  handleChange("registeredHospital", e.target.value)
-                }
-              />
+              <div style={{ marginTop: 8 }}>
+                <label htmlFor="facilityOwnership">
+                  Facility Ownership
+                  <TextField
+                    select
+                    sx={{ marginTop: "5px" }}
+                    fullWidth
+                    name="facilityOwnership"
+                    value={editForm?.facilityOwnership || ""}
+                    onChange={() => null}
+                    inputProps={{ readOnly: true }}
+                    className="!capitalize"
+                  >
+                    <MenuItem value={editForm?.facilityOwnership}>
+                      {editForm?.facilityOwnership}
+                    </MenuItem>
+                  </TextField>
+                </label>
+              </div>
 
               <InputField
                 type="text"
@@ -599,6 +608,17 @@ export default function Profile() {
 
               <InputField
                 type="number"
+                label="Doctor's Contact"
+                name="doctorsContact"
+                placeholder="Enter Doctor's phone number"
+                value={editForm.doctorsContact}
+                onChange={(e: any) =>
+                  handleChange("doctorsContact", e.target.value)
+                }
+              />
+
+              <InputField
+                type="number"
                 label="Doctor's License"
                 placeholder="Enter Doctor's license number"
                 name="doctorsLicense"
@@ -609,13 +629,32 @@ export default function Profile() {
               />
 
               <InputField
-                type="number"
-                label="Doctor's Contact"
-                name="doctorsContact"
-                placeholder="Enter Doctor's phone number"
-                value={editForm.doctorsContact}
+                type="text"
+                label="Nominated Pharmacy"
+                name="nominatedPharmarcy"
+                value={editForm.nominatedPharmarcy}
                 onChange={(e: any) =>
-                  handleChange("doctorsContact", e.target.value)
+                  handleChange("nominatedPharmarcy", e.target.value)
+                }
+              />
+
+              <InputField
+                type="text"
+                label="Nominated Pharmacy Address"
+                name="nominatedPharmarcyAddress"
+                value={editForm.nominatedPharmarcyAddress}
+                onChange={(e: any) =>
+                  handleChange("nominatedPharmarcyAddress", e.target.value)
+                }
+              />
+
+              <InputField
+                type="text"
+                label="Registered Hospital"
+                name="registeredHospital"
+                value={editForm.registeredHospital}
+                onChange={(e: any) =>
+                  handleChange("registeredHospital", e.target.value)
                 }
               />
 

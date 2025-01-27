@@ -641,6 +641,28 @@ export default function StepOne({
           errors={errors}
         />
 
+        <InputField
+          type="text"
+          isReadOnly
+          label="Facility Address"
+          name="facilityAddress"
+          placeholder="Enter Facility's full address"
+          onChange={handleChange}
+          register={register}
+          errors={errors}
+        />
+
+        <InputField
+          type="text"
+          isReadOnly
+          label="Facility Contact"
+          name="facilityContact"
+          placeholder="Enter Facility's phone number"
+          onChange={handleChange}
+          register={register}
+          errors={errors}
+        />
+
         <div style={{ marginTop: 8 }}>
           <label htmlFor="facilityType">
             Facility Type
@@ -661,24 +683,53 @@ export default function StepOne({
             </TextField>
           </label>
         </div>
+        <div style={{ marginTop: 8 }}>
+          <label htmlFor="facilityOwnership">
+            Facility Ownership
+            <TextField
+              select
+              {...register("facilityOwnership")}
+              sx={{ marginTop: "5px" }}
+              fullWidth
+              name="facilityOwnership"
+              value={data?.data?.ownership || ""}
+              onChange={handleChange}
+              // inputProps={{ readOnly: true }}
+              className="!capitalize"
+            >
+              <MenuItem value={data?.data?.ownership}>
+                {data?.data?.facility_level}
+              </MenuItem>
+            </TextField>
+          </label>
+        </div>
 
         <InputField
           type="text"
-          isReadOnly
-          label="Facility Contact"
-          name="facilityContact"
-          placeholder="Enter Facility's phone number"
+          label="Registered Doctor"
+          name="registeredDoctor"
+          placeholder="Enter Doctor's full name"
+          onChange={handleChange}
+          className="capitalize"
+          register={register}
+          errors={errors}
+        />
+
+        <InputField
+          type="number"
+          label="Doctor's Contact"
+          name="doctorsContact"
+          placeholder="Enter Doctor's phone number"
           onChange={handleChange}
           register={register}
           errors={errors}
         />
 
         <InputField
-          type="text"
-          isReadOnly
-          label="Facility Address"
-          name="facilityAddress"
-          placeholder="Enter Facility's full address"
+          type="number"
+          label="Doctor's License"
+          placeholder="Enter Doctor's license number"
+          name="doctorsLicense"
           onChange={handleChange}
           register={register}
           errors={errors}
@@ -695,8 +746,8 @@ export default function StepOne({
 
         <InputField
           type="text"
-          label="Registered Hospital"
-          name="registeredHospital"
+          label="Nominated Pharmacy Address"
+          name="nominatedPharmarcyAddress"
           onChange={handleChange}
           register={register}
           errors={errors}
@@ -704,30 +755,8 @@ export default function StepOne({
 
         <InputField
           type="text"
-          label="Registered Doctor"
-          name="registeredDoctor"
-          placeholder="Enter Doctor's full name"
-          onChange={handleChange}
-          className="capitalize"
-          register={register}
-          errors={errors}
-        />
-
-        <InputField
-          type="number"
-          label="Doctor's License"
-          placeholder="Enter Doctor's license number"
-          name="doctorsLicense"
-          onChange={handleChange}
-          register={register}
-          errors={errors}
-        />
-
-        <InputField
-          type="number"
-          label="Doctor's Contact"
-          name="doctorsContact"
-          placeholder="Enter Doctor's phone number"
+          label="Registered Hospital"
+          name="registeredHospital"
           onChange={handleChange}
           register={register}
           errors={errors}
