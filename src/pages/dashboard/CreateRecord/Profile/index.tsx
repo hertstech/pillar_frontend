@@ -68,7 +68,8 @@ export default function Profile() {
     facilityName: client?.facility?.name || "",
     facilityType: client?.facility?.facility_level || "",
     facilityOwnership: client?.ownership || "",
-    facilityContact: client?.facility.facility_phone_numbers || "",
+    facilityPhone1: client?.facility?.facility_phone_numbers || "",
+    facilityPhone2: client?.facility?.facility_phone_numbers || "",
     facilityAddress: client?.facility?.address || "",
     registeredHospital: client?.registeredHospital || "",
     doctorsLicense: client?.doctorsLicense || "",
@@ -541,10 +542,18 @@ export default function Profile() {
               <InputField
                 type="text"
                 isReadOnly
-                label="Facility Contact"
-                name="facilityContact"
-                placeholder="Enter Facility's phone number"
-                value={editForm.facilityContact?.join(", ")}
+                label="Facility Phone 1"
+                name="facilityPhone1"
+                placeholder="First Facility's phone number"
+                value={editForm.facilityPhone1}
+              />
+              <InputField
+                type="text"
+                isReadOnly
+                label="Facility Phone 2"
+                name="facilityPhone2"
+                placeholder="Second Facility's phone number"
+                value={editForm.facilityPhone2}
               />
 
               <div style={{ marginTop: 8 }}>
@@ -589,6 +598,7 @@ export default function Profile() {
 
               <InputField
                 type="text"
+                isReadOnly
                 label="Registered Doctor"
                 name="registeredDoctor"
                 placeholder="Enter Doctor's full name"

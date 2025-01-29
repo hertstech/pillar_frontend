@@ -411,9 +411,6 @@ export default function CreateUser() {
                   </Button>
                 )}
 
-                {/* {activeStep <= 0 && (
-                  <Buttons onClick={handleNext} title={"Next"} />
-                )} */}
                 {activeStep === 2 && (
                   <Buttons onClick={handleNext} title={"Next"} />
                 )}

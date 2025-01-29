@@ -77,7 +77,9 @@ export default function StepOne({
       const hcpData = data.data;
       setValue("facilityName", hcpData?.name || "");
       setValue("facilityType", hcpData?.ownership || "");
-      setValue("facilityAddress", hcpData?.address || "");
+      setValue("facilityDoorNumAndStreet", hcpData?.address || "");
+      setValue("facilityTown", hcpData?.address || "");
+      setValue("facilityLGAAndState", hcpData?.address || "");
       setValue("facilityContact", hcpData?.facility_phone_numbers || "");
 
       if (hcpData?.management?.length > 0) {
@@ -644,9 +646,26 @@ export default function StepOne({
         <InputField
           type="text"
           isReadOnly
-          label="Facility Address"
-          name="facilityAddress"
-          placeholder="Enter Facility's full address"
+          label="Facility Door No/Street Name"
+          name="facilityDoorNumAndStreet"
+          onChange={handleChange}
+          register={register}
+          errors={errors}
+        />
+        <InputField
+          type="text"
+          isReadOnly
+          label="Facility Town(City)"
+          name="facilityTown"
+          onChange={handleChange}
+          register={register}
+          errors={errors}
+        />
+        <InputField
+          type="text"
+          isReadOnly
+          label="Facility LGA/State"
+          name="facilityLGAAndState"
           onChange={handleChange}
           register={register}
           errors={errors}
@@ -655,9 +674,19 @@ export default function StepOne({
         <InputField
           type="text"
           isReadOnly
-          label="Facility Contact"
-          name="facilityContact"
-          placeholder="Enter Facility's phone number"
+          label="Facility Phone 1"
+          name="facilityPhone1"
+          placeholder="First Facility's phone number"
+          onChange={handleChange}
+          register={register}
+          errors={errors}
+        />
+        <InputField
+          type="text"
+          isReadOnly
+          label="Facility Phone 2"
+          name="facilityPhone2"
+          placeholder="Second Facility's phone number"
           onChange={handleChange}
           register={register}
           errors={errors}
@@ -683,7 +712,7 @@ export default function StepOne({
             </TextField>
           </label>
         </div>
-        <div style={{ marginTop: 8 }}>
+        <div className="mt-4 flex flex-col gap-3">
           <label htmlFor="facilityOwnership">
             Facility Ownership
             <TextField
@@ -694,7 +723,24 @@ export default function StepOne({
               name="facilityOwnership"
               value={data?.data?.ownership || ""}
               onChange={handleChange}
-              // inputProps={{ readOnly: true }}
+              className="!capitalize"
+            >
+              <MenuItem value={data?.data?.ownership}>
+                {data?.data?.facility_level}
+              </MenuItem>
+            </TextField>
+          </label>
+
+          <label htmlFor="registeredDoctor">
+            Registered Doctor
+            <TextField
+              select
+              {...register("registeredDoctor")}
+              sx={{ marginTop: "5px" }}
+              fullWidth
+              name="registeredDoctor"
+              value={data?.data?.ownership || ""}
+              onChange={handleChange}
               className="!capitalize"
             >
               <MenuItem value={data?.data?.ownership}>
@@ -705,19 +751,9 @@ export default function StepOne({
         </div>
 
         <InputField
-          type="text"
-          label="Registered Doctor"
-          name="registeredDoctor"
-          placeholder="Enter Doctor's full name"
-          onChange={handleChange}
-          className="capitalize"
-          register={register}
-          errors={errors}
-        />
-
-        <InputField
+          isReadOnly
           type="number"
-          label="Doctor's Contact"
+          label="Doctor's Phone"
           name="doctorsContact"
           placeholder="Enter Doctor's phone number"
           onChange={handleChange}
@@ -742,21 +778,29 @@ export default function StepOne({
           onChange={handleChange}
           register={register}
           errors={errors}
+          maxLength={50}
         />
 
         <InputField
           type="text"
-          label="Nominated Pharmacy Address"
-          name="nominatedPharmarcyAddress"
+          label="Nominated Pharmacy Door/Street Name"
+          name="nominatedPharmacyDoorAndStreet"
           onChange={handleChange}
           register={register}
           errors={errors}
         />
-
         <InputField
           type="text"
-          label="Registered Hospital"
-          name="registeredHospital"
+          label="Nominated Pharmacy Town(City)"
+          name="nominatedPharmacyTown"
+          onChange={handleChange}
+          register={register}
+          errors={errors}
+        />
+        <InputField
+          type="text"
+          label="Nominated Pharmacy LGA/State"
+          name="nominatedPharmacyLGAAndState"
           onChange={handleChange}
           register={register}
           errors={errors}
@@ -770,6 +814,7 @@ export default function StepOne({
           onChange={handleChange}
           register={register}
           errors={errors}
+          maxLength={20}
         />
 
         <InputField
