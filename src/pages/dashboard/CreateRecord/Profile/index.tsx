@@ -63,15 +63,23 @@ export default function Profile() {
     nokRelationship: client?.nokRelationship || "",
     HMOPlan: client?.HMOPlan || "",
     nominatedPharmarcy: client?.nominatedPharmarcy || "",
-    nominatedPharmarcyAddress: client?.nominatedPharmarcyAddress || "",
+    nominatedPharmacyDoor: client?.nominatedPharmarcyAddress || "", // to be updated from the server
+    nominatedPharmacyStreet: client?.nominatedPharmarcyAddress || "", // to be updated from the server
+    nominatedPharmacyTown: client?.nominatedPharmarcyAddress || "", // SAA
+    nominatedPharmacyLGA: client?.nominatedPharmarcyAddress || "", // SAA
+    nominatedPharmacyState: client?.nominatedPharmarcyAddress || "", // SAA
     registeredDoctor: client?.registeredDoctor || "",
     facilityName: client?.facility?.name || "",
     facilityType: client?.facility?.facility_level || "",
     facilityOwnership: client?.ownership || "",
     facilityPhone1: client?.facility?.facility_phone_numbers || "",
-    facilityPhone2: client?.facility?.facility_phone_numbers || "",
-    facilityAddress: client?.facility?.address || "",
-    registeredHospital: client?.registeredHospital || "",
+    facilityPhone2: client?.facility?.facility_phone_numbers || "", // to be updated from server
+    facilityDoor: client?.facility?.address || "", // SAA
+    facilityStreet: client?.facility?.address || "", // SAA
+    facilityTown: client?.facility?.address || "", // SAA
+    facilityLGA: client?.facility?.address || "", // SAA
+    facilityState: client?.facility?.address || "", // SAA
+
     doctorsLicense: client?.doctorsLicense || "",
     doctorsContact: client?.doctorsContact || "",
     HMONumber: client?.HMONumber || "",
@@ -528,14 +536,54 @@ export default function Profile() {
               />
 
               <InputField
+                isReadOnly
+                type="text"
+                label="Facility Door"
+                name="facilityDoor"
+                value={editForm.facilityDoor}
+                onChange={(e: any) =>
+                  handleChange("facilityDoor", e.target.value)
+                }
+                maxLength={20}
+              />
+              <InputField
+                isReadOnly
+                type="text"
+                label="Facility Street"
+                name="facilityStreet"
+                value={editForm.facilityStreet}
+                onChange={(e: any) =>
+                  handleChange("facilityStreet", e.target.value)
+                }
+              />
+              <InputField
                 type="text"
                 isReadOnly
-                label="Facility Address"
-                name="facilityAddress"
-                placeholder="Enter Facility's full address"
-                value={editForm.facilityAddress}
+                label="Facility Town"
+                name="facilityTown"
+                value={editForm.facilityTown}
                 onChange={(e: any) =>
-                  handleChange("facilityAddress", e.target.value)
+                  handleChange("facilityTown", e.target.value)
+                }
+              />
+              <InputField
+                isReadOnly
+                type="text"
+                label="Facility LGA"
+                name="facilityLGA"
+                value={editForm.facilityLGA}
+                onChange={(e: any) =>
+                  handleChange("facilityLGA", e.target.value)
+                }
+              />
+              <InputField
+                isReadOnly
+                type="text"
+                label="Facility State"
+                name="facilityState"
+                value={editForm.facilityState}
+                onChange={(e: any) =>
+                  handleChange("facilityState", e.target.value)
                 }
               />
 
@@ -574,9 +622,7 @@ export default function Profile() {
                     </MenuItem>
                   </TextField>
                 </label>
-              </div>
 
-              <div style={{ marginTop: 8 }}>
                 <label htmlFor="facilityOwnership">
                   Facility Ownership
                   <TextField
@@ -594,20 +640,24 @@ export default function Profile() {
                     </MenuItem>
                   </TextField>
                 </label>
+                <label htmlFor="facilityOwnership">
+                  Registered Doctor
+                  <TextField
+                    select
+                    sx={{ marginTop: "5px" }}
+                    fullWidth
+                    name="registeredDoctor"
+                    value={editForm?.registeredDoctor || ""}
+                    onChange={() => null}
+                    inputProps={{ readOnly: true }}
+                    className="!capitalize"
+                  >
+                    <MenuItem value={editForm?.registeredDoctor}>
+                      {editForm?.registeredDoctor}
+                    </MenuItem>
+                  </TextField>
+                </label>
               </div>
-
-              <InputField
-                type="text"
-                isReadOnly
-                label="Registered Doctor"
-                name="registeredDoctor"
-                placeholder="Enter Doctor's full name"
-                className="capitalize"
-                value={editForm.registeredDoctor}
-                onChange={(e: any) =>
-                  handleChange("registeredDoctor", e.target.value)
-                }
-              />
 
               <InputField
                 type="number"
@@ -643,21 +693,47 @@ export default function Profile() {
 
               <InputField
                 type="text"
-                label="Nominated Pharmacy Address"
-                name="nominatedPharmarcyAddress"
-                value={editForm.nominatedPharmarcyAddress}
+                label="Nominated Pharmacy Door No."
+                name="nominatedPharmarcyDoorNum"
+                value={editForm.nominatedPharmacyDoor}
                 onChange={(e: any) =>
-                  handleChange("nominatedPharmarcyAddress", e.target.value)
+                  handleChange("nominatedPharmarcyDoorNum", e.target.value)
                 }
               />
-
               <InputField
                 type="text"
-                label="Registered Hospital"
-                name="registeredHospital"
-                value={editForm.registeredHospital}
+                label="Nominated Pharmacy Street"
+                name="nominatedPharmarcyStreet"
+                value={editForm.nominatedPharmacyStreet}
                 onChange={(e: any) =>
-                  handleChange("registeredHospital", e.target.value)
+                  handleChange("nominatedPharmarcyStreet", e.target.value)
+                }
+              />
+              <InputField
+                type="text"
+                label="Nominated Pharmacy Town"
+                name="nominatedPharmarcyTown"
+                value={editForm.nominatedPharmacyTown}
+                onChange={(e: any) =>
+                  handleChange("nominatedPharmarcyTown", e.target.value)
+                }
+              />
+              <InputField
+                type="text"
+                label="Nominated Pharmacy LGA"
+                name="nominatedPharmarcyLGA"
+                value={editForm.nominatedPharmacyLGA}
+                onChange={(e: any) =>
+                  handleChange("nominatedPharmarcyLGA", e.target.value)
+                }
+              />
+              <InputField
+                type="text"
+                label="Nominated Pharmacy State"
+                name="nominatedPharmacyState"
+                value={editForm.nominatedPharmacyState}
+                onChange={(e: any) =>
+                  handleChange("nominatedPharmacyState", e.target.value)
                 }
               />
 

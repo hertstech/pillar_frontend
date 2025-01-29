@@ -646,12 +646,23 @@ export default function StepOne({
         <InputField
           type="text"
           isReadOnly
-          label="Facility Door No/Street Name"
-          name="facilityDoorNumAndStreet"
+          label="Facility Door No."
+          name="facilityDoor"
           onChange={handleChange}
           register={register}
           errors={errors}
         />
+
+        <InputField
+          type="text"
+          isReadOnly
+          label="Facility Street"
+          name="facilityStreet"
+          onChange={handleChange}
+          register={register}
+          errors={errors}
+        />
+
         <InputField
           type="text"
           isReadOnly
@@ -664,8 +675,17 @@ export default function StepOne({
         <InputField
           type="text"
           isReadOnly
-          label="Facility LGA/State"
-          name="facilityLGAAndState"
+          label="Facility LGA"
+          name="facilityLGA"
+          onChange={handleChange}
+          register={register}
+          errors={errors}
+        />
+        <InputField
+          type="text"
+          isReadOnly
+          label="Facility State"
+          name="facilityState"
           onChange={handleChange}
           register={register}
           errors={errors}
@@ -783,8 +803,16 @@ export default function StepOne({
 
         <InputField
           type="text"
-          label="Nominated Pharmacy Door/Street Name"
-          name="nominatedPharmacyDoorAndStreet"
+          label="Nominated Pharmacy Door No."
+          name="nominatedPharmacyDoor"
+          onChange={handleChange}
+          register={register}
+          errors={errors}
+        />
+        <InputField
+          type="text"
+          label="Nominated Pharmacy Street"
+          name="nominatedPharmacyStreet"
           onChange={handleChange}
           register={register}
           errors={errors}
@@ -799,8 +827,16 @@ export default function StepOne({
         />
         <InputField
           type="text"
-          label="Nominated Pharmacy LGA/State"
-          name="nominatedPharmacyLGAAndState"
+          label="Nominated Pharmacy LGA"
+          name="nominatedPharmacyLGA"
+          onChange={handleChange}
+          register={register}
+          errors={errors}
+        />
+        <InputField
+          type="text"
+          label="Nominated Pharmacy State"
+          name="nominatedPharmacyState"
           onChange={handleChange}
           register={register}
           errors={errors}

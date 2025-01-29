@@ -32,9 +32,11 @@ export const stepOneSchema = Joi.object({
   parentTwoNumber: Joi.string().allow("").optional(),
   parentTwoRelationship: Joi.string().allow("").optional(),
   nominatedPharmacy: Joi.string().allow("").optional(),
-  nominatedPharmacyDoorAndStreet: Joi.string().allow("").optional(),
+  nominatedPharmacyDoor: Joi.string().allow("").optional(),
+  nominatedPharmacyStreet: Joi.string().allow("").optional(),
   nominatedPharmacyTown: Joi.string().allow("").optional(),
-  nominatedPharmacyLGAAndState: Joi.string().allow("").optional(),
+  nominatedPharmacyLGA: Joi.string().allow("").optional(),
+  nominatedPharmacyState: Joi.string().allow("").optional(),
   registeredDoctor: Joi.string().allow("").optional(),
 
   HMOPlan: Joi.string().allow("").optional(),
@@ -62,9 +64,11 @@ export const stepOneSchema = Joi.object({
   facilityPhone2: Joi.alternatives()
     .try(Joi.string().allow(""), Joi.array().items(Joi.string().allow("")))
     .optional(),
-  facilityDoorNumAndStreet: Joi.string().required(),
+  facilityDoorNum: Joi.string().required(),
+  facilityStreet: Joi.string().required(),
   facilityTown: Joi.string().required(),
-  facilityLGAAndState: Joi.string().required(),
+  facilityLGA: Joi.string().required(),
+  facilityState: Joi.string().required(),
   doctorsLicense: Joi.string().allow("").optional(),
   doctorsContact: Joi.string().allow("").optional(),
   HMONumber: Joi.string().allow("").optional(),
