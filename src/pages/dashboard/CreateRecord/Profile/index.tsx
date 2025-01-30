@@ -62,12 +62,12 @@ export default function Profile() {
     nokNHR_ID: client?.nokNHR_ID || "",
     nokRelationship: client?.nokRelationship || "",
     HMOPlan: client?.HMOPlan || "",
-    nominatedPharmarcy: client?.nominatedPharmarcy || "",
-    nominatedPharmacyDoor: client?.nominatedPharmarcyAddress || "", // to be updated from the server
-    nominatedPharmacyStreet: client?.nominatedPharmarcyAddress || "", // to be updated from the server
-    nominatedPharmacyTown: client?.nominatedPharmarcyAddress || "", // SAA
-    nominatedPharmacyLGA: client?.nominatedPharmarcyAddress || "", // SAA
-    nominatedPharmacyState: client?.nominatedPharmarcyAddress || "", // SAA
+    nominatedPharmacy: client?.nominated_pharmacy || "",
+    nominatedPharmacyDoor: client?.nominated_pharmacy_door_number || "",
+    nominatedPharmacyStreet: client?.nominated_pharmacy_street || "",
+    nominatedPharmacyTown: client?.nominated_pharmacy_town || "",
+    nominatedPharmacyLGA: client?.nominated_pharmacy_lga || "",
+    nominatedPharmacyState: client?.nominated_pharmacy_state || "",
     registeredDoctor: client?.registeredDoctor || "",
     facilityName: client?.facility?.name || "",
     facilityType: client?.facility?.facility_type || "",
@@ -488,42 +488,6 @@ export default function Profile() {
               </>
             )}
 
-            {/* <Box sx={{ mt: 3 }}>
-              <Typography
-                sx={{ color: "#090816" }}
-                fontWeight={600}
-                fontSize={20}
-              >
-                Care team Information
-              </Typography>
-              <InputField
-                type="text"
-                label="HMO Name"
-                name="HMOPlan"
-                value={editForm.HMOPlan}
-                onChange={(e: any) => handleChange("HMOPlan", e.target.value)}
-              />
-
-              <InputField
-                type="text"
-                label="Nominated Pharmacy"
-                name="nominatedPharmarcy"
-                value={editForm.nominatedPharmarcy}
-                onChange={(e: any) =>
-                  handleChange("nominatedPharmarcy", e.target.value)
-                }
-              />
-
-              <InputField
-                type="text"
-                label="Registered Doctor"
-                name="registeredDoctor"
-                value={editForm.registeredDoctor}
-                onChange={(e: any) =>
-                  handleChange("registeredDoctor", e.target.value)
-                }
-              />
-            </Box> */}
             <Box sx={{ mt: 3 }}>
               <Typography variant="h6">Care Team Information</Typography>
 
@@ -689,52 +653,52 @@ export default function Profile() {
               <InputField
                 type="text"
                 label="Nominated Pharmacy"
-                name="nominatedPharmarcy"
+                name="nominatedPharmacy"
                 placeholder="Enter Nominated Pharmacy Name"
-                value={editForm.nominatedPharmarcy}
+                value={editForm.nominatedPharmacy}
                 onChange={(e: any) =>
-                  handleChange("nominatedPharmarcy", e.target.value)
+                  handleChange("nominatedPharmacy", e.target.value)
                 }
               />
 
               <InputField
                 type="text"
                 label="Nominated Pharmacy Door No."
-                name="nominatedPharmarcyDoorNum"
+                name="nominatedPharmacyDoorNum"
                 placeholder="Enter Nominated Pharmacy House/Door number"
                 value={editForm.nominatedPharmacyDoor}
                 onChange={(e: any) =>
-                  handleChange("nominatedPharmarcyDoorNum", e.target.value)
+                  handleChange("nominatedPharmacyDoorNum", e.target.value)
                 }
               />
               <InputField
                 type="text"
                 label="Nominated Pharmacy Street"
-                name="nominatedPharmarcyStreet"
+                name="nominatedPharmacyStreet"
                 placeholder="Enter Nominated Pharmacy's Street"
                 value={editForm.nominatedPharmacyStreet}
                 onChange={(e: any) =>
-                  handleChange("nominatedPharmarcyStreet", e.target.value)
+                  handleChange("nominatedPharmacyStreet", e.target.value)
                 }
               />
               <InputField
                 type="text"
                 label="Nominated Pharmacy Town"
-                name="nominatedPharmarcyTown"
+                name="nominatedPharmacyTown"
                 placeholder="Enter Nominated Pharmacy's Town"
                 value={editForm.nominatedPharmacyTown}
                 onChange={(e: any) =>
-                  handleChange("nominatedPharmarcyTown", e.target.value)
+                  handleChange("nominatedPharmacyTown", e.target.value)
                 }
               />
               <InputField
                 type="text"
                 label="Nominated Pharmacy LGA"
-                name="nominatedPharmarcyLGA"
+                name="nominatedPharmacyLGA"
                 placeholder="Enter Nominated Pharmacy's LGA"
                 value={editForm.nominatedPharmacyLGA}
                 onChange={(e: any) =>
-                  handleChange("nominatedPharmarcyLGA", e.target.value)
+                  handleChange("nominatedPharmacyLGA", e.target.value)
                 }
               />
               <InputField
