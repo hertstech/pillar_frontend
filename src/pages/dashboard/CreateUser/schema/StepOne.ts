@@ -64,7 +64,7 @@ export const stepOneSchema = Joi.object({
   facilityPhone2: Joi.alternatives()
     .try(Joi.string().allow(""), Joi.array().items(Joi.string().allow("")))
     .optional(),
-  facilityDoorNum: Joi.string().required(),
+  facilityDoor: Joi.string().required(),
   facilityStreet: Joi.string().required(),
   facilityTown: Joi.string().required(),
   facilityLGA: Joi.string().required(),

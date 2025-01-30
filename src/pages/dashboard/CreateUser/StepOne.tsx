@@ -31,6 +31,7 @@ export default function StepOne({
   handleChange: superHandleChange,
 }: any) {
   const [show, setShow] = useState(false);
+  const [selectedDoctor, setSelectedDoctor] = useState("");
 
   const { data } = useGetHCPInfo();
 
@@ -50,6 +51,7 @@ export default function StepOne({
   ) => {
     const { name, value } = event.target;
     superHandleChange({ ...formData, [name || ""]: value });
+    setSelectedDoctor(value);
     setValue(name || "", value, { shouldValidate: true });
   };
 
@@ -77,11 +79,15 @@ export default function StepOne({
     if (data?.data) {
       const hcpData = data.data;
       setValue("facilityName", hcpData?.name || "");
-      setValue("facilityType", hcpData?.ownership || "");
-      setValue("facilityDoorNumAndStreet", hcpData?.address || "");
-      setValue("facilityTown", hcpData?.address || "");
-      setValue("facilityLGAAndState", hcpData?.address || "");
-      setValue("facilityContact", hcpData?.facility_phone_numbers || "");
+      setValue("facilityType", hcpData?.type || "");
+      setValue("facilityOwnership", hcpData?.ownership || "");
+      setValue("facilityDoor", hcpData?.address || "");
+      setValue("facilityStreet", hcpData?.address || "");
+      setValue("facilityTown", hcpData?.town || "");
+      setValue("facilityLGA", hcpData?.lga || "");
+      setValue("facilityState", hcpData?.state || "");
+      setValue("facilityPhone1", hcpData?.facility_phone_number_1 || "");
+      setValue("facilityPhone2", hcpData?.facility_phone_number_1 || "");
 
       if (hcpData?.management?.length > 0) {
         const manager = hcpData.management[0];
@@ -652,6 +658,7 @@ export default function StepOne({
           onChange={handleChange}
           register={register}
           errors={errors}
+          className="!capitalize"
         />
 
         <InputField
@@ -662,6 +669,7 @@ export default function StepOne({
           onChange={handleChange}
           register={register}
           errors={errors}
+          className="!capitalize"
         />
 
         <InputField
@@ -672,6 +680,7 @@ export default function StepOne({
           onChange={handleChange}
           register={register}
           errors={errors}
+          className="!capitalize"
         />
         <InputField
           type="text"
@@ -681,6 +690,7 @@ export default function StepOne({
           onChange={handleChange}
           register={register}
           errors={errors}
+          className="!capitalize"
         />
         <InputField
           type="text"
@@ -690,6 +700,7 @@ export default function StepOne({
           onChange={handleChange}
           register={register}
           errors={errors}
+          className="!capitalize"
         />
 
         <InputField
@@ -727,13 +738,11 @@ export default function StepOne({
               inputProps={{ readOnly: true }}
               className="!capitalize"
             >
-              <MenuItem value={data?.data?.ownership}>
-                {data?.data?.ownership}
-              </MenuItem>
+              <MenuItem value={data?.data?.type}>{data?.data?.type}</MenuItem>
             </TextField>
           </label>
         </div>
-        <div className="mt-4 flex flex-col gap-3">
+        <div className="mt-4 flex flex-col gap-4">
           <label htmlFor="facilityOwnership">
             Facility Ownership
             <TextField
@@ -747,7 +756,7 @@ export default function StepOne({
               className="!capitalize"
             >
               <MenuItem value={data?.data?.ownership}>
-                {data?.data?.facility_level}
+                {data?.data?.ownership}
               </MenuItem>
             </TextField>
           </label>
@@ -760,13 +769,19 @@ export default function StepOne({
               sx={{ marginTop: "5px" }}
               fullWidth
               name="registeredDoctor"
-              value={data?.data?.ownership || ""}
+              value={selectedDoctor || ""}
               onChange={handleChange}
               className="!capitalize"
             >
-              <MenuItem value={data?.data?.ownership}>
-                {data?.data?.facility_level}
-              </MenuItem>
+              {data?.data?.management.map((doctor: any) => (
+                <MenuItem
+                  key={doctor.id}
+                  value={doctor.id}
+                  className="!capitalize"
+                >
+                  {`${doctor.title} ${doctor.firstName} ${doctor.lastName} - ${doctor.position}`}
+                </MenuItem>
+              ))}
             </TextField>
           </label>
         </div>
@@ -795,7 +810,8 @@ export default function StepOne({
         <InputField
           type="text"
           label="Nominated Pharmacy"
-          name="nominatedPharmarcy"
+          name="nominatedPharmacy"
+          placeholder="Enter Nominated Pharmacy's Name"
           onChange={handleChange}
           register={register}
           errors={errors}
@@ -806,6 +822,7 @@ export default function StepOne({
           type="text"
           label="Nominated Pharmacy Door No."
           name="nominatedPharmacyDoor"
+          placeholder="Enter Nominated Pharmacy's Door/House Number"
           onChange={handleChange}
           register={register}
           errors={errors}
@@ -814,6 +831,7 @@ export default function StepOne({
           type="text"
           label="Nominated Pharmacy Street"
           name="nominatedPharmacyStreet"
+          placeholder="Enter Nominated Pharmacy's Street"
           onChange={handleChange}
           register={register}
           errors={errors}
@@ -822,6 +840,7 @@ export default function StepOne({
           type="text"
           label="Nominated Pharmacy Town(City)"
           name="nominatedPharmacyTown"
+          placeholder="Enter Nominated Pharmacy's Town"
           onChange={handleChange}
           register={register}
           errors={errors}
@@ -830,6 +849,7 @@ export default function StepOne({
           type="text"
           label="Nominated Pharmacy LGA"
           name="nominatedPharmacyLGA"
+          placeholder="Enter Nominated Pharmacy's LGA"
           onChange={handleChange}
           register={register}
           errors={errors}
@@ -839,6 +859,7 @@ export default function StepOne({
           label="Nominated Pharmacy State"
           name="nominatedPharmacyState"
           onChange={handleChange}
+          placeholder="Enter Nominated Pharmacy's State"
           register={register}
           errors={errors}
         />
