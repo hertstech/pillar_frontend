@@ -34,6 +34,7 @@ export default function StepOne({
 
   const { data } = useGetHCPInfo();
 
+  console.log("facility info;", data?.data);
   const {
     register,
     setValue,

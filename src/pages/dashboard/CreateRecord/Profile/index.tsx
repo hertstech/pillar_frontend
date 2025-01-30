@@ -70,15 +70,15 @@ export default function Profile() {
     nominatedPharmacyState: client?.nominatedPharmarcyAddress || "", // SAA
     registeredDoctor: client?.registeredDoctor || "",
     facilityName: client?.facility?.name || "",
-    facilityType: client?.facility?.facility_level || "",
-    facilityOwnership: client?.ownership || "",
-    facilityPhone1: client?.facility?.facility_phone_numbers || "",
-    facilityPhone2: client?.facility?.facility_phone_numbers || "", // to be updated from server
-    facilityDoor: client?.facility?.address || "", // SAA
-    facilityStreet: client?.facility?.address || "", // SAA
-    facilityTown: client?.facility?.address || "", // SAA
-    facilityLGA: client?.facility?.address || "", // SAA
-    facilityState: client?.facility?.address || "", // SAA
+    facilityType: client?.facility?.facility_type || "",
+    facilityOwnership: client?.facility?.ownership || "",
+    facilityPhone1: client?.facility?.facility_phone_number_1 || "",
+    facilityPhone2: client?.facility?.facility_phone_number_2 || "",
+    facilityDoor: client?.facility?.house_number || "",
+    facilityStreet: client?.facility?.street_name || "",
+    facilityTown: client?.facility?.town || "",
+    facilityLGA: client?.facility?.lga || "",
+    facilityState: client?.facility?.state || "",
 
     doctorsLicense: client?.doctorsLicense || "",
     doctorsContact: client?.doctorsContact || "",
@@ -538,12 +538,13 @@ export default function Profile() {
               <InputField
                 isReadOnly
                 type="text"
-                label="Facility Door"
+                label="Facility Door No."
                 name="facilityDoor"
                 value={editForm.facilityDoor}
                 onChange={(e: any) =>
                   handleChange("facilityDoor", e.target.value)
                 }
+                className="capitalize"
                 maxLength={20}
               />
               <InputField
@@ -555,6 +556,7 @@ export default function Profile() {
                 onChange={(e: any) =>
                   handleChange("facilityStreet", e.target.value)
                 }
+                className="capitalize"
               />
               <InputField
                 type="text"
@@ -565,6 +567,7 @@ export default function Profile() {
                 onChange={(e: any) =>
                   handleChange("facilityTown", e.target.value)
                 }
+                className="capitalize"
               />
               <InputField
                 isReadOnly
@@ -575,6 +578,7 @@ export default function Profile() {
                 onChange={(e: any) =>
                   handleChange("facilityLGA", e.target.value)
                 }
+                className="capitalize"
               />
               <InputField
                 isReadOnly
@@ -585,6 +589,7 @@ export default function Profile() {
                 onChange={(e: any) =>
                   handleChange("facilityState", e.target.value)
                 }
+                className="capitalize"
               />
 
               <InputField
@@ -604,7 +609,7 @@ export default function Profile() {
                 value={editForm.facilityPhone2}
               />
 
-              <div style={{ marginTop: 8 }}>
+              <div className="flex flex-col gap-3" style={{ marginTop: 8 }}>
                 <label htmlFor="facilityType">
                   Facility Type
                   <TextField
@@ -685,6 +690,7 @@ export default function Profile() {
                 type="text"
                 label="Nominated Pharmacy"
                 name="nominatedPharmarcy"
+                placeholder="Enter Nominated Pharmacy Name"
                 value={editForm.nominatedPharmarcy}
                 onChange={(e: any) =>
                   handleChange("nominatedPharmarcy", e.target.value)
@@ -695,6 +701,7 @@ export default function Profile() {
                 type="text"
                 label="Nominated Pharmacy Door No."
                 name="nominatedPharmarcyDoorNum"
+                placeholder="Enter Nominated Pharmacy House/Door number"
                 value={editForm.nominatedPharmacyDoor}
                 onChange={(e: any) =>
                   handleChange("nominatedPharmarcyDoorNum", e.target.value)
@@ -704,6 +711,7 @@ export default function Profile() {
                 type="text"
                 label="Nominated Pharmacy Street"
                 name="nominatedPharmarcyStreet"
+                placeholder="Enter Nominated Pharmacy's Street"
                 value={editForm.nominatedPharmacyStreet}
                 onChange={(e: any) =>
                   handleChange("nominatedPharmarcyStreet", e.target.value)
@@ -713,6 +721,7 @@ export default function Profile() {
                 type="text"
                 label="Nominated Pharmacy Town"
                 name="nominatedPharmarcyTown"
+                placeholder="Enter Nominated Pharmacy's Town"
                 value={editForm.nominatedPharmacyTown}
                 onChange={(e: any) =>
                   handleChange("nominatedPharmarcyTown", e.target.value)
@@ -722,6 +731,7 @@ export default function Profile() {
                 type="text"
                 label="Nominated Pharmacy LGA"
                 name="nominatedPharmarcyLGA"
+                placeholder="Enter Nominated Pharmacy's LGA"
                 value={editForm.nominatedPharmacyLGA}
                 onChange={(e: any) =>
                   handleChange("nominatedPharmarcyLGA", e.target.value)
@@ -731,6 +741,7 @@ export default function Profile() {
                 type="text"
                 label="Nominated Pharmacy State"
                 name="nominatedPharmacyState"
+                placeholder="Enter Nominated Pharmacy State"
                 value={editForm.nominatedPharmacyState}
                 onChange={(e: any) =>
                   handleChange("nominatedPharmacyState", e.target.value)
