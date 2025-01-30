@@ -33,7 +33,7 @@ type FormDataTypes = {
 export const AddTestRecord: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { mutate } = useCreateTest();
+  const { mutate, isPending } = useCreateTest();
   const [activeStep, setActiveStep] = useState(0);
 
   const [formData, setFormData] = useState<FormDataTypes>({
@@ -71,6 +71,7 @@ export const AddTestRecord: React.FC = () => {
       description: "Enter the test results accurately.",
       content: (
         <AddTestResultForm
+          pending={isPending}
           orderData={formData.orderDetails as TestOrderTypes}
           onSubmit={(data) => {
             const { saveType, tests } = data;

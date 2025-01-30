@@ -48,11 +48,16 @@ interface TestFormValues {
 }
 
 type AddTestResultProps = {
+  pending?: boolean;
   orderData: TestOrderTypes;
   onSubmit: (data: TestFormValues) => void;
 };
 
-export function AddTestResultForm({ onSubmit, orderData }: AddTestResultProps) {
+export function AddTestResultForm({
+  onSubmit,
+  orderData,
+  pending,
+}: AddTestResultProps) {
   const [newTest, setNewTest] = useState({
     category: "",
     testTypes: "",
@@ -219,108 +224,115 @@ export function AddTestResultForm({ onSubmit, orderData }: AddTestResultProps) {
           </Box>
 
           <Box className="p-6 w-[600px] !bg-bg2 !rounded-lg">
-            <Box className="flex flex-col gap-8">
-              <CustomSelect
-                label="Category"
-                name="category"
-                selectItems={testData.category}
-                value={newTest.category}
-                onChange={(value) =>
-                  setNewTest((prev) => ({ ...prev, category: value }))
-                }
-              />
-              {newTest.category && (
-                <Box className="flex flex-col gap-8">
-                  <CustomSelect
-                    label="Test Types"
-                    name="testTypes"
-                    isDisabled={!newTest.category}
-                    selectItems={
-                      testData.category.find(
-                        (item) => item.value === newTest.category
-                      )?.subValues || []
-                    }
-                    value={newTest.testTypes}
-                    onChange={(value) =>
-                      setNewTest((prev) => ({ ...prev, testTypes: value }))
-                    }
-                  />
-                  <Box className="relative">
+            {pending ? (
+              "processing..."
+            ) : (
+              <Box className="flex flex-col gap-8">
+                <CustomSelect
+                  label="Category"
+                  name="category"
+                  selectItems={testData.category}
+                  value={newTest.category}
+                  onChange={(value) =>
+                    setNewTest((prev) => ({ ...prev, category: value }))
+                  }
+                />
+                {newTest.category && (
+                  <Box className="flex flex-col gap-8">
+                    <CustomSelect
+                      label="Test Types"
+                      name="testTypes"
+                      isDisabled={!newTest.category}
+                      selectItems={
+                        testData.category.find(
+                          (item) => item.value === newTest.category
+                        )?.subValues || []
+                      }
+                      value={newTest.testTypes}
+                      onChange={(value) =>
+                        setNewTest((prev) => ({ ...prev, testTypes: value }))
+                      }
+                    />
+                    <Box className="relative">
+                      <InputField
+                        type="text"
+                        label="Reading"
+                        name="reading"
+                        placeholder="e.g., 60-70"
+                        value={newTest.reading}
+                        onChange={(e) =>
+                          setNewTest((prev) => ({
+                            ...prev,
+                            reading: e.target.value,
+                          }))
+                        }
+                      />
+                      <span className="absolute right-3 top-12 mt-1 text-neu-400 text-base font-normal">
+                        {newTestUnit}
+                      </span>
+                    </Box>
                     <InputField
                       type="text"
-                      label="Reading"
-                      name="reading"
-                      placeholder="e.g., 60-70"
-                      value={newTest.reading}
+                      textarea={true}
+                      label="Add Notes (optional)"
+                      name="notes"
+                      placeholder="Enter notes here"
+                      value={newTest.notes}
                       onChange={(e) =>
                         setNewTest((prev) => ({
                           ...prev,
-                          reading: e.target.value,
+                          notes: e.target.value,
                         }))
                       }
                     />
-                    <span className="absolute right-3 top-12 mt-1 text-neu-400 text-base font-normal">
-                      {newTestUnit}
-                    </span>
+                    <button
+                      type="button"
+                      onClick={handleSaveNewTest}
+                      className={classNames(
+                        "font-semibold text-left",
+                        toDisable
+                          ? "cursor-not-allowed text-neu-300"
+                          : "text-pri-650 "
+                      )}
+                      disabled={toDisable}
+                    >
+                      <span className="text-xl font-semibold">+</span> Add
+                      another test
+                    </button>
                   </Box>
-                  <InputField
-                    type="text"
-                    textarea={true}
-                    label="Add Notes (optional)"
-                    name="notes"
-                    placeholder="Enter notes here"
-                    value={newTest.notes}
-                    onChange={(e) =>
-                      setNewTest((prev) => ({ ...prev, notes: e.target.value }))
-                    }
-                  />
-                  <button
-                    type="button"
-                    onClick={handleSaveNewTest}
-                    className={classNames(
-                      "font-semibold text-left",
-                      toDisable
-                        ? "cursor-not-allowed text-neu-300"
-                        : "text-pri-650 "
-                    )}
-                    disabled={toDisable}
-                  >
-                    <span className="text-xl font-semibold">+</span> Add another
-                    test
-                  </button>
-                </Box>
-              )}
-              <Stack
-                gap={3}
-                width={"100%"}
-                sx={{ mt: 4 }}
-                direction="row"
-                alignItems="center"
-              >
-                <Button
-                  fullWidth
-                  size="large"
-                  sx={{
-                    color: "#1570EF",
-                    border: "1px solid #D1E9FF",
-                    outline: "none",
-                    textTransform: "capitalize",
-                    fontWeight: 600,
-                    height: 48,
-                    background: "inherit",
-                    "&:hover": { backgroundColor: "#D1E9FF" },
-                  }}
-                  variant="outlined"
-                  onClick={() => handleSubmitTests("draft")}
+                )}
+                <Stack
+                  gap={3}
+                  width={"100%"}
+                  sx={{ mt: 4 }}
+                  direction="row"
+                  alignItems="center"
                 >
-                  Save as draft
-                </Button>
-                <Buttons
-                  onClick={() => handleSubmitTests("final")}
-                  title={"Save test result"}
-                />
-              </Stack>
-            </Box>
+                  <Button
+                    fullWidth
+                    size="large"
+                    sx={{
+                      color: "#1570EF",
+                      border: "1px solid #D1E9FF",
+                      outline: "none",
+                      textTransform: "capitalize",
+                      fontWeight: 600,
+                      height: 48,
+                      background: "inherit",
+                      "&:hover": { backgroundColor: "#D1E9FF" },
+                    }}
+                    variant="outlined"
+                    onClick={() => handleSubmitTests("draft")}
+                  >
+                    Save as draft
+                  </Button>
+                  <Buttons
+                    onClick={() => handleSubmitTests("final")}
+                    title={"Save test result"}
+                  />
+                </Stack>
+              </Box>
+            )}
           </Box>
         </Box>
       </Box>
