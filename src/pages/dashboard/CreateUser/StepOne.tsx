@@ -787,17 +787,6 @@ export default function StepOne({
         </div>
 
         <InputField
-          isReadOnly
-          type="number"
-          label="Doctor's Phone"
-          name="doctorsContact"
-          placeholder="Enter Doctor's phone number"
-          onChange={handleChange}
-          register={register}
-          errors={errors}
-        />
-
-        <InputField
           type="number"
           label="Doctor's License"
           placeholder="Enter Doctor's license number"

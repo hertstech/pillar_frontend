@@ -630,17 +630,6 @@ export default function Profile() {
 
               <InputField
                 type="number"
-                label="Doctor's Contact"
-                name="doctorsContact"
-                placeholder="Enter Doctor's phone number"
-                value={editForm.doctorsContact}
-                onChange={(e: any) =>
-                  handleChange("doctorsContact", e.target.value)
-                }
-              />
-
-              <InputField
-                type="number"
                 label="Doctor's License"
                 placeholder="Enter Doctor's license number"
                 name="doctorsLicense"
