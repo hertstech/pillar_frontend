@@ -10,12 +10,14 @@ import { LogEntry } from "../../Health/ActivityLog";
 import { PastTests } from "../Components/PastTestModal";
 import {
   useGetSingleTest,
+  useGetTestActivityLog,
   useUpdateTestStatus,
 } from "../../../../../api/HealthServiceUser/test";
 import { useNavigate } from "react-router-dom";
 import { DeleteAllTestsOrder } from "../AddTest/DeleteAllTest";
 import { useAlert } from "../../../../../Utils/useAlert";
 import classNames from "classnames";
+import useDownloader from "react-use-downloader";
 
 interface IProps {
   id: string | undefined;
@@ -32,8 +34,31 @@ export const TestDetails: React.FC<IProps> = ({ id, handleCloseDrawer }) => {
 
   const { data, isLoading } = useGetSingleTest(id as string);
   const { mutate } = useUpdateTestStatus();
+  const { download } = useDownloader();
+  const { data: logData } = useGetTestActivityLog(id as string);
+
+  console.log("log data:", logData?.data);
 
   const status = data?.data?.status;
+  const docId = data?.data?.document_id;
+
+  const handleDownload = (documentId: string, fileName?: string) => {
+    if (!documentId) {
+      console.error("Document ID is missing.");
+      return;
+    } else {
+      const filename = fileName ? fileName : "reports_transcript";
+      const downloadUrl = documentId;
+
+      download(downloadUrl, filename)
+        .then(() => {
+          console.log(`File downloaded successfully: ${filename}`);
+        })
+        .catch((err: any) => {
+          console.error(`Error downloading file: ${err}`);
+        });
+    }
+  };
 
   const handleDuplicate = (Id: string | null) => {
     if (!Id) {
@@ -152,7 +177,6 @@ export const TestDetails: React.FC<IProps> = ({ id, handleCloseDrawer }) => {
     },
   ];
 
-
   return (
     <Box
       sx={{
@@ -185,10 +209,13 @@ export const TestDetails: React.FC<IProps> = ({ id, handleCloseDrawer }) => {
               <button
                 className={classNames(
                   "flex mt-1 gap-2 text-sm font-[600] text-pri-650",
-                  data?.data?.document_id ? "!text-pri-650" : "!text-neu-400"
+                  docId ? "!text-pri-650" : "!text-neu-400"
                 )}
               >
-                <FaDownload /> <span className="">Download</span>
+                <FaDownload />{" "}
+                <button onClick={() => handleDownload(docId)} className="">
+                  Download
+                </button>
               </button>
               <PopperOver
                 clipping={true}
@@ -232,11 +259,16 @@ export const TestDetails: React.FC<IProps> = ({ id, handleCloseDrawer }) => {
             {
               label: "Activity",
               content: (
-                <LogEntry
-                  date="5th Nov., 2023 • 5:30 AM"
-                  title="Edited test result"
-                  author="Aminat Rukaiya Okeke"
-                />
+                <>
+                  {logData?.data?.map((log: any, index: number) => (
+                    <LogEntry
+                      key={index}
+                      date={new Date(log.date_created).toLocaleString()}
+                      title={log.message}
+                      author={`${log.pillar_tenet.title} ${log.pillar_tenet.firstName} ${log.pillar_tenet.lastName}`}
+                    />
+                  ))}
+                </>
               ),
             },
           ]}

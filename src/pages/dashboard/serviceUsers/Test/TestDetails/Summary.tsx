@@ -25,8 +25,9 @@ export const Summary = ({ data }: any) => {
         <SummaryItem
           label="Attachment"
           value={
-            <div className="flex gap-2 items-center">
-              <FaFile /> <span>labscan.tst</span>
+            <div className="flex text-succ gap-2 items-center">
+              <FaFile className="" />{" "}
+              <span >{data?.file_name ? data?.file_name : "lab_scan.tst"}</span>
             </div>
           }
         />

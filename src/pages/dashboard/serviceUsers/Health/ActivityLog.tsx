@@ -40,7 +40,7 @@ export const LogEntry = ({ date, title, author, ...rest }: LogEntryProps) => (
       )}
       <p className="break-before-all">{title}</p>
     </Box>
-    <Box className="text-sm font-normal text-neu-700 flex items-center gap-1">
+    <Box className="text-sm font-normal text-neu-700 flex items-center gap-1 capitalize">
       <img src="/src/assets/avi.png" alt="" className="w-4 h-4" />
       <p>{author}</p>
     </Box>

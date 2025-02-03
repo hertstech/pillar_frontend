@@ -20,6 +20,15 @@ export const useGetSingleTest = (testID: string) => {
     },
   });
 };
+export const useGetTestActivityLog = (orderId: string) => {
+  return useQuery({
+    queryKey: ["getTestsLogs", orderId],
+    queryFn: async () => {
+      const res = axiosInstance.get(`/api/v1/order/${orderId}/activity/log`);
+      return res;
+    },
+  });
+};
 
 export const useDownloadFiles = (data: Record<string, any>) => {
   const { NHRID, docId } = data;
