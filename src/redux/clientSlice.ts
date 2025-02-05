@@ -23,7 +23,7 @@ export const clientSlice = createSlice({
         ...state.clients,
         [tabId]: client,
       };
-    },
+    }, 
     dispatchEditClient: (
       state,
       action: PayloadAction<{ tabId: string; updatedClient: Client }>

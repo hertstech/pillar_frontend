@@ -22,6 +22,8 @@ import {
 } from "../../../../api/HealthServiceUser/transferAndShareAccess";
 import { useParams } from "react-router-dom";
 import { useAlert } from "../../../../Utils/useAlert";
+import { useDispatch } from "react-redux";
+import { dispatchClient } from "../../../../redux/clientSlice";
 
 interface ActivityPinModalProps {
   open: boolean;
@@ -49,6 +51,7 @@ const TransferRecordAccessForm: React.FC<ActivityPinModalProps> = ({
 
   const NHRID = id;
 
+  const dispatch = useDispatch();
   const [isValidUID, setIsValidUID] = useState<boolean>(false);
   const [isSending, setIsSending] = useState(false);
 
@@ -100,16 +103,16 @@ const TransferRecordAccessForm: React.FC<ActivityPinModalProps> = ({
   };
 
   const onSubmit = (data: any) => {
-    setIsSending(true)
-    const submissionData = {
-      ...data,
-      service_user_id: NHRID,
-    };
+    setIsSending(true);
+    const submissionData = { ...data, service_user_id: NHRID };
 
     mutate(submissionData, {
-      onSuccess: () => {
+      onSuccess: (response) => {
+        dispatch(
+          dispatchClient({ tabId: response.data.id, client: response.data })
+        );
         reset();
-        setIsSending(false)
+        setIsSending(false);
         setOpen(false);
         useAlert({
           timer: 4000,
@@ -120,8 +123,7 @@ const TransferRecordAccessForm: React.FC<ActivityPinModalProps> = ({
         });
       },
       onError: () => {
-        reset();
-        setIsSending(false)
+        setIsSending(false);
         setOpen(false);
         useAlert({
           timer: 4000,
@@ -192,11 +194,13 @@ const TransferRecordAccessForm: React.FC<ActivityPinModalProps> = ({
               label="Doctors Name"
               name="doctors_name"
               selectItems={docData}
-              value={watch("doctors_name")}
-              onChange={(value) =>
-                setValue("doctors_name", value, { shouldValidate: true })
-              }
-              register={register("doctors_name")}
+              value={watch("doctors_name") || ""}
+              onChange={(value) => {
+                setValue("doctors_name", value, { shouldValidate: true });
+              }}
+              register={register("doctors_name", {
+                required: "Doctors name is required",
+              })}
               validationError={errors.doctors_name}
             />
 
@@ -219,7 +223,7 @@ const TransferRecordAccessForm: React.FC<ActivityPinModalProps> = ({
                 buttonName="Cancel"
               />
               <PrimaryButton
-                disabled={isLoading||isSending}
+                disabled={isLoading || isSending}
                 type="submit"
                 width="100%"
                 buttonName="Transfer access"

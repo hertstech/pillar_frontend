@@ -30,6 +30,8 @@ import {
 import { debounce } from "lodash";
 import { useAlert } from "../../../../Utils/useAlert";
 import { useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { dispatchClient } from "../../../../redux/clientSlice";
 
 interface ActivityPinModalProps {
   open: boolean;
@@ -78,6 +80,7 @@ const ShareUserAccessForm: React.FC<ActivityPinModalProps> = ({
 
   const NHRID = id;
 
+  const dispatch = useDispatch();
   const [startDate, setStartDate] = useState<Dayjs | null>(null);
   const [startTime, setStartTime] = useState<Dayjs | null>(null);
   const [endDate, setEndDate] = useState<Dayjs | null>(null);
@@ -160,7 +163,10 @@ const ShareUserAccessForm: React.FC<ActivityPinModalProps> = ({
         service_user_id: NHRID,
       },
       {
-        onSuccess: () => {
+        onSuccess: (response) => {
+          dispatch(
+            dispatchClient({ tabId: response.data.id, client: response.data })
+          );
           reset();
           setIsSending(false);
           setOpen(false);
