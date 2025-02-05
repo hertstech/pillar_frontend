@@ -38,7 +38,11 @@ export default function Monitor() {
 
   return (
     <Page title="Monitoring">
-      <HeaderTabs links={filteredTabs} isLoaded={isLoading} />
+      <HeaderTabs
+        links={filteredTabs}
+        isLoaded={isLoading}
+        writeAccess={true}
+      />
     </Page>
   );
 }

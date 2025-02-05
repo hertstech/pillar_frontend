@@ -309,7 +309,7 @@ export default function Report({
             fontFamily: "fontbold",
           }}
         >
-          <FaPlus className="px-2" />
+          <FaPlus size={20} className="px- text-white " />
           New Report
         </Link>
       </Box>
@@ -487,7 +487,7 @@ export default function Report({
         </Box>
       ) : (
         <Box marginTop={2}>
-          {chartData.length > 0 ? (
+          {chartData?.length > 0 ? (
             <Box
               sx={{
                 display: "grid",
@@ -500,116 +500,124 @@ export default function Report({
                 },
               }}
             >
-              {chartData?.map((chart: any, index: any) => (
-                <Box
-                  key={chart.id}
-                  sx={{
-                    borderRadius: 2,
-                    border: "1px #E4E7EC solid",
-                    background: "white",
-                  }}
-                >
+              {chartData
+                ?.filter(
+                  (chart: any) => chart !== null && typeof chart === "object"
+                )
+                .map((chart: any, index: any) => (
                   <Box
+                    key={chart?.id}
                     sx={{
-                      display: "flex",
-                      flexDirection: "row",
-                      gap: 1,
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      p: 2,
+                      borderRadius: 2,
+                      border: "1px #E4E7EC solid",
+                      background: "white",
                     }}
                   >
-                    <Typography fontWeight={600} fontSize={18} color="#090816">
-                      {chart?.title}
-                    </Typography>
-
-                    <Button
+                    <Box
                       sx={{
-                        borderRadius: "50%",
-                        height: "36px",
-                        minWidth: "36px",
-                      }}
-                      onClick={(event) => handleClick(event, chart.id)}
-                    >
-                      <FaEllipsis />
-                    </Button>
-                    <Popover
-                      id={id}
-                      open={open && currentChartId === chart.id}
-                      anchorEl={anchorEl}
-                      onClose={handleClose}
-                      anchorOrigin={{
-                        vertical: "bottom",
-                        horizontal: "right",
-                      }}
-                      transformOrigin={{
-                        vertical: "top",
-                        horizontal: "right",
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: 1,
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        p: 2,
                       }}
                     >
-                      <Box
+                      <Typography
+                        fontWeight={600}
+                        fontSize={18}
+                        color="#090816"
+                      >
+                        {chart?.title}
+                      </Typography>
+
+                      <Button
                         sx={{
-                          zIndex: 1,
-                          background: "white",
-                          border: "1px #F2F4F7 solid",
-                          borderRadius: 2,
-                          width: "120px",
-                          top: "53px",
-                          right: "-16px",
-                          p: 1,
+                          borderRadius: "50%",
+                          height: "36px",
+                          minWidth: "36px",
+                        }}
+                        onClick={(event) => handleClick(event, chart?.id)}
+                      >
+                        <FaEllipsis />
+                      </Button>
+                      <Popover
+                        id={id}
+                        open={open && currentChartId === chart?.id}
+                        anchorEl={anchorEl}
+                        onClose={handleClose}
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "right",
+                        }}
+                        transformOrigin={{
+                          vertical: "top",
+                          horizontal: "right",
                         }}
                       >
-                        {chart.status === true ? (
-                          <Button
-                            onClick={() => onUnPinHandler(chart.id)}
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              textTransform: "none",
-                            }}
-                            startIcon={<PinIcon />}
-                          >
-                            Unpin
-                          </Button>
-                        ) : (
-                          <Button
-                            onClick={() => onPinHandler(chart.id)}
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              textTransform: "none",
-                            }}
-                            startIcon={<PinIcon />}
-                          >
-                            Pin
-                          </Button>
-                        )}
-                        <Button
+                        <Box
                           sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            textTransform: "none",
-                            color: "#CB1A14",
-                            justifyContent: "flex-start",
+                            zIndex: 1,
+                            background: "white",
+                            border: "1px #F2F4F7 solid",
+                            borderRadius: 2,
+                            width: "120px",
+                            top: "53px",
+                            right: "-16px",
+                            p: 1,
                           }}
-                          startIcon={<FaTrash />}
                         >
-                          Delete
-                        </Button>
-                      </Box>
-                    </Popover>
-                  </Box>
+                          {chart?.status === true ? (
+                            <Button
+                              onClick={() => onUnPinHandler(chart.id)}
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                textTransform: "none",
+                              }}
+                              startIcon={<PinIcon />}
+                            >
+                              Unpin
+                            </Button>
+                          ) : (
+                            <Button
+                              onClick={() => onPinHandler(chart.id)}
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                textTransform: "none",
+                              }}
+                              startIcon={<PinIcon />}
+                            >
+                              Pin
+                            </Button>
+                          )}
+                          <Button
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              textTransform: "none",
+                              color: "#CB1A14",
+                              justifyContent: "flex-start",
+                            }}
+                            startIcon={<FaTrash />}
+                          >
+                            Delete
+                          </Button>
+                        </Box>
+                      </Popover>
+                    </Box>
 
-                  <Divider />
-                  <ChartComponent
-                    chart={chart}
-                    chartResponse={chart.result}
-                    index={index}
-                    xs={"100%"}
-                    lg={"100%"}
-                  />
-                </Box>
-              ))}
+                    <Divider />
+                    <ChartComponent
+                      chart={chart}
+                      chartResponse={chart?.result}
+                      index={index}
+                      xs={"100%"}
+                      lg={"100%"}
+                    />
+                  </Box>
+                ))}
             </Box>
           ) : (
             <NoResultIllustration text="No report generated yet" />
