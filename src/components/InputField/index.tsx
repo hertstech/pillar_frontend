@@ -4,6 +4,7 @@ import { useState } from "react";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import classNames from "classnames";
 import { FaRegCircleCheck } from "react-icons/fa6";
+import { IoMdStar } from "react-icons/io";
 
 interface TextProps {
   label: string;
@@ -15,6 +16,7 @@ interface TextProps {
   register?: any;
   placeholder?: string;
   required?: boolean;
+  showRequired?: boolean;
   disabled?: boolean;
   checking?: boolean;
   isReadOnly?: boolean;
@@ -51,7 +53,13 @@ export default function InputField({
   return (
     <div className={Styles.wrapper}>
       <label htmlFor={name} className="text-neu-700 font-[600] text-[.875rem]">
-        {label}
+        {rest.showRequired ? (
+          <span className="flex items-center gap-1">
+            {label} <IoMdStar size={10} className="text-err" />
+          </span>
+        ) : (
+          <> {label}</>
+        )}
         {textarea ? (
           <textarea
             name={name}

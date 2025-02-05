@@ -24,6 +24,7 @@ import { joiResolver } from "@hookform/resolvers/joi";
 import { stepOneSchema } from "./schema/StepOne";
 import Buttons from "../../../components/Button";
 import { useGetHCPInfo } from "../../../api/hcp";
+import { IoMdStar } from "react-icons/io";
 
 export default function StepOne({
   formData,
@@ -112,7 +113,10 @@ export default function StepOne({
       >
         <div style={{ display: "flex", gap: 10 }}>
           <label htmlFor="title" style={{ marginTop: 9 }}>
-            Title
+            <span className="flex items-center gap-1">
+              Title <IoMdStar size={10} className="text-err" />
+            </span>
+
             <TextField
               {...register("title")}
               select
@@ -138,6 +142,7 @@ export default function StepOne({
           </label>
 
           <InputField
+            showRequired
             type="text"
             label="First Name"
             name="firstName"
@@ -149,6 +154,7 @@ export default function StepOne({
         </div>
 
         <InputField
+          showRequired
           type="text"
           label="Middle Name"
           name="middleName"
@@ -159,6 +165,7 @@ export default function StepOne({
         />
 
         <InputField
+          showRequired
           type="text"
           label="Last Name"
           name="lastName"
@@ -169,6 +176,7 @@ export default function StepOne({
         />
 
         <InputField
+          showRequired
           type="email"
           label="Email Address"
           name="email"
@@ -179,7 +187,10 @@ export default function StepOne({
         />
 
         <label htmlFor="gender">
-          Gender
+          <span className="flex items-center gap-1">
+            Gender
+            <IoMdStar size={10} className="text-err" />
+          </span>
           <TextField
             select
             {...register("gender")}
@@ -200,7 +211,10 @@ export default function StepOne({
         </label>
 
         <label htmlFor="dateOfBirth">
-          Date of Birth
+          <span className="flex items-center gap-1">
+            Date of Birth
+            <IoMdStar size={10} className="text-err" />
+          </span>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={["DatePicker"]}>
               <DatePicker
@@ -232,26 +246,11 @@ export default function StepOne({
           )}
         </label>
 
-        <label htmlFor="religion" className="hidden">
-          Religion
-          <TextField
-            select
-            {...register("religion")}
-            error={!!errors.religion}
-            sx={{ marginTop: "5px" }}
-            fullWidth
-            name="religion"
-            onChange={handleChange}
-          >
-            <MenuItem value="christian">Christian</MenuItem>
-            <MenuItem value="muslim">Muslim</MenuItem>
-            <MenuItem value="traditional">Traditional</MenuItem>
-            <MenuItem value="others">Others</MenuItem>
-          </TextField>
-        </label>
-
         <label htmlFor="religion">
-          Religion
+          <span className="flex items-center gap-1">
+            Religion
+            <IoMdStar size={10} className="text-err" />
+          </span>
           <TextField
             select
             {...register("religion")}
@@ -281,7 +280,10 @@ export default function StepOne({
         />
 
         <label htmlFor="height">
-          Height
+          <span className="flex items-center gap-1">
+            Height
+            <IoMdStar size={10} className="text-err" />
+          </span>
           <OutlinedInput
             type="number"
             {...register("height")}
@@ -305,7 +307,10 @@ export default function StepOne({
         </label>
 
         <label>
-          Weight
+          <span className="flex items-center gap-1">
+            Weight
+            <IoMdStar size={10} className="text-err" />
+          </span>
           <OutlinedInput
             type="number"
             {...register("weight")}
@@ -354,6 +359,7 @@ export default function StepOne({
       <Box sx={{ marginBottom: 2 }}>
         <Typography variant="h6">Residential Information</Typography>
         <InputField
+          showRequired
           type="text"
           label="Address"
           name="address"
@@ -371,7 +377,10 @@ export default function StepOne({
           }}
         >
           <label htmlFor="state">
-            State
+            <span className="flex items-center gap-1">
+              State
+              <IoMdStar size={10} className="text-err" />
+            </span>
             <TextField
               select
               sx={{ marginTop: "5px" }}
@@ -396,7 +405,10 @@ export default function StepOne({
           </label>
 
           <label htmlFor="LGA">
-            L.G.A
+            <span className="flex items-center gap-1">
+              L.G.A
+              <IoMdStar size={10} className="text-err" />
+            </span>
             <TextField
               select
               {...register("lga")}
@@ -641,6 +653,7 @@ export default function StepOne({
         <Typography variant="h6">Care Team Information</Typography>
 
         <InputField
+          showRequired
           type="text"
           isReadOnly
           label="Facility Name"
@@ -651,6 +664,7 @@ export default function StepOne({
         />
 
         <InputField
+          showRequired
           type="text"
           isReadOnly
           label="Facility Door No."
@@ -662,6 +676,7 @@ export default function StepOne({
         />
 
         <InputField
+          showRequired
           type="text"
           isReadOnly
           label="Facility Street"
@@ -673,6 +688,7 @@ export default function StepOne({
         />
 
         <InputField
+          showRequired
           type="text"
           isReadOnly
           label="Facility Town(City)"
@@ -683,6 +699,7 @@ export default function StepOne({
           className="!capitalize"
         />
         <InputField
+          showRequired
           type="text"
           isReadOnly
           label="Facility LGA"
@@ -693,6 +710,7 @@ export default function StepOne({
           className="!capitalize"
         />
         <InputField
+          showRequired
           type="text"
           isReadOnly
           label="Facility State"
@@ -704,6 +722,7 @@ export default function StepOne({
         />
 
         <InputField
+          showRequired
           type="text"
           isReadOnly
           label="Facility Phone 1"
