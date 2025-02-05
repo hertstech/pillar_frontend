@@ -34,7 +34,7 @@ const testSchema = Joi.object({
       reading: Joi.string().required().messages({
         "string.empty": "Reading values are required",
       }),
-      notes: Joi.string().optional(),
+      additional_notes: Joi.string().optional(),
     })
   ),
 });
@@ -45,7 +45,7 @@ interface TestFormValues {
     category: string;
     testTypes: string;
     reading: string;
-    notes?: string | null;
+    additional_notes?: string | null;
   }[];
   saveType: "draft" | "final";
 }
@@ -74,7 +74,7 @@ export function UpdateTestResultForm({
     category: "",
     testTypes: "",
     reading: "",
-    notes: "",
+    additional_notes: "",
   });
 
   // const [newTestUnit, setNewTestUnit] = useState("");
@@ -131,7 +131,7 @@ export function UpdateTestResultForm({
         category: "",
         testTypes: "",
         reading: "",
-        notes: null,
+        additional_notes: null,
       });
     });
   };
@@ -156,7 +156,7 @@ export function UpdateTestResultForm({
           category: test.category,
           testTypes: test.test_types,
           reading: test.reading,
-          notes: test.additional_notes,
+          additional_notes: test.additional_notes,
         })
       );
       initialTests.forEach((test) => append(test));
@@ -260,7 +260,7 @@ export function UpdateTestResultForm({
                           type="text"
                           textarea={true}
                           label="Add Notes (optional)"
-                          name={`tests_results.${index}.notes`}
+                          name={`tests_results.${index}.additional_notes`}
                           placeholder="Enter notes here"
                           register={methods.register}
                           errors={errors}
