@@ -82,8 +82,8 @@ export default function StepOne({
       setValue("facilityName", hcpData?.name || "");
       setValue("facilityType", hcpData?.type || "");
       setValue("facilityOwnership", hcpData?.ownership || "");
-      setValue("facilityDoor", hcpData?.address || "");
-      setValue("facilityStreet", hcpData?.address || "");
+      setValue("facilityDoor", hcpData?.house_number || "");
+      setValue("facilityStreet", hcpData?.street_name || "");
       setValue("facilityTown", hcpData?.town || "");
       setValue("facilityLGA", hcpData?.lga || "");
       setValue("facilityState", hcpData?.state || "");
