@@ -111,7 +111,7 @@ export default function StepOne({
         }}
       >
         <div style={{ display: "flex", gap: 10 }}>
-          <label htmlFor="title" style={{ marginTop: 9 }}>
+          <label htmlFor="title" style={{ marginTop: 7 }}>
             <span className="flex items-center gap-1">
               Title <IoMdStar size={10} className="text-err" />
             </span>
