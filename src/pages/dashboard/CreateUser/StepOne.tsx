@@ -37,6 +37,7 @@ export default function StepOne({
   const { data } = useGetHCPInfo();
 
   const {
+    watch,
     register,
     setValue,
     handleSubmit,
@@ -47,12 +48,14 @@ export default function StepOne({
   });
 
   const handleChange = (
-    event: React.ChangeEvent<{ name?: string; value: any }>
+    event: React.ChangeEvent<{ name?: string; value: unknown }>
   ) => {
     const { name, value } = event.target;
-    superHandleChange({ ...formData, [name || ""]: value });
-    setSelectedDoctor(value);
+
+    setSelectedDoctor(value as string);
     setValue(name || "", value, { shouldValidate: true });
+
+    superHandleChange({ ...formData, [name || ""]: value });
   };
 
   const handleDateChange = (newValue: any) => {
@@ -70,11 +73,11 @@ export default function StepOne({
     superHandleChange({ ...formData, [identifier]: value });
   };
 
-  console.log(errors);
   const onSubmit = (data: any) => {
     superHandleChange(data);
     handleNext();
   };
+  console.log("doctors id;", watch("registeredDoctor"));
 
   useEffect(() => {
     if (data?.data) {
@@ -332,7 +335,10 @@ export default function StepOne({
         </label>
 
         <label htmlFor="tribalMarks">
-          Tribal Mark
+          <span className="flex items-center gap-1">
+            Tribal Mark
+            <IoMdStar size={10} className="text-err" />
+          </span>
           <TextField
             select
             {...register("tribalMarks")}

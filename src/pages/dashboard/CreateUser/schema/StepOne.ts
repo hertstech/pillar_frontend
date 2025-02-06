@@ -50,7 +50,7 @@ export const stepOneSchema = Joi.object({
     "any.required": "Weight is required.",
     "string.empty": "Weight is required.",
   }),
-  tribalMarks: Joi.string().valid("Yes", "No").allow("").optional(),
+  tribalMarks: Joi.string().valid("Yes", "No").allow("").required().messages({ "string.empty": "Tribal mark is required."}),
   address: Joi.string().required().messages({
     "any.required": "Address is required.",
     "string.empty": "Address is required.",

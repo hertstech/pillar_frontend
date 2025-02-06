@@ -23,7 +23,6 @@ import { axiosInstance } from "../../../Utils";
 import { useNavigate } from "react-router-dom";
 import { NeedHelp } from "../../../components/CalendarField";
 import { useAlert } from "../../../Utils/useAlert";
-import { transformToSnakeCase } from "../../../Utils/caseTransformer";
 
 export default function CreateUser() {
   const [activeStep, setActiveStep] = useState(0);
@@ -170,8 +169,6 @@ export default function CreateUser() {
 
   const createUser = async () => {
     setIsLoading(true);
-    const formattedData = transformToSnakeCase(formData);
-    console.log("snake case payload;", formattedData);
     try {
       const res = await axiosInstance.post(
         "/create-serviceuser-profile",
@@ -194,7 +191,7 @@ export default function CreateUser() {
         isToast: true,
         title: "Error",
         text: `${
-          error.response.data.message ||
+          error.response.data?.detail ||
           "Server error, kindly reach out to support team"
         }`,
       });
