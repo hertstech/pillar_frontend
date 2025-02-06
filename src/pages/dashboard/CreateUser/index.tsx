@@ -62,9 +62,9 @@ export default function CreateUser() {
     nokNHR_ID: "",
     nokPhoneNumber: "",
     nokRelationship: "",
-    nominatedPharmarcy: "",
+    nominatedPharmacy: "",
     registeredDoctor: "",
-    registeredHospital: "",
+
     HMOPlan: "",
     title: "",
 

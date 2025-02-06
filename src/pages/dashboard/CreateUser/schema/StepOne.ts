@@ -104,6 +104,7 @@ export const stepOneSchema = Joi.object({
   parentTwo: Joi.string().allow("").optional(),
   parentTwoNumber: Joi.string().allow("").optional(),
   parentTwoRelationship: Joi.string().allow("").optional(),
+
   nominatedPharmacy: Joi.string().allow("").optional(),
   nominatedPharmacyDoor: Joi.string().allow("").optional(),
   nominatedPharmacyStreet: Joi.string().allow("").optional(),

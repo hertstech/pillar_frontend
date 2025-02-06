@@ -79,7 +79,7 @@ export default function StepOne({
     if (data?.data) {
       const hcpData = data.data;
       setValue("facilityName", hcpData?.name || "");
-      setValue("facilityType", hcpData?.type || "");
+      setValue("facilityType", hcpData?.facility_type || "");
       setValue("facilityOwnership", hcpData?.ownership || "");
       setValue("facilityDoor", hcpData?.house_number || "");
       setValue("facilityStreet", hcpData?.street_name || "");
@@ -744,25 +744,33 @@ export default function StepOne({
 
         <div style={{ marginTop: 8 }}>
           <label htmlFor="facilityType">
-            Facility Type
+            <span className="flex items-center gap-1">
+              Type
+              <IoMdStar size={10} className="text-err" />
+            </span>
             <TextField
               select
               {...register("facilityType")}
               sx={{ marginTop: "5px" }}
               fullWidth
               name="facilityType"
-              value={data?.data?.ownership || ""}
+              value={data?.data?.facility_type || ""}
               onChange={handleChange}
               inputProps={{ readOnly: true }}
               className="!capitalize"
             >
-              <MenuItem value={data?.data?.type}>{data?.data?.type}</MenuItem>
+              <MenuItem value={data?.data?.facility_type}>
+                {data?.data?.facility_type}
+              </MenuItem>
             </TextField>
           </label>
         </div>
         <div className="mt-4 flex flex-col gap-4">
           <label htmlFor="facilityOwnership">
-            Facility Ownership
+            <span className="flex items-center gap-1">
+              Facility Ownership
+              <IoMdStar size={10} className="text-err" />
+            </span>
             <TextField
               select
               {...register("facilityOwnership")}
@@ -780,7 +788,10 @@ export default function StepOne({
           </label>
 
           <label htmlFor="registeredDoctor">
-            Registered Doctor
+            <span className="flex items-center gap-1">
+              Registered Doctor
+              <IoMdStar size={10} className="text-err" />
+            </span>
             <TextField
               select
               {...register("registeredDoctor")}

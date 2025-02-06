@@ -131,7 +131,7 @@ export default function InputField({
             {showPassword ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
           </div>
         )}
-        {errors[name] && (
+        {errors?.[name] && (
           <p className="text-err ml-4 text-xs !font-semibold">
             {errors[name]?.message || "This field is required"}
           </p>
