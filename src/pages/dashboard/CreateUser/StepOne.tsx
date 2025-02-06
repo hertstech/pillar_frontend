@@ -70,6 +70,7 @@ export default function StepOne({
     superHandleChange({ ...formData, [identifier]: value });
   };
 
+  console.log(errors);
   const onSubmit = (data: any) => {
     superHandleChange(data);
     handleNext();
@@ -81,7 +82,7 @@ export default function StepOne({
       setValue("facilityName", hcpData?.name || "");
       setValue("facilityType", hcpData?.facility_type || "");
       setValue("facilityOwnership", hcpData?.ownership || "");
-      setValue("facilityDoor", hcpData?.house_number || "");
+      setValue("facilityDoorNumber", hcpData?.house_number || "");
       setValue("facilityStreet", hcpData?.street_name || "");
       setValue("facilityTown", hcpData?.town || "");
       setValue("facilityLGA", hcpData?.lga || "");
@@ -667,7 +668,7 @@ export default function StepOne({
           type="text"
           isReadOnly
           label="Facility Door No."
-          name="facilityDoor"
+          name="facilityDoorNumber"
           onChange={handleChange}
           register={register}
           errors={errors}
@@ -839,7 +840,7 @@ export default function StepOne({
         <InputField
           type="text"
           label="Nominated Pharmacy Door No."
-          name="nominatedPharmacyDoor"
+          name="nominatedPharmacyDoorNumber"
           placeholder="Enter Nominated Pharmacy's Door/House Number"
           onChange={handleChange}
           register={register}
@@ -885,7 +886,7 @@ export default function StepOne({
         <InputField
           type="text"
           label="HMO Plan"
-          name="HMOPlan"
+          name="hmoPlan"
           placeholder="Enter current HMO plan"
           onChange={handleChange}
           register={register}
@@ -896,7 +897,7 @@ export default function StepOne({
         <InputField
           type="number"
           label="HMO Number"
-          name="HMONumber"
+          name="hmoNumber"
           placeholder="Enter HMO number"
           onChange={handleChange}
           register={register}

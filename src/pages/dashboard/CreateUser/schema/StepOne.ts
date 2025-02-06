@@ -75,7 +75,7 @@ export const stepOneSchema = Joi.object({
     "any.required": "Facility ownership is required.",
     "string.empty": "Facility ownership is required.",
   }),
-  facilityDoor: Joi.string().required().messages({
+  facilityDoorNumber: Joi.string().required().messages({
     "any.required": "Facility door number is required.",
     "string.empty": "Facility door number is required.",
   }),
@@ -106,13 +106,13 @@ export const stepOneSchema = Joi.object({
   parentTwoRelationship: Joi.string().allow("").optional(),
 
   nominatedPharmacy: Joi.string().allow("").optional(),
-  nominatedPharmacyDoor: Joi.string().allow("").optional(),
+  nominatedPharmacyDoorNumber: Joi.string().allow("").optional(),
   nominatedPharmacyStreet: Joi.string().allow("").optional(),
   nominatedPharmacyTown: Joi.string().allow("").optional(),
   nominatedPharmacyLGA: Joi.string().allow("").optional(),
   nominatedPharmacyState: Joi.string().allow("").optional(),
   registeredDoctor: Joi.string().allow("").optional(),
-  HMOPlan: Joi.string().allow("").optional(),
+  hmoPlan: Joi.string().allow("").optional(),
   nokFullName: Joi.string().allow("").optional(),
   nokNHR_ID: Joi.string().allow("").optional(),
   nokPhoneNumber: Joi.string().allow("").optional(),
@@ -136,5 +136,5 @@ export const stepOneSchema = Joi.object({
     .optional(),
   doctorsLicense: Joi.string().allow("").optional(),
   doctorsContact: Joi.string().allow("").optional(),
-  HMONumber: Joi.string().allow("").optional(),
+  hmoNumber: Joi.string().allow("").optional(),
 });
