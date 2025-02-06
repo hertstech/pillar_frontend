@@ -5,25 +5,27 @@ import {
   InputAdornment,
   MenuItem,
   OutlinedInput,
-  Stack,
   TextField,
   Typography,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
-import InputField from "../../../components/InputField";
-import PhoneField from "../../../components/PhoneInput";
-import StatesData from "../../../../states.json";
+import InputField from "../../../../components/InputField";
+import PhoneField from "../../../../components/PhoneInput";
+import StatesData from "../../../../../states.json";
 import { useNavigate, useParams } from "react-router-dom";
-import Swal from "sweetalert2";
-import { axiosInstance } from "../../../Utils";
-import { dispatchClient } from "../../../redux/clientSlice";
-import { relations } from "../serviceUsers/shared";
+import { axiosInstance } from "../../../../Utils";
+import { dispatchClient } from "../../../../redux/clientSlice";
+import { relations } from "../../serviceUsers/shared";
+import { useAlert } from "../../../../Utils/useAlert";
 
 export default function Profile() {
   const client = useSelector((state: any) => state.client.clients.tab1[0]);
 
   const user = useSelector((state: any) => state.user.user);
+
+  console.log("user information;", user);
+  console.log("client information;", client);
 
   const { id } = useParams();
 
@@ -39,9 +41,9 @@ export default function Profile() {
     religion: client?.religion,
     dateOfBirth: client?.dateOfBirth,
     tribalMarks: client?.tribalMarks,
+    phoneNumber: client?.phoneNumber || "",
     email: client?.email,
     id: id,
-    phoneNumber: client?.phoneNumber || "",
     address: client?.address || "",
     state: client?.state || "",
     lga: client?.lga || "",
@@ -60,8 +62,27 @@ export default function Profile() {
     nokNHR_ID: client?.nokNHR_ID || "",
     nokRelationship: client?.nokRelationship || "",
     HMOPlan: client?.HMOPlan || "",
-    nominatedPharmarcy: client?.nominatedPharmarcy || "",
+    nominatedPharmacy: client?.nominated_pharmacy || "",
+    nominatedPharmacyDoor: client?.nominated_pharmacy_door_number || "",
+    nominatedPharmacyStreet: client?.nominated_pharmacy_street || "",
+    nominatedPharmacyTown: client?.nominated_pharmacy_town || "",
+    nominatedPharmacyLGA: client?.nominated_pharmacy_lga || "",
+    nominatedPharmacyState: client?.nominated_pharmacy_state || "",
     registeredDoctor: client?.registeredDoctor || "",
+    facilityName: client?.facility?.name || "",
+    facilityType: client?.facility?.facility_type || "",
+    facilityOwnership: client?.facility?.ownership || "",
+    facilityPhone1: client?.facility?.facility_phone_number_1 || "",
+    facilityPhone2: client?.facility?.facility_phone_number_2 || "",
+    facilityDoor: client?.facility?.house_number || "",
+    facilityStreet: client?.facility?.street_name || "",
+    facilityTown: client?.facility?.town || "",
+    facilityLGA: client?.facility?.lga || "",
+    facilityState: client?.facility?.state || "",
+
+    doctorsLicense: client?.doctorsLicense || "",
+    doctorsContact: client?.doctorsContact || "",
+    HMONumber: client?.HMONumber || "",
   });
 
   const handleChange = (name: string, value: any) => {
@@ -74,11 +95,12 @@ export default function Profile() {
 
   const [isLoad, setIsLoad] = React.useState(false);
 
-  const updateUser = async () => {
+  const updateUser = async (e: any) => {
+    e.preventDefault();
     setIsLoad(true);
 
     try {
-      const res = await axiosInstance.put(
+      const res = await axiosInstance.patch(
         `/update-serviceiuser-profile/${id}`,
         editForm
       );
@@ -88,11 +110,11 @@ export default function Profile() {
       dispatch(dispatchClient({ tabId: "tab1", client: responseArray }));
 
       setIsLoad(false);
-      Swal.fire({
+      useAlert({
+        isToast: true,
         icon: "success",
-        title: `Successful`,
-        text: "Record Successfully Updated",
-        confirmButtonColor: "#2E90FA",
+        position: "top-start",
+        title: "Record Successfully Updated",
       });
 
       // console.log(res.data);
@@ -103,10 +125,11 @@ export default function Profile() {
       }
     } catch (error) {
       setIsLoad(false);
-      Swal.fire({
+      useAlert({
+        isToast: true,
         icon: "error",
-        title: "Error",
-        confirmButtonColor: "#2E90FA",
+        position: "top-start",
+        title: "Something went wrong try again shortly",
       });
     }
   };
@@ -119,7 +142,7 @@ export default function Profile() {
         </Typography>
       </div>
 
-      <form>
+      <form onSubmit={updateUser}>
         <div>
           <Box>
             <Typography
@@ -466,63 +489,247 @@ export default function Profile() {
             )}
 
             <Box sx={{ mt: 3 }}>
-              <Typography
-                sx={{ color: "#090816" }}
-                fontWeight={600}
-                fontSize={20}
-              >
-                Health Plan Information
-              </Typography>
+              <Typography variant="h6">Care Team Information</Typography>
+
               <InputField
                 type="text"
-                label="HMO Name"
-                name="HMOPlan"
-                value={editForm.HMOPlan}
-                onChange={(e: any) => handleChange("HMOPlan", e.target.value)}
+                isReadOnly
+                label="Facility Name"
+                name="facilityName"
+                value={editForm?.facilityName || ""}
+              />
+
+              <InputField
+                isReadOnly
+                type="text"
+                label="Facility Door No."
+                name="facilityDoor"
+                value={editForm.facilityDoor}
+                onChange={(e: any) =>
+                  handleChange("facilityDoor", e.target.value)
+                }
+                className="capitalize"
+                maxLength={20}
+              />
+              <InputField
+                isReadOnly
+                type="text"
+                label="Facility Street"
+                name="facilityStreet"
+                value={editForm.facilityStreet}
+                onChange={(e: any) =>
+                  handleChange("facilityStreet", e.target.value)
+                }
+                className="capitalize"
+              />
+              <InputField
+                type="text"
+                isReadOnly
+                label="Facility Town"
+                name="facilityTown"
+                value={editForm.facilityTown}
+                onChange={(e: any) =>
+                  handleChange("facilityTown", e.target.value)
+                }
+                className="capitalize"
+              />
+              <InputField
+                isReadOnly
+                type="text"
+                label="Facility LGA"
+                name="facilityLGA"
+                value={editForm.facilityLGA}
+                onChange={(e: any) =>
+                  handleChange("facilityLGA", e.target.value)
+                }
+                className="capitalize"
+              />
+              <InputField
+                isReadOnly
+                type="text"
+                label="Facility State"
+                name="facilityState"
+                value={editForm.facilityState}
+                onChange={(e: any) =>
+                  handleChange("facilityState", e.target.value)
+                }
+                className="capitalize"
+              />
+
+              <InputField
+                type="text"
+                isReadOnly
+                label="Facility Phone 1"
+                name="facilityPhone1"
+                placeholder="First Facility's phone number"
+                value={editForm.facilityPhone1}
+              />
+              <InputField
+                type="text"
+                isReadOnly
+                label="Facility Phone 2"
+                name="facilityPhone2"
+                placeholder="Second Facility's phone number"
+                value={editForm.facilityPhone2}
+              />
+
+              <div className="flex flex-col gap-3" style={{ marginTop: 8 }}>
+                <label htmlFor="facilityType">
+                  Facility Type
+                  <TextField
+                    select
+                    sx={{ marginTop: "5px" }}
+                    fullWidth
+                    name="facilityType"
+                    value={editForm?.facilityType || ""}
+                    onChange={() => null}
+                    inputProps={{ readOnly: true }}
+                    className="!capitalize"
+                  >
+                    <MenuItem value={editForm?.facilityType}>
+                      {editForm?.facilityType}
+                    </MenuItem>
+                  </TextField>
+                </label>
+
+                <label htmlFor="facilityOwnership">
+                  Facility Ownership
+                  <TextField
+                    select
+                    sx={{ marginTop: "5px" }}
+                    fullWidth
+                    name="facilityOwnership"
+                    value={editForm?.facilityOwnership || ""}
+                    onChange={() => null}
+                    inputProps={{ readOnly: true }}
+                    className="!capitalize"
+                  >
+                    <MenuItem value={editForm?.facilityOwnership}>
+                      {editForm?.facilityOwnership}
+                    </MenuItem>
+                  </TextField>
+                </label>
+                <label htmlFor="facilityOwnership">
+                  Registered Doctor
+                  <TextField
+                    select
+                    sx={{ marginTop: "5px" }}
+                    fullWidth
+                    name="registeredDoctor"
+                    value={editForm?.registeredDoctor || ""}
+                    onChange={() => null}
+                    inputProps={{ readOnly: true }}
+                    className="!capitalize"
+                  >
+                    <MenuItem value={editForm?.registeredDoctor}>
+                      {editForm?.registeredDoctor}
+                    </MenuItem>
+                  </TextField>
+                </label>
+              </div>
+
+              <InputField
+                type="number"
+                label="Doctor's License"
+                placeholder="Enter Doctor's license number"
+                name="doctorsLicense"
+                value={editForm.doctorsLicense}
+                onChange={(e: any) =>
+                  handleChange("doctorsLicense", e.target.value)
+                }
               />
 
               <InputField
                 type="text"
                 label="Nominated Pharmacy"
-                name="nominatedPharmarcy"
-                value={editForm.nominatedPharmarcy}
+                name="nominatedPharmacy"
+                placeholder="Enter Nominated Pharmacy Name"
+                value={editForm.nominatedPharmacy}
                 onChange={(e: any) =>
-                  handleChange("nominatedPharmarcy", e.target.value)
+                  handleChange("nominatedPharmacy", e.target.value)
                 }
               />
 
               <InputField
                 type="text"
-                label="Registered Doctor"
-                name="registeredDoctor"
-                value={editForm.registeredDoctor}
+                label="Nominated Pharmacy Door No."
+                name="nominatedPharmacyDoorNum"
+                placeholder="Enter Nominated Pharmacy House/Door number"
+                value={editForm.nominatedPharmacyDoor}
                 onChange={(e: any) =>
-                  handleChange("registeredDoctor", e.target.value)
+                  handleChange("nominatedPharmacyDoorNum", e.target.value)
                 }
+              />
+              <InputField
+                type="text"
+                label="Nominated Pharmacy Street"
+                name="nominatedPharmacyStreet"
+                placeholder="Enter Nominated Pharmacy's Street"
+                value={editForm.nominatedPharmacyStreet}
+                onChange={(e: any) =>
+                  handleChange("nominatedPharmacyStreet", e.target.value)
+                }
+              />
+              <InputField
+                type="text"
+                label="Nominated Pharmacy Town"
+                name="nominatedPharmacyTown"
+                placeholder="Enter Nominated Pharmacy's Town"
+                value={editForm.nominatedPharmacyTown}
+                onChange={(e: any) =>
+                  handleChange("nominatedPharmacyTown", e.target.value)
+                }
+              />
+              <InputField
+                type="text"
+                label="Nominated Pharmacy LGA"
+                name="nominatedPharmacyLGA"
+                placeholder="Enter Nominated Pharmacy's LGA"
+                value={editForm.nominatedPharmacyLGA}
+                onChange={(e: any) =>
+                  handleChange("nominatedPharmacyLGA", e.target.value)
+                }
+              />
+              <InputField
+                type="text"
+                label="Nominated Pharmacy State"
+                name="nominatedPharmacyState"
+                placeholder="Enter Nominated Pharmacy State"
+                value={editForm.nominatedPharmacyState}
+                onChange={(e: any) =>
+                  handleChange("nominatedPharmacyState", e.target.value)
+                }
+              />
+
+              <InputField
+                type="text"
+                label="HMO Plan"
+                name="HMOPlan"
+                placeholder="Enter current HMO plan"
+                value={editForm.HMOPlan}
+                onChange={(e: any) => handleChange("HMOPlan", e.target.value)}
+              />
+
+              <InputField
+                type="number"
+                label="HMO Number"
+                name="HMONumber"
+                placeholder="Enter HMO number"
+                value={editForm.HMONumber}
+                onChange={(e: any) => handleChange("HMONumber", e.target.value)}
               />
             </Box>
           </Box>
         </div>
 
-        <Stack marginTop={5}>
-          <Button
-            variant="contained"
-            sx={{
-              color: "#FFF",
-              outline: "none",
-              textTransform: "capitalize",
-              fontWeight: 600,
-              background: "#2E90FA",
-              height: "48px",
-              "&:hover": { backgroundColor: "#2E90FA" },
-              borderRadius: 2,
-            }}
-            onClick={updateUser}
-            disabled={isLoad}
-          >
-            Save changes
-          </Button>
-        </Stack>
+        <Button
+          type="submit"
+          disabled={isLoad}
+          variant="contained"
+          sx={{ width: "100%", color: "white", marginTop: 4 }}
+        >
+          Update Profile
+        </Button>
       </form>
     </Box>
   );

@@ -38,14 +38,6 @@
     "type": ["No type provided"]
   },
   {
-    "name": "Personal Preferences",
-    "type": ["No type provided"]
-  },
-  {
-    "name": "Recent Surgeries",
-    "type": ["No type provided"]
-  },
-  {
     "name": "Investigation Result",
     "type": ["No type provided"]
   },
@@ -53,10 +45,7 @@
     "name": "Risk Factors",
     "type": ["No type provided"]
   },
-  {
-    "name": "Hospital Visits",
-    "type": ["No type provided"]
-  },
+
   {
     "name": "Emergency Contacts",
     "type": ["No type provided"]

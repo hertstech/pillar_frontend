@@ -11,7 +11,7 @@ export const useUpdateUserConsent = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ NHRID, data }: CType) => {
-      return axiosInstance.put(`/update-serviceiuser-profile/${NHRID}`, data);
+      return axiosInstance.patch(`/update-serviceiuser-profile/${NHRID}`, data);
       data;
     },
     onSuccess: () => {

@@ -15,8 +15,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Calendar } from "../../../components/CalendarField";
 import InputField, { TextLabel } from "../../../components/InputField";
 import moment from "moment";
-import Swal from "sweetalert2";
 import { axiosInstance } from "../../../Utils";
+import { useAlert } from "../../../Utils/useAlert";
 
 export default function ReferralRecord() {
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
@@ -33,6 +33,7 @@ export default function ReferralRecord() {
     referralSource: "",
     referralName: "",
     referralReason: "",
+    otherReferralReason: "",
     urgencyStatus: "",
     waitingStatus: "",
     teamReferredTo: "",
@@ -63,43 +64,53 @@ export default function ReferralRecord() {
   const handleSubmit = async () => {
     setIsLoading(true);
 
-    const isCategoriesAndTypeEmpty = formField.careSetting === "";
+    const finalReferralReason =
+      formField.referralReason === "other"
+        ? formField.otherReferralReason
+        : formField.referralReason;
 
-    if (isCategoriesAndTypeEmpty) {
+    const { otherReferralReason, ...filteredFormField } = formField;
+
+    const payload = {
+      ...filteredFormField,
+      referralReason: finalReferralReason,
+    };
+
+
+    if (!formField.careSetting) {
       setIsLoading(false);
-
       setIsOpen(false);
-      return Swal.fire({
+      return useAlert({
         icon: "info",
-        text: `You can not submit an empty form!`,
-        confirmButtonColor: "#2E90FA",
+        title: `You cannot submit an empty form!`,
       });
     }
 
     try {
       const res = await axiosInstance.post(
         `/create-serviceuser-referralrecord/${id}`,
-        formField
+        payload
       );
 
       setIsOpen(false);
       setIsLoading(false);
-      Swal.fire({
+      useAlert({
         icon: "success",
         title: `Successful`,
+        isToast: true,
+        position: "top-start",
         text: `${res.data.message}`,
-        confirmButtonColor: "#2E90FA",
       });
 
       navigate(`/dashboard/user/${id}/5`);
     } catch (error: any) {
-      error;
       setIsLoading(false);
-      Swal.fire({
+      useAlert({
         icon: "error",
         title: "Error",
+        isToast: true,
+        position: "top-start",
         text: `${error.response.data.message}`,
-        confirmButtonColor: "#2E90FA",
       });
     }
   };
@@ -162,8 +173,22 @@ export default function ReferralRecord() {
               <MenuItem value="Surgery">Surgery</MenuItem>
               <MenuItem value="Specialized Care">Specialized Care</MenuItem>
               <MenuItem value="Maternity Care">Maternity Care</MenuItem>
+              <MenuItem value="other">Other</MenuItem>
             </TextField>
           </label>
+
+          {formField.referralReason === "other" && (
+            <InputField
+              type="text"
+              label="Other referral reasons"
+              placeholder="Enter possible reasons"
+              name={`otherReferralReason`}
+              value={formField.otherReferralReason}
+              onChange={(e: any) =>
+                handleChange("otherReferralReason", e.target.value)
+              }
+            />
+          )}
 
           <label htmlFor="urgency_status">
             Urgency Status
@@ -301,10 +326,18 @@ export default function ReferralRecord() {
                   label="Referral (Name of referral)"
                   text={formField.referralName}
                 />
-                <TextLabel
-                  label="Referral reason"
-                  text={formField.referralReason}
-                />
+                {formField.otherReferralReason !== "" &&
+                formField.referralReason === "other" ? (
+                  <TextLabel
+                    label="Referral reason"
+                    text={formField.otherReferralReason}
+                  />
+                ) : (
+                  <TextLabel
+                    label="Referral reason"
+                    text={formField.referralReason}
+                  />
+                )}
                 <TextLabel
                   label="Urgency Status"
                   text={formField.urgencyStatus}

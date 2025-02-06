@@ -1,7 +1,10 @@
 .background {
-  background-image: url("/assets/Empty State.png");
-  background-position: center;
-  height: 70vh;
+  display: flex;
+  flex-direction: column;
+  background-image: url("/assets/Empty state.png");
+  background-position: center bottom;
+  height: 80vh;
+
   /* height: calc(100vh - 130px); */
   background-repeat: no-repeat;
   background-color: white;

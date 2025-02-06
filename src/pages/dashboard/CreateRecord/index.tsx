@@ -9,6 +9,7 @@ import AllergyRecord from "./AllergyRecord";
 import AdditionalInformationRecord from "./AdditionalInformationRecord";
 import ReferralRecord from "./ReferralRecord";
 import { NeedHelp } from "../../../components/CalendarField";
+import { UpdateConsent } from "./Profile/updateConsent";
 
 // interface LinkItem {
 //   label: string;
@@ -21,24 +22,32 @@ import { NeedHelp } from "../../../components/CalendarField";
 //   isLoaded?: boolean;
 // }
 
-export default function CreateRecord() {
+export default function UpdateRecord() {
+  const { id } = useParams();
+
+  const { tabId } = useParams();
+
+  const newId = parseInt(id as string);
+
+  const navigate = useNavigate();
+
   const client = useSelector((state: any) => state.client.clients.tab1[0]);
 
   const user = useSelector((state: any) => state.user.user);
 
-  const [value, setValue] = React.useState(0);
-
-  const { tabId } = useParams();
-
-  const handleChange = (_event: any, newValue: number) => {
-    setValue(newValue);
-  };
+  const initialTab = tabId ? parseInt(tabId, 10) : 0;
+  const [value, setValue] = React.useState(initialTab);
 
   React.useEffect(() => {
-    setValue(tabId ? parseInt(tabId, 10) : 0);
-  }, [tabId]);
+    if (tabId && parseInt(tabId, 10) !== value) {
+      setValue(parseInt(tabId, 10));
+    }
+  }, [tabId, value]);
 
-  const navigate = useNavigate();
+  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+    navigate(`/dashboard/user/${id}/update/${newValue}`);
+  };
 
   const tabs = [
     {
@@ -70,6 +79,36 @@ export default function CreateRecord() {
       content: <Profile />,
     },
     {
+      label: "Consent Information",
+      icon: (
+        <svg
+          width="42"
+          height="42"
+          viewBox="0 0 42 42"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect
+            x="0.5"
+            y="0.5"
+            width="41"
+            height="41"
+            rx="20.5"
+            stroke="#E7E9FB"
+          />
+          <path
+            d="M23.25 30H18.75C18.3523 29.9995 17.9711 29.8413 17.6899 29.5601C17.4087 29.2789 17.2505 28.8977 17.25 28.5V24.75H13.5C13.1023 24.7495 12.7211 24.5913 12.4399 24.3101C12.1587 24.0289 12.0005 23.6477 12 23.25V18.75C12.0005 18.3523 12.1587 17.9711 12.4399 17.6899C12.7211 17.4087 13.1023 17.2505 13.5 17.25H17.25V13.5C17.2505 13.1023 17.4087 12.7211 17.6899 12.4399C17.9711 12.1587 18.3523 12.0005 18.75 12H23.25C23.6477 12.0005 24.0289 12.1587 24.3101 12.4399C24.5913 12.7211 24.7495 13.1023 24.75 13.5V17.25H28.5C28.8977 17.2505 29.2789 17.4087 29.5601 17.6899C29.8413 17.9711 29.9995 18.3523 30 18.75V23.25C29.9995 23.6477 29.8413 24.0289 29.5601 24.3101C29.2789 24.5913 28.8977 24.7495 28.5 24.75H24.75V28.5C24.7495 28.8977 24.5913 29.2789 24.3101 29.5601C24.0289 29.8413 23.6477 29.9995 23.25 30ZM13.5 18.75V23.25H18.75V28.5H23.25V23.25H28.5V18.75H23.25V13.5H18.75V18.75H13.5Z"
+            fill="#475367"
+          />
+          <path
+            d="M13.5 18.75V23.25H18.75V28.5H23.25V23.25H28.5V18.75H23.25V13.5H18.75V18.75H13.5Z"
+            fill="#475367"
+          />
+        </svg>
+      ),
+      content: <UpdateConsent NHRID={newId} />,
+    },
+    {
       label: "Health Information",
       icon: (
         <svg
@@ -99,6 +138,7 @@ export default function CreateRecord() {
       ),
       content: <HealthRecord />,
     },
+
     {
       label: "Medications",
       icon: (
@@ -372,7 +412,7 @@ export default function CreateRecord() {
                     key={index}
                     label={tab.label}
                     icon={tab.icon}
-                    value={tab.content}
+                    value={index}
                     iconPosition="start"
                     onClick={() => setValue(index)}
                   />

@@ -1,8 +1,10 @@
-import { Skeleton, Typography } from "@mui/material";
+import { Box, Skeleton, Typography } from "@mui/material";
 import Styles from "./styles.module.css";
 import { useState } from "react";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import classNames from "classnames";
+import { FaRegCircleCheck } from "react-icons/fa6";
+import { IoMdStar } from "react-icons/io";
 
 interface TextProps {
   label: string;
@@ -14,13 +16,19 @@ interface TextProps {
   register?: any;
   placeholder?: string;
   required?: boolean;
+  showRequired?: boolean;
   disabled?: boolean;
+  checking?: boolean;
+  isReadOnly?: boolean;
+  maxLength?: number;
+  onKeyDown?: (e: React.KeyboardEvent) => void;
   pattern?: string;
   onChange?: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
   onWheel?: (e: React.WheelEvent) => void;
   textarea?: boolean;
+  className?: string;
 }
 
 export default function InputField({
@@ -37,6 +45,7 @@ export default function InputField({
   onWheel,
   textarea = false,
   errors,
+  className,
   ...rest
 }: TextProps) {
   const [showPassword, setShowPassword] = useState(false);
@@ -44,7 +53,13 @@ export default function InputField({
   return (
     <div className={Styles.wrapper}>
       <label htmlFor={name} className="text-neu-700 font-[600] text-[.875rem]">
-        {label}
+        {rest.showRequired ? (
+          <span className="flex items-center gap-1">
+            {label} <IoMdStar size={10} className="text-err" />
+          </span>
+        ) : (
+          <> {label}</>
+        )}
         {textarea ? (
           <textarea
             name={name}
@@ -72,27 +87,41 @@ export default function InputField({
             }}
           />
         ) : (
-          <input
-            type={
-              type === "password" ? (showPassword ? "text" : "password") : type
-            }
-            className={classNames(
-              Styles.input,
-              disabled &&
-                "text-neutral-400 border-neutral-200 bg-[#F0F2F5] cursor-not-allowed",
-              errors?.[name] && "border-red-500 !border-[1px]",
-              "!font-[400] !text-[1rem] placeholder:text-neu-400"
+          <Box className="relative">
+            <input
+              type={
+                type === "password"
+                  ? showPassword
+                    ? "text"
+                    : "password"
+                  : type
+              }
+              className={classNames(
+                Styles.input,
+                disabled &&
+                  "text-neutral-400 border-neutral-200 bg-[#F0F2F5] cursor-not-allowed",
+                errors?.[name] && "border-red-500 !border-[1px]",
+                "!font-[400] !text-[1rem] placeholder:text-neu-400",
+                className
+              )}
+              name={name}
+              value={value}
+              onChange={onChange}
+              placeholder={placeholder}
+              required={required}
+              disabled={disabled}
+              pattern={pattern}
+              onWheel={onWheel}
+              {...(register && register(name, { required }))}
+              readOnly={rest.isReadOnly}
+              {...rest}
+            />
+            {rest.checking && (
+              <span className="absolute top-5 right-4">
+                <FaRegCircleCheck className="text-succ" size={18} />
+              </span>
             )}
-            name={name}
-            value={value}
-            onChange={onChange}
-            placeholder={placeholder}
-            required={required}
-            disabled={disabled}
-            pattern={pattern}
-            onWheel={onWheel}
-            {...(register && register(name, { required }))}
-          />
+          </Box>
         )}
         {type === "password" && (
           <div
@@ -103,7 +132,7 @@ export default function InputField({
           </div>
         )}
         {errors?.[name] && (
-          <p className="text-red-500 text-sm italic !font-[400]">
+          <p className="text-err ml-4 text-xs !font-semibold">
             {errors[name]?.message || "This field is required"}
           </p>
         )}
