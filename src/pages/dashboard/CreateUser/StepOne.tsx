@@ -36,7 +36,6 @@ export default function StepOne({
 
   const { data } = useGetHCPInfo();
 
-  console.log("facility info;", data?.data);
   const {
     register,
     setValue,
@@ -154,7 +153,6 @@ export default function StepOne({
         </div>
 
         <InputField
-          showRequired
           type="text"
           label="Middle Name"
           name="middleName"
@@ -205,7 +203,7 @@ export default function StepOne({
           </TextField>
           {!!errors?.gender && (
             <p className="text-err text-xs !font-semibold">
-              {"This field is required"}
+              {"Gender field is required"}
             </p>
           )}
         </label>
@@ -267,7 +265,7 @@ export default function StepOne({
           </TextField>
           {!!errors?.religion && (
             <p className="text-err text-xs !font-semibold">
-              {"This field is required"}
+              {"Religion must be selected"}
             </p>
           )}
         </label>
@@ -483,6 +481,7 @@ export default function StepOne({
 
             <div style={{ marginTop: 8 }}>
               <PhoneField
+                isRequired={true}
                 {...register("parentOneNumber")}
                 name="parentOneNumber"
                 value={formData.parentOneNumber}
