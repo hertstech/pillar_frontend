@@ -36,8 +36,8 @@ export default function StepOne({
 
   const { data } = useGetHCPInfo();
 
-  console.log("facility info;", data?.data);
   const {
+    watch,
     register,
     setValue,
     handleSubmit,
@@ -48,12 +48,14 @@ export default function StepOne({
   });
 
   const handleChange = (
-    event: React.ChangeEvent<{ name?: string; value: any }>
+    event: React.ChangeEvent<{ name?: string; value: unknown }>
   ) => {
     const { name, value } = event.target;
-    superHandleChange({ ...formData, [name || ""]: value });
-    setSelectedDoctor(value);
+
+    setSelectedDoctor(value as string);
     setValue(name || "", value, { shouldValidate: true });
+
+    superHandleChange({ ...formData, [name || ""]: value });
   };
 
   const handleDateChange = (newValue: any) => {
@@ -75,15 +77,16 @@ export default function StepOne({
     superHandleChange(data);
     handleNext();
   };
+  console.log("doctors id;", watch("registeredDoctor"));
 
   useEffect(() => {
     if (data?.data) {
       const hcpData = data.data;
       setValue("facilityName", hcpData?.name || "");
-      setValue("facilityType", hcpData?.type || "");
+      setValue("facilityType", hcpData?.facility_type || "");
       setValue("facilityOwnership", hcpData?.ownership || "");
-      setValue("facilityDoor", hcpData?.address || "");
-      setValue("facilityStreet", hcpData?.address || "");
+      setValue("facilityDoorNumber", hcpData?.house_number || "");
+      setValue("facilityStreet", hcpData?.street_name || "");
       setValue("facilityTown", hcpData?.town || "");
       setValue("facilityLGA", hcpData?.lga || "");
       setValue("facilityState", hcpData?.state || "");
@@ -112,7 +115,7 @@ export default function StepOne({
         }}
       >
         <div style={{ display: "flex", gap: 10 }}>
-          <label htmlFor="title" style={{ marginTop: 9 }}>
+          <label htmlFor="title" style={{ marginTop: 7 }}>
             <span className="flex items-center gap-1">
               Title <IoMdStar size={10} className="text-err" />
             </span>
@@ -154,7 +157,6 @@ export default function StepOne({
         </div>
 
         <InputField
-          showRequired
           type="text"
           label="Middle Name"
           name="middleName"
@@ -205,7 +207,7 @@ export default function StepOne({
           </TextField>
           {!!errors?.gender && (
             <p className="text-err text-xs !font-semibold">
-              {"This field is required"}
+              {"Gender field is required"}
             </p>
           )}
         </label>
@@ -267,7 +269,7 @@ export default function StepOne({
           </TextField>
           {!!errors?.religion && (
             <p className="text-err text-xs !font-semibold">
-              {"This field is required"}
+              {"Religion must be selected"}
             </p>
           )}
         </label>
@@ -333,7 +335,10 @@ export default function StepOne({
         </label>
 
         <label htmlFor="tribalMarks">
-          Tribal Mark
+          <span className="flex items-center gap-1">
+            Tribal Mark
+            <IoMdStar size={10} className="text-err" />
+          </span>
           <TextField
             select
             {...register("tribalMarks")}
@@ -483,6 +488,7 @@ export default function StepOne({
 
             <div style={{ marginTop: 8 }}>
               <PhoneField
+                isRequired={true}
                 {...register("parentOneNumber")}
                 name="parentOneNumber"
                 value={formData.parentOneNumber}
@@ -668,7 +674,7 @@ export default function StepOne({
           type="text"
           isReadOnly
           label="Facility Door No."
-          name="facilityDoor"
+          name="facilityDoorNumber"
           onChange={handleChange}
           register={register}
           errors={errors}
@@ -745,25 +751,33 @@ export default function StepOne({
 
         <div style={{ marginTop: 8 }}>
           <label htmlFor="facilityType">
-            Facility Type
+            <span className="flex items-center gap-1">
+              Type
+              <IoMdStar size={10} className="text-err" />
+            </span>
             <TextField
               select
               {...register("facilityType")}
               sx={{ marginTop: "5px" }}
               fullWidth
               name="facilityType"
-              value={data?.data?.ownership || ""}
+              value={data?.data?.facility_type || ""}
               onChange={handleChange}
               inputProps={{ readOnly: true }}
               className="!capitalize"
             >
-              <MenuItem value={data?.data?.type}>{data?.data?.type}</MenuItem>
+              <MenuItem value={data?.data?.facility_type}>
+                {data?.data?.facility_type}
+              </MenuItem>
             </TextField>
           </label>
         </div>
         <div className="mt-4 flex flex-col gap-4">
           <label htmlFor="facilityOwnership">
-            Facility Ownership
+            <span className="flex items-center gap-1">
+              Facility Ownership
+              <IoMdStar size={10} className="text-err" />
+            </span>
             <TextField
               select
               {...register("facilityOwnership")}
@@ -781,7 +795,10 @@ export default function StepOne({
           </label>
 
           <label htmlFor="registeredDoctor">
-            Registered Doctor
+            <span className="flex items-center gap-1">
+              Registered Doctor
+              <IoMdStar size={10} className="text-err" />
+            </span>
             <TextField
               select
               {...register("registeredDoctor")}
@@ -829,7 +846,7 @@ export default function StepOne({
         <InputField
           type="text"
           label="Nominated Pharmacy Door No."
-          name="nominatedPharmacyDoor"
+          name="nominatedPharmacyDoorNumber"
           placeholder="Enter Nominated Pharmacy's Door/House Number"
           onChange={handleChange}
           register={register}
@@ -875,7 +892,7 @@ export default function StepOne({
         <InputField
           type="text"
           label="HMO Plan"
-          name="HMOPlan"
+          name="hmoPlan"
           placeholder="Enter current HMO plan"
           onChange={handleChange}
           register={register}
@@ -886,7 +903,7 @@ export default function StepOne({
         <InputField
           type="number"
           label="HMO Number"
-          name="HMONumber"
+          name="hmoNumber"
           placeholder="Enter HMO number"
           onChange={handleChange}
           register={register}

@@ -62,10 +62,15 @@ export default function CreateUser() {
     nokNHR_ID: "",
     nokPhoneNumber: "",
     nokRelationship: "",
-    nominatedPharmarcy: "",
     registeredDoctor: "",
-    registeredHospital: "",
-    HMOPlan: "",
+    nominatedPharmacy: "",
+    nominatedPharmacyDoorNumber: "",
+    nominatedPharmacyStreet: "",
+    nominatedPharmacyTown: "",
+    nominatedPharmacyLGA: "",
+    nominatedPharmacyState: "",
+    hmoNumber: "",
+    hmoPlan: "",
     title: "",
 
     // STEP TWO
@@ -185,7 +190,10 @@ export default function CreateUser() {
         icon: "error",
         isToast: true,
         title: "Error",
-        text: `${error.response.data.detail || error.response.data.message}`,
+        text: `${
+          error.response.data?.detail ||
+          "Server error, kindly reach out to support team"
+        }`,
       });
 
       setIsLoading(false);

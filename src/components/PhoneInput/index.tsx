@@ -1,3 +1,4 @@
+import { IoMdStar } from "react-icons/io";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 
@@ -5,13 +6,26 @@ interface PhoneProps {
   name: string;
   value: string;
   onChange?: any;
+  isRequired?: boolean;
 }
 
-export default function PhoneField({ name, value, onChange }: PhoneProps) {
+export default function PhoneField({
+  name,
+  value,
+  onChange,
+  isRequired,
+}: PhoneProps) {
   return (
     <div>
       <label htmlFor={name}>
-        Phone Number
+        {isRequired ? (
+          <span className="flex items-center gap-1">
+            Weight
+            <IoMdStar size={10} className="text-err" />
+          </span>
+        ) : (
+          <>Phone Number</>
+        )}
         <PhoneInput
           inputProps={{
             name: name,
